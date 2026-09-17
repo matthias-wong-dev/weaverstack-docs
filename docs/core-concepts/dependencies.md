@@ -1,8 +1,6 @@
 # Dependencies
 
-A dependency states that one Weaver document reads another. Weaver uses that relationship to order work and to include affected downstream documents when a changed declaration is built.
-
-Dependencies affect work only inside the items selected for an operation. They do not silently add another item to Build, Load or Test.
+A dependency states that one Weaver document reads another. Across the [Weaver operations](weaver-operations.md), that relationship determines Build impact and the order of item-wide work. It does not widen the items selected for an operation.
 
 ## Weaver discovers or reads dependencies from documents
 
@@ -28,7 +26,7 @@ A dependency cycle has no valid Build order. Project checking and Build reject c
 
 ## Load orders selected work
 
-An item-wide Load uses the dependencies recorded by Build. Within the selected items, upstream load work runs before downstream load work, and an upstream failure blocks dependent work.
+An item-wide Load uses the dependencies recorded by Build. Within the selected items, upstream load work runs before downstream load work.
 
 A dependency on an unselected item does not add that item to the run. Select both items when both should load.
 
@@ -40,4 +38,4 @@ Tests and Assumptions can depend on the data they inspect. Nothing can depend on
 
 Test selects installed validations from the requested items. Their dependencies do not add items to the Test run, and Tests and Assumptions run in stable identity order rather than dependency order among validations.
 
-Declare relationships in documents and Shortcuts, not through filenames or directory order. [How Weaver works](how-weaver-works.md) places dependency handling in the Build, Load and Test lifecycle.
+Declare relationships in documents and Shortcuts, not through filenames or directory order. The [development cycle](development-cycle.md) shows where dependency impact enters the edit, Build, Load and Test loop. [Fault tolerance](fault-tolerance.md) explains how each operation proceeds after work fails.
