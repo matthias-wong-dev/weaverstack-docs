@@ -1,0 +1,2 @@
+logical:
+  "Warehouse/Dispatch/Parcel.Event": "Lakehouse/Tracking/Tables/Parcel.Event"
