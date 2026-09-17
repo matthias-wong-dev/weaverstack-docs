@@ -76,6 +76,11 @@ nav:
   - Core concepts:
       - core-concepts/index.md
       - How Weaver works: core-concepts/how-weaver-works.md
+      - Projects and estates: core-concepts/projects-and-estates.md
+      - Logical and physical items: core-concepts/logical-and-physical-items.md
+      - Resources and artefacts: core-concepts/resources-and-artefacts.md
+      - Dependencies: core-concepts/dependencies.md
+      - Weaver catalogue: core-concepts/catalogue.md
   - Reference:
       - reference/index.md
       - CLI: reference/cli.md

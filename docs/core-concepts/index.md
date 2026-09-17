@@ -18,4 +18,12 @@ Operational state
 Health
 ```
 
-The same model includes projects and estates, logical and physical items, resources and artefacts, dependencies, the catalogue, workflows, fault tolerance, local and Fabric execution, and mirrors.
+Read the model in layers:
+
+- [Projects and estates](projects-and-estates.md) separates project source, installed state and operational state.
+- [Logical and physical items](logical-and-physical-items.md) explains how stable project identities bind to Fabric targets.
+- [Resources and artefacts](resources-and-artefacts.md) separates what you author from what Weaver installs and runs.
+- [Dependencies](dependencies.md) explains ordering, change impact and item-selection boundaries.
+- [The Weaver catalogue](catalogue.md) describes the shared installed and operational state behind Build, Load, Test and Health.
+
+Later pages will cover workflows, fault tolerance, local and Fabric execution, and mirrors in more depth.

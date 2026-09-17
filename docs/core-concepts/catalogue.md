@@ -21,7 +21,7 @@ For installed logical items, the catalogue records enough public state for Weave
 - current Load and Test outcomes, run activity and bookmarks;
 - which objects are borrowed through a mirror.
 
-Logical identity remains item-aware. Two items may bind to one physical target without sharing ownership, and a Lakehouse Folder and Table with the same `Schema.Object` remain distinct. See [Logical and physical items](logical-and-physical-items.md) and [Resources and artefacts](resources-and-artefacts.md).
+Logical identity remains item-aware. Two items can contain resources with the same object name without sharing ownership, and a Lakehouse Folder and Table with the same `Schema.Object` remain distinct. Ordinary logical items cannot share one physical target. See [Logical and physical items](logical-and-physical-items.md) and [Resources and artefacts](resources-and-artefacts.md).
 
 The catalogue does not claim ownership of every object found in a Lakehouse or Warehouse. A physical object can exist without being part of Weaver's installed estate. Conversely, catalogue state can become stale when a target is changed outside Weaver; Build reconciles relevant recorded claims with the target before relying on them.
 
