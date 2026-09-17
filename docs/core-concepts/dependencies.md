@@ -1,70 +1,43 @@
 # Dependencies
 
-A dependency says that one declared object reads another. Weaver uses dependencies to order work, find the structural impact of a change and explain why later work cannot run yet.
+A dependency states that one Weaver document reads another. Weaver uses that relationship to order work and to include affected downstream documents when a changed declaration is built.
 
-Dependencies do not widen a command's selection. They order work only within the logical items the command selected.
+Dependencies affect work only inside the items selected for an operation. They do not silently add another item to Build, Load or Test.
 
-## Inferred and explicit dependencies
+## Weaver discovers or reads dependencies from documents
 
-Weaver normally discovers dependencies from the declaration itself:
+Depending on the document form, Weaver can discover dependencies from Python imports and SQL relation references. A document can instead declare its dependencies explicitly in metadata.
 
-- Python imports of another object in the same item identify that object as upstream.
-- SQL relation references identify the tables and views the statement reads.
-- Logical shortcuts connect a consumer to an object owned by another logical item.
+An explicit dependency list replaces discovery rather than extending it. An explicitly empty list states that the document has no managed dependencies. Spark SQL data documents require an explicit list because a query may read paths or other sources that static SQL relation discovery cannot represent completely.
 
-Discovery is static. `weaver check` does not import authored Python or execute SQL to find dependencies.
+Weaver determines these relationships without executing authored Python or SQL. Exact import forms, metadata keys and SQL rules belong with each document type in Reference.
 
-A declaration can instead provide an explicit dependency list. When it does, that list replaces inference; it does not supplement it. An explicitly empty list therefore means that the object has no managed dependencies. Spark SQL objects require this explicit choice because a query may read paths or other sources that SQL relation discovery cannot represent completely.
+## Logical shortcuts connect items
 
-Keep the exact declaration syntax with the relevant authoring form. The [Lakehouse pipeline](../guides/lakehouse-pipeline.md) shows both a dependency inferred from a Python import and an explicit empty list for Spark SQL. The [Warehouse pipeline](../guides/warehouse-pipeline.md) shows a dependency inferred from T-SQL.
+A short object name resolves within the document's owning logical item. To represent a managed read across logical items, declare a logical Shortcut in the consuming item. The Shortcut identifies both the document presented to the consumer and the document that owns the data.
 
-## Identity includes the item
+A physical reference can name a Fabric object outside the logical estate, but Weaver cannot infer a managed project dependency from that physical name.
 
-A dependency resolves to a logical identity, not just a `Schema.Object` name. The owning item is part of that identity, and a Lakehouse identity also distinguishes its `Files` and `Tables` areas.
+## Build uses dependencies for order and change impact
 
-This means:
+Build installs upstream documents before selected documents that depend on them. If an upstream declaration changes, selected downstream documents may also need to be rebuilt even when their own files are unchanged.
 
-- the same `Schema.Object` may exist independently in several items;
-- a Lakehouse Folder and Table may share a `Schema.Object` without becoming one object;
-- a two-part reference resolves within the consuming item;
-- a managed cross-item read needs a logical shortcut that identifies the producer.
+Selection remains the boundary. If a downstream document belongs to an unselected item, Build leaves that item unchanged. Select every item that should participate in the Build.
 
-See [Projects and estates](projects-and-estates.md), [Logical and physical items](logical-and-physical-items.md), and [Resources and artefacts](resources-and-artefacts.md) for the identities that Build and later operations preserve.
+A dependency cycle has no valid Build order. Project checking and Build reject cycles rather than using file order to break them.
 
-## What dependencies change during Build
+## Load orders selected work
 
-Build uses the complete project graph to establish a deterministic structural order. An upstream object is built before its dependent objects, including across logical items when both are in scope.
+An item-wide Load uses the dependencies recorded by Build. Within the selected items, upstream load work runs before downstream load work, and an upstream failure blocks dependent work.
 
-Dependencies also determine change impact. A new or changed declaration can require its downstream dependants to be rebuilt even when their own files did not change. This is why a small source edit can produce a larger Build selection.
+A dependency on an unselected item does not add that item to the run. Select both items when both should load.
 
-Selection remains a hard boundary. Selecting one item for Build does not add an upstream or downstream item. Weaver applies dependency impact and ordering to the selected project items and leaves omitted items untouched. The [CLI reference](../reference/cli.md#item-and-target-selection) defines Build's item-selection grammar.
+A named Load is a narrower operator selection: it runs exactly the named installed documents without adding or ordering their dependencies. The Load contract owns the detailed selection and failure behaviour.
 
-Cycles have no valid structural order. `weaver check` and Build reject dependency cycles, including cycles that appear only when relationships between items are considered. If installed catalogue state cannot form an acyclic graph, Load, Test and Health refuse to treat it as a runnable estate. Fix the declarations or shortcuts rather than trying to control their file order.
+## Test reads dependencies but does not sequence validations
 
-## What dependencies change during Load
+Tests and Assumptions can depend on the data they inspect. Nothing can depend on a Test or Assumption: validations consume data and do not produce data for another document.
 
-An item-wide Load reads the installed dependency graph from the [Weaver catalogue](catalogue.md). It runs selected upstream work before selected downstream work, and a failed upstream load blocks the dependent work.
+Test selects installed validations from the requested items. Their dependencies do not add items to the Test run, and Tests and Assumptions run in stable identity order rather than dependency order among validations.
 
-The item boundary still wins. If a selected object depends on an object in an unselected item, that dependency does not pull the other item into the run. Select both items when both should run:
-
-```bash
-weaver load Lakehouse/Landing Warehouse/Operations
-```
-
-Name selection is different from dependency ordering. `load --name` is an operator override that runs exactly the named installed objects, without adding or ordering their dependencies. It is useful for a deliberate targeted rerun, not as a request for an affected subgraph.
-
-The [Load contract](../contracts/load.md) owns the exact selection, ordering, blocking and failure behaviour. The [CLI reference](../reference/cli.md#load-test-and-health-selection) owns the command syntax.
-
-## What dependencies change during Test
-
-A Test or Assumption may depend on the data objects it reads. Those dependencies make the validation a terminal consumer of installed data; a Test or Assumption cannot itself be a dependency target.
-
-An item-wide Test selects the installed validations owned by the named items. It does not add another item because a validation reads data there. Validations run in a stable identity order rather than a test-to-test dependency order: their declared dependencies describe the data they check, not a sequence among validations.
-
-Name selection again stays inside the selected item scope. See the [CLI reference](../reference/cli.md#load-test-and-health-selection) for item-wide and named Test forms.
-
-## Use the graph, not file order
-
-Do not encode sequencing by renaming files or relying on discovery order. Declare the read in Python, SQL, metadata or a logical shortcut, then use `weaver check` before Build.
-
-[How Weaver works](how-weaver-works.md) places dependency resolution in the full lifecycle. [First project](../get-started/first-project.md) shows that lifecycle with one item; the two authoring guides show how the graph grows as objects begin to read one another.
+Declare relationships in documents and Shortcuts, not through filenames or directory order. [How Weaver works](how-weaver-works.md) places dependency handling in the Build, Load and Test lifecycle.

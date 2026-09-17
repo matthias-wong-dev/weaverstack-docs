@@ -1,83 +1,51 @@
 # How Weaver works
 
-A Weaver project declares a logical estate of Microsoft Fabric items. Workspace configuration binds that estate to physical items in a Fabric workspace.
+Weaver turns project files into an installed data estate in Microsoft Fabric.
 
-That separation matters. Project source can stay the same while development and production use different Lakehouses, Warehouses and catalogue Warehouses.
-
-## The core model
+A project contains Weaver documents grouped beneath logical Lakehouse and Warehouse items. Workspace configuration binds those logical items to Fabric items in a workspace. This keeps the authored model separate from the names and locations used by each environment.
 
 ```text
-Project declarations
-        ↓
-Physical bindings
-        ↓
-Build
-        ↓
-Load / Test
-        ↓
-Operational state
-        ↓
-Health
+Weaver project
+  logical items
+    Weaver documents
+          │
+          │ workspace binding
+          ▼
+Fabric workspace
+  physical Lakehouses and Warehouses
+  Weaver catalogue
 ```
 
-### Project declarations
+## Declare the estate
 
-A project contains logical items such as:
+Weaver documents describe Tables, Folders, Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata. Their paths, document types and metadata establish the logical estate: what belongs to each item, how documents are identified and which documents depend on others.
 
-```text
-Lakehouse/Landing
-Warehouse/Operations
-```
+The project is the authored model. It does not describe every object that happens to exist in a Fabric workspace.
 
-Documents beneath those items declare tables, folders, views, tests, assumptions, shortcuts and supported Warehouse objects. These declarations describe the estate Weaver should build and operate.
+## Physical bindings
 
-The [Lakehouse pipeline](../guides/lakehouse-pipeline.md) and [Warehouse pipeline](../guides/warehouse-pipeline.md) show the two main authoring paths.
+A logical item has a project identity such as `Lakehouse/Landing` or `Warehouse/Operations`. Workspace configuration maps that identity to a physical Lakehouse or Warehouse and identifies the Warehouse used for Weaver's catalogue.
 
-### Physical bindings
+The same project can use different workspace configuration in development and production. The logical item names and Weaver documents remain unchanged while the workspace, catalogue and physical targets differ.
 
-`workspace-config.yml` names the Fabric workspace, catalogue Warehouse and physical target for each logical item:
+## Build, Load and Test
 
-```yaml
-workspace: Parcel Development
-catalogue: Warehouse/Catalogue
-
-targets:
-  Lakehouse/Landing: Landing_Dev
-  Warehouse/Operations: Operations_Dev
-```
-
-A logical item and its physical target are not the same thing. The logical name belongs to the project. The physical name belongs to one configured workspace.
+Build, Load and Test are the fundamental lifecycle.
 
 ### Build
 
-Build reads the project, resolves identities and dependencies, compares the declared estate with Fabric and applies the required structural changes. It installs the definitions that later load and test operations run.
+Build reads the project, resolves the selected logical items and their dependencies, and installs their definitions into the bound Fabric items. A successful Build records the installed generation and bindings in the catalogue.
 
-Build changes structure. It does not perform the project's data loads.
+### Load
 
-### Load and test
+Load runs the installed data work for the selected items. It reads the definitions and bindings recorded by Build rather than reparsing edited project files.
 
-Load runs the installed data work for the selected logical items. Test runs the installed Tests and Assumptions. Dependencies determine ordering within the selected scope; selecting an item does not silently add another item.
+### Test
 
-Both operations record their outcomes in the Weaver catalogue.
+Test runs the installed Tests and Assumptions for the selected items and records their outcomes.
 
-The [Load contract](../contracts/load.md) states the exact selection, ordering and failure behaviour.
+This boundary allows source to move ahead while the previously built generation continues to run. Build the changed items when the edited declarations should become operational.
 
-### Operational state and health
+Dependencies affect Build impact and execution order inside the selected scope. They do not add unselected items to an operation.
 
-The catalogue records what Weaver installed and what later runs did. Health reads that state and reports whether builds, loads and tests are current and successful for the selected estate.
-
-Project source remains the declaration of intent. The catalogue is the record of the installed estate and its operation.
-
-## The normal lifecycle
-
-```text
-initialise → check → build → load → test → health
-```
-
-A generated workflow can run build, load, test and health in one Session:
-
-```bash
-weaver workflow full
-```
-
-See [First project](../get-started/first-project.md) for the smallest complete path and the [Load contract](../contracts/load.md) for a precise example of behaviour users can rely on.
+Continue with [Projects and estates](projects-and-estates.md) for the relationship between authored source and installed state.
