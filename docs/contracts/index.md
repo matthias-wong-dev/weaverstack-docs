@@ -1,12 +1,12 @@
 # Contracts
 
-A contract states behaviour a Weaver user can rely on. It is precise enough to guide use, implementation and acceptance testing without turning internal implementation choices into promises.
+A contract specifies public behaviour precisely enough to guide use, implementation and acceptance testing without turning internal implementation choices into promises.
 
 Contracts include syntax and interfaces, but they also cover behavioural semantics: selection, ordering, state changes, outcomes, failure boundaries and host-specific qualifications.
 
 The contract surface includes:
 
-- projects, resources, identity and naming;
+- projects, Weaver documents, identity and naming;
 - configuration, catalogue state and dependencies;
 - signatures and change detection;
 - build, load, test and workflow behaviour;

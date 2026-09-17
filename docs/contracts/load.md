@@ -74,9 +74,9 @@ A successful load records its outcome in the catalogue. Bookmark changes become 
 
 Reload removes the selected table's bookmark before execution, marks its load state pending, empties the selected target and then runs the installed load. Other tables and downstream objects are outside that reset unless they were selected separately.
 
-## Guarantees
+## Defined behaviour
 
-A user can rely on Load to:
+The Load contract specifies that Load:
 
 1. execute the installed definitions rather than unbuilt source changes;
 2. keep execution within the selected item or name boundary;
@@ -87,6 +87,6 @@ A user can rely on Load to:
 7. leave bookmarks unchanged during a dry run;
 8. record completed work before reporting a successful run.
 
-These guarantees describe Load behaviour. They do not make catalogue tables, internal planning nodes or execution transports public extension points.
+These properties do not make catalogue tables, internal planning nodes or execution transports public extension points.
 
 For complete examples, see [Author a Lakehouse pipeline](../guides/lakehouse-pipeline.md) and [Author a Warehouse pipeline](../guides/warehouse-pipeline.md).
