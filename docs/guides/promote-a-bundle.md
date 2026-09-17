@@ -28,8 +28,6 @@ A zero exit status confirms that the project source parses locally. This checkpo
 Use the destination's workspace configuration while creating the bundle:
 
 ```bash
-rm -rf ./dist/parcel-operations
-
 weaver build examples/parcel-automation \
   --item Warehouse/Operations \
   --workspace-config examples/parcel-automation/workspace-config.yml \
@@ -39,7 +37,7 @@ weaver build examples/parcel-automation \
   --json > build-bundle.json
 ```
 
-`--bundle-path` requires `--bundle-only`. The path must not exist or must be an empty directory. A successful result has `"installation": false`, a `bundle_id`, a `bundle_path` and `"status": "succeeded"`.
+Choose a new output path for each approved bundle. `--bundle-path` requires `--bundle-only`; the path must not exist or must be an empty directory. A successful result has `"installation": false`, a `bundle_id`, a `bundle_path` and `"status": "succeeded"`.
 
 The directory contains `plan.yml` and generated files under `payload/`. It does not contain a copy of the project repository. The plan freezes the selected physical targets, ordered installation actions, generated definitions and payload checksums from this planning run.
 

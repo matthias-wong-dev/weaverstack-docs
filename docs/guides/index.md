@@ -16,4 +16,13 @@ Begin with [First project](../get-started/first-project.md) to initialise a proj
 - [Validation](validation.md) — install and run Tests and Assumptions against an estate.
 - [Workspaces and Fabric Environments](environments.md) — separate physical estate bindings from Python runtime publication.
 
+## Operate and automate an estate
+
+- [Operate an estate](operate-estate.md) — inspect, preview, run and verify an installed estate.
+- [Troubleshooting](troubleshooting.md) — diagnose project, workspace, installation, runtime and state problems from their observed symptoms.
+- [Recovery](recovery.md) — reconcile partial state, reload selected Tables, refresh a mirror or deliberately empty targets.
+- [Automation](automation.md) — run Weaver unattended with explicit interaction, authentication and output boundaries.
+- [Sessions and workflows](sessions-and-workflows.md) — compose ordinary commands interactively or as a checked sequence.
+- [Promote a build bundle](promote-a-bundle.md) — separate destination-specific Build planning from installation.
+
 Use [How Weaver works](../core-concepts/how-weaver-works.md) for the model behind the steps, the [CLI reference](../reference/cli.md) for exact command forms, and the [Load contract](../contracts/load.md) for selection and failure behaviour.

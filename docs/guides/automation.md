@@ -18,7 +18,7 @@ Run `weaver doctor --workspace "Parcel Development" --non-interactive --json` in
 `--yes` grants authorisation. It does not make an invocation non-interactive, configure credentials or fill missing arguments. An unattended destructive command needs both options:
 
 ```bash
-weaver wipe Warehouse/Operations_Dev \
+weaver wipe Warehouse/ParcelOperationsDev \
   --workspace "Parcel Development" \
   --non-interactive \
   --yes

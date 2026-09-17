@@ -47,15 +47,15 @@ Probe the workspace independently of the project:
 weaver doctor --workspace "Parcel Operations"
 ```
 
-Doctor requires an explicit workspace name. It does not read `workspace-production.yml`, a catalogue binding or an Environment binding. It reports authentication, Fabric REST and the available TDS, OneLake and Livy probes. Checking a workspace with a Lakehouse can start a Fabric Spark session and take about a minute.
+Doctor requires an explicit workspace name. It does not read `workspace-production.yml`, a catalogue binding or an Environment binding. It reports authentication and the available Fabric, Warehouse SQL, OneLake storage and Spark checks. Checking a workspace with a Lakehouse can start a Fabric Spark session and take about a minute.
 
 Interpret the boundary that failed:
 
 - **Authentication**: confirm the intended credential path. Interactive CLI use can fall back to browser sign-in; `--non-interactive` omits browser sign-in.
-- **Fabric REST**: confirm the workspace spelling, tenant and permission to discover it.
-- **Warehouse TDS**: confirm SQL endpoint availability and permission on the Warehouse Doctor names.
+- **Fabric workspace access**: confirm the workspace spelling, tenant and permission to discover it.
+- **Warehouse SQL**: confirm SQL endpoint availability and permission on the Warehouse Doctor names.
 - **OneLake**: confirm storage access to the Lakehouse Doctor names.
-- **Fabric Spark / Livy**: confirm the capacity and workspace can start a Spark session.
+- **Fabric Spark**: confirm the capacity and workspace can start a Spark session.
 
 A successful Doctor report proves only the probes it ran against the named workspace. It does not prove that a later command selected the intended workspace configuration, catalogue, targets or Environment.
 

@@ -77,6 +77,12 @@ nav:
       - Shortcuts: guides/shortcuts.md
       - Validation: guides/validation.md
       - Workspaces and Environments: guides/environments.md
+      - Operate an estate: guides/operate-estate.md
+      - Troubleshooting: guides/troubleshooting.md
+      - Recovery: guides/recovery.md
+      - Automation: guides/automation.md
+      - Sessions and workflows: guides/sessions-and-workflows.md
+      - Promote a build bundle: guides/promote-a-bundle.md
   - Core concepts:
       - core-concepts/index.md
       - How Weaver works: core-concepts/how-weaver-works.md
