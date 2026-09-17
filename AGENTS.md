@@ -27,7 +27,9 @@ Read `/opt/data/repos/weaverstack/PROSE.md` before writing. Use the public terms
 
 Write as one senior engineer to another. Use plain, direct language. Prefer small working examples to ceremonial explanation. Reference pages should be terse and searchable; concept pages should explain the mental model needed to reason correctly.
 
-Avoid claims such as “powerful”, “seamless”, “robust” and “enterprise-grade”. State concrete behaviour instead. Do not document a feature merely because it would complete a pattern.
+Avoid claims such as “powerful”, “seamless”, “robust”, “safe”, “predictable” and “enterprise-grade”. State the mechanism or property instead. Do not tell readers what behaviour or state they “can rely on”; describe the defined behaviour or recorded state directly. Do not write “current versions of Weaver” unless a version distinction matters.
+
+Use Weaver's user model rather than deriving a taxonomy from internal nouns. A project contains Weaver documents such as Tables, Folders, Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata. Do not introduce `resource` or `artefact` as a user-facing category.
 
 Examples use a neutral parcel and logistics domain. Keep them small and independent rather than building one giant tutorial estate.
 
