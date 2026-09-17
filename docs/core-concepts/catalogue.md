@@ -1,80 +1,103 @@
 # Weaver catalogue
 
-The Weaver catalogue is a configured Fabric Warehouse that records the estate Weaver has installed and the results of operating it. It is the shared state behind Build, Load, Test and Health.
+The Weaver catalogue is a configured Fabric Warehouse that records the installed estate and its operational state. Its tables live in the `_` schema. Build publishes installed state there; Load and Test update runtime state; Health reads both.
 
 Project source and catalogue state answer different questions:
 
-- project source declares what the estate should be;
-- the catalogue records what Weaver installed, where it installed it and what later runs did.
+- project source declares what should exist;
+- workspace configuration says where logical items should be installed;
+- the catalogue records what Build installed and what later operations did.
 
-[How Weaver works](how-weaver-works.md) places both in the normal lifecycle. [Projects and estates](projects-and-estates.md) explains the wider project and workspace boundary.
+A change to a Weaver document does not change catalogue state until a successful Build includes that logical item. Load and Test use the installed definitions recorded by Build rather than reopening the project source.
 
-## State you can rely on
+## How to read the `_` schema
 
-For installed logical items, the catalogue records enough public state for Weaver to recover:
+Most catalogue rows are scoped by logical item type and name. Object-level tables add schema and object identity. `_.Installation` connects that logical scope to a physical Fabric target.
 
-- the logical item and its physical Fabric target;
-- installed objects and their kinds;
-- declaration signatures and Build timestamps;
-- resolved dependencies and shortcuts;
-- installed Load, Test and Assumption work;
-- current Load and Test outcomes, run activity and bookmarks;
-- which objects are borrowed through a mirror.
+The tables fall into four groups:
 
-Logical identity remains item-aware. Two items can contain resources with the same object name without sharing ownership, and a Lakehouse Folder and Table with the same `Schema.Object` remain distinct. Ordinary logical items cannot share one physical target. See [Logical and physical items](logical-and-physical-items.md) and [Resources and artefacts](resources-and-artefacts.md).
+1. installed and declaration state, reconciled by Build;
+2. current operational state for the installed generation;
+3. append-only operational history;
+4. borrowed state created by a mirror.
 
-The catalogue does not claim ownership of every object found in a Lakehouse or Warehouse. A physical object can exist without being part of Weaver's installed estate. Conversely, catalogue state can become stale when a target is changed outside Weaver; Build reconciles relevant recorded claims with the target before relying on them.
+The tour below explains what each table means and when it is useful to inspect. Exact columns, keys, stored vocabularies and compatibility rules belong in [Reference](../reference/index.md).
 
-## Repository intent becomes an installed projection
+## Installed and declaration state
 
-A parsed project can describe all of its intended metadata, dependencies and resources without knowing a physical target. Build adds the selected bindings, compares that intent with the current installed and physical state, and applies the required structural changes.
+Build reconciles these tables from the selected project declarations. Rows for logical items outside the Build selection remain outside that reconciliation.
 
-Only the selected, successfully installed result becomes the new catalogue projection. An omitted item is outside that Build's scope. A declaration that has changed in source does not change Load or Test until Build installs it.
+| Table | What it records | Inspect it when |
+| --- | --- | --- |
+| `_.Installation` | Each logical item's physical target, the Weaver version that last reconciled it and the item declaration signature. | You need to confirm where a logical item is installed or which installation a catalogue row belongs to. |
+| `_.Registry` | Objects certified as installed, including their physical kind, role, source signature and Build time. Certification is published after the object and its dependencies have succeeded. | You need to distinguish installed objects from unrelated objects in the same Fabric item, or compare an installed signature with project source. |
+| `_.SchemaDictionary` | Declared schemas and their authored descriptions. | You need the installed schema-level documentation for an item. |
+| `_.TableDictionary` | Declared Tables and Views, including descriptions, lineage, keys used by loading, nullability metadata and load behaviour. It describes Weaver documents rather than inventorying arbitrary physical relations. | You need to understand the installed declaration for a Table or View. |
+| `_.FolderDictionary` | Managed Folders, their lineage and load behaviour, and the file patterns that bound Weaver's management of their contents. | You need to inspect a Folder's installed load contract or managed file scope. |
+| `_.ColumnDictionary` | Authored column descriptions and Weaver-managed surrogate columns. It is not a complete physical-column inventory. | You need installed column documentation or need to identify a managed identity column. |
+| `_.KeyDictionary` | Declared primary and unique keys. These are logical metadata; the catalogue does not imply that Weaver built database indexes or constraints for them. | You need to see the keys used to identify rows or describe uniqueness. |
+| `_.ForeignKeyDictionary` | Declared relationships between column sets, including relationships across logical items. These are relationship metadata, not database constraints. | You need to inspect installed relationship metadata or trace a cross-item relationship. |
+| `_.TestDictionary` | Declared Tests and Assumptions, their descriptions and a Test's correlation key. It describes validations, not their latest outcomes. | You need to see which validations Build installed or distinguish a Test from an Assumption. |
+| `_.Dependency` | Authored dependency references and the logical object identities to which they resolved. | You need to explain Build impact or the ordering of installed Load and Test work. |
+| `_.Shortcut` | Declared cross-item, cross-engine and cross-workspace edges, including their logical or physical targets. | You need to trace how one installed item reaches an object owned elsewhere. |
 
-This distinction is visible in the [First project](../get-started/first-project.md): Build installs the Table and Test definitions, then Load and Test use those installed definitions. The [Lakehouse pipeline](../guides/lakehouse-pipeline.md) and [Warehouse pipeline](../guides/warehouse-pipeline.md) show the same boundary for larger items.
+`_.Registry` is the certification boundary. A physical object can exist without a Registry row, and a Registry row is meaningful only in the context of its `_.Installation` binding. Health can compare these claims with physical inventory; Build compares them with project declarations and the selected targets.
 
-## How commands use the catalogue
+## Current operational state
+
+Current-state rows describe the present installed generation. Rebuilding the corresponding object invalidates or resets that state.
+
+| Table | What it records | Inspect it when |
+| --- | --- | --- |
+| `_.Bookmark` | The UTC instant immediately before a loadable object's latest clean load began. A rebuild or reload resets the bookmark; Views have no bookmark row. | You need to explain the next incremental read boundary or whether an object has completed a clean load. |
+| `_.LoadStatus` | The current Load result and timing for each managed Table, Folder and View, with the workflow that produced it. Rebuilt loadable objects return to Pending; built Views start Succeeded. | You need the current Load outcome used by Health. |
+| `_.TestStatus` | The current result, timing and failure count for each installed Test and Assumption, with the workflow that produced it. Rebuilding a validation sets it to Pending. | You need the current validation outcome used by Health. |
+
+These tables are keyed by logical object identity rather than by a physical target name. `_.Installation` supplies the target binding. The workflow identifier connects a current result with its supporting entries in `_.Log` and, for loads, `_.LoadStatistic`.
+
+## Operational history
+
+History records what happened. Rebuilding an object does not remove it.
+
+| Table | What it records | Inspect it when |
+| --- | --- | --- |
+| `_.Log` | One appended row for each settled unit of Weaver work, with workflow identity, target, result, timing, message and task-specific detail. | You need to reconstruct a run, correlate work from one workflow or investigate a failure. |
+| `_.LoadStatistic` | Append-only counts and timing for each Load, including rows read, inserted, updated, deleted and rejected, plus reload and static-skip indicators. | You need the activity behind a Load outcome or a historical record of data movement. |
+
+`_.LoadStatus` answers “what is the current result?” while `_.LoadStatistic` answers “what did that Load move?”. A blocked Load can have current status without a statistic because no data work ran.
+
+## Mirrored and borrowed state
+
+| Table | What it records | Inspect it when |
+| --- | --- | --- |
+| `_.Mirror` | Installed objects whose data is still borrowed from another target: the source workspace and object, and the physical form at the local address. A Warehouse uses a local View; a Lakehouse uses shortcuts for stored objects and wrapper Views for source Views. | You need to distinguish borrowed data from locally materialised data or explain the physical type Health should expect. |
+
+`_.Mirror` is created when borrowed state is first recorded; an estate that has never borrowed an object need not contain the table. A mirrored catalogue copies installed and current operational state from its source, but `_.Log` and `_.LoadStatistic` stay where that work happened.
+
+Build still compares the mirrored Registry signatures with the same project documents. An unchanged borrowed object remains a View or shortcut over its source. When Build installs a changed borrowed object locally, it removes that object's `_.Mirror` row; unchanged objects remain borrowed. Health reads current Load state for remaining borrowed objects from the configured source catalogue and local state for materialised objects.
+
+## How operations use the catalogue
 
 ### Build
 
-Build reads catalogue state for the selected logical items, compares it with project intent and the relevant Fabric targets, and publishes the resulting installed state. The first successful Build creates the catalogue structures when they are absent.
+Build reads installed state, compares it with the selected project declarations and physical inventory, applies structural changes, then publishes the resulting dictionaries, bindings and certifications. A successful Build is what moves a source change into the installed estate.
 
-Dependencies affect Build ordering and change impact, but they do not widen item selection. See [Dependencies](dependencies.md) and the [CLI reference](../reference/cli.md#build-and-install).
+Dependencies affect ordering and change impact, but they do not widen the logical-item selection. See [Dependencies](dependencies.md).
 
 ### Load
 
-Load resolves logical items to their installed targets, selects installed loadable objects and orders item-wide work from the installed dependencies. It does not reopen project source.
-
-The [Load contract](../contracts/load.md) defines the resulting selection, ordering, bookmarks and recorded outcomes.
+Load resolves selected logical items through `_.Installation`, runs their installed load work in dependency order, advances `_.Bookmark` after clean loads, updates `_.LoadStatus`, and appends statistics and log records. The [Load contract](../contracts/load.md) defines the execution boundary.
 
 ### Test
 
-Test selects installed Tests and Assumptions for the requested logical items and runs their installed forms. A declared validation whose runnable form is missing is an execution failure, not a pass and not an item to skip silently.
+Test selects installed Tests and Assumptions, runs their installed forms, updates `_.TestStatus`, and appends log records.
 
 ### Health
 
-Health combines installed state with current Load and Test state. It reports on the targets bound to the selected logical items and can compare the catalogue's claims with physical inventory unless that check is disabled.
+Health combines installed declarations, certifications, dependencies, current Load and Test state, and optionally physical inventory. For borrowed objects it also reads current Load state from the source catalogue named by the selected workspace configuration.
 
-A Green report therefore means the selected installed estate is current and successful according to the checks Health performed. It does not mean that every unregistered object in the same physical Fabric item belongs to Weaver.
+## Inspect, but do not write
 
-The [CLI reference](../reference/cli.md#load-test-and-health-selection) defines selection and exit behaviour for Load, Test and Health.
+The `_` schema is a queryable public surface, not a write extension point. Do not insert, update or delete catalogue rows by hand. Manual writes can separate logical identity from its target, certify an object that Build did not install, alter dependency ordering or detach a result from the workflow that produced it.
 
-## Treat the catalogue as read-only
-
-Do not insert, update or delete catalogue state by hand. Use Build and the runtime commands as its writers, and use the Weaver CLI to inspect outcomes.
-
-Manual edits can make an object appear installed, move a logical item to the wrong target, remove dependency ordering or separate an outcome from the run that produced it. The catalogue's storage layout is not a public extension API; the public contract is the behaviour Weaver exposes through Build, Load, Test, Health, mirror and wipe.
-
-Configure a separate catalogue Warehouse or allow it to share a Warehouse with application schemas. In either case, Weaver's catalogue state remains separate from the project's materialised output. The [First project](../get-started/first-project.md#1-initialise-the-project) shows the catalogue and project Warehouse as separate items, while [How Weaver works](how-weaver-works.md#physical-bindings) explains the binding.
-
-## Mirrors preserve installed meaning
-
-A mirror creates a destination estate from another catalogue's installed state. The destination catalogue records which objects remain borrowed from the source, while local bindings identify where the mirrored logical items live.
-
-That record has operational consequences:
-
-- an unchanged project can Build against the mirrored estate without rebuilding borrowed objects;
-- when Build materialises a changed borrowed object locally, that object stops being borrowed;
-- Health consults the configured source catalogue for current operational state when selected objects still depend on it.
-
-A mirror is therefore not a replacement for project source and not an invitation to edit catalogue records. It is another installed projection, tied to a named source and destination. Inspect the destructive scope before running it; the [CLI reference](../reference/cli.md#destructive-commands) describes mirror and wipe responsibilities.
+Use Build, Load, Test, mirror and wipe as writers. Use Health, command output and read-only queries for inspection. Generated procedures and Weaver's internal write order are implementation details rather than additional catalogue contracts.
