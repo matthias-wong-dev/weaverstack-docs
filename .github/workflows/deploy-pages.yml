@@ -1,0 +1,67 @@
+name: Deploy documentation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        if: ${{ hashFiles('uv.lock') != '' }}
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Install documentation dependencies
+        if: ${{ hashFiles('uv.lock') != '' }}
+        run: uv sync --locked --python 3.11
+
+      - name: Build the MkDocs site
+        if: ${{ hashFiles('mkdocs.yml') != '' }}
+        run: uv run mkdocs build --strict
+
+      - name: Build the bootstrap site
+        if: ${{ hashFiles('mkdocs.yml') == '' }}
+        run: |
+          mkdir -p site
+          cp -R bootstrap/. site/
+
+      - name: Set the custom domain
+        run: printf '%s\n' docs.weaverstack.dev > site/CNAME
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload the GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
