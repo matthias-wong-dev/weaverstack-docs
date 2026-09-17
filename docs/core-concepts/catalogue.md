@@ -68,13 +68,17 @@ History records what happened. Rebuilding an object does not remove it.
 
 ## Mirrored and borrowed state
 
+Mirror is an estate transition. It creates a development catalogue whose installed state starts from another catalogue, rebinds selected logical items to development targets and records which relations still read from the source estate.
+
 | Table | What it records | Inspect it when |
 | --- | --- | --- |
-| `_.Mirror` | Installed objects whose data is still borrowed from another target: the source workspace and object, and the physical form at the local address. A Warehouse uses a local View; a Lakehouse uses shortcuts for stored objects and wrapper Views for source Views. | You need to distinguish borrowed data from locally materialised data or explain the physical type Health should expect. |
+| `_.Mirror` | Installed objects whose data is still borrowed: the source workspace and object, and the physical form at the destination address. A Warehouse relation is a local View. A Lakehouse Table or Folder is a shortcut, while a source View is exposed through a local wrapper View. | You need to distinguish borrowed data from locally materialised data, find the source relation or explain the physical type Build and Health should expect. |
 
-`_.Mirror` is created when borrowed state is first recorded; an estate that has never borrowed an object need not contain the table. A mirrored catalogue copies installed and current operational state from its source, but `_.Log` and `_.LoadStatistic` stay where that work happened.
+`_.Mirror` is created when borrowed state is first recorded; an estate that has never borrowed an object need not contain the table. The resulting catalogue can describe a mixed estate. `_.Installation` binds each logical item to its destination target. `_.Registry` retains the installed logical type, role and signature. A matching `_.Mirror` row overrides the expected physical form and names the source; no matching row means the Registry object is local.
 
-Build still compares the mirrored Registry signatures with the same project documents. An unchanged borrowed object remains a View or shortcut over its source. When Build installs a changed borrowed object locally, it removes that object's `_.Mirror` row; unchanged objects remain borrowed. Health reads current Load state for remaining borrowed objects from the configured source catalogue and local state for materialised objects.
+The destination starts with copied declaration and current-state rows. `_.Log` and `_.LoadStatistic` remain in the catalogue where the work happened. For an object still in `_.Mirror`, Health reads current Load state from the configured source catalogue; for a local object, it reads destination state.
+
+Build compares Registry signatures with the selected project documents. A changed borrowed object and affected descendants selected by Build are installed locally. After the physical work, Build removes their `_.Mirror` rows before publishing the resulting catalogue state. Unchanged objects keep their borrowed forms and rows.
 
 ## Inspect, but do not write
 
