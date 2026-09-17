@@ -33,10 +33,11 @@ Warehouse work can execute without Spark. Lakehouse work may require a Fabric Sp
 
 ## Dependencies
 
-For an item-wide run, Weaver orders selected work by its installed dependency graph.
+For an item-wide run, Weaver orders selected work by its installed dependency graph. Failure policy determines whether a settled execution failure blocks later work.
 
-- A node runs only after its selected dependencies have succeeded.
-- A failed dependency blocks the dependent node.
+- Without fault tolerance, a failed node blocks its dependants and stops later scheduling.
+- With fault tolerance, a dependant may run after an upstream execution failure has settled. It reads the state left by that failure.
+- An unresolved or invalid upstream node blocks its descendants under either policy.
 - Dependencies outside the selected item do not widen the run.
 - Name selection is an operator override: Weaver runs only the named objects without dependency expansion or dependency ordering.
 
@@ -66,7 +67,7 @@ A normal CLI load exits non-zero when the report is not successful.
 
 Without `--fault-tolerant`, Weaver stops after the first failed branch and raises a load failure with the partial report attached where available.
 
-With `--fault-tolerant`, independent branches continue. Work that depends on a failed node remains blocked. Fault tolerance changes how much independent work Weaver attempts; it does not turn a failed or partially successful report into success.
+With `--fault-tolerant`, independent branches continue and downstream work may run after a resolved upstream execution failure. Descendants of unresolved or invalid work remain blocked. Fault tolerance changes how much selected work Weaver attempts; it does not turn a failed or partially successful report into success.
 
 ## Bookmarks and recorded state
 
@@ -81,8 +82,8 @@ The Load contract specifies that Load:
 1. execute the installed definitions rather than unbuilt source changes;
 2. keep execution within the selected item or name boundary;
 3. respect dependency order for item-wide runs;
-4. block dependent work after an upstream failure;
-5. preserve independent progress only when fault tolerance is requested;
+4. apply fail-fast or fault-tolerant continuation without widening the selection;
+5. keep descendants blocked when their upstream work cannot be resolved or validated;
 6. report node and run outcomes separately;
 7. leave bookmarks unchanged during a dry run;
 8. record completed work before reporting a successful run.

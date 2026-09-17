@@ -79,9 +79,11 @@ nav:
       - Projects and estates: core-concepts/projects-and-estates.md
       - Logical and physical items: core-concepts/logical-and-physical-items.md
       - Weaver documents: core-concepts/weaver-documents.md
-      - Dependencies: core-concepts/dependencies.md
+      - Weaver operations: core-concepts/weaver-operations.md
       - Weaver catalogue: core-concepts/catalogue.md
       - Development cycle: core-concepts/development-cycle.md
+      - Dependencies: core-concepts/dependencies.md
+      - Fault tolerance: core-concepts/fault-tolerance.md
   - Reference:
       - reference/index.md
       - CLI: reference/cli.md
