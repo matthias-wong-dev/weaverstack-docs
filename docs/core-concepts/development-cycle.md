@@ -33,36 +33,34 @@ A production and development configuration can bind the same project to differen
 Production configuration:
 
 ```yaml
-workspace: Data Without Guessing
-environment: dwg-environment
-catalogue: Warehouse/Catalogue
+workspace: Parcel Operations
+catalogue: Warehouse/ParcelCatalogue
 
 targets:
-  Lakehouse/T1_DWG: T1_DWG
-  Warehouse/T2_DWG: T2_DWG
+  Lakehouse/Landing: ParcelLanding
+  Warehouse/Operations: ParcelOperations
 ```
 
 Development configuration:
 
 ```yaml
-workspace: Data Without Guessing
-environment: dwg-environment
-catalogue: Warehouse/DEV_Catalogue
-mirror: Warehouse/Catalogue
+workspace: Parcel Operations
+catalogue: Warehouse/ParcelCatalogueDev
+mirror: Warehouse/ParcelCatalogue
 
 targets:
-  Lakehouse/T1_DWG: DEV_T1_DWG
-  Warehouse/T2_DWG: DEV_T2_DWG
+  Lakehouse/Landing: ParcelLandingDev
+  Warehouse/Operations: ParcelOperationsDev
 ```
 
 The project and logical item keys are unchanged:
 
-- `Lakehouse/T1_DWG`
-- `Warehouse/T2_DWG`
+- `Lakehouse/Landing`
+- `Warehouse/Operations`
 
-The selected configuration changes their physical targets from `T1_DWG` and `T2_DWG` to `DEV_T1_DWG` and `DEV_T2_DWG`. It also changes the catalogue from `Warehouse/Catalogue` to `Warehouse/DEV_Catalogue` and names the production catalogue as the mirror source.
+The selected configuration changes their physical targets from `ParcelLanding` and `ParcelOperations` to `ParcelLandingDev` and `ParcelOperationsDev`. It also changes the catalogue from `Warehouse/ParcelCatalogue` to `Warehouse/ParcelCatalogueDev` and names the production catalogue as the mirror source.
 
-These names are one project's convention, not a required production/development naming pattern. The mechanism is the selected configuration. Separate document trees or Git branches are not what makes an operation target production or development.
+These names are illustrative, not a required production/development naming pattern. The mechanism is the selected configuration. Separate document trees or Git branches are not what makes an operation target production or development.
 
 ## Start from the production estate
 
@@ -80,7 +78,7 @@ Operational history remains with the estate where it happened: `_.Log` and `_.Lo
 
 ## Change the project, then Build
 
-Edit the ordinary Weaver documents under `Lakehouse/T1_DWG` or `Warehouse/T2_DWG`. Their logical identities match the Registry rows copied from production, so Build can compare the edited declarations with the mirrored baseline.
+Edit the ordinary Weaver documents under `Lakehouse/Landing` or `Warehouse/Operations`. Their logical identities match the Registry rows copied from production, so Build can compare the edited declarations with the mirrored baseline.
 
 For an unchanged borrowed object, the installed signature still matches and the local View or shortcut remains in place. For a changed borrowed object, Build follows dependencies within its selected scope:
 
@@ -99,8 +97,8 @@ Test runs the installed Tests and Assumptions against the resulting estate. A va
 
 Health combines both sides:
 
-- installed and operational state for local objects comes from `Warehouse/DEV_Catalogue`;
-- current Load state for objects still listed in `_.Mirror` comes from `Warehouse/Catalogue`;
+- installed and operational state for local objects comes from `Warehouse/ParcelCatalogueDev`;
+- current Load state for objects still listed in `_.Mirror` comes from `Warehouse/ParcelCatalogue`;
 - physical inventory is checked against the borrowed form recorded for each mirrored object and the local form of each materialised object.
 
 Continue with another edit, Build, Load, Test and Health cycle. Re-mirror when development needs a fresh production baseline. It repeats the transition: the destination catalogue and selected development targets are emptied and reconstructed from the source, replacing local materialisations in that boundary.

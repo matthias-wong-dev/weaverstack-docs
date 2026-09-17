@@ -47,7 +47,7 @@ Exact configuration keys and YAML forms belong in Reference. The concept is a ma
 
 ## Development and production can bind the same project differently
 
-A real project uses one set of logical items in both environments. Its production configuration binds them to the production Lakehouse and Warehouse and records state in `Warehouse/Catalogue`. Its development configuration keeps those logical item names but binds them to development-prefixed physical items, records state in `Warehouse/DEV_Catalogue`, and identifies `Warehouse/Catalogue` as the catalogue it mirrors.
+A project can use one set of logical items in both environments. Its production configuration binds them to production Lakehouse and Warehouse items and records state in `Warehouse/ParcelCatalogue`. Its development configuration keeps those logical item names but binds them to `ParcelLandingDev` and `ParcelOperationsDev`, records state in `Warehouse/ParcelCatalogueDev`, and identifies `Warehouse/ParcelCatalogue` as the catalogue it mirrors.
 
 The mechanism is:
 
