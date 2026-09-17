@@ -58,6 +58,20 @@ Each operation has a selection of logical items or documents. Build interprets s
 
 [Dependencies](dependencies.md) owns the dependency model, including cross-item relationships and operation-specific selection rules.
 
+## A Session carries operations to Fabric
+
+A Session is the execution context through which an operation reaches Fabric. Build, Load and Test keep the same selection, catalogue and state-change semantics whether Weaver starts on a desktop or already runs inside Fabric.
+
+An operation can open a Session for itself. Several operations can instead use one Session, as they do in the interactive CLI and in a workflow. They then share the resolved workspace and item context, credentials and Fabric execution resources already acquired for that workspace. Closing an operation-created Session releases its resources; a Session supplied by the caller remains open for later operations.
+
+The host changes the path to Fabric, not the operation. On a desktop, the Session acquires remote Fabric capabilities as an operation needs them. Inside the Fabric workspace being addressed, it uses that workspace's active execution context. A notebook addressing another workspace takes the desktop path. Authentication, Spark availability and other host prerequisites can therefore differ even though the project, catalogue and operation mean the same thing.
+
+## A workflow composes ordinary operations
+
+A workflow is an ordered sequence of ordinary Weaver commands run in one Session and one workspace. Each command keeps its normal Build, Load, Test or other operation semantics; the workflow is not another execution engine or a replacement lifecycle.
+
+The shared Session preserves workspace resolution and acquired execution context across the sequence. Recorded Load and Test work from the sequence shares one workflow identifier, which correlates those outcomes without making the sequence transactional. Failure between commands is covered by [Fault tolerance](fault-tolerance.md).
+
 ## Health reports the resulting state
 
 Health combines installed declarations, current Load and Test state and, when requested, physical inventory. It reports what Build installed and what later operations recorded; it does not advance the estate through another lifecycle stage.

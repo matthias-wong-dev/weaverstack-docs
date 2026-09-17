@@ -32,14 +32,18 @@ An installed Test run attempts every selected Test and Assumption. A failed vali
 
 Test does not expose Load's fault-tolerance choice. Its validations are independent consumers of data, not producers ordered through one another. A source-file Test is a single direct evaluation, so there is no remaining validation set to continue.
 
-## Workflows stop between commands
+## A Session does not replace execution context mid-operation
 
-A workflow runs commands in order and stops when a command returns failure or raises a Weaver error. It does not continue to a later command because an earlier command preserved some independent progress.
+If a Session's Fabric execution capability fails, Weaver does not replace it part-way through the operation. The operation fails against the context in which it started. Before a later operation begins in the same Session, Weaver can make a bounded attempt to reacquire the failed capability; recovery does not resume the failed operation.
+
+## A failed operation stops a workflow
+
+A [workflow](weaver-operations.md#a-workflow-composes-ordinary-operations) stops when a command returns failure or raises a Weaver error. It does not continue to a later command because an earlier command preserved some independent progress.
 
 Fault tolerance remains local to a command inside the workflow. For example, a fault-tolerant Load may finish additional work, but its failed or partially successful result still stops the following workflow commands. Commands that completed before the failure remain applied; the workflow does not roll them back.
 
 ## Reports and catalogue state describe partial work
 
-Build reports the outcome of its planned installation actions. Load records each settled piece of work in the catalogue, including failed, blocked and pending outcomes. Installed Test runs record each validation outcome. Load statistics exist only for work that executed, and bookmarks advance only after a clean successful load. Direct source-file Tests do not publish estate evidence. Load and Test records created inside one workflow share its workflow identifier.
+Build reports the outcome of its planned installation actions. Load records each settled piece of work in the catalogue, including failed, blocked and pending outcomes. Installed Test runs record each validation outcome. Load statistics exist only for work that executed, and bookmarks advance only after a clean successful load. Direct source-file Tests do not publish estate evidence. A workflow's shared identifier correlates recorded Load and Test work before and including the command that stops it; later commands have no outcomes to record.
 
 Fault tolerance does not retry failed Build actions, Load work, validations or workflow commands. A later attempt is a new operation against the state left by the previous one. Exact statuses, options, output fields and persistence guarantees belong in Reference and Contracts; the [Load contract](../contracts/load.md) defines the current Load surface.
