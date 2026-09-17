@@ -69,7 +69,10 @@ nav:
       - get-started/index.md
       - Installation: get-started/installation.md
       - First project: get-started/first-project.md
-  - Guides: guides/index.md
+  - Guides:
+      - guides/index.md
+      - Lakehouse pipeline: guides/lakehouse-pipeline.md
+      - Warehouse pipeline: guides/warehouse-pipeline.md
   - Core concepts:
       - core-concepts/index.md
       - How Weaver works: core-concepts/how-weaver-works.md

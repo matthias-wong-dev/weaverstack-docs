@@ -6,8 +6,6 @@ This project declares one Warehouse Table and one Test in deterministic T-SQL. I
 initialise → check → build → load → test → health → weaver workflow full
 ```
 
-The declarations below are also kept as a [checked example fixture](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-first-project).
-
 ## Prerequisites
 
 - [Weaver installed](installation.md).

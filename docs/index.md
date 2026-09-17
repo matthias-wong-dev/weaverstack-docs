@@ -8,7 +8,8 @@ The project stays separate from deployment configuration. The same logical item 
 
 1. [Install Weaver](get-started/installation.md).
 2. [Create and run a first project](get-started/first-project.md).
-3. Read [How Weaver works](core-concepts/how-weaver-works.md) for the product's core model.
+3. Author a [Lakehouse pipeline](guides/lakehouse-pipeline.md) or [Warehouse pipeline](guides/warehouse-pipeline.md).
+4. Read [How Weaver works](core-concepts/how-weaver-works.md) for the product's core model.
 
 ## Documentation
 

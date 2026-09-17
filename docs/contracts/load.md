@@ -88,3 +88,5 @@ A user can rely on Load to:
 8. record completed work before reporting a successful run.
 
 These guarantees describe Load behaviour. They do not make catalogue tables, internal planning nodes or execution transports public extension points.
+
+For complete examples, see [Author a Lakehouse pipeline](../guides/lakehouse-pipeline.md) and [Author a Warehouse pipeline](../guides/warehouse-pipeline.md).

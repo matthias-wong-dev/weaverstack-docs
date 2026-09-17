@@ -31,6 +31,8 @@ Warehouse/Operations
 
 Documents beneath those items declare tables, folders, views, tests, assumptions, shortcuts and supported Warehouse objects. These declarations describe the estate Weaver should build and operate.
 
+The [Lakehouse pipeline](../guides/lakehouse-pipeline.md) and [Warehouse pipeline](../guides/warehouse-pipeline.md) show the two main authoring paths.
+
 ### Physical bindings
 
 `workspace-config.yml` names the Fabric workspace, catalogue Warehouse and physical target for each logical item:
@@ -57,6 +59,8 @@ Build changes structure. It does not perform the project's data loads.
 Load runs the installed data work for the selected logical items. Test runs the installed Tests and Assumptions. Dependencies determine ordering within the selected scope; selecting an item does not silently add another item.
 
 Both operations record their outcomes in the Weaver catalogue.
+
+The [Load contract](../contracts/load.md) states the exact selection, ordering and failure behaviour.
 
 ### Operational state and health
 
