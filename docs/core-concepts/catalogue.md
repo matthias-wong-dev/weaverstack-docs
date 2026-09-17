@@ -1,6 +1,6 @@
 # Weaver catalogue
 
-The Weaver catalogue is a configured Fabric Warehouse that records the installed estate and its operational state. Its tables live in the `_` schema. Build publishes installed state there; Load and Test update runtime state; Health reads both.
+The Weaver catalogue is a configured Fabric Warehouse that records the installed estate and its operational state. Its tables live in the `_` schema. [Weaver operations](weaver-operations.md) explains how Build publishes installed state, Load and Test update runtime state, and Health reads both.
 
 Project source and catalogue state answer different questions:
 
@@ -76,28 +76,8 @@ History records what happened. Rebuilding an object does not remove it.
 
 Build still compares the mirrored Registry signatures with the same project documents. An unchanged borrowed object remains a View or shortcut over its source. When Build installs a changed borrowed object locally, it removes that object's `_.Mirror` row; unchanged objects remain borrowed. Health reads current Load state for remaining borrowed objects from the configured source catalogue and local state for materialised objects.
 
-## How operations use the catalogue
-
-### Build
-
-Build reads installed state, compares it with the selected project declarations and physical inventory, applies structural changes, then publishes the resulting dictionaries, bindings and certifications. A successful Build is what moves a source change into the installed estate.
-
-Dependencies affect ordering and change impact, but they do not widen the logical-item selection. See [Dependencies](dependencies.md).
-
-### Load
-
-Load resolves selected logical items through `_.Installation`, runs their installed load work in dependency order, advances `_.Bookmark` after clean loads, updates `_.LoadStatus`, and appends statistics and log records. The [Load contract](../contracts/load.md) defines the execution boundary.
-
-### Test
-
-Test selects installed Tests and Assumptions, runs their installed forms, updates `_.TestStatus`, and appends log records.
-
-### Health
-
-Health combines installed declarations, certifications, dependencies, current Load and Test state, and optionally physical inventory. For borrowed objects it also reads current Load state from the source catalogue named by the selected workspace configuration.
-
 ## Inspect, but do not write
 
 The `_` schema is a queryable public surface, not a write extension point. Do not insert, update or delete catalogue rows by hand. Manual writes can separate logical identity from its target, certify an object that Build did not install, alter dependency ordering or detach a result from the workflow that produced it.
 
-Use Build, Load, Test, mirror and wipe as writers. Use Health, command output and read-only queries for inspection. Generated procedures and Weaver's internal write order are implementation details rather than additional catalogue contracts.
+Use Build, Load, Test, mirror and wipe as writers. Use Health, command output and read-only queries for inspection. Generated procedures and Weaver's internal write order are implementation details rather than additional catalogue contracts. The [Load contract](../contracts/load.md) defines Load's execution and recording boundary.

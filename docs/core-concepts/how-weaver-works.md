@@ -28,24 +28,10 @@ A logical item has a project identity such as `Lakehouse/Landing` or `Warehouse/
 
 The same project can use different workspace configuration in development and production. The logical item names and Weaver documents remain unchanged while the workspace, catalogue and physical targets differ.
 
-## Build, Load and Test
+## Realise and operate the estate { #build }
 
-Build, Load and Test are the fundamental lifecycle.
+[Build, Load and Test](weaver-operations.md) connect the authored project to an operating estate. Build realises selected documents in Fabric and records the installed generation. Load runs that generation's data-producing work, and Test checks the resulting estate. Health reads and summarises the state they leave.
 
-### Build
-
-Build reads the project, resolves the selected logical items and their dependencies, and installs their definitions into the bound Fabric items. A successful Build records the installed generation and bindings in the catalogue.
-
-### Load
-
-Load runs the installed data work for the selected items. It reads the definitions and bindings recorded by Build rather than reparsing edited project files.
-
-### Test
-
-Test runs the installed Tests and Assumptions for the selected items and records their outcomes.
-
-This boundary allows source to move ahead while the previously built generation continues to run. Build the changed items when the edited declarations should become operational.
-
-Dependencies affect Build impact and execution order inside the selected scope. They do not add unselected items to an operation.
+The separation lets project source change without silently changing installed work. Build is the boundary at which edited declarations become operational.
 
 Continue with [Projects and estates](projects-and-estates.md) for the relationship between authored source and installed state.

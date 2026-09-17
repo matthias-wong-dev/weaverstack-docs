@@ -2,7 +2,7 @@
 
 A development estate can start from production's installed state without maintaining a second set of Weaver documents. The selected workspace configuration changes the catalogue and physical targets; the project keeps the same logical item identities and declarations.
 
-This page assumes the mirror and Session/workflow models. It describes the development loop rather than command syntax. See the [CLI reference](../reference/cli.md) for command forms and options.
+This page assumes the mirror and Session/workflow models. It applies the [Build, Load and Test lifecycle](weaver-operations.md) to a mirrored development estate rather than repeating the operation model or command syntax. See the [CLI reference](../reference/cli.md) for command forms and options.
 
 ## The loop
 
@@ -105,4 +105,4 @@ Health combines both sides:
 
 Continue with another edit, Build, Load, Test and Health cycle. Re-mirror when development needs a fresh production baseline; that starts again by replacing the configured development destinations.
 
-The [Catalogue](catalogue.md) explains the state that changes through this loop. Exact workspace-configuration fields, precedence, mirror selection and command grammar belong in Reference.
+The [Catalogue](catalogue.md) explains the state that changes through this loop. [Weaver operations](weaver-operations.md) explains the lifecycle boundary between authored, installed and operational state. Exact workspace-configuration fields, precedence, mirror selection and command grammar belong in Reference.

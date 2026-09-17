@@ -8,13 +8,13 @@ Weaver reads three sources of meaning together:
 - **Document type** identifies what the file declares, such as a Table, View or Test.
 - **Metadata** names the declaration and describes properties such as schema, keys, dependencies and load behaviour.
 
-Together they establish the document's logical identity and how Build, Load or Test treats it. Weaver checks that the path, filename, document type and declared identity agree. Exact filenames, metadata keys and language-specific syntax belong in Reference and the authoring guides.
+Together they establish the document's logical identity and meaning. Weaver checks that the path, filename, document type and declared identity agree. Exact filenames, metadata keys and language-specific syntax belong in Reference and the authoring guides.
 
 ## Data documents
 
 ### Table
 
-A Table declares stored tabular data. Its document describes the table's identity and data contract and may define the work that populates it. Build installs the table definition and any load work; Load runs installed load work.
+A Table declares stored tabular data. Its document describes the table's identity and data contract and may define the work that populates it.
 
 Tables can belong to a Lakehouse or Warehouse. A Lakehouse Table is owned by the item's `Tables` area.
 
@@ -26,7 +26,7 @@ Folders are Lakehouse documents. A Folder and Table may use the same `Schema.Obj
 
 ### View
 
-A View declares a query-defined relation. Build installs the view after the Tables, Folders or other Views it reads. A View has no separate Load step.
+A View declares a query-defined relation over Tables, Folders or other Views.
 
 ## Validation documents
 
@@ -38,19 +38,17 @@ A Test compares an expected relation with an actual relation. It passes when the
 
 An Assumption returns rows that contradict a condition. It passes when the result is empty.
 
-Tests and Assumptions are installed by Build and run by Test. They read the estate but do not materialise data objects.
-
 ## Connection and structure documents
 
 ### Shortcut
 
 A Shortcut declares a relation from one item to data elsewhere. A logical Shortcut names another Weaver document and carries that relationship across item boundaries. A physical Shortcut names an external Fabric location directly.
 
-Shortcuts participate in Build ordering. A logical Shortcut is also how a document in one logical item declares a managed dependency on data owned by another.
+A logical Shortcut is also how a document in one logical item declares a managed dependency on data owned by another.
 
 ### Warehouse programmable
 
-A Warehouse programmable declares a stored procedure that Build manages in a Warehouse item. It is installed structure rather than a Table or View and has no independent Load step.
+A Warehouse programmable declares a stored procedure in a Warehouse item. It is neither a Table nor a View.
 
 ### Schema metadata
 
@@ -60,4 +58,4 @@ Schema metadata adds a description to a schema or declares a schema that no Tabl
 
 An item can include supporting code and data that travel with its installed work. Those files do not become independently selectable Weaver documents merely because they are beneath the item.
 
-The next concept is [Dependencies](dependencies.md): how documents state what they read and how those relationships affect Build, Load and Test.
+The next concept is [Weaver operations](weaver-operations.md): how Build, Load and Test turn these documents into an installed and operating estate.
