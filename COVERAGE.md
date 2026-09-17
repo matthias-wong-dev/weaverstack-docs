@@ -1,21 +1,21 @@
-# Documentation coverage gaps
+# Internal documentation coverage map
 
-This map records what the public site does not yet explain. A named future path is an ownership decision, not a claim that the page or contract already exists. Paths in backticks are therefore not links.
+This maintainer-only map records what the public site does not yet explain. It lives outside `docs/` and is not rendered on `docs.weaverstack.dev`. A named path is an ownership decision, not a claim that the page or contract already exists.
 
 ## Concepts
 
 | Missing subject | Current evidence | Future authoritative home | Needed coverage |
 | --- | --- | --- | --- |
-| Logical identity and naming | Repository parser, identity tests, repository design | `concepts/identity.md` | Item, area, schema and object identity; filename rules; logical versus physical names; reserved `_` and `_weaver` names. |
-| Repository discovery | Repository reader and discovery tests | `concepts/repository.md` | Recognised trees, ignored content, `_ignore`, helper modules, static parsing and source locations. |
-| Dependency graph | Declaration graph and build/run graph tests | `concepts/dependencies.md` | Inferred and declared dependencies, item layers, cycles, impact propagation and run-scope boundaries. |
-| Shortcuts | Shortcut declarations, planner tests and Fabric journeys | `concepts/shortcuts.md` | Logical and physical targets, Lakehouse and Warehouse forms, ownership, cross-workspace limits and read semantics. |
-| Incremental build | Build selection, Registry and inventory tests | `concepts/incremental-build.md` | Signatures, physical reconciliation, changed/impacted selection, prune, prohibited rebuild and certification. |
-| Load execution | Runtime graph, load reports and acceptance journeys | `concepts/load.md` | Bookmarks, fault tolerance, barriers, reload, stale selection, row statistics and failure boundaries. |
-| Tests and Assumptions | Validation source, tests and design | `concepts/validation.md` | Test versus Assumption semantics, installed and direct execution, diagnostic-row handling and persisted outcomes. |
-| Health model | Health source, representation tests and design | `concepts/health.md` | Green/Amber/Red rules, freshness, inventory checks, findings, history bounds and exit status. |
-| Sessions and host positions | Session code, desktop/notebook tests and architecture design | `concepts/sessions.md` | Desktop versus Fabric execution, resource reuse, lazy Spark startup, workspace scope and supported host-specific behaviour. |
-| Catalogue model | Catalogue source, table declarations and design | `concepts/catalogue.md` | Certification, installed bindings, runtime state, read-only consumer expectations and upgrade boundaries. |
+| Logical identity and naming | Repository parser, identity tests, repository design | `core-concepts/identity.md` | Item, area, schema and object identity; filename rules; logical versus physical names; reserved `_` and `_weaver` names. |
+| Repository discovery | Repository reader and discovery tests | `core-concepts/repository.md` | Recognised trees, ignored content, `_ignore`, helper modules, static parsing and source locations. |
+| Dependency graph | Declaration graph and build/run graph tests | `core-concepts/dependencies.md` | Inferred and declared dependencies, item layers, cycles, impact propagation and run-scope boundaries. |
+| Shortcuts | Shortcut declarations, planner tests and Fabric journeys | `core-concepts/shortcuts.md` | Logical and physical targets, Lakehouse and Warehouse forms, ownership, cross-workspace limits and read semantics. |
+| Incremental build | Build selection, Registry and inventory tests | `core-concepts/incremental-build.md` | Signatures, physical reconciliation, changed/impacted selection, prune, prohibited rebuild and certification. |
+| Load execution | Runtime graph, load reports and acceptance journeys | `core-concepts/load.md` | Bookmarks, fault tolerance, barriers, reload, stale selection, row statistics and failure boundaries. |
+| Tests and Assumptions | Validation source, tests and design | `core-concepts/validation.md` | Test versus Assumption semantics, installed and direct execution, diagnostic-row handling and persisted outcomes. |
+| Health model | Health source, representation tests and design | `core-concepts/health.md` | Green/Amber/Red rules, freshness, inventory checks, findings, history bounds and exit status. |
+| Sessions and host positions | Session code, desktop/notebook tests and architecture design | `core-concepts/sessions.md` | Desktop versus Fabric execution, resource reuse, lazy Spark startup, workspace scope and supported host-specific behaviour. |
+| Catalogue model | Catalogue source, table declarations and design | `core-concepts/catalogue.md` | Certification, installed bindings, runtime state, read-only consumer expectations and upgrade boundaries. |
 
 ## Guides
 

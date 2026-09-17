@@ -1,9 +1,12 @@
 # Reference
 
-Reference pages state accepted public interfaces without repeating the architectural rationale behind them.
+Reference pages describe supported interfaces tersely and precisely. Use them to look up syntax, selection rules and command behaviour; use Guides for complete tasks and Core concepts for the mental model behind them.
 
-- [CLI reference](cli.md) — current commands, selection grammar and shared options.
-- Python API reference — not yet published; see the [coverage gap map](../gaps.md).
-- Configuration reference — not yet published; see the [coverage gap map](../gaps.md).
+- [CLI reference](cli.md) — commands, shared options and selection grammar.
+- [Load contract](../contracts/load.md) — exact behavioural guarantees for Load.
 
-Until a dedicated page exists, the output of `weaver <command> --help` is the exact option reference for the installed version.
+For the exact options in an installed version, run:
+
+```bash
+weaver <command> --help
+```

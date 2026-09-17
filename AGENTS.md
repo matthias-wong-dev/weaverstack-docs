@@ -31,14 +31,16 @@ Avoid claims such as “powerful”, “seamless”, “robust” and “enterpr
 
 Examples use a neutral parcel and logistics domain. Keep them small and independent rather than building one giant tutorial estate.
 
-## Initial site structure
+## Public site structure
 
 - Get started
 - Guides
-- Architecture and concepts
+- Core concepts
 - Reference
 - Contracts
 - Advanced
 - Contributing
+
+`COVERAGE.md` is the internal documentation ledger. Keep it outside `docs/` and out of public navigation.
 
 Coverage comes before volume: give each public concept, command, API and contract an authoritative home before filling every page.

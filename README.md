@@ -13,8 +13,12 @@ uv sync --locked --python 3.11
 uv run mkdocs serve
 ```
 
-Build the same site checked by CI:
+Build the site strictly before submitting a change:
 
 ```bash
 uv run mkdocs build --strict
 ```
+
+## Licence
+
+This repository is licensed under the [Mozilla Public License 2.0](LICENSE), matching Weaver.

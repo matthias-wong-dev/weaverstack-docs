@@ -1,22 +1,27 @@
 # First project
 
-This path creates one Warehouse table from a deterministic T-SQL query. It exercises project generation, local validation, structural build and data load without requiring Spark-authored code.
+This path creates one Warehouse table and one Test from deterministic T-SQL. It covers the normal Weaver lifecycle without requiring Spark-authored code:
+
+```text
+initialise → check → build → load → test → health → workflow
+```
 
 ## 1. Create the project
 
-Choose a Fabric workspace you can modify. The command below creates or reuses the catalogue Warehouse, project Warehouse and Environment, then writes the local project. It does not publish the Environment.
+Choose a Fabric workspace you can modify. The command creates or reuses the catalogue Warehouse and project Warehouse, then writes the local project:
 
 ```bash
 weaver initialise \
   --workspace "Parcel Development" \
   --project-folder ./parcel-ops \
   --catalogue Catalogue \
-  --environment Weaver \
   --warehouse Operations \
   --no-example
 ```
 
-Without `--non-interactive`, setup reviews the choices before changing Fabric. For unattended setup, provide the project folder, workspace and at least one Lakehouse or Warehouse, then add `--non-interactive`.
+Current versions of `weaver initialise` also create or reuse the default `Weaver` Environment and write its local definition. This Warehouse-only example does not use or publish that Environment.
+
+Without `--non-interactive`, setup reviews the choices before changing Fabric. For unattended setup, provide the project folder, workspace and Warehouse, then add `--non-interactive`.
 
 Move into the generated project:
 
@@ -36,7 +41,7 @@ parcel-ops/
     └── Operations/
 ```
 
-`workspace-config.yml` binds the logical `Warehouse/Operations` item to the physical Warehouse selected during setup. The catalogue is a separate Warehouse whose `_` schema stores Weaver's installed and operational state.
+`workspace-config.yml` binds the logical `Warehouse/Operations` item to the physical Warehouse selected during setup. The catalogue is a separate Warehouse that holds Weaver's installed and operational state.
 
 ## 2. Declare a table
 
@@ -66,49 +71,101 @@ from (values
 
 The containing item chooses the SQL dialect: a `.sql` document directly under a Warehouse item is T-SQL. Its filename and `Table ID` identify the same `Schema.Object`.
 
-## 3. Check the project locally
+## 3. Declare a Test
+
+Create `Warehouse/Operations/tests/Parcel.StatusMatches.sql`:
+
+```sql
+/*
+Test ID: Parcel.StatusMatches
+
+Description: Parcel status contains the rows declared by this example.
+
+Primary key: Parcel ID
+*/
+select v.ParcelId as [Parcel ID]
+     , v.ParcelStatus as [Status]
+from (values
+    ('P-1001', 'In transit'),
+    ('P-1002', 'Delivered')
+) as v (ParcelId, ParcelStatus);
+
+select [Parcel ID], [Status]
+from [Parcel].[Status];
+```
+
+A Warehouse Test supplies two result sets: the expected rows, then the actual rows. Weaver compares them by the declared primary key.
+
+## 4. Check the project locally
 
 ```bash
 weaver check
 ```
 
-`check` parses and validates the current project without contacting Fabric. It catches repository, identity and metadata errors, but it does not prove workspace permissions or Fabric connectivity. Use `weaver doctor --workspace "Parcel Development"` for those crossings.
+`check` parses and validates the current project without contacting Fabric. It catches repository, identity and metadata errors, but it does not prove workspace permissions or Fabric connectivity. Use `weaver doctor --workspace "Parcel Development"` to check access to the Fabric services Weaver needs.
 
-## 4. Build the structure
+## 5. Build the structure
 
 ```bash
 weaver build
 ```
 
-From the project root, Weaver reads `workspace-config.yml` automatically. Build parses the repository, resolves the target, compares it with Fabric and the catalogue, prepares a frozen build bundle, installs the selected structural actions, and updates the catalogue. It does not run the table's query to populate business rows.
+From the project root, Weaver reads `workspace-config.yml` automatically. Build applies the structural changes declared by the project and installs the Table and Test definitions. It does not run the table's query to populate business rows.
 
 The first build also creates the catalogue tables in the configured catalogue Warehouse.
 
-## 5. Load the rows
+## 6. Load the rows
 
 ```bash
 weaver load Warehouse/Operations
 ```
 
-Load runs installed loadable objects for the named logical item. In this example it executes the installed Warehouse load for `Parcel.Status` and records the outcome in the catalogue.
+Load runs the installed loadable objects owned by the logical item. Here it executes the installed Warehouse load for `Parcel.Status` and records the outcome in the catalogue.
 
-Finish by reading the estate's operational state:
+## 7. Run the Test
+
+```bash
+weaver test Warehouse/Operations
+```
+
+Test runs the installed Test and records whether the actual rows match the expected rows. A failed or invalid Test returns a non-zero exit status.
+
+## 8. Read health
 
 ```bash
 weaver health --item Warehouse/Operations
 ```
 
-`health` exits zero only when the selected estate is Green. A recent successful load can still coexist with an Amber or Red finding that needs attention; read the section status and finding rather than relying on command completion alone.
+Health reports the Build, Load and Test state for the selected item. It exits zero only when the selected estate is Green; read the section status and finding when it is Amber or Red.
+
+## 9. Run the lifecycle as a workflow
+
+Initialisation generated `workflow.yml` with a `full` workflow:
+
+```yaml
+workflows:
+  full:
+    - build
+    - load
+    - test
+    - health
+```
+
+Run it with:
+
+```bash
+weaver workflow full
+```
+
+The four commands run in order in one Session. A workflow stops when a command returns a non-zero result.
 
 ## Next runs
 
-After changing the declaration, repeat:
+After changing a declaration, run the stages individually or use the workflow:
 
 ```bash
 weaver check
-weaver build
-weaver load Warehouse/Operations
-weaver health --item Warehouse/Operations
+weaver workflow full
 ```
 
-Build selects changed and dependency-impacted objects from the declared repository and installed state. A wipe is not part of the normal edit-build-load loop.
+Build, Load and Test are separate operations. Build installs changed declarations, Load runs installed data work, and Test checks the installed estate. A wipe is not part of the normal edit-build-load-test loop.

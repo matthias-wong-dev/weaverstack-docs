@@ -1,16 +1,5 @@
 # Guides
 
-Task-oriented guides will live here. The initial documentation provides the complete first path in [First project](../get-started/first-project.md) and keeps unverified procedures out of the site.
+Guides show how to complete a task with Weaver. Each guide states its prerequisites, uses a small independent example and links to the exact concept or reference needed for detail.
 
-Planned guides include:
-
-- authoring Lakehouse Tables and Folders;
-- authoring Warehouse tables, views and programmables;
-- declaring dependencies and shortcuts;
-- loading incrementally and using bookmarks;
-- writing Tests and Assumptions;
-- using workflows and persistent sessions;
-- diagnosing connectivity and estate health;
-- operating development and production bindings.
-
-The [coverage gap map](../gaps.md) assigns each subject an intended authoritative page.
+Begin with [First project](../get-started/first-project.md) to initialise a project and run Build, Load, Test and Health. Use [How Weaver works](../core-concepts/how-weaver-works.md) when the distinction between project declarations, physical bindings and installed state matters to the task.

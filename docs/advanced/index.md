@@ -1,14 +1,7 @@
 # Advanced
 
-The following workflows are implemented but need dedicated operating guides:
+Advanced workflows combine ordinary Weaver operations across environments or execution positions. They include frozen bundle handoff, estate mirroring and running notebooks in Fabric.
 
-- generating a bundle with `weaver build --bundle-only` and installing it separately;
-- running several commands through one `weaver session`;
-- defining ordered command sequences in `workflow.yml`;
-- publishing a released or development build into a Fabric Environment;
-- mirroring an installed catalogue into another estate;
-- using stale-only loads and explicit freshness cutoffs;
-- running Weaver from a Fabric notebook;
-- managing Fabric notebooks and capacities through `weaver fabric`.
+The same public rules still apply: project declarations remain separate from physical bindings, destructive scope is settled before execution, and installed state belongs to the Weaver catalogue.
 
-The [CLI reference](../reference/cli.md) gives the current command grammar. The [coverage gap map](../gaps.md) names the future guide and contract page for each workflow. This section does not imply that internal planner, catalogue or transport modules are public extension points.
+Use the [CLI reference](../reference/cli.md) for current command syntax and [How Weaver works](../core-concepts/how-weaver-works.md) for the shared model.

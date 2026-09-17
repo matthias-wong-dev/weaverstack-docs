@@ -103,7 +103,7 @@ weaver wipe Warehouse/Operations_Dev \
   --yes
 ```
 
-Commands that accept `--json` emit one JSON document to stdout and do not prompt. JSON schemas and format-version guarantees are not yet collected in this site; see [coverage gaps](../gaps.md).
+Commands that accept `--json` emit one JSON document to stdout and do not prompt. Output fields and version guarantees are command-specific; do not infer a stable schema from one example.
 
 ## Build and install
 
@@ -140,4 +140,4 @@ Installation executes the bundle without reopening project source or replanning 
 
 `wipe --dry-run` displays the settled plan and changes nothing. With named targets, wipe empties exactly those physical items. With none, it discovers the installed estate from the catalogue and empties the catalogue last. `--unbind` instead preserves the catalogue and removes its claims for the named targets; it requires both a catalogue and at least one target.
 
-`mirror` also empties destination items. Inspect its plan and require `--yes` for unattended execution. Detailed mirror configuration and fork semantics remain a documented [coverage gap](../gaps.md).
+`mirror` also empties destination items. Inspect its plan and require `--yes` for unattended execution. The source catalogue is read before Weaver changes the destination, and the settled plan names the destination items it will empty.

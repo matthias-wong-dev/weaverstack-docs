@@ -70,13 +70,14 @@ nav:
       - Installation: get-started/installation.md
       - First project: get-started/first-project.md
   - Guides: guides/index.md
-  - Architecture and concepts:
-      - concepts/index.md
-      - Architecture: concepts/architecture.md
+  - Core concepts:
+      - core-concepts/index.md
+      - How Weaver works: core-concepts/how-weaver-works.md
   - Reference:
       - reference/index.md
       - CLI: reference/cli.md
-  - Contracts: contracts/index.md
+  - Contracts:
+      - contracts/index.md
+      - Load: contracts/load.md
   - Advanced: advanced/index.md
   - Contributing: contributing/index.md
-  - Documentation gaps: gaps.md

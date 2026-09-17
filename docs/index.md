@@ -1,23 +1,23 @@
 # Weaver
 
-Weaver builds and operates Microsoft Fabric data estates from a version-controlled project. A project declares logical Lakehouse and Warehouse items with ordinary Python, Spark SQL, T-SQL, metadata and tests. Weaver resolves their dependencies, builds the required structure, runs loads and records installed state in a catalogue.
+Weaver builds and operates Microsoft Fabric data estates from a version-controlled project. A project declares logical Lakehouse and Warehouse items with Python, Spark SQL, T-SQL, metadata and tests. Weaver resolves their dependencies, builds the required structures, runs loads and tests, and records operational state in a catalogue.
 
-The repository stays separate from deployment configuration. The same logical item can bind to different physical Fabric items in development and production.
+The project stays separate from deployment configuration. The same logical item can bind to different physical Fabric items in development and production.
 
 ## Start here
 
 1. [Install Weaver](get-started/installation.md).
 2. [Create and run a first project](get-started/first-project.md).
-3. Read the [architecture overview](concepts/architecture.md) before designing a larger estate.
+3. Read [How Weaver works](core-concepts/how-weaver-works.md) for the product's core model.
 
 ## Documentation
 
-- [Get started](get-started/index.md) — install Weaver and complete a first build and load.
-- [Guides](guides/index.md) — task-oriented documentation as coverage is added.
-- [Architecture and concepts](concepts/index.md) — the repository, build bundle, Fabric targets and catalogue.
-- [Reference](reference/index.md) — command and, later, Python API details.
-- [Contracts](contracts/index.md) — stable project, configuration and machine-readable interfaces.
-- [Advanced](advanced/index.md) — controlled deployment and operating patterns.
-- [Contributing](contributing/index.md) — how to improve these public docs.
+- [Get started](get-started/index.md) — install Weaver and run the basic lifecycle.
+- [Guides](guides/index.md) — complete a specific task.
+- [Core concepts](core-concepts/index.md) — understand the model needed to reason about Weaver.
+- [Reference](reference/index.md) — look up commands and supported interfaces.
+- [Contracts](contracts/index.md) — read the behaviour Weaver guarantees.
+- [Advanced](advanced/index.md) — work with specialised operating patterns.
+- [Contributing](contributing/index.md) — improve the public documentation.
 
-This site documents public behaviour. Weaver's source repository remains the authority for implementation design and internal module ownership. [Current coverage gaps](gaps.md) are listed explicitly rather than filled with inferred behaviour.
+This site documents public behaviour. Implementation design and internal module ownership belong in the Weaver source repository.
