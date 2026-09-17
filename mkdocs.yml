@@ -73,6 +73,10 @@ nav:
       - guides/index.md
       - Lakehouse pipeline: guides/lakehouse-pipeline.md
       - Warehouse pipeline: guides/warehouse-pipeline.md
+      - Incremental loads: guides/incremental-loads.md
+      - Shortcuts: guides/shortcuts.md
+      - Validation: guides/validation.md
+      - Workspaces and Environments: guides/environments.md
   - Core concepts:
       - core-concepts/index.md
       - How Weaver works: core-concepts/how-weaver-works.md
