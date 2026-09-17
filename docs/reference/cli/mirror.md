@@ -1,38 +1,48 @@
 # `weaver mirror`
 
 <!-- BEGIN GENERATED CLI -->
-```text
-usage: weaver mirror [-h] [--item ITEM[=TARGET]] [--no-item]
-                     [--mirror CATALOGUE] [--workspace WORKSPACE]
-                     [--workspace-config WORKSPACE_CONFIG]
-                     [--environment ENVIRONMENT] [--catalogue CATALOGUE]
-                     [--yes] [--json] [--non-interactive]
 
-options:
-  -h, --help            show this help message and exit
-  --item ITEM[=TARGET]  A logical item to rebind, such as Warehouse/Model or
-                        Warehouse/Model=Warehouse/Model_Dev. Repeat to select
-                        multiple items. Naming none selects every configured
-                        target.
-  --no-item             Fork the catalogue and rebind no physical item.
-  --mirror CATALOGUE    Catalogue to fork, for example Warehouse/Weaver.
-                        Overrides mirror: in workspace configuration.
-  --workspace WORKSPACE
-                        Fabric Workspace name.
-  --workspace-config WORKSPACE_CONFIG
-                        Workspace configuration file.
-  --environment ENVIRONMENT
-                        Fabric Environment name or Workspace/Environment
-                        reference.
-  --catalogue CATALOGUE
-                        Where the Weaver catalogue lives, for example
-                        Warehouse/Weaver.
-  --yes                 Authorise emptying the destinations without asking.
-  --json                Emit the result as JSON.
-  --non-interactive     Do not read stdin, wait for a keypress or open browser
-                        sign-in. Missing authorisation or required input is an
-                        error.
+## Synopsis
+
+```text
+weaver mirror [-h] [--item ITEM[=TARGET]] [--no-item] [--mirror CATALOGUE] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--yes] [--json] [--non-interactive]
 ```
+
+## Options
+
+`-h, --help`
+: show this help message and exit
+
+`--item ITEM[=TARGET]`
+: A logical item to rebind, such as Warehouse/Model or Warehouse/Model=Warehouse/Model_Dev. Repeat to select multiple items. Naming none selects every configured target.
+
+`--no-item`
+: Fork the catalogue and rebind no physical item.
+
+`--mirror CATALOGUE`
+: Catalogue to fork, for example Warehouse/Weaver. Overrides mirror: in workspace configuration.
+
+`--workspace WORKSPACE`
+: Fabric Workspace name.
+
+`--workspace-config WORKSPACE_CONFIG`
+: Workspace configuration file.
+
+`--environment ENVIRONMENT`
+: Fabric Environment name or Workspace/Environment reference.
+
+`--catalogue CATALOGUE`
+: Where the Weaver catalogue lives, for example Warehouse/Weaver.
+
+`--yes`
+: Authorise emptying the destinations without asking.
+
+`--json`
+: Emit the result as JSON.
+
+`--non-interactive`
+: Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.
+
 <!-- END GENERATED CLI -->
 
 ## Responsibility and selection

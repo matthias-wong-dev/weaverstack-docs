@@ -1,47 +1,50 @@
 # `weaver wipe`
 
 <!-- BEGIN GENERATED CLI -->
+
+## Synopsis
+
 ```text
-usage: weaver wipe [-h] [--workspace WORKSPACE]
-                   [--workspace-config WORKSPACE_CONFIG]
-                   [--environment ENVIRONMENT] [--catalogue CATALOGUE]
-                   [--unbind] [--dry-run] [--yes] [--json] [--non-interactive]
-                   [TARGET ...]
-
-Empty physical Fabric items and the catalogue that records them.
-
-Naming targets selects exactly those physical items. Naming none selects the
-estate recorded in the catalogue.
-
-A resolved catalogue is emptied last. Pass --unbind to keep it and remove its
-claims for the emptied targets.
-
-positional arguments:
-  TARGET                Physical items to empty, as Lakehouse/Name or
-                        Warehouse/Name. Naming none empties the estate the
-                        catalogue records.
-
-options:
-  -h, --help            show this help message and exit
-  --workspace WORKSPACE
-                        Fabric Workspace name.
-  --workspace-config WORKSPACE_CONFIG
-                        Workspace configuration file.
-  --environment ENVIRONMENT
-                        Fabric Environment name or Workspace/Environment
-                        reference.
-  --catalogue CATALOGUE
-                        Where the Weaver catalogue lives, for example
-                        Warehouse/Weaver.
-  --unbind              Keep the catalogue and remove its claims for the named
-                        targets. Requires a catalogue and at least one target.
-  --dry-run             Show the estate this would empty.
-  --yes                 Authorise the removal without asking.
-  --json                Emit the result as JSON.
-  --non-interactive     Do not read stdin, wait for a keypress or open browser
-                        sign-in. Missing authorisation or required input is an
-                        error.
+weaver wipe [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--unbind] [--dry-run] [--yes] [--json] [--non-interactive] [TARGET ...]
 ```
+
+## Positional arguments
+
+`TARGET`
+: Physical items to empty, as Lakehouse/Name or Warehouse/Name. Naming none empties the estate the catalogue records.
+
+## Options
+
+`-h, --help`
+: show this help message and exit
+
+`--workspace WORKSPACE`
+: Fabric Workspace name.
+
+`--workspace-config WORKSPACE_CONFIG`
+: Workspace configuration file.
+
+`--environment ENVIRONMENT`
+: Fabric Environment name or Workspace/Environment reference.
+
+`--catalogue CATALOGUE`
+: Where the Weaver catalogue lives, for example Warehouse/Weaver.
+
+`--unbind`
+: Keep the catalogue and remove its claims for the named targets. Requires a catalogue and at least one target.
+
+`--dry-run`
+: Show the estate this would empty.
+
+`--yes`
+: Authorise the removal without asking.
+
+`--json`
+: Emit the result as JSON.
+
+`--non-interactive`
+: Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.
+
 <!-- END GENERATED CLI -->
 
 ## Responsibility and selection

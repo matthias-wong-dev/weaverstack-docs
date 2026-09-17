@@ -1,33 +1,38 @@
 # `weaver fabric environment`
 
 <!-- BEGIN GENERATED CLI -->
-## `weaver fabric environment publish`
+
+## Synopsis
 
 ```text
-usage: weaver fabric environment publish [-h] [--path DIRECTORY] [--dev]
-                                         [--non-interactive]
-                                         [--workspace WORKSPACE]
-                                         [--workspace-config WORKSPACE_CONFIG]
-                                         [ENVIRONMENT]
-
-positional arguments:
-  ENVIRONMENT           Fabric Environment name or Workspace/Environment
-                        reference.
-
-options:
-  -h, --help            show this help message and exit
-  --path DIRECTORY      Local <Name>.Environment definition directory. It
-                        names the Environment and supplies the complete
-                        definition.
-  --dev                 Supply Weaver as a wheel built from this checkout.
-  --non-interactive     Do not read stdin, wait for a keypress or open browser
-                        sign-in. Missing authorisation or required input is an
-                        error.
-  --workspace WORKSPACE
-                        Fabric Workspace name.
-  --workspace-config WORKSPACE_CONFIG
-                        Workspace configuration file.
+weaver fabric environment publish [-h] [--path DIRECTORY] [--dev] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [ENVIRONMENT]
 ```
+
+## Positional arguments
+
+`ENVIRONMENT`
+: Fabric Environment name or Workspace/Environment reference.
+
+## Options
+
+`-h, --help`
+: show this help message and exit
+
+`--path DIRECTORY`
+: Local <Name>.Environment definition directory. It names the Environment and supplies the complete definition.
+
+`--dev`
+: Supply Weaver as a wheel built from this checkout.
+
+`--non-interactive`
+: Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.
+
+`--workspace WORKSPACE`
+: Fabric Workspace name.
+
+`--workspace-config WORKSPACE_CONFIG`
+: Workspace configuration file.
+
 <!-- END GENERATED CLI -->
 
 ## Responsibility and selection

@@ -1,26 +1,33 @@
 # `weaver session`
 
 <!-- BEGIN GENERATED CLI -->
-```text
-usage: weaver session [-h] [--workspace WORKSPACE]
-                      [--workspace-config WORKSPACE_CONFIG]
-                      [--environment ENVIRONMENT] [--catalogue CATALOGUE]
-                      [--timings]
 
-options:
-  -h, --help            show this help message and exit
-  --workspace WORKSPACE
-                        Fabric Workspace name.
-  --workspace-config WORKSPACE_CONFIG
-                        Workspace configuration file.
-  --environment ENVIRONMENT
-                        Fabric Environment name or Workspace/Environment
-                        reference.
-  --catalogue CATALOGUE
-                        Where the Weaver catalogue lives, for example
-                        Warehouse/Weaver.
-  --timings             Report Fabric access timings when the session ends.
+## Synopsis
+
+```text
+weaver session [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--timings]
 ```
+
+## Options
+
+`-h, --help`
+: show this help message and exit
+
+`--workspace WORKSPACE`
+: Fabric Workspace name.
+
+`--workspace-config WORKSPACE_CONFIG`
+: Workspace configuration file.
+
+`--environment ENVIRONMENT`
+: Fabric Environment name or Workspace/Environment reference.
+
+`--catalogue CATALOGUE`
+: Where the Weaver catalogue lives, for example Warehouse/Weaver.
+
+`--timings`
+: Report Fabric access timings when the session ends.
+
 <!-- END GENERATED CLI -->
 
 ## Responsibility and selection

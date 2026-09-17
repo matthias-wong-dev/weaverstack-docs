@@ -1,35 +1,47 @@
 # `weaver workflow`
 
 <!-- BEGIN GENERATED CLI -->
+
+## Synopsis
+
 ```text
-usage: weaver workflow [-h] [--file PATH] [--timings] [--yes]
-                       [--non-interactive] [--workspace WORKSPACE]
-                       [--workspace-config WORKSPACE_CONFIG]
-                       [--environment ENVIRONMENT] [--catalogue CATALOGUE]
-                       name
-
-positional arguments:
-  name                  Workflow name in workflow.yml.
-
-options:
-  -h, --help            show this help message and exit
-  --file PATH           Workflow file. Defaults to ./workflow.yml.
-  --timings             Report Fabric access timings after the workflow.
-  --yes                 Authorise the workflow and all its commands.
-  --non-interactive     Do not read stdin, wait for a keypress or open browser
-                        sign-in. Missing authorisation or required input is an
-                        error.
-  --workspace WORKSPACE
-                        Fabric Workspace name.
-  --workspace-config WORKSPACE_CONFIG
-                        Workspace configuration file.
-  --environment ENVIRONMENT
-                        Fabric Environment name or Workspace/Environment
-                        reference.
-  --catalogue CATALOGUE
-                        Where the Weaver catalogue lives, for example
-                        Warehouse/Weaver.
+weaver workflow [-h] [--file PATH] [--timings] [--yes] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] name
 ```
+
+## Positional arguments
+
+`name`
+: Workflow name in workflow.yml.
+
+## Options
+
+`-h, --help`
+: show this help message and exit
+
+`--file PATH`
+: Workflow file. Defaults to ./workflow.yml.
+
+`--timings`
+: Report Fabric access timings after the workflow.
+
+`--yes`
+: Authorise the workflow and all its commands.
+
+`--non-interactive`
+: Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.
+
+`--workspace WORKSPACE`
+: Fabric Workspace name.
+
+`--workspace-config WORKSPACE_CONFIG`
+: Workspace configuration file.
+
+`--environment ENVIRONMENT`
+: Fabric Environment name or Workspace/Environment reference.
+
+`--catalogue CATALOGUE`
+: Where the Weaver catalogue lives, for example Warehouse/Weaver.
+
 <!-- END GENERATED CLI -->
 
 ## Responsibility and selection

@@ -1,27 +1,35 @@
 # `weaver fabric capacity`
 
 <!-- BEGIN GENERATED CLI -->
+
+## Synopsis
+
 ```text
-usage: weaver fabric capacity [-h] --resource-group RESOURCE_GROUP
-                              --capacity-name CAPACITY_NAME
-                              [--subscription-id SUBSCRIPTION_ID]
-                              [--non-interactive]
-                              {status,resume,suspend}
-
-positional arguments:
-  {status,resume,suspend}
-
-options:
-  -h, --help            show this help message and exit
-  --resource-group RESOURCE_GROUP
-  --capacity-name CAPACITY_NAME
-  --subscription-id SUBSCRIPTION_ID
-                        Azure subscription ID when more than one subscription
-                        is available.
-  --non-interactive     Do not read stdin, wait for a keypress or open browser
-                        sign-in. Missing authorisation or required input is an
-                        error.
+weaver fabric capacity [-h] --resource-group RESOURCE_GROUP --capacity-name CAPACITY_NAME [--subscription-id SUBSCRIPTION_ID] [--non-interactive] {status,resume,suspend}
 ```
+
+## Positional arguments
+
+`{status,resume,suspend}`
+: No description is provided by the parser.
+
+## Options
+
+`-h, --help`
+: show this help message and exit
+
+`--resource-group RESOURCE_GROUP`
+: No description is provided by the parser.
+
+`--capacity-name CAPACITY_NAME`
+: No description is provided by the parser.
+
+`--subscription-id SUBSCRIPTION_ID`
+: Azure subscription ID when more than one subscription is available.
+
+`--non-interactive`
+: Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.
+
 <!-- END GENERATED CLI -->
 
 ## Responsibility and selection

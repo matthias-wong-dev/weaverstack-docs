@@ -10,22 +10,22 @@ Run `weaver <command> --help` for the exact options in the installed version. Th
 
 | Command | Purpose |
 | --- | --- |
-| `session` | Run lifecycle commands in one persistent Session. |
-| `workflow NAME` | Run a named sequence from `workflow.yml` in one Session. |
-| `initialise` | Create or adopt named Fabric items and write a project. The `initialize` spelling is also accepted. |
-| `doctor` | Check authentication and Fabric connectivity for a named workspace without reading a project. |
-| `check [PROJECT_FOLDER]` | Parse and validate a project without contacting Fabric. |
-| `build [SOURCE]` | Build project structure into selected logical items and install it, unless bundle-only mode is selected. |
-| `install BUNDLE` | Install a previously built bundle directory or `.weaver.zip` archive. |
-| `load [ITEM ...]` | Run installed loadable objects for the selected logical items. |
-| `test [ITEM ...]` | Run installed Tests and Assumptions for the selected logical items. |
-| `health` | Report load, test and build health for installed items. |
-| `wipe [TARGET ...]` | Empty physical Lakehouses or Warehouses; with no targets, use the estate recorded by the catalogue. |
-| `mirror` | Fork another catalogue's installed estate into the current workspace's catalogue. |
-| `fabric environment publish` | Publish Weaver into a Fabric Environment. |
-| `fabric notebook push` | Create or update a Fabric notebook definition. |
-| `fabric notebook run` | Run a deployed Fabric notebook. |
-| `fabric capacity` | Resume, suspend or report a Fabric capacity. |
+| [`session`](cli/session.md) | Run lifecycle commands in one persistent Session. |
+| [`workflow NAME`](cli/workflow.md) | Run a named sequence from `workflow.yml` in one Session. |
+| [`initialise`](cli/initialise.md) | Create or adopt named Fabric items and write a project. The `initialize` spelling is also accepted. |
+| [`doctor`](cli/doctor.md) | Check authentication and Fabric connectivity for a named workspace without reading a project. |
+| [`check [PROJECT_FOLDER]`](cli/check.md) | Parse and validate a project without contacting Fabric. |
+| [`build [SOURCE]`](cli/build.md) | Build project structure into selected logical items and install it, unless bundle-only mode is selected. |
+| [`install BUNDLE`](cli/install.md) | Install a previously built bundle directory or `.weaver.zip` archive. |
+| [`load [ITEM ...]`](cli/load.md) | Run installed loadable objects for the selected logical items. |
+| [`test [ITEM ...]`](cli/test.md) | Run installed Tests and Assumptions for the selected logical items. |
+| [`health`](cli/health.md) | Report load, test and build health for installed items. |
+| [`wipe [TARGET ...]`](cli/wipe.md) | Empty physical Lakehouses or Warehouses; with no targets, use the estate recorded by the catalogue. |
+| [`mirror`](cli/mirror.md) | Fork another catalogue's installed estate into the current workspace's catalogue. |
+| [`fabric environment publish`](cli/fabric-environment.md) | Publish Weaver into a Fabric Environment. |
+| [`fabric notebook push`](cli/fabric-notebook.md) | Create or update a Fabric notebook definition. |
+| [`fabric notebook run`](cli/fabric-notebook.md) | Run a deployed Fabric notebook. |
+| [`fabric capacity`](cli/fabric-capacity.md) | Resume, suspend or report a Fabric capacity. |
 
 ## Workspace options
 

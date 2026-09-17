@@ -1,73 +1,94 @@
 # `weaver fabric notebook`
 
 <!-- BEGIN GENERATED CLI -->
+
 ## `weaver fabric notebook push`
 
+### Synopsis
+
 ```text
-usage: weaver fabric notebook push [-h] [--name NAME]
-                                   [--description DESCRIPTION] [--json]
-                                   [--non-interactive] [--workspace WORKSPACE]
-                                   [--workspace-config WORKSPACE_CONFIG]
-                                   [--environment ENVIRONMENT]
-                                   source
-
-positional arguments:
-  source                Local .py or .ipynb notebook source.
-
-options:
-  -h, --help            show this help message and exit
-  --name NAME           Fabric display name. Defaults to the filename.
-  --description DESCRIPTION
-  --json
-  --non-interactive     Do not read stdin, wait for a keypress or open browser
-                        sign-in. Missing authorisation or required input is an
-                        error.
-  --workspace WORKSPACE
-                        Fabric Workspace name.
-  --workspace-config WORKSPACE_CONFIG
-                        Workspace configuration file.
-  --environment ENVIRONMENT
-                        Fabric Environment name or Workspace/Environment
-                        reference.
+weaver fabric notebook push [-h] [--name NAME] [--description DESCRIPTION] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] source
 ```
+
+### Positional arguments
+
+`source`
+: Local .py or .ipynb notebook source.
+
+### Options
+
+`-h, --help`
+: show this help message and exit
+
+`--name NAME`
+: Fabric display name. Defaults to the filename.
+
+`--description DESCRIPTION`
+: No description is provided by the parser.
+
+`--json`
+: No description is provided by the parser.
+
+`--non-interactive`
+: Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.
+
+`--workspace WORKSPACE`
+: Fabric Workspace name.
+
+`--workspace-config WORKSPACE_CONFIG`
+: Workspace configuration file.
+
+`--environment ENVIRONMENT`
+: Fabric Environment name or Workspace/Environment reference.
 
 ## `weaver fabric notebook run`
 
+### Synopsis
+
 ```text
-usage: weaver fabric notebook run [-h] [--lakehouse LAKEHOUSE] [--no-wait]
-                                  [--timeout TIMEOUT]
-                                  [--poll-interval POLL_INTERVAL] [--json]
-                                  [--non-interactive] [--workspace WORKSPACE]
-                                  [--workspace-config WORKSPACE_CONFIG]
-                                  [--environment ENVIRONMENT]
-                                  [--catalogue CATALOGUE]
-                                  name
-
-positional arguments:
-  name                  Fabric Notebook display name.
-
-options:
-  -h, --help            show this help message and exit
-  --lakehouse LAKEHOUSE
-                        Default Lakehouse for the notebook session.
-  --no-wait
-  --timeout TIMEOUT
-  --poll-interval POLL_INTERVAL
-  --json
-  --non-interactive     Do not read stdin, wait for a keypress or open browser
-                        sign-in. Missing authorisation or required input is an
-                        error.
-  --workspace WORKSPACE
-                        Fabric Workspace name.
-  --workspace-config WORKSPACE_CONFIG
-                        Workspace configuration file.
-  --environment ENVIRONMENT
-                        Fabric Environment name or Workspace/Environment
-                        reference.
-  --catalogue CATALOGUE
-                        Where the Weaver catalogue lives, for example
-                        Warehouse/Weaver.
+weaver fabric notebook run [-h] [--lakehouse LAKEHOUSE] [--no-wait] [--timeout TIMEOUT] [--poll-interval POLL_INTERVAL] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] name
 ```
+
+### Positional arguments
+
+`name`
+: Fabric Notebook display name.
+
+### Options
+
+`-h, --help`
+: show this help message and exit
+
+`--lakehouse LAKEHOUSE`
+: Default Lakehouse for the notebook session.
+
+`--no-wait`
+: No description is provided by the parser.
+
+`--timeout TIMEOUT`
+: No description is provided by the parser.
+
+`--poll-interval POLL_INTERVAL`
+: No description is provided by the parser.
+
+`--json`
+: No description is provided by the parser.
+
+`--non-interactive`
+: Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.
+
+`--workspace WORKSPACE`
+: Fabric Workspace name.
+
+`--workspace-config WORKSPACE_CONFIG`
+: Workspace configuration file.
+
+`--environment ENVIRONMENT`
+: Fabric Environment name or Workspace/Environment reference.
+
+`--catalogue CATALOGUE`
+: Where the Weaver catalogue lives, for example Warehouse/Weaver.
+
 <!-- END GENERATED CLI -->
 
 ## Responsibility and selection

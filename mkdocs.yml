@@ -96,7 +96,23 @@ nav:
       - Fault tolerance: core-concepts/fault-tolerance.md
   - Reference:
       - reference/index.md
-      - CLI: reference/cli.md
+      - CLI:
+          - Overview: reference/cli.md
+          - Initialise: reference/cli/initialise.md
+          - Doctor: reference/cli/doctor.md
+          - Check: reference/cli/check.md
+          - Build: reference/cli/build.md
+          - Install: reference/cli/install.md
+          - Load: reference/cli/load.md
+          - Test: reference/cli/test.md
+          - Health: reference/cli/health.md
+          - Session: reference/cli/session.md
+          - Workflow: reference/cli/workflow.md
+          - Wipe: reference/cli/wipe.md
+          - Mirror: reference/cli/mirror.md
+          - Fabric Environment: reference/cli/fabric-environment.md
+          - Fabric Notebook: reference/cli/fabric-notebook.md
+          - Fabric capacity: reference/cli/fabric-capacity.md
   - Contracts:
       - contracts/index.md
       - Load: contracts/load.md

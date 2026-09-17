@@ -956,11 +956,11 @@
     "install": "docs/reference/cli/install.md",
     "load": "docs/reference/cli/load.md",
     "mirror": "docs/reference/cli/mirror.md",
-    "session": "docs/reference/cli/session-and-workflow.md",
+    "session": "docs/reference/cli/session.md",
     "test": "docs/reference/cli/test.md",
     "wipe": "docs/reference/cli/wipe.md",
-    "workflow": "docs/reference/cli/session-and-workflow.md"
+    "workflow": "docs/reference/cli/workflow.md"
   },
-  "page_count": 14,
+  "page_count": 15,
   "schema_version": 1
 }

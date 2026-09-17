@@ -19,8 +19,8 @@ DEFAULT_MANIFEST = Path("generated/cli-reference.json")
 # Every executable parser leaf has one documentation owner. A page may own
 # several leaves when aliases or one command family are deliberately combined.
 OWNERSHIP: tuple[tuple[str, str], ...] = (
-    ("session", "docs/reference/cli/session-and-workflow.md"),
-    ("workflow", "docs/reference/cli/session-and-workflow.md"),
+    ("session", "docs/reference/cli/session.md"),
+    ("workflow", "docs/reference/cli/workflow.md"),
     ("initialise", "docs/reference/cli/initialise.md"),
     ("initialize", "docs/reference/cli/initialise.md"),
     ("doctor", "docs/reference/cli/doctor.md"),
