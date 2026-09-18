@@ -1,235 +1,108 @@
-# Troubleshoot an estate
+# Troubleshooting
 
-Start from the symptom the operator can observe. Keep the selected workspace configuration beside every remote command so diagnosis does not cross estates accidentally.
+Use the same workspace configuration as the failed command. Preserve its report, exit status and workflow identifier, and do not edit catalogue rows to repair state.
 
-## Prerequisites
+## Check fails
 
-- [Install Weaver](../getting-started/installation.md) and confirm `weaver --version` works.
-- Know the workspace-configuration file used by the failing command.
-- Preserve the complete command report, exit status and workflow identifier when one is printed.
-- Use read-only access to the catalogue Warehouse for deeper investigation. Do not repair catalogue rows manually.
-
-The examples use `workspace-production.yml`, `Lakehouse/Landing` and `Warehouse/Operations` from a neutral parcel estate.
-
-## `weaver check` rejects the project
-
-Run Check from the project root before investigating Fabric:
+Run Check from the project root:
 
 ```bash
 weaver check
 ```
 
-Check parses Weaver documents, identities, metadata, SQL validation shapes and dependency relationships without contacting Fabric. A success prints `Project valid.`. A failure is therefore a project-source problem, not proof of a workspace outage.
+Check is local. Correct the first reported path, identity, metadata, SQL shape or dependency error, then rerun it. Do not proceed to Build until Check succeeds.
 
-Use the first reported file, identity or dependency error as the correction boundary. Common tasks are:
+A successful Check proves that Weaver can parse the project. It does not execute authored code or prove Fabric access, permissions or remote Python imports.
 
-- make a path agree with its declared `Schema.Object` identity;
-- correct an unsupported or misspelled metadata key;
-- add a missing logical Shortcut target or correct its full logical identity;
-- remove a dependency cycle;
-- correct the result-query shape of a SQL Test or Assumption.
+## Build fails
 
-Rerun Check after each correction. Do not proceed to Build until it succeeds. Check does not execute authored Python or SQL and cannot prove remote imports, permissions or object creation.
+Read the Build report in action order. Completed actions may already have changed physical objects; Build does not roll them back when a later action fails.
 
-For machine-readable reporting:
-
-```bash
-weaver check --json
-```
-
-JSON changes output form, not validation scope.
-
-## The workspace cannot be reached or authentication fails
-
-Probe the workspace independently of the project:
+1. Run `weaver check` and correct source errors.
+2. Confirm that the selected configuration names the intended catalogue and targets.
+3. Correct the first failed declaration, permission or Fabric condition.
+4. Rerun the same Build selection.
+5. Run Health.
 
 ```bash
-weaver doctor --workspace "Parcel Operations"
+weaver build . --workspace-config workspace-development.yml
+weaver health --workspace-config workspace-development.yml
 ```
 
-Doctor requires an explicit workspace name. It does not read `workspace-production.yml`, a catalogue binding or an Environment binding. It reports authentication and the available Fabric, Warehouse SQL, OneLake storage and Spark checks. Checking a workspace with a Lakehouse can start a Fabric Spark session and take about a minute.
+The rerun reconciles the state it finds; it does not resume the previous report. If Health reports an incomplete or incompatible catalogue, preserve the evidence rather than writing catalogue tables manually or using Wipe as an ordinary Build repair.
 
-Interpret the boundary that failed:
+## Load fails
 
-- **Authentication**: confirm the intended credential path. Interactive CLI use can fall back to browser sign-in; `--non-interactive` omits browser sign-in.
-- **Fabric workspace access**: confirm the workspace spelling, tenant and permission to discover it.
-- **Warehouse SQL**: confirm SQL endpoint availability and permission on the Warehouse Doctor names.
-- **OneLake**: confirm storage access to the Lakehouse Doctor names.
-- **Fabric Spark**: confirm the capacity and workspace can start a Spark session.
-
-A successful Doctor report proves only the probes it ran against the named workspace. It does not prove that a later command selected the intended workspace configuration, catalogue, targets or Environment.
-
-## The command uses the wrong workspace, catalogue or target
-
-Repeat the failing command with an explicit configuration path:
+Use the report to distinguish failed, blocked and pending work. Correct the reported data, code, runtime or permission condition, then preview and rerun the intended item boundary:
 
 ```bash
-weaver health \
-  --workspace-config workspace-production.yml
+weaver load \
+  --dry-run \
+  --workspace-config workspace-development.yml
+
+weaver load \
+  --workspace-config workspace-development.yml
 ```
 
-Then inspect:
+A retry is a new Load against the state left by the previous run. If source changed during the correction, Build it first. Without fault tolerance, the first execution failure stops new scheduling; completed work remains applied. See [Recover failed work](recover-failed-work.md) for stale catch-up and deliberate Table reconstruction.
 
-1. `workspace`, `catalogue` and `targets` in that file;
-2. any explicit `--workspace`, `--catalogue`, `--environment` or Build `ITEM=TARGET` override;
-3. `_.Installation` for the logical item and its installed physical target.
+## Test cannot run
 
-Build reads physical target bindings from workspace configuration. Load, Test and Health read installed bindings from the selected catalogue. A physical Fabric item name is not a Load or Test item selection. Correct the configuration or Build binding rather than renaming logical project directories to match a physical target.
+A validation that could not run is different from a validation that ran and found bad data. Correct the reported query, binding, permission or runtime condition.
 
-Use one configuration consistently through Check, Build, Load, Test and Health. Check itself is local and does not read that binding, but keeping the command sequence explicit makes an estate switch visible.
-
-## Load or Test says an item or object is not installed
-
-Confirm installation state:
-
-```bash
-weaver health \
-  --item Warehouse/Operations \
-  --workspace-config workspace-production.yml
-```
-
-Inspect `_.Installation` for the logical item and `_.Registry` for the object. If the item has never been installed, select it in Build:
+If the Test or Assumption source changed, Check and Build its owning item before rerunning Test:
 
 ```bash
 weaver check
-weaver build . \
-  --item Warehouse/Operations \
-  --workspace-config workspace-production.yml
+weaver build . --workspace-config workspace-development.yml
+weaver test --workspace-config workspace-development.yml
 ```
 
-If a consumer uses a logical Shortcut, the source document must resolve locally and the source item must have an installation when Build needs its physical binding. On a first installation, Build the producer and consumer items together. Dependencies do not widen Build selection.
+Test executes installed validations, not edited source files. A validation that ran and failed is a data finding; investigate the diagnostic rows and the data-producing work, then rerun Test after correction.
 
-Do not write `_.Installation` or `_.Registry` by hand. Build is the reconciliation operation that publishes those claims.
+## Health is Amber
 
-## Build fails or leaves the estate inconsistent
-
-Read the Build report in order. Completed actions may already have changed physical objects; later actions can be failed or skipped. Build does not roll the operation back and does not certify a failed rebuild as successful.
-
-Separate three questions:
-
-1. **Did Check pass?** If not, correct source first.
-2. **Did preflight find the configured Fabric items?** Confirm the catalogue and each selected target exist with the expected Fabric item kind.
-3. **Which Build action first failed?** Correct that declaration, permission or Fabric condition rather than acting on the skipped remainder.
-
-Then rerun the same selected Build:
+Amber usually means work is pending or stale rather than failed. Run Health, catch up non-Green Load work, run validations and inspect again:
 
 ```bash
-weaver build . \
-  --item Warehouse/Operations \
-  --workspace-config workspace-production.yml
+weaver health --workspace-config workspace-development.yml
+weaver load --stale --workspace-config workspace-development.yml
+weaver test --workspace-config workspace-development.yml
+weaver health --workspace-config workspace-development.yml
 ```
 
-The next Build reconciles the state it finds; it does not resume the previous report. Follow it with Health. If Health says the catalogue is incomplete or incompatible, preserve the report and inspect the named catalogue table. Do not use a scoped Build or manual SQL writes as an assumed repair for damaged catalogue state.
+A rebuilt Table or Folder remains Pending until Load settles. A rebuilt validation remains Pending until Test runs. If a validation is stale because its inputs changed, Load the data first and then rerun Test.
 
-## Load reports failed, blocked or pending work
+## Health is Red
 
-Preview the same boundary before retrying:
+Read the section and finding that caused Red:
+
+- **Load**: correct the failed or blocked work, then rerun the intended Load boundary.
+- **Tests**: correct the data or validation expectation, then rerun Test.
+- **Build**: reconcile the source and physical installation with Build; missing or contradictory catalogue state is not repaired by Load or Test.
+
+Run Health again after the recovery operation. Red is not cleared by a successful unrelated command.
+
+## Runtime or authentication fails
+
+Probe the named workspace independently of the project:
 
 ```bash
-weaver load Lakehouse/Landing Warehouse/Operations \
-  --workspace-config workspace-production.yml \
-  --dry-run
+weaver doctor --workspace "Parcel Development"
 ```
 
-Use the per-object outcomes:
+Doctor reports the authentication and Fabric capabilities it could probe. It does not read workspace configuration or prove that a later command selected the intended catalogue, targets or Environment.
 
-- **failed**: the selected work or its dispatch failed; correct the reported data, code, permission or runtime condition;
-- **blocked**: inspect the named upstream failure or unresolved dependency first;
-- **pending**: the work did not execute, commonly because fail-fast scheduling stopped after another failure;
-- **succeeded with rejects**: inspect the rejection evidence and row counts; the bookmark does not advance after a load with rejects.
+For authentication failures, confirm the credential path and workspace permission. Non-interactive execution does not fall back to browser sign-in.
 
-A retry is a new Load against the state left by the previous run. Without `--fault-tolerant`, scheduling stops after the first execution failure. With it, independent branches continue and downstream work may read the state left by a settled upstream failure. Choose that policy deliberately; it does not turn partial work into success.
-
-Use `_.LoadStatus` for the current outcome, `_.Log` for settled work under the workflow identifier and `_.LoadStatistic` for recorded data movement. A blocked object can have status without a load statistic because its data work did not run.
-
-## Test fails or could not run
-
-A failed validation ran and found discrepancies or violations. A validation that could not run is an execution problem. Both exit non-zero, but they require different actions.
-
-Run one installed validation for diagnostic rows:
-
-```bash
-weaver test Warehouse/Operations \
-  --name Parcel.StatusMatches \
-  --workspace-config workspace-production.yml
-```
-
-For a failure, inspect the missing, unexpected or violation rows and correct either the data-producing work or the validation expectation. For a validation that could not run, correct the reported query, permission, binding or runtime condition.
-
-If the validation source changed, Check and Build it before rerunning Test. Installed Test does not read the edited source file. `test --file` is a direct source-file evaluation and does not install the validation or publish estate evidence.
-
-Use `_.TestStatus` for the current installed outcome and `_.Log` for settled execution detail. `_.TestDictionary` answers what Build installed; it does not hold the latest result.
-
-## Python work reports an Environment or import problem
-
-First identify whether the selected installed work uses Python in Fabric:
-
-- Warehouse T-SQL work does not need a Fabric Environment;
-- Lakehouse Spark SQL can use the workspace's default Spark runtime;
-- Python Table, Folder, Test and Assumption work needs a configured, published Fabric Environment containing Weaver.
-
-For Python work, verify all three controls:
-
-1. the selected workspace configuration names `environment`;
-2. that Environment exists in the intended workspace or is fully qualified as `Workspace/Environment`;
-3. its latest definition was published successfully.
-
-Publish or republish it when needed:
+For Python Load or Test work, confirm that the selected workspace configuration names an Environment, that the Environment exists, and that its latest definition was published successfully:
 
 ```bash
 weaver fabric environment publish \
   --path Environment/ParcelRuntime.Environment \
-  --workspace-config workspace-production.yml
+  --workspace-config workspace-development.yml
 ```
 
-Then rerun the failed Load or Test. Publication does not resume it. A successful local Check does not prove that Fabric attached the Environment or imported Weaver; only live execution establishes that outcome. See [Workspaces and Environments](workspace-and-python-runtime.md) for the full boundary.
+Then rerun the failed Load or Test; publication does not resume it. Warehouse T-SQL work does not require a Fabric Environment, and Spark SQL can use the workspace's default Spark runtime. See [Configure a workspace and Python runtime](workspace-and-python-runtime.md).
 
-## Health is Amber because work is pending or stale
-
-Run Health and a matching stale dry run:
-
-```bash
-weaver health \
-  --workspace-config workspace-production.yml
-
-weaver load Lakehouse/Landing Warehouse/Operations \
-  --stale \
-  --dry-run \
-  --workspace-config workspace-production.yml
-```
-
-A rebuilt loadable object returns to Pending until a clean Load settles. A non-static successful load older than Health's freshness threshold is stale. `load --stale` selects loadable objects whose Load health is not Green; it does not select Views as work or rerun Tests.
-
-If Test state is Pending because its validation was rebuilt, run Test for the owning item. If Health says a validation has a stale dependency, Load the affected data first, then rerun Test. To change freshness, pass the same zoned `--as-of` instant to Health and to `load --stale`.
-
-## A Shortcut or mirrored object points somewhere unexpected
-
-Establish whether the object is local, a declared Shortcut or borrowed mirror state:
-
-- `_.Shortcut` records installed logical and physical Shortcut edges;
-- `_.Dependency` records the relationship Build resolved;
-- `_.Mirror` records objects still borrowed from a mirror source;
-- no matching `_.Mirror` row means the installed object is local.
-
-For a logical Shortcut, correct the source Weaver identity and Build every selected producer or consumer that should change. For a physical Shortcut, verify the external workspace, item and Fabric permission; Weaver has no managed producer to order from that address.
-
-In a mirrored development estate, unchanged borrowed objects continue to read the source estate. Build materialises changed borrowed objects and affected selected descendants locally, then removes their `_.Mirror` rows. If the intended recovery is a fresh source baseline rather than a local Build, use the mirror-refresh procedure in [Recovery](recover-failed-work.md); it replaces the destination boundary.
-
-Never delete a Shortcut's source to repair its local destination. Wiping, pruning or replacing a local Shortcut is not authority to mutate the referenced object.
-
-## Decide between the catalogue and logs
-
-Use the narrowest evidence surface:
-
-| Question | Inspect |
-| --- | --- |
-| What is installed and where? | `_.Installation`, `_.Registry`, declaration dictionaries |
-| What is the current Load or Test result? | `_.LoadStatus`, `_.TestStatus` |
-| What settled during one reported workflow? | `_.Log` filtered by the workflow identifier |
-| What data movement was recorded? | `_.LoadStatistic` |
-| Is the object borrowed or connected through a Shortcut? | `_.Mirror`, `_.Shortcut` |
-| Did parsing, planning, authentication or preflight fail before work settled? | The command's stderr or JSON report |
-
-The catalogue records installed and settled operational state; it is not a copy of every terminal message. Preserve command output for failures that occur before a catalogue write.
-
-Use [Weaver operations](../core-concepts/build-load-and-test.md) to identify the lifecycle stage, [Catalogue](../core-concepts/catalogue.md) for table meanings, [Development cycle](development-cycle.md) for mirrored estates, [Dependencies](../core-concepts/dependencies.md) for selection and ordering, [Fault tolerance](../core-concepts/fault-tolerance.md) for partial work, the [CLI reference](../reference/cli.md) for exact options and [Contracts](../reference/operation-behaviour/index.md) for defined behaviour.
+For exact command outcomes and catalogue evidence, use [Operation behaviour](../reference/operation-behaviour/index.md) and [Catalogue](../core-concepts/catalogue.md).

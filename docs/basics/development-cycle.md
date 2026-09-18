@@ -1,106 +1,72 @@
-# Development cycle
+# The development cycle
 
-A development estate can start from production's installed state without maintaining a second set of Weaver documents. Mirror is the state transition into that estate, not merely a command that copies data. The selected workspace configuration changes the catalogue and physical targets; the project keeps the same logical item identities and declarations.
+Use a mirrored development estate to keep the project's logical identities while working against development catalogues and physical targets. Establish the baseline once, then iterate without re-mirroring it on every change.
 
-This page applies the [Build, Load and Test lifecycle](../core-concepts/build-load-and-test.md) to a mirrored development estate. See the [CLI reference](../reference/cli.md) for command forms and options.
+## Phase 1: establish the development baseline
 
-## The loop
+Choose the development workspace configuration. It should bind the project to the development catalogue and targets and name the source catalogue in `mirror`.
+
+Before changing anything, ask Weaver to settle and display the Mirror plan:
+
+```bash
+weaver mirror --workspace-config workspace-development.yml
+```
+
+Review the source catalogue, destination catalogue and every destination target. Decline the confirmation after inspection. Mirror has no dry-run mode; declining leaves the destinations unchanged.
+
+Run the same command again and confirm only when the displayed destination boundary is correct:
+
+```bash
+weaver mirror --workspace-config workspace-development.yml
+```
+
+Mirror empties and reconstructs the displayed destination catalogue and targets from the source estate. Unchanged objects begin as borrowed source data. The destination catalogue records that state, while the project's logical items and Weaver documents remain unchanged.
+
+Inspect the baseline:
+
+```bash
+weaver health --workspace-config workspace-development.yml
+```
+
+See [Mirrors](../core-concepts/mirrors.md) for borrowed and local data. Exact Mirror selection, authorisation and failure boundaries are in [Mirror operation behaviour](../reference/operation-behaviour/mirror.md).
+
+## Phase 2: edit and iterate
+
+Use this loop after the baseline exists:
 
 ```text
-production estate
-        ↓
-select development workspace configuration
-        ↓
-mirror production into development
-        ↓
-change Weaver documents
-        ↓
-build
-        ↓
-changed borrowed objects become local
-        ↓
-load → test → health
-        ↖         ↓
-          repeat
+edit
+  → check
+  → build
+  → load --stale
+  → test
+  → health
+  → repeat
 ```
 
-The mirror supplies a development baseline. Build then materialises changed borrowed objects and affected descendants in the selected Build scope. Unchanged objects continue to read production data through their local Views or shortcuts.
+Run it against the same development configuration:
 
-## Configuration is the environment switch
+```bash
+weaver check
 
-A production and development configuration can bind the same project to different physical items. A real project uses these two files in the same project directory.
+weaver build . \
+  --workspace-config workspace-development.yml
 
-Production configuration:
+weaver load \
+  --stale \
+  --workspace-config workspace-development.yml
 
-```yaml
-workspace: Parcel Operations
-catalogue: Warehouse/ParcelCatalogue
+weaver test \
+  --workspace-config workspace-development.yml
 
-targets:
-  Lakehouse/Landing: ParcelLanding
-  Warehouse/Operations: ParcelOperations
+weaver health \
+  --workspace-config workspace-development.yml
 ```
 
-Development configuration:
+Check validates project source locally. Build compares that source with the mirrored installed state. Changed borrowed objects and affected descendants inside the Build selection become local; unchanged objects remain borrowed.
 
-```yaml
-workspace: Parcel Operations
-catalogue: Warehouse/ParcelCatalogueDev
-mirror: Warehouse/ParcelCatalogue
+Build resets changed loadable work to a non-Green state. `load --stale` selects the installed loadable objects that now need work while leaving Green objects alone. Test runs the installed validations, and Health shows the resulting Load, Tests and Build state.
 
-targets:
-  Lakehouse/Landing: ParcelLandingDev
-  Warehouse/Operations: ParcelOperationsDev
-```
+Run the loop item-wide by default. Use `--name` only for deliberate targeting, diagnosis or Table reconstruction; named Load does not add dependencies. The [Load operation behaviour](../reference/operation-behaviour/load.md) defines that narrower boundary.
 
-The project and logical item keys are unchanged:
-
-- `Lakehouse/Landing`
-- `Warehouse/Operations`
-
-The selected configuration changes their physical targets from `ParcelLanding` and `ParcelOperations` to `ParcelLandingDev` and `ParcelOperationsDev`. It also changes the catalogue from `Warehouse/ParcelCatalogue` to `Warehouse/ParcelCatalogueDev` and names the production catalogue as the mirror source.
-
-These names are illustrative, not a required production/development naming pattern. The mechanism is the selected configuration. Separate document trees or Git branches are not what makes an operation target production or development.
-
-## Start from the production estate
-
-Production must first have an installed estate: item bindings, Registry certifications, declaration dictionaries and current operational state in its catalogue. Mirror reads that installed projection rather than rebuilding production documents into the development targets.
-
-Select the development configuration before planning the mirror. In that configuration:
-
-- `catalogue` is the destination catalogue;
-- `mirror` is the source catalogue;
-- `targets` bind the same logical items to their development items.
-
-Mirror empties and rebuilds the destination catalogue, then empties each selected destination target. It copies installed and current state, changes the selected items' physical bindings to their development targets, and creates local borrowed forms for production data. Warehouse relations are exposed as Views over their source. Lakehouse Tables and Folders are exposed through shortcuts, while source Views use local wrapper Views. The destination catalogue records each borrowed relation in `_.Mirror`.
-
-Operational history remains with the estate where it happened: `_.Log` and `_.LoadStatistic` are not copied. Inspect the settled mirror plan before applying it: its destination catalogue and listed development targets are the destructive replacement boundary.
-
-## Change the project, then Build
-
-Edit the ordinary Weaver documents under `Lakehouse/Landing` or `Warehouse/Operations`. Their logical identities match the Registry rows copied from production, so Build can compare the edited declarations with the mirrored baseline.
-
-For an unchanged borrowed object, the installed signature still matches and the local View or shortcut remains in place. For a changed borrowed object, Build follows dependencies within its selected scope:
-
-1. the changed object and affected descendants are selected for local installation;
-2. Build replaces each selected borrowed representation with its declared local form;
-3. Build removes their `_.Mirror` rows after physical work and before catalogue publication;
-4. unchanged objects retain their `_.Mirror` rows and continue to borrow production data.
-
-The result is a mixed development estate. Some objects still read production; changed objects and affected descendants hold local data in the configured development targets. `_.Registry` continues to describe the logical installed object, while `_.Mirror` identifies which of those objects remain borrowed.
-
-## Load, Test and Health the mixed estate
-
-Load runs the installed work for locally materialised objects and records local bookmarks, status, statistics and logs. Borrowed data remains owned and loaded at its source rather than being written through the development pointer.
-
-Test runs the installed Tests and Assumptions against the resulting estate. A validation can therefore exercise local changes while unchanged dependencies still resolve to production data.
-
-Health combines both sides:
-
-- installed and operational state for local objects comes from `Warehouse/ParcelCatalogueDev`;
-- current Load state for objects still listed in `_.Mirror` comes from `Warehouse/ParcelCatalogue`;
-- physical inventory is checked against the borrowed form recorded for each mirrored object and the local form of each materialised object.
-
-Continue with another edit, Build, Load, Test and Health cycle. Re-mirror when development needs a fresh production baseline. It repeats the transition: the destination catalogue and selected development targets are emptied and reconstructed from the source, replacing local materialisations in that boundary.
-
-The [Catalogue](../core-concepts/catalogue.md) explains the state that changes through this loop. [Weaver operations](../core-concepts/build-load-and-test.md) explains the lifecycle boundary between authored, installed and operational state. The [Mirror contract](../reference/operation-behaviour/mirror.md) defines the destructive transition, copied state and localisation boundary; exact command grammar remains in Reference.
+Re-mirror only when the intended result is a fresh source baseline. It replaces local materialisations inside the displayed destination boundary; it is a reset, not an iteration step.
