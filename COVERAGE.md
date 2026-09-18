@@ -1,53 +1,87 @@
 # Internal documentation coverage map
 
-This maintainer-only map records what the public site does not yet explain. It lives outside `docs/` and is not rendered on `docs.weaverstack.dev`. A named path is an ownership decision, not a claim that the page or contract already exists.
+This maintainer-only ledger maps the accepted five-section site to the staged migration. It lives outside `docs/` and is not rendered. A target path or owner records intent; it does not mean the page has received its later editorial or source-verification pass.
 
-## Concepts
+## Phase 1 checkpoint
 
-The accepted Core sequence now covers the public mental model: Weaver documents, operations, catalogue state, the development cycle, dependencies and fault tolerance. Task-specific detail belongs in Guides; precise behavioural commitments belong in Contracts. Do not create extra concept pages merely to mirror source modules.
+Phase 1 establishes navigation and ownership. At this checkpoint:
 
-The foundation, lifecycle and interface contracts now own identity, source discovery, change detection, schema, runtime, host, CLI, validation, state and health. The final integration pass should remove conceptual repetition rather than create matching Core pages.
+- public ownership is **Getting started / Core concepts / Basics / Advanced / Reference**;
+- Guides, Contracts and Contributing are no longer target top-level sections;
+- contribution guidance is owned by root-level `CONTRIBUTING.md`, `AGENTS.md` and `PROSE.md`;
+- Notebook and Capacity are CLI Reference topics, not Advanced topics;
+- target paths may contain moved, split or placeholder material inherited from the old structure;
+- substantive reframing, exhaustive Reference work, cross-link reconciliation and editorial calibration remain for Phases 2–6.
 
-## Guides
+Do not mark a topic complete because its navigation entry or destination file exists. Completion requires the content work and verification assigned to its later phase.
 
-The mapped authoring, operating and automation tasks have substantive guides and complete reader routes. Advanced pages cover specialised mirroring, Fabric notebooks and capacity operations. The documentation now shares the product site's visual language and each site's header links to the other. Holistic editorial calibration remains deferred until Matthias reviews the assembled site.
+## Section ownership and remaining work
 
-## CLI commands
-
-The generated CLI reference owns all 17 current parser leaves across 15 pages. `tools/generate_cli_reference.py` rejects unassigned, duplicate and retired commands and detects checked-in generated-block drift.
-
-The machine-readable-interface reference records the current command-specific JSON shapes and exit outcomes. It does not turn unversioned output into a compatibility promise.
-
-## Python API
-
-The generated Python reference owns all 51 names in `weaver.__all__` across seven pages. `tools/generate_python_reference.py` rejects unassigned, duplicate and retired exports and detects checked-in generated-block drift.
-
-The reference distinguishes public top-level exports from importable internal modules. It does not claim compatibility for nested implementation types or current machine mappings.
-
-## Contracts
-
-Foundation, lifecycle and interface behaviour is covered through Build, Load, Test, Workflow, selection, state and health, schema, runtime, host behaviour, CLI behaviour, fault tolerance, incremental processing, history and Mirror. Current Environment, build-bundle, machine-output and catalogue shapes are recorded under Reference where no compatibility policy exists.
-
-The following authored-format contracts remain optional post-launch depth rather than gaps in the accepted public model:
-
-| Possible contract | Current authority | Future authoritative home | Required precision |
+| Section | Owns | Phase 1 state | Remaining work |
 | --- | --- | --- | --- |
-| Python-authored objects | Object base classes and repository AST validation | `contracts/python-authoring.md` | Required class names/methods, static restrictions, runtime context and return contracts. |
-| SQL-authored objects | SQL program readers and tests | `contracts/sql-authoring.md` | Metadata blocks, statement structure, dialect-specific constraints, inferred versus declared schema and load/delete queries. |
-| Shortcut declarations | Shortcut readers and tests | `contracts/shortcuts.md` | Exact Python/YAML schema, target grammar and unsupported combinations. |
+| Getting started | Installation and the shortest first-project lifecycle | Target ownership established; existing material is migration input. | Phase 2: restrict prerequisites, simplify the first project and verify the complete path independently. |
+| Core concepts | The public mental model | Target ownership and planned splits established. | Phase 2: refactor operations; add State and health, Mirrors, and Sessions and workflows; move the practical development cycle; reframe Dependencies. |
+| Basics | Normal authoring, development and operation | Receives former task-oriented Guides material. Moves do not establish final examples or routes. | Phase 3: split Lakehouse paths, simplify workflows and validation, create the development cycle, and apply defaults/inference-first examples. |
+| Advanced | Deeper mechanisms and non-basic operating patterns | Receives selected Guide and Contract explanations; Notebook and Capacity are excluded. | Phase 4: reframe change detection, incrementality, history, schema, partial failure, mirroring, bundles and automation. |
+| Reference | Exact documents, APIs, CLI, configuration, schemas, formats and operation behaviour | Existing reference and contract material has a target owner; generated CLI and Python reference remain authoritative only for their generated facts. | Phase 5: build exhaustive Weaver-document and configuration reference, redistribute operation contracts, and retire legacy Contracts only after every rule has a verified owner. |
+
+## Migration ledger
+
+| Legacy material | Target owner | Editorial status after Phase 1 |
+| --- | --- | --- |
+| `get-started/*` | Getting started | Retained for Phase 2 simplification. |
+| Core overview, projects, logical/physical items, documents and catalogue | Core concepts | Retained; later passes separate concepts from exact syntax. |
+| Weaver operations | Core concepts / Build, Load and Test | Rename and refactor remain in Phase 2. |
+| Core development cycle | Core concepts / Mirrors plus Basics / The development cycle | Split and substantive rewrite remain in Phases 2–3. |
+| Core dependencies and fault tolerance | Core concepts, with exact rules in Reference | Concept reframing remains; exact rules must be reconciled in Phase 5. |
+| Task-oriented `guides/*` | Mostly Basics | Re-homing does not validate commands, examples or reader routes. Phase 3 owns that work. |
+| Incremental loads, automation and bundle promotion | Advanced | Mechanism reframing remains in Phase 4. |
+| Specialised estate mirroring | Advanced | Retained for Phase 4 reframing. |
+| Notebook and Capacity explanations | Reference / CLI | Removed from Advanced ownership; no broader conceptual page is planned. |
+| Explanatory Contract material | Core concepts or Advanced | Must be merged without duplicating the exact rule. |
+| Exact Contract behaviour | Reference / Operation behaviour or Weaver documents | Redistribution and source verification remain in Phase 5. |
+| Existing `reference/*` | Reference | Retained, then reorganised and checked for exhaustive ownership in Phase 5. |
+| `contributing/*` | Root maintainer documentation | Useful guidance has a root owner; rendered copies are structural migration material and must not be treated as the canonical instructions. |
+
+## Reference coverage still required
+
+Phase 1 does not establish exhaustive reference coverage. Phase 5 must verify these surfaces against current source and tests:
+
+- every Weaver document kind, location, identity rule, supported language and metadata key;
+- defaults, accepted values, conditional requirements and incompatible combinations;
+- dependency inference and override behaviour, including the current Spark SQL requirement;
+- required Python methods and accepted return forms;
+- configuration keys, discovery, precedence and restrictions;
+- Build, Load, Test, Health, Mirror, Wipe, Workflow and Session selection, ordering, state changes, outcomes and failure boundaries;
+- catalogue schema, build-bundle representation and machine-readable command output;
+- generated CLI leaves and public names exported by `weaver.__all__`.
+
+The generated CLI and Python checks prove assignment and generated-block consistency for a selected source checkout. They do not verify authored explanation, behavioural completeness or compatibility policy.
+
+## Cross-cutting integration work
+
+Phase 6 still owns:
+
+- stale links and vocabulary left by moves and splits;
+- section landing pages and complete reader routes;
+- duplication between concept, task, mechanism and reference pages;
+- syntax contrast and code/table rendering in both themes;
+- header labels and presentation alignment;
+- checked example validation against current Weaver;
+- strict builds, internal-link checks, responsive inspection and whole-site editorial calibration.
 
 ## Explicitly withheld claims
 
-The site does not claim:
+Until the product specifies and tests them, the site must not claim:
 
-- compatibility guarantees for bundle or catalogue formats beyond current source behaviour;
+- compatibility guarantees for bundle or catalogue formats beyond documented current behaviour;
 - stability for internal Python modules;
 - a complete compatibility contract for every authored metadata key;
 - a universal authentication prerequisite beyond the implemented credential chain;
-- that all Fabric workspaces expose every Doctor probe;
+- that every Fabric workspace exposes every Doctor probe;
 - that an Environment is required for Warehouse-only work;
 - that workflow files are a general orchestration language;
-- that `--json` schemas are stable where no format/version contract is documented;
+- stable `--json` schemas where no versioned format contract exists;
 - that source design documents are themselves a supported public API.
 
-Those claims remain withheld until the product establishes and tests them precisely.
+Record exact current behaviour in Reference when useful, but do not convert observation into a guarantee.
