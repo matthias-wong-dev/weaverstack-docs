@@ -1,86 +1,65 @@
-# Promote a build bundle
+# Build bundles and controlled installation
 
-The [Build bundle reference](../reference/build-bundle-format.md) records the current manifest, payload and installation handoff.
+A build bundle separates installation planning from installation execution. One process reads reviewed project source and the intended destination, then emits frozen installation work. Another process transfers and installs that work without reopening the project.
 
-Weaver has a public split-build route: `weaver build --bundle-only` writes a local bundle directory, and `weaver install` installs that frozen bundle later. Use it when one process prepares and approves installation work and another process applies exactly that work.
-
-This route is a bundle handoff, not a general retargeting mechanism. Build plans against a selected destination workspace and its current catalogue and target state. Install does not reopen project source, recalculate dependencies or replace the bundle's physical target names.
-
-## Prerequisites
-
-- [Install Weaver](../getting-started/installation.md) in both processes. Use compatible installations: the installer accepts only its supported bundle format and tells you to regenerate an unsupported bundle with that Weaver version.
-- Make the project and the destination workspace configuration available to the planning process. This documentation repository includes the checked example at `examples/parcel-automation/`.
-- Authenticate both processes for the destination workspace. Bundle planning reads that workspace's catalogue and target inventory even though `--bundle-only` does not install the plan.
-- Transfer the complete bundle directory through your normal artifact store without editing it. Keep credentials outside the bundle and repository.
-
-## Check the source
-
-From the documentation repository root:
-
-```bash
-weaver check examples/parcel-automation \
-  --non-interactive \
-  --json > check.json
+```text
+check source
+→ plan bundle for destination
+→ review and transfer
+→ install frozen work
+→ Load → Test → Health
 ```
 
-A zero exit status confirms that the project source parses locally. This checkpoint does not contact Fabric and does not establish that the destination can accept the build.
+This is a controlled handoff, not a general promotion or retargeting mechanism.
 
-## Plan a bundle for the destination
+## Check source before planning
 
-Use the destination's workspace configuration while creating the bundle:
+Run Check against the reviewed project revision first. Check parses the Weaver documents locally and catches declaration errors without contacting Fabric. It does not prove that the destination exists, that credentials can reach it or that the planned installation will succeed.
 
-```bash
-weaver build examples/parcel-automation \
-  --item Warehouse/Operations \
-  --workspace-config examples/parcel-automation/workspace-config.yml \
-  --bundle-only \
-  --bundle-path ./dist/parcel-operations \
-  --non-interactive \
-  --json > build-bundle.json
+Keep the reviewed source revision as the provenance for the handoff. A bundle contains generated installation inputs, not another copy of the project repository.
+
+## Plan against the intended destination
+
+Bundle-only Build still reads the destination catalogue and physical inventory. It uses the selected workspace, catalogue and item bindings to decide what is new, changed, affected or removable, then freezes:
+
+- the selected physical targets;
+- ordered installation sequences and actions;
+- generated payloads;
+- destination-specific state changes; and
+- integrity hashes for payload-bearing actions.
+
+Planning therefore needs destination access even though it does not install anything. Generate a separate bundle for each destination. Changing a workspace configuration after generation does not rewrite the targets already recorded in the bundle.
+
+## Review and transfer one complete artifact
+
+Review the Build selection and the destination for which it was planned. Transfer the complete bundle directory, or a supported local bundle archive, through the organisation's artifact controls. Keep its manifest and payload tree together.
+
+Do not edit the manifest or payloads. Install validates the supported representation, structure and payload checksums before executing actions, but the bundle is still a handoff artifact rather than a substitute for source review or artifact-store controls. Exact files, fields and validation rules are in the [Build bundle reference](../reference/build-bundle-format.md).
+
+Credentials are not part of the bundle. The installation process authenticates independently to the workspace in which the frozen targets exist.
+
+## Install frozen work without replanning
+
+Install loads and validates the local bundle, prepares the target capabilities it needs, then executes the recorded sequences in order. It does not:
+
+- reread project source;
+- rediscover dependencies;
+- recalculate Build impact;
+- replace the recorded physical targets with bindings from another configuration; or
+- choose a different catalogue or Fabric Environment for the plan.
+
+The workspace supplies execution context; the bundle supplies the installation targets and work. If the reviewed source, intended bindings or relevant destination state changed, return to bundle planning and produce a new artifact.
+
+A failed installation action stops later sequences. Completed physical changes remain applied, and later planned work is reported as not completed. Installation is not an operation-wide transaction. Inspect the report and destination state before deciding whether to correct the cause and reinstall or generate a new bundle.
+
+## Continue the lifecycle at the destination
+
+Installing a bundle changes installed definitions and catalogue state. It does not run the installed data or validation work. Complete the destination lifecycle with:
+
+```text
+Load → Test → Health
 ```
 
-Choose a new output path for each approved bundle. `--bundle-path` requires `--bundle-only`; the path must not exist or must be an empty directory. A successful result has `"installation": false`, a `bundle_id`, a `bundle_path` and `"status": "succeeded"`.
+Use Health and the catalogue to inspect the estate established by those operations. Keep their evidence with the bundle identity and reviewed source revision so the handoff, installation and runtime results can be correlated.
 
-The directory contains `plan.yml` and generated files under `payload/`. It does not contain a copy of the project repository. The plan freezes the selected physical targets, ordered installation actions, generated definitions and payload checksums from this planning run.
-
-Review the Build selection and retain the complete directory as one artifact. Do not edit `plan.yml` or payloads: Install validates the bundle structure, format and payload checksums before running an action.
-
-## Transfer and install the same bundle
-
-Move or copy `./dist/parcel-operations/` to the installation process with its directory structure intact. Then install it into the workspace for which it was planned:
-
-```bash
-weaver install ./dist/parcel-operations \
-  --workspace-config examples/parcel-automation/workspace-config.yml \
-  --non-interactive \
-  --json > install-bundle.json
-```
-
-The checkpoint is a zero exit status and an installation report whose status is `succeeded` and whose `bundle_id` matches `build-bundle.json`. The installer runs the frozen sequences in order. A failed action stops later sequences, marks remaining planned work skipped and returns non-zero; completed changes are not rolled back. See [Fault tolerance](../core-concepts/fault-tolerance.md).
-
-`weaver install` accepts a local bundle directory or a local `.weaver.zip` archive. The public CLI creates a directory; it does not expose a command that packages that directory as `.weaver.zip`. This guide therefore uses the complete directory rather than inventing an archive command. Install rejects URL locations, so download an approved artifact to local storage before invoking it.
-
-## Respect compatibility and host boundaries
-
-- **Generate per destination.** Build reads the destination catalogue and target inventories and embeds target names in the bundle. Install accepts a workspace selection, not new item bindings, catalogue selection or Environment selection. To use another destination configuration, generate another bundle against that destination.
-- **Do not treat delayed installation as replanning.** Install validates the frozen files but does not reread source or recalculate the plan from later destination state. If the intended source, bindings or destination state changed, generate and review a new bundle.
-- **Keep source access on the Build side.** A desktop Build accepts a local project folder. An `abfss://` source is supported only while Weaver is running inside a Fabric session. Install still requires a local bundle directory or archive.
-- **Match the bundle format.** The installer accepts exactly the bundle format it supports. An unsupported format, unknown installation method, malformed target, missing payload or checksum mismatch is rejected before installation actions run.
-- **Check host capabilities.** The same bundle can be installed by a desktop Session or inside Fabric, but a host may skip an operation it cannot perform. For example, a host without SQL endpoint refresh capability records that refresh as skipped rather than inferring replacement work. Treat the installation report as the outcome.
-
-These are source- and test-backed interface boundaries. The commands above were not run against a live Fabric workspace as part of this documentation check; a local parser or bundle test is not evidence of a live destination installation.
-
-## Know what the bundle is not
-
-A build bundle is generated installation input. It is not:
-
-- a Git commit, tag, release archive or replacement for source review;
-- a copy of the project source;
-- a [Mirror](../basics/development-cycle.md), which creates a development catalogue and borrowed estate from another installed catalogue;
-- a portable request to choose new physical targets at install time.
-
-Use Git to review and version the authored Weaver documents. Use a bundle to hand frozen installation work to another process. Use Mirror when the task is to establish a development estate from another catalogue.
-
-## Next actions
-
-After installation, run Load, Test and Health against the destination and inspect the resulting [Catalogue](../core-concepts/catalogue.md). [Weaver operations](../core-concepts/build-load-and-test.md) explains why installation changes definitions but does not run their data or validation work. See [Sessions and workflows](../basics/sessions-and-workflows.md), [Run Weaver unattended](automation-and-execution-contexts.md), the [CLI reference](../reference/cli.md) and [Contracts](../reference/operation-behaviour/index.md) for composition, automation and exact command surfaces.
+See the [`build`](../reference/cli/build.md) and [`install`](../reference/cli/install.md) references for exact command syntax and the [Build behaviour](../reference/operation-behaviour/build.md) reference for installation barriers. [Automation and execution contexts](automation-and-execution-contexts.md) explains unattended policy, credentials and machine-readable results.
