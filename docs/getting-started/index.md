@@ -1,33 +1,16 @@
 # Getting started
 
-This path creates a Warehouse-only Weaver project, validates its source and runs its complete lifecycle:
+Follow this path to create and run a Warehouse-only Weaver project:
 
 ```text
-initialise → check → build → load → test → health
-                         ↘ workflow full ↗
+install → initialise → check → build → load → test → health → workflow full
 ```
 
-## Prerequisites
+You will author one Table and one Test, install them in Microsoft Fabric, load two rows, validate those rows and read the estate's health.
 
-- Python 3.11 or later.
-- A Microsoft Fabric workspace you can modify.
-- Permission to create or reuse the catalogue Warehouse and project Warehouse.
+1. [Install Weaver](installation.md) and confirm that it can reach your Fabric workspace.
+2. [Build your first project](first-project.md) through the complete lifecycle.
 
-[Install Weaver](installation.md), authenticate and run `weaver doctor` before creating the project.
+The tutorial contains every command and source file it requires. It uses T-SQL only, so you do not need to publish a Fabric Environment before running it.
 
-## Complete the first lifecycle
-
-[First project](first-project.md) declares one Warehouse Table and one Test. It takes you through each operation separately so you can inspect its effect, then runs `weaver workflow full` as the composed form of the same lifecycle.
-
-`weaver check` validates project declarations locally. Build installs definitions, Load materialises the Table, Test compares its rows, and Health reports the resulting state.
-
-`weaver initialise` also creates or reuses the default Fabric Environment and writes its definition into the project. This Warehouse-only path does not publish or use that Environment.
-
-## Continue from the working project
-
-Choose the next route by execution engine:
-
-- [Lakehouse pipeline](../basics/lakehouse-python.md) — author Python and Spark SQL Tables backed by a Fabric Environment.
-- [Warehouse pipeline](../basics/warehouse-pipeline.md) — author T-SQL Tables and Views without Spark.
-
-Read [How Weaver works](../core-concepts/how-weaver-works.md) when you need the distinction between project source, physical Fabric items and catalogue state. Use [Troubleshooting](../basics/troubleshooting.md) if Doctor, Build, Load or Test does not reach the expected result.
+Afterwards, read [How Weaver works](../core-concepts/how-weaver-works.md) for the model behind the commands, or continue with [Build a Warehouse pipeline](../basics/warehouse-pipeline.md) for a larger SQL example.

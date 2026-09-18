@@ -1,61 +1,62 @@
 # Weaver documents
 
-Weaver documents are the files you author to declare a logical estate. Each document belongs to a logical Lakehouse or Warehouse item.
+Weaver documents are the files you author to declare a logical estate. Read each document as four parts:
 
-Weaver reads three sources of meaning together:
+```text
+path + kind + metadata + authored body
+```
 
-- **Path** identifies the owning item and, for Lakehouse data, the `Files` or `Tables` area.
-- **Document type** identifies what the file declares, such as a Table, View or Test.
+- **Path** identifies the owning logical item and, for Lakehouse data, the `Files` or `Tables` area.
+- **Kind** says what the document declares: a Table, Folder, View, Test, Assumption, Shortcut, Warehouse programmable or schema description.
 - **Metadata** names the declaration and describes properties such as schema, keys, dependencies and load behaviour.
+- **Authored body** contains the SQL, Python or mapping that implements the declaration.
 
-Together they establish the document's logical identity and meaning. Weaver checks that the path, filename, document type and declared identity agree. Exact filenames, metadata keys and language-specific syntax belong in Reference and the authoring guides.
+For example, in `Warehouse/Operations/Parcel.Status.sql`, the path assigns the document to `Warehouse/Operations`, `Table ID` makes it a Table named `Parcel.Status`, the remainder of the comment carries its metadata, and the query is the body Build installs as data work.
 
-## Data documents
+Weaver checks that placement, filename, kind and declared identity agree. Exact paths, metadata fields, defaults and body requirements are in [Weaver documents reference](../reference/weaver-documents/overview.md).
+
+## Documents that hold or present data
 
 ### Table
 
-A Table declares stored tabular data. Its document describes the table's identity and data contract and may define the work that populates it.
-
-Tables can belong to a Lakehouse or Warehouse. A Lakehouse Table is owned by the item's `Tables` area.
+A Table declares stored tabular data and, when it has authored load work, how that data is produced. Tables can belong to Lakehouses or Warehouses. Lakehouse Tables live in the item's `Tables` area.
 
 ### Folder
 
-A Folder declares managed files under a Lakehouse item's `Files` area. Its document defines the folder identity and the file scope and load behaviour Weaver manages.
-
-Folders are Lakehouse documents. A Folder and Table may use the same `Schema.Object` name because `Files` and `Tables` are separate Lakehouse areas.
+A Folder declares files managed beneath a Lakehouse item's `Files` area. Its body produces or reads the files within the declared scope.
 
 ### View
 
-A View declares a query-defined relation over Tables, Folders or other Views.
+A View declares a query-defined relation. Build installs its query as a definition; View creation is not a separate Load step.
 
-## Validation documents
+## Documents that validate data
 
 ### Test
 
-A Test compares an expected relation with an actual relation. It passes when their symmetric difference is empty. An optional primary key correlates diagnostic rows; it does not change the comparison count.
+A Test compares expected and actual rows. The optional primary key helps correlate diagnostic rows when the two sides differ.
 
 ### Assumption
 
-An Assumption returns rows that contradict a condition. It passes when the result is empty.
+An Assumption returns rows that contradict a stated condition. It passes when that result is empty.
 
-## Connection and structure documents
+Build installs Tests and Assumptions. Test executes them later against estate data.
+
+## Documents that connect or describe the estate
 
 ### Shortcut
 
-A Shortcut declares a relation from one item to data elsewhere. A logical Shortcut names another Weaver document and carries that relationship across item boundaries. A physical Shortcut names an external Fabric location directly.
-
-A logical Shortcut is also how a document in one logical item declares a managed dependency on data owned by another.
+A Shortcut presents data from another location inside an item. A logical Shortcut names another Weaver document and therefore carries a managed cross-item relationship. A physical Shortcut names an external Fabric location directly.
 
 ### Warehouse programmable
 
-A Warehouse programmable declares a stored procedure in a Warehouse item. It is neither a Table nor a View.
+A Warehouse programmable declares a stored procedure in a Warehouse. Build installs it, but it is not independently loadable.
 
 ### Schema metadata
 
-Schema metadata adds a description to a schema or declares a schema that no Table, View or other document yet implies. Object identities imply the schemas they use, so a separate schema document is optional unless that additional declaration is needed.
+Schema metadata describes a schema or declares one before another document implies it. Tables, Views and other object identities already imply their schemas, so a separate schema document is needed only for that additional declaration.
 
-## Supporting files
+## Supporting files travel with an item
 
-An item can include supporting code and data that travel with its installed work. Those files do not become independently selectable Weaver documents merely because they are beneath the item.
+An item can contain supporting Python modules and other files used by its documents. Build can package those files with installed work, but their presence does not make them independently selectable Weaver documents.
 
-The [Weaver documents contract](../reference/weaver-documents/overview.md) defines supported families, placement and agreement rules. The next concept is [Weaver operations](build-load-and-test.md): how Build, Load and Test turn these documents into an installed and operating estate.
+Next, [Build, Load and Test](build-load-and-test.md) explains how authored documents become an operating estate.

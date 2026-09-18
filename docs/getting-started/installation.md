@@ -1,12 +1,15 @@
 # Installation
 
-## Prerequisites
+## Before you start
 
-- Python 3.11 or later.
-- Access to a Microsoft Fabric workspace for commands that inspect or change Fabric.
-- A service principal, an Azure CLI sign-in, or permission to complete browser sign-in.
+You need:
 
-The [first project](first-project.md) also requires permission to create or reuse two Warehouses and the default Fabric Environment.
+- Python 3.11 or later;
+- a Microsoft Fabric workspace you can modify;
+- permission to create or reuse two Warehouses and a Fabric Environment in that workspace;
+- a Fabric credential available through a configured service principal, an existing Azure CLI sign-in or browser sign-in.
+
+The first project also creates or reuses a Fabric Environment, but its Warehouse-only code does not use or publish that Environment.
 
 ## Install Weaver
 
@@ -16,50 +19,27 @@ Install the published package into your Python environment:
 python -m pip install weaverstack
 ```
 
-The distribution installs both the `weaver` command and the importable `weaver` Python package.
+**Expected result:** the installation completes and provides both the `weaver` command and the importable `weaver` Python package.
 
-Check the installation:
+Confirm that the command is available:
 
 ```bash
 weaver --version
 weaver --help
 ```
 
-`weaver --version` prints the installed package version. `weaver --help` lists the available commands. Both commands should exit with status `0`.
+**Expected result:** the first command prints the installed version, the second lists Weaver commands and both exit successfully.
 
-## Authenticate to Fabric
+## Check access to Fabric
 
-The desktop CLI tries these credential paths in order when a command first reaches Fabric:
-
-1. a service principal configured with `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, and either `AZURE_CLIENT_SECRET` or `AZURE_CLIENT_CERTIFICATE_PATH`;
-2. an existing Azure CLI sign-in;
-3. browser sign-in, unless the command uses `--non-interactive`.
-
-For local development, sign in with the Azure CLI and check the workspace:
+Replace the workspace name below with your own:
 
 ```bash
-az login
 weaver doctor --workspace "Parcel Development"
 ```
 
-`doctor` checks authentication, workspace visibility, and the applicable Fabric connections. A failed applicable check returns a non-zero status. A connection that cannot be tested because the workspace has no corresponding Lakehouse or Warehouse is reported as not tested.
+Weaver first tries a configured service principal, then an existing Azure CLI sign-in, then browser sign-in. Complete the browser sign-in if it opens.
 
-`--non-interactive` prevents prompts, keypress waits, and browser sign-in. It does not authorise destructive work; those commands also require `--yes` when no person is available to confirm them. See [Interaction and automation](../reference/cli.md#interaction-and-automation) for the shared CLI rules.
+**Expected result:** Doctor confirms authentication and workspace visibility and exits successfully. A connection that does not apply because the workspace has no corresponding Lakehouse or Warehouse may be reported as not tested.
 
-## Know when to publish an Environment
-
-`weaver initialise` writes a local Fabric Environment definition and creates or reuses the named Environment. Creation and publication are separate operations.
-
-Publish the generated definition before running project work that imports Weaver-authored Python in Fabric:
-
-```bash
-weaver fabric environment publish \
-  --path Environment/Weaver.Environment \
-  --workspace "Parcel Development"
-```
-
-Warehouse-only SQL work does not require Environment publication. The first project therefore leaves publication deferred. The [CLI reference](../reference/cli.md) lists the command responsibilities and workspace options.
-
-## Next action
-
-[Create the Warehouse-only first project](first-project.md).
+You are ready to [create the first project](first-project.md). Authentication options, unattended execution and Fabric topology are covered in [Automation and execution contexts](../advanced/automation-and-execution-contexts.md) and the [CLI reference](../reference/cli.md).

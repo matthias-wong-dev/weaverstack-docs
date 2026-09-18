@@ -1,37 +1,49 @@
 # How Weaver works
 
-Weaver turns project files into an installed data estate in Microsoft Fabric.
-
-A project contains Weaver documents grouped beneath logical Lakehouse and Warehouse items. Workspace configuration binds those logical items to Fabric items in a workspace. This keeps the authored model separate from the names and locations used by each environment.
+Weaver turns authored project files into an installed and observable data estate in Microsoft Fabric.
 
 ```text
-Weaver project
-  logical items
-    Weaver documents
-          │
-          │ workspace binding
-          ▼
-Fabric workspace
-  physical Lakehouses and Warehouses
-  Weaver catalogue
+Weaver documents
+      ↓ Build
+installed estate
+      ↓ Load
+data + load state
+      ↓ Test
+validation state
+      ↓ Health
+current estate view
 ```
 
-## Declare the estate
+Each stage has a different source of truth. Keeping those stages separate explains why editing a file does not immediately change a running estate, and why Load and Test continue to use the last successful Build.
 
-Weaver documents describe Tables, Folders, Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata. Their paths, document types and metadata establish the logical estate: what belongs to each item, how documents are identified and which documents depend on others.
+## Author Weaver documents
 
-The project is the authored model. It does not describe every object that happens to exist in a Fabric workspace.
+A project groups Weaver documents beneath logical Lakehouse and Warehouse items. A document's path, kind, metadata and authored body describe what should exist and what work Weaver should install.
 
-## Physical bindings
+The logical names belong to the project. A [workspace configuration](logical-and-physical-items.md) binds them to Lakehouses and Warehouses in a Fabric workspace.
 
-A logical item has a project identity such as `Lakehouse/Landing` or `Warehouse/Operations`. Workspace configuration maps that identity to a physical Lakehouse or Warehouse and identifies the Warehouse used for Weaver's catalogue.
+## Build installs a generation
 
-The same project can use different workspace configuration in development and production. The logical item names and Weaver documents remain unchanged while the workspace, catalogue and physical targets differ.
+Build interprets the selected project source, resolves its physical bindings and installs the required definitions and executable work. A successful Build records the installed generation and its bindings in the [catalogue](catalogue.md).
 
-## Realise and operate the estate { #build }
+That installed generation is the boundary between source and operation. Editing project files changes the intended estate; Build makes those edits operational.
 
-[Build, Load and Test](build-load-and-test.md) connect the authored project to an operating estate. Build realises selected documents in Fabric and records the installed generation. Load runs that generation's data-producing work, and Test checks the resulting estate. Health reads and summarises the state they leave.
+## Load runs installed data work
 
-The separation lets project source change without silently changing installed work. Build is the boundary at which edited declarations become operational.
+Load starts from catalogue state, not from the files currently on disk. It runs the installed work for Tables and Folders in the selected logical items, changes their data and records the result.
 
-Continue with [Projects and estates](projects-and-estates.md) for the relationship between authored source and installed state.
+## Test runs installed validations
+
+Test also starts from the installed generation. It runs Tests and Assumptions against estate data and records whether each validation passed, failed or could not run.
+
+## Health reads the estate
+
+Health combines installed declarations, current Load and Test state and, by default, physical inventory. It reports the estate as it stands; it does not install or execute authored work.
+
+## Mirror can establish a development baseline
+
+Mirror creates a development catalogue from another installed estate and presents selected source data through development targets. The development estate can therefore begin with borrowed data. When Build installs a changed borrowed object locally, that object becomes local while unchanged objects can remain borrowed.
+
+Mirror changes how a development estate begins; the normal Build → Load → Test → Health lifecycle remains the same. See [Mirrors](mirrors.md) for that model.
+
+Continue with [Projects and estates](projects-and-estates.md) for the distinction between source, logical model, installed generation and physical Fabric state.

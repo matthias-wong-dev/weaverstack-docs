@@ -1,61 +1,66 @@
 # Logical and physical items
 
-A Weaver project names **logical items**. Workspace configuration binds each logical item to a **physical item** in Microsoft Fabric.
+A Weaver project names logical items such as `Lakehouse/Landing` and `Warehouse/Operations`. `workspace-config.yml` binds those identities to physical Lakehouses and Warehouses in Microsoft Fabric.
 
 ```text
 logical item                 physical Fabric item
-Lakehouse/Landing      →     Lakehouse/Landing_Dev
-Warehouse/Operations   →     Warehouse/Operations_Dev
+Lakehouse/Landing      →     Lakehouse/ParcelLandingDev
+Warehouse/Operations   →     Warehouse/ParcelOperationsDev
 ```
 
 The logical identity belongs to the project. The physical item belongs to a Fabric workspace.
 
-## Logical items organise the project
+Item kinds remain aligned: a logical Lakehouse binds to a physical Lakehouse, and a logical Warehouse binds to a physical Warehouse.
 
-A logical item identity combines its kind and name:
+## Logical identity stays with the source
 
-```text
-Lakehouse/Landing
-Warehouse/Operations
-```
+A logical item identity combines its kind and name. The kind matters: `Lakehouse/Shared` and `Warehouse/Shared` are different logical items.
 
-The kind is part of the identity. `Lakehouse/Shared` and `Warehouse/Shared` are different logical items even though their names match.
+Every Weaver document belongs to one logical item. That ownership keeps otherwise identical object names distinct across items and gives Build, Load and Test a stable item vocabulary independent of Fabric display names.
 
-Every Weaver document belongs to a logical item. Lakehouse data documents also belong to either the `Files` or `Tables` area. This ownership allows the same schema and object names to appear in different items without making them the same declaration.
+Commands select logical items. Build resolves them through the chosen workspace configuration. After Build succeeds, Load and Test use the physical bindings recorded in the catalogue for that installed generation.
 
-## Physical items are environment-specific
+## `workspace-config.yml` supplies an environment
 
-A physical item is a Lakehouse or Warehouse in the configured Fabric workspace. Its display name does not become part of the project's logical identity.
-
-Bindings preserve the item kind: a logical Lakehouse maps to a physical Lakehouse, and a logical Warehouse maps to a physical Warehouse. Two logical items cannot be installed into the same physical target.
-
-Commands select logical items. Build resolves those selections to physical targets before changing Fabric. Load and Test use the bindings recorded by the successful Build.
-
-## Workspace configuration owns the binding
-
-Workspace configuration supplies the physical context for operations. It identifies:
+A workspace configuration can name:
 
 - the Fabric workspace;
 - the Warehouse containing the Weaver catalogue;
-- the physical target for each logical Lakehouse or Warehouse;
-- an optional catalogue to mirror;
-- environment and execution settings when required.
+- the physical target for each logical item;
+- a Fabric Environment for Python work;
+- a source catalogue to mirror when establishing a development estate.
 
-The catalogue Warehouse is not an implicit target for a project's Warehouse documents. It stores the installed model, bindings and operational state.
+The catalogue Warehouse stores Weaver state. It is separate from the physical target of a logical Warehouse unless both are deliberately hosted in the same Warehouse.
 
-Exact configuration keys and YAML forms belong in Reference. The concept is a mapping from stable project identities to one environment's Fabric items.
+## One project can bind to development and production
 
-## Development and production can bind the same project differently
+For example, the same Warehouse project can carry these two configurations:
 
-A project can use one set of logical items in both environments. Its production configuration binds them to production Lakehouse and Warehouse items and records state in `Warehouse/ParcelCatalogue`. Its development configuration keeps those logical item names but binds them to `ParcelLandingDev` and `ParcelOperationsDev`, records state in `Warehouse/ParcelCatalogueDev`, and identifies `Warehouse/ParcelCatalogue` as the catalogue it mirrors.
+```yaml title="workspace-config.prod.yml"
+workspace: Parcel Production
+catalogue: Warehouse/ParcelCatalogue
 
-The mechanism is:
-
-```text
-same project + production configuration → production targets and catalogue
-same project + development configuration → development targets and catalogue
+targets:
+  Warehouse/Operations: ParcelOperations
 ```
 
-No declaration path changes between those builds. Selecting another workspace configuration changes the physical workspace context, catalogue and target mappings; it does not rename the logical items. The [Identity and naming](../reference/operation-behaviour/shared-selection-and-identity.md) and [Configuration](../reference/configuration-files/workspace-config.md) contracts define the exact boundaries.
+```yaml title="workspace-config.dev.yml"
+workspace: Parcel Development
+catalogue: Warehouse/ParcelCatalogueDev
 
-Continue with [Weaver documents](weaver-documents.md) for the files that declare the contents of each logical item.
+targets:
+  Warehouse/Operations: ParcelOperationsDev
+```
+
+The project still authors `Warehouse/Operations` in both cases. Selecting the production configuration addresses the production workspace and catalogue and builds into `ParcelOperations`; selecting the development configuration addresses the development workspace and catalogue and builds into `ParcelOperationsDev`.
+
+```text
+same logical project + production config → production physical estate
+same logical project + development config → development physical estate
+```
+
+A configuration's `targets` mapping tells Build where to install. Load and Test read the installed binding from the selected catalogue, so an edited mapping takes effect for those operations only after Build installs the project with it.
+
+A build also refuses to install two logical items into one occupied physical target. The exact configuration keys, discovery order and command-line precedence are in [Workspace configuration reference](../reference/configuration-files/workspace-config.md).
+
+Continue with [Weaver documents](weaver-documents.md) for what the project places inside each logical item.

@@ -1,79 +1,64 @@
-# Weaver operations
+# Build, Load and Test
 
-Build, Load and Test connect authored Weaver documents to an operating Fabric estate. They are separate operations over successive states:
+Build, Load and Test move an estate through different states. Health reads the state they leave.
 
 ```text
-Weaver documents
-      │
-      │ Build
-      ▼
+project source
+    ↓ Build
 installed definitions and work
-      │
-      │ Load
-      ▼
-data and recorded load state
-      │
-      │ Test
-      ▼
-recorded validation outcomes
+    ↓ Load
+data + current load state
+    ↓ Test
+current validation state
+    ↓ Health
+estate assessment
 ```
 
-Health reads and summarises the resulting state. It does not install definitions, run data-producing work or run validations, so it is not a fourth materialising operation.
+The separation is operationally important: source is not installed state, installed work is not the data it produces, and validation results are not the act of loading data.
 
-## Build realises the authored estate
+## Build interprets authored source
 
-Build is the operation that interprets project source. It reads the selected project documents, applies the selected workspace configuration's physical bindings and uses declared dependencies to determine affected work and order it. It then installs or changes the corresponding definitions and work in the bound Fabric items.
+Build is the operation that reads Weaver documents. It combines the selected source with workspace configuration, determines the required installation work and applies it to the bound Fabric items.
 
-A successful Build records the installed generation in the [Weaver catalogue](catalogue.md). That record connects each logical item and document to the definitions and work that later operations use. Editing a document changes the authored estate; Build is what makes that change part of the installed estate.
+A successful Build records the resulting installed generation in the catalogue. Different document kinds contribute different things:
 
-Different documents give Build different work:
+- Tables and Folders contribute stored targets and loadable work;
+- Views contribute query-defined relations installed during Build;
+- Tests and Assumptions contribute validations for a later Test operation;
+- Shortcuts contribute installed connections;
+- Warehouse programmables and schema metadata contribute definitions with no separate Load step.
 
-- **Tables** become stored relations together with any data-producing work declared for them.
-- **Folders** become managed file scopes together with their data-producing work.
-- **Views** become query-defined relations. Their query is realised by Build rather than run as a separate Load.
-- **Tests and Assumptions** become installed validations. Build does not run them.
-- **Shortcuts** become installed connections to data elsewhere. They can also place their consumers after the data they expose in Build order.
-- **Warehouse programmables** become installed stored procedures. They are installed definitions, not independently loadable documents.
-- **Schema metadata** contributes installed schema declarations and descriptions; it has no independent Load or Test step.
+Editing source does not update an installed definition. Build is the point at which an edit becomes part of the operating estate.
 
-Build can therefore affect a document even when that document will never participate in Load or Test.
+## Load runs installed data work
 
-## Load runs the installed data work
+Load reads the catalogue to find the installed items, bindings and data work in its selection. It runs loadable Tables and Folders in dependency order where applicable, changes their data and records current state and history.
 
-Load starts from the installed generation recorded in the catalogue. It resolves the selected logical items to their installed Fabric targets, runs the installed data-producing work for Tables and Folders, and records the resulting operational state.
+Load does not reopen project source. If a Table document changed after the last Build, Load still runs the previously installed work until another Build succeeds.
 
-Load does not reinterpret project source. If a Table or Folder document has changed since the last Build, Load continues to run the previously installed work. Build the change before expecting Load to use it.
+Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata do not have their own Load step. They may still supply structure or data used by loadable work.
 
-Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata have no independent Load step. They can still affect a Load: an installed View or Shortcut can supply data to loadable work, and dependencies can order selected loadable documents. The operation changes data only through the installed work it runs.
+## Test runs installed validations
 
-## Test checks the installed estate
+Test reads the catalogue and executes the installed Tests and Assumptions in its selection.
 
-Test runs installed Tests and Assumptions against the estate produced by Build and Load. A Test compares expected and actual relations; an Assumption finds rows that contradict a condition. Test records their outcomes in the catalogue.
+- A Test compares expected and actual rows.
+- An Assumption counts rows that contradict its condition.
 
-Test reads estate data but does not install definitions or materialise business data. Changing a Test or Assumption document does not change the installed validation until Build installs the new generation.
+Test records each validation's current outcome. It reads estate data but does not install definitions or materialise business data. An edited validation takes effect only after Build installs it.
 
-## Selection sets the operating boundary
+## Health reads state
 
-Each operation has a selection of logical items or documents. Build interprets source within its selection; Load and Test select from what the catalogue says is installed. Dependencies determine affected Build work and execution order where applicable, but they do not turn every dependency into an implicit request to operate on another logical item.
+Health assesses installed declarations, current Load and Test state and, by default, physical inventory. It reports Build, Load and Tests as Green, Amber or Red and explains findings that affect that assessment.
 
-[Dependencies](dependencies.md) owns the dependency model, including cross-item relationships and operation-specific selection rules.
+Health is not another materialising stage. It runs no authored load or validation code and does not change the installed generation.
 
-## A Session carries operations to Fabric
+## Each operation has its own boundary
 
-A Session is the execution context through which an operation reaches Fabric. Build, Load and Test keep the same selection, catalogue and state-change semantics whether Weaver starts on a desktop or already runs inside Fabric.
+Build selects project items and resolves their configured physical targets. Load and Test select from the installed estate and use the bindings recorded by Build. Dependencies can determine affected work and execution order, but selection remains an operation-specific boundary.
 
-An operation can open a Session for itself. Several operations can instead use one Session, as they do in the interactive CLI and in a workflow. They then share the resolved workspace and item context, credentials and Fabric execution resources already acquired for that workspace. Closing an operation-created Session releases its resources; a Session supplied by the caller remains open for later operations.
+## Sessions and workflows { #a-workflow-composes-ordinary-operations }
 
-The host changes the path to Fabric, not the operation. On a desktop, the Session acquires remote Fabric capabilities as an operation needs them. Inside the Fabric workspace being addressed, it uses that workspace's active execution context. A notebook addressing another workspace takes the desktop path. Authentication, Spark availability and other host prerequisites can therefore differ even though the project, catalogue and operation mean the same thing.
+A workflow runs ordinary Weaver commands in order through one Session. Each operation keeps its normal boundary and state changes; the sequence is not a transaction.
 
-## A workflow composes ordinary operations
-
-A workflow is an ordered sequence of ordinary Weaver commands run in one Session and one workspace. Each command keeps its normal Build, Load, Test or other operation semantics; the workflow is not another execution engine or a replacement lifecycle.
-
-The shared Session preserves workspace resolution and acquired execution context across the sequence. Recorded Load and Test work from the sequence shares one workflow identifier, which correlates those outcomes without making the sequence transactional. Failure between commands is covered by [Fault tolerance](fault-tolerance.md).
-
-## Health reports the resulting state
-
-Health combines installed declarations, current Load and Test state and, when requested, physical inventory. It reports what Build installed and what later operations recorded; it does not advance the estate through another lifecycle stage.
-
-Exact commands and options belong in [Reference](../reference/index.md). The [Build](../reference/operation-behaviour/build.md), [Load](../reference/operation-behaviour/load.md), [Test](../reference/operation-behaviour/test.md), [Workflow](../reference/operation-behaviour/workflow.md), [Selection](../reference/operation-behaviour/shared-selection-and-identity.md), and [State and health](../reference/operation-behaviour/health.md) contracts own the precise operation boundaries. [Runtime](../reference/operation-behaviour/session-runtime.md) and [Host behaviour](../reference/operation-behaviour/session-runtime.md) define where installed work executes. [Signatures and change detection](../advanced/incremental-build-selection.md) defines how Build distinguishes installed work from changed and impacted work.
+Exact selection, ordering, state changes and failure behaviour belong in [Operation behaviour reference](../reference/operation-behaviour/index.md). [Sessions and workflows](sessions-and-workflows.md) explains the shared execution context.
