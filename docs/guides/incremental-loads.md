@@ -1,6 +1,6 @@
 # Load changed parcel files incrementally
 
-This guide keeps a current parcel-status Table in sync with a managed Folder. The Folder publishes a complete file snapshot; the Table reads only files changed since its own last clean load and explicitly retires rows for deleted files.
+This guide keeps a current parcel-status Table in sync with a managed Folder. The Folder publishes a complete file snapshot; the Table reads only files changed since its own last clean load and explicitly retires rows for deleted files. The [Incremental-processing contract](../contracts/incremental-processing.md) owns the precise bookmark, change and commit semantics.
 
 ## Prerequisites
 

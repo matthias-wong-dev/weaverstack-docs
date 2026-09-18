@@ -130,6 +130,15 @@ nav:
       - Catalogue: contracts/catalogue.md
       - Dependencies: contracts/dependencies.md
       - Signatures and change detection: contracts/signatures-and-change-detection.md
+      - Build: contracts/build.md
       - Load: contracts/load.md
+      - Test: contracts/test.md
+      - Workflow: contracts/workflow.md
+      - Selection: contracts/selection.md
+      - State and health: contracts/state-and-health.md
+      - Fault tolerance: contracts/fault-tolerance.md
+      - Incremental processing: contracts/incremental-processing.md
+      - History: contracts/history.md
+      - Mirror: contracts/mirror.md
   - Advanced: advanced/index.md
   - Contributing: contributing/index.md

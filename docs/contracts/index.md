@@ -25,6 +25,15 @@ The contract surface includes:
 - [Catalogue](catalogue.md) — ownership, publication, certification, runtime state and read boundaries.
 - [Dependencies](dependencies.md) — inferred and declared relationships, Build impact and execution boundaries.
 - [Signatures and change detection](signatures-and-change-detection.md) — installed equality, physical reconciliation, pruning and certification.
+- [Build](build.md) — source snapshots, selection, planning, bundles, installation and certification.
 - [Load](load.md) — selection, dependencies, execution, outcomes, bookmarks and fault tolerance.
+- [Test](test.md) — installed and source-file validation, outcomes, strict mode and recording.
+- [Workflow](workflow.md) — command composition, shared Session, confirmation and stop-on-failure behaviour.
+- [Selection](selection.md) — logical items, installed names, physical targets and operation-specific boundaries.
+- [State and health](state-and-health.md) — current evidence, freshness, findings and Green/Amber/Red status.
+- [Fault tolerance](fault-tolerance.md) — operation-specific failure barriers, continuation and partial work.
+- [Incremental processing](incremental-processing.md) — bookmarks, keyed changes, Folder history, stability and reload.
+- [History](history.md) — current state, append-only records, workflow correlation and retention boundaries.
+- [Mirror](mirror.md) — estate copying, rebinding, borrowed forms, localisation and destructive boundaries.
 
 A contract states only behaviour supported by current source and tests. Examples may illustrate that behaviour, but an example does not enlarge the guarantee.

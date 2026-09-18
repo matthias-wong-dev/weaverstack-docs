@@ -103,4 +103,4 @@ Health combines both sides:
 
 Continue with another edit, Build, Load, Test and Health cycle. Re-mirror when development needs a fresh production baseline. It repeats the transition: the destination catalogue and selected development targets are emptied and reconstructed from the source, replacing local materialisations in that boundary.
 
-The [Catalogue](catalogue.md) explains the state that changes through this loop. [Weaver operations](weaver-operations.md) explains the lifecycle boundary between authored, installed and operational state. Exact workspace-configuration fields, precedence, mirror selection and command grammar belong in Reference.
+The [Catalogue](catalogue.md) explains the state that changes through this loop. [Weaver operations](weaver-operations.md) explains the lifecycle boundary between authored, installed and operational state. The [Mirror contract](../contracts/mirror.md) defines the destructive transition, copied state and localisation boundary; exact command grammar remains in Reference.

@@ -6,7 +6,7 @@ This maintainer-only map records what the public site does not yet explain. It l
 
 The accepted Core sequence now covers the public mental model: Weaver documents, operations, catalogue state, the development cycle, dependencies and fault tolerance. Task-specific detail belongs in Guides; precise behavioural commitments belong in Contracts. Do not create extra concept pages merely to mirror source modules.
 
-The remaining conceptual calibration points are identity and naming, repository discovery, incremental Build, validation and health. Batches 9–10 should decide whether each point needs contract language, a restrained addition to an existing Core page, or no additional public prose.
+The foundation and lifecycle contracts now own identity, source discovery, change detection, validation, state and health. The final integration pass should remove conceptual repetition rather than create matching Core pages.
 
 ## Guides
 
@@ -26,27 +26,26 @@ The reference distinguishes public top-level exports from importable internal mo
 
 ## Contracts
 
+Foundation and lifecycle behaviour is covered through Build, Load, Test, Workflow, selection, state and health, fault tolerance, incremental processing, history and Mirror. The remaining contracts are exact authored formats and machine/host interfaces whose compatibility boundaries require care.
+
 | Missing contract | Current authority | Future authoritative home | Required precision |
 | --- | --- | --- | --- |
-| Workspace configuration | Config parser and declaration tests | `contracts/workspace-config.md` | All keys, value types, defaults, environment references, target execution settings, precedence and errors. |
-| Workflow configuration | CLI workflow parser and tests | `contracts/workflow.md` | File shape, accepted command language, forbidden nesting/shell syntax, confirmation and propagation rules. |
-| Project documents | Metadata and repository parsers plus fixtures | `contracts/documents.md` | Supported kinds, paths, headers, keys, defaults, type/nullability grammar and validation errors. |
 | Python-authored objects | Object base classes and repository AST validation | `contracts/python-authoring.md` | Required class names/methods, static restrictions, runtime context and return contracts. |
 | SQL-authored objects | SQL program readers and tests | `contracts/sql-authoring.md` | Metadata blocks, statement structure, dialect-specific constraints, inferred versus declared schema and load/delete queries. |
 | Shortcut declarations | Shortcut readers and tests | `contracts/shortcuts.md` | Exact Python/YAML schema, target grammar and unsupported combinations. |
 | Build bundle | Build bundle model, serializer and invariant tests | `contracts/build-bundle.md` | Directory/archive layout, manifest and payload hashes, identity, compatibility and validation errors. |
 | CLI JSON | Renderers and representation tests | `contracts/cli-json.md` | Per-command schemas, format versions, nullability, partial reports and error envelope. |
 | Exit codes | CLI handlers and interaction tests | `contracts/exit-codes.md` | Success, domain failure, health status, refusal, parser failure and interruption. |
-| Catalogue | Catalogue table declarations and compatibility tests | `contracts/catalogue.md` | Supported read surface, columns, keys, meanings, schema/version compatibility and prohibition on manual writes. |
+| Catalogue compatibility | Catalogue table declarations and compatibility tests | existing `contracts/catalogue.md` or a generated schema reference | Decide whether columns, keys and schema versions form a supported consumer interface beyond the established table purposes and read-only boundary. |
 | Environment definition | Environment definition parser and publication tests | `contracts/environment.md` | Directory parts, package overlay ownership, local/remote authority and preservation guarantees. |
 
 ## Explicitly withheld claims
 
-The initial site does not claim:
+The site does not claim:
 
 - compatibility guarantees for bundle or catalogue formats beyond current source behaviour;
 - stability for internal Python modules;
-- a complete list of metadata keys or configuration fields;
+- a complete compatibility contract for every authored metadata key;
 - a universal authentication prerequisite beyond the implemented credential chain;
 - that all Fabric workspaces expose every Doctor probe;
 - that an Environment is required for Warehouse-only work;
