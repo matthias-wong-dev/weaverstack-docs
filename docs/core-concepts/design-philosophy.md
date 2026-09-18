@@ -44,7 +44,9 @@ That boundary is what makes frozen Build bundles, repeatable runtime work and in
 
 > **Rebuilding everything is not a change strategy. Compare desired, installed and operational state, then act on the difference.**
 
-Build compares authored declarations, catalogue certification and physical inventory. Signatures identify changed definitions; managed dependencies identify affected descendants within the selected items; unchanged installed definitions remain in place. Load uses bookmarks and current health to select or process outstanding data work. In a mirrored development estate, unchanged objects can remain borrowed while changed or affected objects become local.
+Build compares authored declarations, catalogue certification and physical inventory. Signatures identify changed definitions; managed dependencies identify affected descendants within the selected items; unchanged installed definitions remain in place. Load uses bookmarks and current health to select or process outstanding data work.
+
+Development follows the same rule. A code branch should not require another full copy and reload of production data before useful work can begin. Mirror forks the installed catalogue and can present unchanged source data through OneLake shortcuts and Warehouse views. Changed or affected objects become local when Build installs them; the rest can remain borrowed. Code and data can therefore branch together without duplicating the whole estate.
 
 This principle is not a universal “incremental” slogan. `Incremental` has specific Table and Folder meanings, with document-specific defaults. Rebuilding loadable work resets its current Load state and bookmark, and reload explicitly reconstructs selected Tables. Re-mirroring is also a deliberate reset: it reconstructs the selected destination boundary from a new source baseline rather than refreshing around local work.
 
@@ -64,7 +66,7 @@ Notebook support is therefore a consequence, not the principle itself. The same 
 
 > **Operational state is queryable data. Logs are evidence, not the estate's memory.**
 
-A run log alone cannot say which generation is installed, where an incremental read resumes, whether a validation is stale or which objects still borrow source data. Weaver records those facts in the catalogue, alongside execution history and row movement. Workflow identifiers correlate related work, and Health turns installed, operational and optional physical evidence into a current estate view.
+A run log alone cannot say which generation is installed, where an incremental read resumes, whether a validation is stale or which objects still borrow source data. A detached manifest can describe what a tool compiled, but it cannot by itself prove what is installed now or what happened after installation. Weaver records those facts in the estate's catalogue, alongside execution history and row movement. Workflow identifiers correlate related work, and Health turns installed, operational and optional physical evidence into a current estate view.
 
 `_.Installation`, `_.Registry` and `_.Dependency` describe installed state. `_.Bookmark`, `_.LoadStatus` and `_.TestStatus` describe current operation state. `_.Log` and `_.LoadStatistic` retain operation history. `_.Mirror` identifies borrowed objects. Managed row-audit datetimes describe the lifecycle state of stored rows.
 
