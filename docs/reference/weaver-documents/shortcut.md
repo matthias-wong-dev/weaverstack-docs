@@ -1,25 +1,96 @@
 # Shortcut
 
-| Family | Lakehouse authored form | Warehouse authored form | Identity established by |
+A Shortcut gives an item-local name to data in another logical or physical Fabric item. Lakehouses materialise OneLake shortcuts; Warehouses materialise T-SQL Views.
+
+## Supported declaration files
+
+| Owner | File | Supported destination kinds |
+| --- | --- | --- |
+| Lakehouse | `Lakehouse/<Item>/shortcuts.py` | `table`, `folder`, `schema` |
+| Warehouse | `Warehouse/<Item>/shortcuts.yml` | `view` |
+
+There is at most one recognised shortcut file at the item root. It has no Weaver metadata block and no free-form executable body.
+
+## Lakehouse `shortcuts.py`
+
+Each declaration is a single assignment:
+
+```python
+Name = Shortcut(shortcut_type, target_type, target, workspace=None)
+```
+
+Arguments may be positional in that order or named. `shortcut_type`, `target_type` and `target` are required literal strings and have no defaults; `workspace` defaults to `None`. A workspace value is one non-empty name with no surrounding whitespace, forward slash, backslash, dot or colon. Imports and standalone string comments are allowed beside declarations. Other statements, expressions, unpacked arguments and computed values are rejected because Weaver parses this file without executing it.
+
+| `shortcut_type` | Assignment name | `target_type` | Target form |
 | --- | --- | --- | --- |
-| Table | Python or Spark SQL under `Tables/` | T-SQL at the item root | item path, `Tables` area for a Lakehouse, filename and `Table ID` |
-| Folder | Python under `Files/` | Not supported | item path, `Files` area, filename and `Folder ID` |
-| View | Spark SQL under `Tables/` | T-SQL at the item root | item path, `Tables` area for a Lakehouse, filename and `View ID` |
-| Test | Python or Spark SQL under `tests/` | T-SQL under `tests/` | item path, directory, filename and `Test ID` |
-| Assumption | Python or Spark SQL under `assumptions/` | T-SQL under `assumptions/` | item path, directory, filename and `Assumption ID` |
-| Shortcut | `shortcuts.py` | `shortcuts.yml` | declaring item, authored destination name and shortcut kind |
-| Warehouse programmable | Not supported | T-SQL under `programmables/` | item path, filename and the procedure created by the statement |
-| Schema metadata | YAML under `schemas/` | YAML under `schemas/` | item path, filename and `Schema ID` |
+| `table` | `Schema__Object` | `logical` | Full project identity: `Lakehouse/<Item>/Tables/Schema.Object` or `Warehouse/<Item>/Schema.Object`. |
+| `table` | `Schema__Object` | `physical` | `<ItemType>/<FabricItem>/[Tables/]Schema.Object`; `workspace` may name another workspace. |
+| `folder` | `Schema__Object` | `logical` | Full project Folder identity: `Lakehouse/<Item>/Files/Schema.Object`. |
+| `folder` | `Schema__Object` | `physical` | `Lakehouse/<FabricItem>/Files/<relative/path>`; `workspace` may name another workspace. |
+| `schema` | Bare destination schema | `physical` only | `<ItemType>/<FabricItem>/<source-schema>`; `workspace` may name another workspace. |
 
-The owning item selects the SQL dialect: SQL in a Lakehouse is Spark SQL; SQL in a Warehouse is T-SQL. A suffix does not select another dialect.
+A physical table or schema source may be a Lakehouse or Warehouse. A folder source must be a Lakehouse because Warehouses have no `Files` area. A physical target without `workspace` uses the configured workspace.
 
-Exact metadata keys, method return values and SQL program forms remain in the [authoring guides](../../basics/index.md) and [Python API reference](../python/index.md). The placement and agreement rules below are part of the document contract because they decide whether a file is a declaration at all.
+`workspace` is incompatible with every logical target. A schema Shortcut is incompatible with `logical`, and `view` is incompatible with a Lakehouse owner.
 
-A shortcut belongs to the item containing its shortcut file. Its authored destination establishes the local identity that Build manages.
+```python
+from weaver import Shortcut
 
-- A Lakehouse shortcut can declare a Table, Folder or schema destination.
-- A Warehouse shortcut declares a View destination.
-- A logical shortcut names another Weaver document and must resolve with exact case inside the same project.
-- A physical shortcut names a Fabric location directly.
+Parcel__Current = Shortcut(
+    shortcut_type="table",
+    target_type="logical",
+    target="Lakehouse/Landing/Tables/Parcel.Current",
+)
 
-A shortcut destination must not collide with another declaration in the same logical namespace. A logical shortcut crosses item boundaries; it cannot point back into its declaring item. See [Shortcuts](../../basics/shortcuts.md) for the Python and YAML declaration forms.
+Parcel__Incoming = Shortcut(
+    shortcut_type="folder",
+    target_type="physical",
+    target="Lakehouse/External/Files/parcel/incoming",
+    workspace="Logistics Shared",
+)
+
+Reference = Shortcut(
+    shortcut_type="schema",
+    target_type="physical",
+    target="Warehouse/Reference/Reference",
+    workspace="Logistics Shared",
+)
+```
+
+Path: `Lakehouse/Curated/shortcuts.py`.
+
+The deployed runtime `shortcuts` module is generated by Weaver; authored Python imports an individual destination with `from shortcuts import Parcel__Current`. Importing a logical shortcut creates a dependency on its logical source. Importing a physical shortcut records an external boundary with no project producer.
+
+## Warehouse `shortcuts.yml`
+
+The optional top-level keys are exactly `logical` and `physical`. Each section maps a full destination identity owned by this Warehouse to a target string. Both destination and target must be YAML strings. Every destination is a View; there is no kind field or workspace field.
+
+```yaml
+logical:
+  "Warehouse/Reporting/Parcel.Current": "Lakehouse/Curated/Tables/Parcel.Current"
+physical:
+  "Warehouse/Reporting/Reference.Depot": "Warehouse/Reference/Reference.Depot"
+```
+
+Path: `Warehouse/Reporting/shortcuts.yml`.
+
+Logical targets are full project document identities and must resolve exactly. Physical View targets use `<ItemType>/<FabricItem>/[Tables/]Schema.Object` in the configured workspace. Warehouse View shortcuts do not accept a workspace override; `shortcuts.yml` has no field for one.
+
+## Identity, compatibility and dependencies
+
+A Table, Folder or View destination is `Schema.Object`; a schema destination is the bare schema name. Destinations must not duplicate or case-collide with another Shortcut or authored object. Nothing may be declared inside a schema-shortcut namespace. A logical target:
+
+- must resolve, with exact case, to a managed object or Shortcut destination in the same project;
+- cannot point into its declaring item;
+- adds `source → destination` to the document graph and a cross-item edge to the item graph;
+- must preserve the Tables/Files namespace for a Lakehouse destination.
+
+Item graphs remain acyclic. Physical targets add no project dependency edge. Metadata references and foreign keys do not turn into Shortcut dependencies.
+
+## Operations and managed state
+
+- **Check** parses declarations, identities, target forms, collisions, logical resolution and cycles without contacting Fabric.
+- **Build** selects and materialises changed Shortcuts. A Lakehouse destination becomes a OneLake Table, Folder or schema shortcut; a Warehouse destination becomes `CREATE OR ALTER VIEW ... AS SELECT * FROM <physical source>`. Removed managed destinations are pruned. Unsupported or unresolved physical work fails or is reported during planning/installation rather than becoming a different form.
+- **Load** and **Test** do not create Shortcuts. Installed loads and validations may read them through their local destinations.
+
+`_.Shortcut` records item scope, shortcut ID, destination schema/object, shortcut and target types, target item/schema/object, optional target workspace and signature. `_.Registry` certifies the installed destination with role `Shortcut` and its physical type (`Table`, `Folder`, `Schema` or `View`). Logical consumers also have `_.Dependency` rows for their resolved source edges.

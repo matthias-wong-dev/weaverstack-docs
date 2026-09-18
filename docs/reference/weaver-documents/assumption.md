@@ -1,24 +1,89 @@
 # Assumption
 
-| Family | Lakehouse authored form | Warehouse authored form | Identity established by |
+An Assumption returns rows that contradict a statement about the estate. It passes when no rows are returned.
+
+## Location and identity
+
+| Item | Location | Filename | Authored form |
 | --- | --- | --- | --- |
-| Table | Python or Spark SQL under `Tables/` | T-SQL at the item root | item path, `Tables` area for a Lakehouse, filename and `Table ID` |
-| Folder | Python under `Files/` | Not supported | item path, `Files` area, filename and `Folder ID` |
-| View | Spark SQL under `Tables/` | T-SQL at the item root | item path, `Tables` area for a Lakehouse, filename and `View ID` |
-| Test | Python or Spark SQL under `tests/` | T-SQL under `tests/` | item path, directory, filename and `Test ID` |
-| Assumption | Python or Spark SQL under `assumptions/` | T-SQL under `assumptions/` | item path, directory, filename and `Assumption ID` |
-| Shortcut | `shortcuts.py` | `shortcuts.yml` | declaring item, authored destination name and shortcut kind |
-| Warehouse programmable | Not supported | T-SQL under `programmables/` | item path, filename and the procedure created by the statement |
-| Schema metadata | YAML under `schemas/` | YAML under `schemas/` | item path, filename and `Schema ID` |
+| Lakehouse | `Lakehouse/<Item>/assumptions/` | `Schema__Object.py` | Python |
+| Lakehouse | `Lakehouse/<Item>/assumptions/` | `Schema.Object.sql` | Spark SQL |
+| Warehouse | `Warehouse/<Item>/assumptions/` | `Schema.Object.sql` | T-SQL |
 
-The owning item selects the SQL dialect: SQL in a Lakehouse is Spark SQL; SQL in a Warehouse is T-SQL. A suffix does not select another dialect.
+The file must sit directly under `assumptions/`. `Assumption ID: Schema.Object`, filename and Python class name must agree exactly, including case. Each identity component is one logical name: no forward slash, backslash, dot, colon or surrounding whitespace. Tests and Assumptions share one validation namespace. In a Warehouse that namespace also collides with Tables and Views of the same identity; a Lakehouse validation has no `Tables/` area.
 
-Exact metadata keys, method return values and SQL program forms remain in the [authoring guides](../../basics/index.md) and [Python API reference](../python/index.md). The placement and agreement rules below are part of the document contract because they decide whether a file is a declaration at all.
+## Metadata
 
-A Python object filename uses `Schema__Object.py`; a SQL object filename uses `Schema.Object.sql`. The metadata ID uses `Schema.Object`. All components must agree exactly, including case.
+| Key | Required | Value and default |
+| --- | --- | --- |
+| `Assumption ID` | Yes | One non-empty `Schema.Object`; the file contains no other ID key. |
+| `Description` | Yes | Non-empty prose or one metadata reference. |
+| `Dependencies` | No | YAML list of item-relative `Schema.Object` names. Absent: infer; present: replace inference; `[]`: none. |
+| `Notes` | No | Non-empty free text. |
+| `Revision notes` | No | Non-empty YAML list of dated notes using one accepted date spelling throughout the document; see [Common metadata](common-metadata.md). |
 
-A Python document must contain exactly one directly declared Weaver class. The class name must equal the filename stem, inherit the class named by its metadata kind and provide that kind's required authored methods. Helper classes may coexist in the module but do not declare additional Weaver documents. A View is authored in SQL, not Python, and a Folder is authored in Python, not SQL.
+Only these keys are accepted. `Primary key` is incompatible because an Assumption has no expected/actual pair to correlate. `Lineage`, `Schema`, `Column notes`, `Unique keys`, `Foreign keys`, `Not null`, `Identity`, `Comparison columns`, `Incremental`, `Static`, `Prohibit rebuild`, `File key`, `Has load procedure`, `Delete percentage threshold`, `Update percentage threshold` and `Stability row threshold` are also incompatible.
 
-A SQL document's metadata kind determines whether it is a Table, View, Test or Assumption. Weaver validates the supported result-query shape without submitting the SQL. SQL syntax and engine behaviour that cannot be established statically remain the responsibility of Spark SQL or the Warehouse endpoint when the installed work runs.
+Dependencies are inferred from Python object imports or SQL relation references when `Dependencies` is absent. Spark SQL Assumptions may use inference; the explicit-dependency requirement for Spark SQL Tables and Views does not apply to validations. A declaration replaces inferred references and cannot name the Assumption itself or any Test or Assumption. Item graphs remain acyclic.
 
-Tests and Assumptions are declarations but do not materialise relations. In a Lakehouse their identities carry no `Tables` or `Files` area; in a Warehouse they share the item's ordinary `Schema.Object` namespace with Tables and Views. Tests and Assumptions also share one validation namespace with each other.
+## Python body
+
+The module declares exactly one Weaver class directly inheriting `weaver.Assumption`. Its name equals the filename stem and it implements one synchronous `read()` method. `read()` returns a Spark DataFrame containing the violating rows; any returned row is a failure.
+
+```python
+"""
+Assumption ID: Parcel.HasDestination
+
+Description: Every parcel has a destination.
+"""
+
+from weaver import Assumption
+
+
+class Parcel__HasDestination(Assumption):
+    def read(self):
+        return self.spark.createDataFrame([], "ParcelId string, Destination string")
+```
+
+Path: `Lakehouse/Quality/assumptions/Parcel__HasDestination.py`.
+
+## SQL body
+
+Setup statements that return no rows may precede the contract query. All setup must finish before the first result-producing query. The body then produces exactly one result set containing violating rows.
+
+Spark SQL example:
+
+```sql
+/*
+Assumption ID: Parcel.HasDestination
+
+Description: Every parcel has a destination.
+*/
+select cast(null as string) as ParcelId
+where false;
+```
+
+Path: `Lakehouse/Quality/assumptions/Parcel.HasDestination.sql`.
+
+Warehouse T-SQL example:
+
+```sql
+/*
+Assumption ID: Parcel.HasDestination
+
+Description: Every parcel has a destination.
+*/
+select cast(null as varchar(50)) as ParcelId
+where 1 = 0;
+```
+
+Path: `Warehouse/Quality/assumptions/Parcel.HasDestination.sql`.
+
+## Operations and managed state
+
+- **Check** parses metadata, identity, class/method structure, SQL program shape, dependencies and cycles without running the Assumption.
+- **Build** installs the declaration and its runnable form. Lakehouse Python is deployed as a module; Lakehouse Spark SQL is compiled to a module; Warehouse T-SQL is compiled to a stored procedure. Build does not evaluate it. A rebuilt Assumption receives current status `Pending`.
+- **Load** does not run Assumptions.
+- **Test** runs the installed definition after its data dependencies. Zero rows records `Succeeded`; returned rows record `Failed`; execution failures record `Error`; unavailable dependencies can record `Blocked`. The violation count is retained, while diagnostic rows are not persisted.
+
+`_.TestDictionary` records the logical item, `Schema.Object`, type `Assumption`, resolved description and its reference, a null primary key and source signature. `_.Registry` records the compiled module or procedure with role `Assumption`, not a physical object at the logical Assumption ID. `_.Dependency` records resolved edges. `_.TestStatus` records the logical identity, test type, workflow, result, timing and current violation count as `Failure count`; `_.Log` keeps execution history.

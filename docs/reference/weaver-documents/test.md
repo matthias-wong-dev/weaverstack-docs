@@ -1,24 +1,110 @@
 # Test
 
-| Family | Lakehouse authored form | Warehouse authored form | Identity established by |
+A Test compares an expected relation with an actual relation. It passes when their two-way set difference is empty. An optional primary key correlates diagnostic rows; it does not change the comparison.
+
+## Location and identity
+
+| Item | Location | Filename | Authored form |
 | --- | --- | --- | --- |
-| Table | Python or Spark SQL under `Tables/` | T-SQL at the item root | item path, `Tables` area for a Lakehouse, filename and `Table ID` |
-| Folder | Python under `Files/` | Not supported | item path, `Files` area, filename and `Folder ID` |
-| View | Spark SQL under `Tables/` | T-SQL at the item root | item path, `Tables` area for a Lakehouse, filename and `View ID` |
-| Test | Python or Spark SQL under `tests/` | T-SQL under `tests/` | item path, directory, filename and `Test ID` |
-| Assumption | Python or Spark SQL under `assumptions/` | T-SQL under `assumptions/` | item path, directory, filename and `Assumption ID` |
-| Shortcut | `shortcuts.py` | `shortcuts.yml` | declaring item, authored destination name and shortcut kind |
-| Warehouse programmable | Not supported | T-SQL under `programmables/` | item path, filename and the procedure created by the statement |
-| Schema metadata | YAML under `schemas/` | YAML under `schemas/` | item path, filename and `Schema ID` |
+| Lakehouse | `Lakehouse/<Item>/tests/` | `Schema__Object.py` | Python |
+| Lakehouse | `Lakehouse/<Item>/tests/` | `Schema.Object.sql` | Spark SQL |
+| Warehouse | `Warehouse/<Item>/tests/` | `Schema.Object.sql` | T-SQL |
 
-The owning item selects the SQL dialect: SQL in a Lakehouse is Spark SQL; SQL in a Warehouse is T-SQL. A suffix does not select another dialect.
+The file must sit directly under `tests/`. `Test ID: Schema.Object`, filename and Python class name must agree exactly, including case. Each identity component is one logical name: no forward slash, backslash, dot, colon or surrounding whitespace. A Test and Assumption share one validation namespace. In a Warehouse that namespace also collides with Tables and Views of the same `Schema.Object`; a Lakehouse validation identity has no `Tables/` area and may share a local name with a Table.
 
-Exact metadata keys, method return values and SQL program forms remain in the [authoring guides](../../basics/index.md) and [Python API reference](../python/index.md). The placement and agreement rules below are part of the document contract because they decide whether a file is a declaration at all.
+## Metadata
 
-A Python object filename uses `Schema__Object.py`; a SQL object filename uses `Schema.Object.sql`. The metadata ID uses `Schema.Object`. All components must agree exactly, including case.
+| Key | Required | Value and default |
+| --- | --- | --- |
+| `Test ID` | Yes | One non-empty `Schema.Object`; the file contains no other ID key. |
+| `Description` | Yes | Non-empty prose or one metadata reference. |
+| `Primary key` | No | One comma-separated, ordered column set. Default: no correlation key. |
+| `Dependencies` | No | YAML list of item-relative `Schema.Object` names. Absent: infer; present: replace inference; `[]`: none. |
+| `Notes` | No | Non-empty free text. |
+| `Revision notes` | No | Non-empty YAML list of dated notes using one accepted date spelling throughout the document; see [Common metadata](common-metadata.md). |
 
-A Python document must contain exactly one directly declared Weaver class. The class name must equal the filename stem, inherit the class named by its metadata kind and provide that kind's required authored methods. Helper classes may coexist in the module but do not declare additional Weaver documents. A View is authored in SQL, not Python, and a Folder is authored in Python, not SQL.
+Only these keys are accepted. `Lineage`, `Schema`, `Column notes`, `Unique keys`, `Foreign keys`, `Not null`, `Identity`, `Comparison columns`, `Incremental`, `Static`, `Prohibit rebuild`, `File key`, `Has load procedure`, `Delete percentage threshold`, `Update percentage threshold` and `Stability row threshold` are incompatible with a Test.
 
-A SQL document's metadata kind determines whether it is a Table, View, Test or Assumption. Weaver validates the supported result-query shape without submitting the SQL. SQL syntax and engine behaviour that cannot be established statically remain the responsibility of Spark SQL or the Warehouse endpoint when the installed work runs.
+`Primary key` columns must be returned by both sides. At runtime each key must be non-null, non-blank and unique on each side. `_weaver_side` and `_weaver_sk` are reserved diagnostic column names and must not be returned by either side.
 
-Tests and Assumptions are declarations but do not materialise relations. In a Lakehouse their identities carry no `Tables` or `Files` area; in a Warehouse they share the item's ordinary `Schema.Object` namespace with Tables and Views. Tests and Assumptions also share one validation namespace with each other.
+Dependencies are inferred from Python object imports or SQL relation references when `Dependencies` is absent. This includes Spark SQL Tests; the explicit-dependency requirement for Spark SQL Tables and Views does not apply to validations. Declared dependencies replace inferred references and cannot name the Test itself or another Test or Assumption. Item graphs remain acyclic.
+
+## Python body
+
+The module declares exactly one Weaver class directly inheriting `weaver.Test`. Its name equals the filename stem. It implements one synchronous `expected()` and one synchronous `actual()` method and must not override `read()`.
+
+Both methods return Spark DataFrames with the same number of positionally compatible columns. If both sides use the same column names, they must use the same order; Weaver refuses a reordered copy of the same names rather than silently changing comparison semantics. A declared primary key must exist on both sides and only pairs expected and actual diagnostic rows for the same entity.
+
+```python
+"""
+Test ID: Parcel.CountsMatch
+
+Description: Expected and actual parcel counts match.
+
+Primary key: Depot
+"""
+
+from weaver import Test
+
+
+class Parcel__CountsMatch(Test):
+    def expected(self):
+        return self.spark.createDataFrame([("CBR", 2)], "Depot string, Count long")
+
+    def actual(self):
+        return self.spark.createDataFrame([("CBR", 2)], "Depot string, Count long")
+```
+
+Path: `Lakehouse/Quality/tests/Parcel__CountsMatch.py`.
+
+## SQL body
+
+Setup statements that return no rows may precede the contract queries. All setup must finish before the first result-producing query. The body then produces exactly two result sets:
+
+1. expected rows;
+2. actual rows.
+
+Both result sets obey the same shape and optional primary-key rules as Python Tests.
+
+Spark SQL example:
+
+```sql
+/*
+Test ID: Parcel.CountsMatch
+
+Description: Expected and actual parcel counts match.
+
+Primary key: Depot
+*/
+select 'CBR' as Depot, 2 as Count;
+
+select 'CBR' as Depot, 2 as Count;
+```
+
+Path: `Lakehouse/Quality/tests/Parcel.CountsMatch.sql`.
+
+Warehouse T-SQL example:
+
+```sql
+/*
+Test ID: Parcel.CountsMatch
+
+Description: Expected and actual parcel counts match.
+
+Primary key: Depot
+*/
+select cast('CBR' as varchar(20)) as Depot, cast(2 as bigint) as Count;
+
+select cast('CBR' as varchar(20)) as Depot, cast(2 as bigint) as Count;
+```
+
+Path: `Warehouse/Quality/tests/Parcel.CountsMatch.sql`.
+
+## Operations and managed state
+
+- **Check** parses metadata, identity, class/method structure, SQL program shape, dependencies and cycles without running the Test.
+- **Build** installs the declaration and its runnable form. Lakehouse Python is deployed as a module; Lakehouse Spark SQL is compiled to a module; Warehouse T-SQL is compiled to a stored procedure. Build does not evaluate the Test. A rebuilt Test receives current status `Pending`.
+- **Load** does not run Tests.
+- **Test** runs the installed definition after its data dependencies and records `Succeeded`, `Failed`, `Error` or `Blocked`. Missing and unexpected counts form the failure count. Diagnostic rows are returned to an interactive caller when requested but are not persisted.
+
+`_.TestDictionary` records the logical item, `Schema.Object`, test type, resolved description and its reference, optional primary key and source signature. `_.Registry` records the compiled module or procedure with role `Test`, not a physical object at the logical Test ID. `_.Dependency` records resolved edges. `_.TestStatus` records the logical identity, test type, workflow, result, timing and current failure count; `_.Log` keeps execution history.
