@@ -1,8 +1,8 @@
 # Core concepts
 
-Core concepts explain the mental model needed to understand and operate Weaver. They describe public behaviour and its consequences, not the internal arrangement of the source code.
+Core concepts explain the public model needed to design and operate a Weaver estate. They describe consequences visible to a user, not the internal arrangement of the source code.
 
-The model begins with [How Weaver works](how-weaver-works.md):
+Begin with [How Weaver works](how-weaver-works.md) for the complete model, then follow the sequence behind the work:
 
 ```text
 Weaver documents
@@ -12,17 +12,27 @@ Build → Load → Test
 Catalogue state
         ↓
 Development cycle
+        ↓
+Dependencies and fault tolerance
 ```
 
-Read the model in layers:
+## Establish the estate boundary
 
-- [Projects and estates](projects-and-estates.md) separates project source, installed state and operational state.
-- [Logical and physical items](logical-and-physical-items.md) explains how stable project identities bind to Fabric targets.
+- [Projects and estates](projects-and-estates.md) separates version-controlled source, installed Fabric definitions and operational catalogue state.
+- [Logical and physical items](logical-and-physical-items.md) explains how stable project identities bind to environment-specific Fabric targets.
+
+Read these first when one project must address development and production estates without changing its logical identities.
+
+## Follow authored work into operation
+
 - [Weaver documents](weaver-documents.md) explains how paths, document types and metadata declare the estate.
-- [Weaver operations](weaver-operations.md) explains how Build, Load and Test turn those documents into an installed and operating estate.
-- [The Weaver catalogue](catalogue.md) describes the installed and operational state behind Build, Load, Test and Health.
-- [The development cycle](development-cycle.md) shows how a configuration switch and mirror establish a development estate from production.
-- [Dependencies](dependencies.md) explains ordering, change impact and item-selection boundaries.
+- [Weaver operations](weaver-operations.md) explains how Build, Load and Test turn those documents into installed definitions, data and validation outcomes.
+- [The Weaver catalogue](catalogue.md) describes the recorded state behind Build, Load, Test and Health.
+- [The development cycle](development-cycle.md) shows how a configuration switch and Mirror establish a development estate from production.
+
+## Reason about ordering and failure
+
+- [Dependencies](dependencies.md) explains operation order, change impact and item-selection boundaries.
 - [Fault tolerance](fault-tolerance.md) explains what each operation attempts after work fails.
 
-This order follows the user's work: author documents, operate them, inspect the resulting catalogue state, and repeat the cycle. Dependencies and fault tolerance explain how that work is ordered and how it proceeds after failure.
+Concepts explain why the system behaves this way. Use [Guides](../guides/index.md) to complete a task, [Reference](../reference/index.md) to look up an interface and [Contracts](../contracts/index.md) for precise behavioural boundaries.

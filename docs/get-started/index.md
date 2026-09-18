@@ -1,9 +1,10 @@
 # Get started
 
-Use this path to create a Warehouse-only Weaver project, validate its source, and run its complete lifecycle:
+This path creates a Warehouse-only Weaver project, validates its source and runs its complete lifecycle:
 
 ```text
-initialise → check → build → load → test → health → weaver workflow full
+initialise → check → build → load → test → health
+                         ↘ workflow full ↗
 ```
 
 ## Prerequisites
@@ -12,16 +13,21 @@ initialise → check → build → load → test → health → weaver workflow 
 - A Microsoft Fabric workspace you can modify.
 - Permission to create or reuse the catalogue Warehouse and project Warehouse.
 
-[Install Weaver](installation.md), authenticate, and run `weaver doctor` before creating the project.
+[Install Weaver](installation.md), authenticate and run `weaver doctor` before creating the project.
 
-## What you will create
+## Complete the first lifecycle
 
-The [first project](first-project.md) declares one Warehouse Table and one Test. `weaver check` validates the declarations locally. Build installs them, Load materialises the table, Test compares its rows, and Health reports the resulting state.
+[First project](first-project.md) declares one Warehouse Table and one Test. It takes you through each operation separately so you can inspect its effect, then runs `weaver workflow full` as the composed form of the same lifecycle.
 
-Current versions of `weaver initialise` also create or reuse the default Fabric Environment and write its definition into the project. This Warehouse-only path does not publish or use that Environment.
+`weaver check` validates project declarations locally. Build installs definitions, Load materialises the Table, Test compares its rows, and Health reports the resulting state.
 
-For the distinction between project source, physical Fabric items, and installed state, see [How Weaver works](../core-concepts/how-weaver-works.md).
+`weaver initialise` also creates or reuses the default Fabric Environment and writes its definition into the project. This Warehouse-only path does not publish or use that Environment.
 
-## Next action
+## Continue from the working project
 
-Follow [First project](first-project.md). After that, continue with the [Lakehouse pipeline](../guides/lakehouse-pipeline.md) or [Warehouse pipeline](../guides/warehouse-pipeline.md) guide.
+Choose the next route by execution engine:
+
+- [Lakehouse pipeline](../guides/lakehouse-pipeline.md) — author Python and Spark SQL Tables backed by a Fabric Environment.
+- [Warehouse pipeline](../guides/warehouse-pipeline.md) — author T-SQL Tables and Views without Spark.
+
+Read [How Weaver works](../core-concepts/how-weaver-works.md) when you need the distinction between project source, physical Fabric items and catalogue state. Use [Troubleshooting](../guides/troubleshooting.md) if Doctor, Build, Load or Test does not reach the expected result.

@@ -1,17 +1,26 @@
 # Reference
 
-Reference pages describe supported interfaces tersely and precisely. Use them to look up syntax, selection rules and command behaviour; use Guides for complete tasks and Core concepts for the mental model behind them.
+Reference pages describe current public interfaces tersely and precisely. Use them to look up syntax and shapes; use [Guides](../guides/index.md) for complete tasks and [Contracts](../contracts/index.md) for behavioural guarantees.
 
-- [CLI reference](cli.md) — command index, shared options and selection grammar, with a generated reference page for each command.
-- [Python API](python/index.md) — every public export, its call shape and the returned result types.
-- [Machine-readable interfaces](machine-readable-interfaces.md) — current CLI JSON documents and exit outcomes.
-- [Fabric Environment definition](environment-definition.md) — accepted directory parts, package overlays and publication boundaries.
-- [Build bundle](build-bundle.md) — current manifest, payload and installation handoff.
-- [Catalogue schema](catalogue-schema.md) — current public `_` tables, columns and keys.
-- [Load contract](../contracts/load.md) — exact behavioural guarantees for Load.
+## Invoke Weaver
 
-For the exact options in an installed version, run:
+- [CLI reference](cli.md) — shared options, selection grammar and a generated page for every executable command.
+- [Python API](python/index.md) — every public top-level export, its call shape and returned result types.
+
+For options in an installed CLI version, run:
 
 ```bash
 weaver <command> --help
 ```
+
+## Exchange and publish definitions
+
+- [Fabric Environment definition](environment-definition.md) — accepted directory parts, package overlays and publication boundaries.
+- [Build bundle](build-bundle.md) — current manifest, payload and installation handoff.
+
+## Inspect machine state
+
+- [Machine-readable interfaces](machine-readable-interfaces.md) — current CLI JSON documents and exit outcomes.
+- [Catalogue schema](catalogue-schema.md) — current public `_` tables, columns and keys.
+
+These pages record current formats where no separate compatibility policy exists. They do not make every machine shape or stored column a stable cross-version contract. For specified operation semantics, continue to the [Contracts index](../contracts/index.md).
