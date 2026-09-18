@@ -6,11 +6,14 @@
 
 Use the strongest boundary that fits the source:
 
-| Situation | Approach | What Weaver owns |
-| --- | --- | --- |
-| The physical source cannot be reproduced | Physical Shortcut | The Shortcut destination—the local pointer—not the source it targets |
-| Weaver owns the Table, Folder or View, but recreation would lose or make data costly to recover | `Prohibit rebuild: true` | The physical object and its installed definition, with destructive Build replacement disabled |
-| The object is repeatably reconstructed | Ordinary Weaver-owned document | The physical object and its complete Build and Load lifecycle |
+| Situation | Pattern |
+| --- | --- |
+| Manually supplied Excel dump | External data + physical Shortcut |
+| One-time historical source archive | External data + physical Shortcut |
+| Another team owns the source | Physical Shortcut |
+| Weaver Table accumulated through costly API calls | `Prohibit rebuild: true` |
+| Weaver-managed Folder containing unrecoverable API responses | `Prohibit rebuild: true` |
+| Ordinary reproducible derived Table | Normal Weaver management |
 
 The distinction matters. A Shortcut keeps the data beyond Weaver's ownership boundary. `Prohibit rebuild` keeps the data inside that boundary and changes how Build reconciles an existing object.
 
@@ -27,7 +30,7 @@ Use a physical Shortcut when no repeatable process can reconstruct the source. T
 
 Weaver manages the Shortcut destination in the local item: it may create, replace or remove that pointer as its declaration changes. Weaver does **not** manage the underlying physical source named by the Shortcut. This is the strongest ownership boundary because Build and Load do not treat the source contents as a Weaver-owned Table or Folder.
 
-For example, a Lakehouse physical Folder Shortcut can expose an archive held in another workspace without making that archive part of the local estate's managed data. Follow [Connect items with a Shortcut](../basics/shortcuts.md) for the authoring workflow, and use the [Shortcut reference](../reference/weaver-documents/shortcut.md) for exact physical target forms and workspace rules.
+For example, a Lakehouse physical Folder Shortcut can expose an archive held in another workspace without making that archive part of the local estate's managed data. Follow [Connect data with Shortcuts](../basics/shortcuts.md) for the authoring workflow, and use the [Shortcut reference](../reference/weaver-documents/shortcut.md) for exact physical target forms and workspace rules.
 
 ## Retain an existing Weaver-owned object
 

@@ -8,8 +8,8 @@ This maintainer-only ledger records the state of the five-section public site. I
 | --- | --- | --- |
 | 1 | Navigation and ownership | Complete. Public navigation is **Getting started / Core concepts / Basics / Advanced / Reference**. Guides, Contracts and Contributing are not public sections. |
 | 2 | Getting started and Core concepts | Complete. The first-project route is self-contained, and the concept sequence covers documents, operations, catalogue state, Mirrors, Sessions, dependencies and failure. |
-| 3 | Basics | Complete. Task pages use defaults and inference first, separate Python and Spark SQL paths, and cover normal development, operation and recovery. |
-| 4 | Advanced | Complete. The section covers Build selection, data incrementality, portable desktop/Fabric execution, history, schema, partial failure, mirroring, bundles and execution contexts. Notebook and Capacity remain CLI Reference topics. |
+| 3 | Basics | Complete. Task pages use defaults and inference first, separate Python and Spark SQL paths, distinguish logical and physical Shortcuts, and cover normal development, operation and recovery. |
+| 4 | Advanced | Complete. The section covers Build selection, the general incremental Table and bookmark contracts, portable desktop/Fabric execution, history, schema, data protection, partial failure, mirroring, bundles and execution contexts. Notebook and Capacity remain CLI Reference topics. |
 | 5 | Reference | Complete. Weaver documents, Python API, CLI, configuration, operation behaviour, catalogue schema, bundle format and machine-readable output have explicit owners. Generated CLI and Python blocks remain generator-owned. |
 | 6 | Editorial integration | Complete on this branch. The whole rendered tree was checked for reader routes, retired paths and vocabulary, duplicated explanation, assurance and agent-facing language, future-product claims, and cross-page behavioural consistency. |
 
@@ -25,6 +25,9 @@ The launch surface includes:
 - a source-backed, reproducible route for moving one project between desktop and Fabric and running installed artefacts in Fabric;
 - a complete Warehouse-only first project;
 - normal Warehouse, Lakehouse Python and Lakehouse Spark SQL task paths;
+- the logical/physical Shortcut ownership boundary and its effect on project dependencies;
+- general Python and SQL incremental Table staging/delete contracts, with consumer-owned bookmark state;
+- recoverability-based guidance for external physical data and `Prohibit rebuild`;
 - exact Weaver-document defaults and accepted forms;
 - configuration discovery, precedence and workspace restrictions;
 - CLI and public Python interfaces synchronized with the selected Weaver checkout;
