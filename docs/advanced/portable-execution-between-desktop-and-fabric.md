@@ -50,7 +50,7 @@ if not result.succeeded:
     raise RuntimeError(result.errors)
 ```
 
-Replace each angle-bracketed value with an existing physical item name in the notebook's workspace. The notebook's attached Environment must contain Weaver and any libraries imported by the project. Build installs Python definitions but does not call their authored `read()` methods.
+Replace each angle-bracketed value with an existing physical item name in the notebook's workspace. The notebook's attached runtime must contain Weaver and any libraries imported by the project. Build installs Python definitions but does not call their authored `read()` methods.
 
 Workspace and runtime resolution remain explicit rules rather than a separate notebook mode:
 
@@ -96,7 +96,7 @@ The entry point changes, but logical identities, catalogue selection, installed 
 
 Mirror and Wipe are also public Python operations. They retain their operation-specific planning and destructive boundaries, so they are not folded into the routine lifecycle shorthand above: inspect a Mirror or Wipe plan using the documented operation interface before executing it. See [Mirror behaviour](../reference/operation-behaviour/mirror.md) and [Wipe behaviour](../reference/operation-behaviour/wipe.md).
 
-A notebook can reuse one Session across the normal lifecycle. With no `workspace-config.yml` in the process working directory, `current_workspace()` supplies the attached Fabric workspace; each operation below supplies the catalogue explicitly:
+In an attached Fabric notebook, each top-level operation discovers the current workspace and uses the active Spark runtime and notebook identity. The catalogue remains explicit because workspace discovery does not invent one. Build binds the project items to physical Fabric items; Load, Test and Health then select the installed logical items:
 
 ```python
 from pathlib import Path
@@ -111,21 +111,24 @@ bindings = [
     "Warehouse/Operations=Warehouse/<physical-warehouse-name>",
 ]
 
-workspace = weaver.current_workspace()
-with weaver.session(workspace=workspace) as session:
-    build_result = weaver.build(
-        project,
-        items=bindings,
-        catalogue=catalogue,
-        session=session,
-    )
-    if not build_result.succeeded:
-        raise RuntimeError(build_result.errors)
+build_result = weaver.build(
+    project,
+    items=bindings,
+    catalogue=catalogue,
+)
+if not build_result.succeeded:
+    raise RuntimeError(build_result.errors)
 
-    load_report = weaver.load(items, catalogue=catalogue, session=session)
-    test_report = weaver.test(items, catalogue=catalogue, session=session)
-    health_report = weaver.health(items, catalogue=catalogue, session=session)
+load_report = weaver.load(items, catalogue=catalogue)
+
+test_report = weaver.test(items, catalogue=catalogue)
+if not test_report.succeeded:
+    raise RuntimeError(f"Test {test_report.status}")
+
+health_report = weaver.health(items, catalogue=catalogue)
 ```
+
+No desktop credential or `environment=` argument is needed for this attached-workspace path. The attached runtime must still contain Weaver and the project's Python dependencies. Supplying a [Session](../reference/python/session.md) is optional when a caller needs explicit context reuse or control.
 
 The corresponding desktop sequence uses the configuration that binds the same logical items and catalogue:
 
@@ -151,7 +154,7 @@ The rest of the CLI is deliberately not folded into this table:
 - Doctor and frozen-bundle Install are CLI commands. `doctor` and `install` are not exports of the top-level `weaver` Python API.
 - Check is local project validation rather than a hosted estate operation.
 - `weaver fabric environment publish` and `weaver fabric notebook push|run` are CLI helpers for Fabric items. They have no top-level Python operation counterparts.
-- A CLI workflow is represented in Python by an explicit sequence of public operation calls, normally sharing one Session as above.
+- A CLI workflow is represented in Python by an explicit sequence of public operation calls. Each call can discover the attached notebook context as shown above.
 
 See [Python operations](../reference/python/operations.md) and the [CLI reference](../reference/cli.md) for exact signatures and selection rules.
 
