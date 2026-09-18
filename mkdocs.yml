@@ -108,6 +108,7 @@ nav:
       - Portable execution between desktop and Fabric: advanced/portable-execution-between-desktop-and-fabric.md
       - Row auditing and operational history: advanced/row-auditing-and-operational-history.md
       - Schemas, keys and managed columns: advanced/schemas-keys-and-managed-columns.md
+      - Protecting data: advanced/protecting-data.md
       - Partial failures, rejected data and stability thresholds: advanced/partial-failures-rejected-data-and-thresholds.md
       - Mirror and materialisation strategies: advanced/mirror-and-materialisation-strategies.md
       - Build bundles and controlled installation: advanced/build-bundles-and-controlled-installation.md
