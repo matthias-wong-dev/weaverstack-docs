@@ -2,7 +2,7 @@
 
 Weaver operations return frozen result and report values. Import every type on this page from `weaver`; nested implementation types named in annotations are not additional public import paths.
 
-The constructors below describe the returned shape and are useful in tests. Normal application code receives these values from the corresponding operation. `to_mapping()` methods produce the operation's current machine representation, but this page does not promise a version-independent JSON schema. See [Weaver operations](../../core-concepts/weaver-operations.md) for lifecycle semantics and the operation's [CLI reference](../cli.md) for command behaviour.
+The constructors below describe the returned shape and are useful in tests. Normal application code receives these values from the corresponding operation. `to_mapping()` methods produce the operation's current machine representation, but this page does not promise a version-independent JSON schema. See [Weaver operations](../../core-concepts/build-load-and-test.md) for lifecycle semantics and the operation's [CLI reference](../cli.md) for command behaviour.
 
 <!-- BEGIN GENERATED PYTHON -->
 
@@ -95,7 +95,7 @@ Returned by `build()`. `installation` distinguishes an installed build from a bu
 
 Each value in `errors` exposes `action_id`, `error_type`, `message`, `artefact`, and `source_path`. `selection` and `installation_report` retain detailed in-memory evidence but are omitted by `to_mapping()`; the mapping contains source, selected items, bundle identity, installation mode, bundle path, status, and mapped errors.
 
-See [`weaver build`](../cli/build.md) and [Promote a build bundle](../../guides/promote-a-bundle.md).
+See [`weaver build`](../cli/build.md) and [Promote a build bundle](../../advanced/build-bundles-and-controlled-installation.md).
 
 ## Mirror
 
@@ -130,7 +130,7 @@ MirrorResult(
 
 Returned after `mirror()` completes. `wiped` names emptied destinations in execution order. `copied` maps catalogue table names to copied row counts, and `rows` is their sum. `uncopied` names historical catalogue tables rebuilt without copied rows. `items` names mirrored logical items; `mirrored` carries each item's source, target, and operation-specific counts. `to_mapping()` converts tuples and mappings to transport shapes.
 
-See [`weaver mirror`](../cli/mirror.md) and [Development cycle](../../core-concepts/development-cycle.md).
+See [`weaver mirror`](../cli/mirror.md) and [Development cycle](../../basics/development-cycle.md).
 
 ## Wipe
 
@@ -191,7 +191,7 @@ WipeResult(
 
 Returned by `wipe()`. `items` is the item-level result; `reports` is the lower-level removal detail. `emptied` lists emptied physical targets in execution order. `unbound` contains the catalogue update result when claims were removed. `to_mapping()` includes the plan and item outcomes but not the lower-level `reports` tuple.
 
-See [`weaver wipe`](../cli/wipe.md) and [Recovery](../../guides/recovery.md) before using the destructive operation.
+See [`weaver wipe`](../cli/wipe.md) and [Recovery](../../basics/recover-failed-work.md) before using the destructive operation.
 
 ## Load
 
@@ -280,7 +280,7 @@ LoadRunReport(
 
 Returned by `load()`. `requested` preserves the requested item strings. `nodes`, `edges`, and `order` describe the settled run graph. `by_node` maps node IDs to reports. `succeeded` is true for `succeeded` and `succeeded_with_rejects` run statuses. Dry runs use the same shape, with `dry_run=True` and no execution evidence. `to_mapping()` and `from_mapping(payload)` round-trip the report.
 
-See [`weaver load`](../cli/load.md), [Incremental loads](../../guides/incremental-loads.md), and [Fault tolerance](../../core-concepts/fault-tolerance.md).
+See [`weaver load`](../cli/load.md), [Incremental loads](../../advanced/incremental-data-processing.md), and [Fault tolerance](../../core-concepts/fault-tolerance.md).
 
 ## Validation
 
@@ -319,7 +319,7 @@ ValidationRunReport(
 
 Returned by `test()`. `succeeded` is true for `passed` and `planned`. `failed_nodes` and `invalid_nodes` filter the two unsuccessful status classes. `node(name)` performs a case-insensitive lookup by the trailing logical `Schema.Object` and raises `KeyError` when absent. `totals()` returns planned, executed, passed, failed, and invalid node counts plus missing, unexpected, and violation totals. `to_mapping()` includes those totals; `from_mapping(payload)` reconstructs the report.
 
-See [`weaver test`](../cli/test.md) and [Validate an installed estate](../../guides/validation.md).
+See [`weaver test`](../cli/test.md) and [Validate an installed estate](../../basics/tests-and-assumptions.md).
 
 ## Health
 
@@ -397,4 +397,4 @@ Returned by `health()`. `sections` is `(load, tests, build)`. `status` is their 
 
 `current_load` summarises the workflow IDs, time range, and status counts behind the estate's current load state. `to_mapping()` emits the health format version, sections, this current-load summary, and load activity.
 
-See [`weaver health`](../cli/health.md) and [Operate an estate](../../guides/operate-estate.md).
+See [`weaver health`](../cli/health.md) and [Operate an estate](../../basics/run-and-inspect-estate.md).

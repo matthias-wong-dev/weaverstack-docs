@@ -6,6 +6,9 @@ repo_url: https://github.com/matthias-wong-dev/weaverstack-docs
 edit_uri: edit/main/docs/
 strict: true
 
+exclude_docs: |
+  _maintainers/
+
 theme:
   name: material
   custom_dir: overrides
@@ -67,37 +70,67 @@ extra_css:
 
 nav:
   - Home: index.md
-  - Get started:
-      - get-started/index.md
-      - Installation: get-started/installation.md
-      - First project: get-started/first-project.md
-  - Guides:
-      - guides/index.md
-      - Lakehouse pipeline: guides/lakehouse-pipeline.md
-      - Warehouse pipeline: guides/warehouse-pipeline.md
-      - Incremental loads: guides/incremental-loads.md
-      - Shortcuts: guides/shortcuts.md
-      - Validation: guides/validation.md
-      - Workspaces and Environments: guides/environments.md
-      - Operate an estate: guides/operate-estate.md
-      - Troubleshooting: guides/troubleshooting.md
-      - Recovery: guides/recovery.md
-      - Automation: guides/automation.md
-      - Sessions and workflows: guides/sessions-and-workflows.md
-      - Promote a build bundle: guides/promote-a-bundle.md
+  - Getting started:
+      - getting-started/index.md
+      - Installation: getting-started/installation.md
+      - First project: getting-started/first-project.md
   - Core concepts:
       - core-concepts/index.md
       - How Weaver works: core-concepts/how-weaver-works.md
       - Projects and estates: core-concepts/projects-and-estates.md
       - Logical and physical items: core-concepts/logical-and-physical-items.md
       - Weaver documents: core-concepts/weaver-documents.md
-      - Weaver operations: core-concepts/weaver-operations.md
-      - Weaver catalogue: core-concepts/catalogue.md
-      - Development cycle: core-concepts/development-cycle.md
+      - Build, Load and Test: core-concepts/build-load-and-test.md
+      - Catalogue: core-concepts/catalogue.md
+      - State and health: core-concepts/state-and-health.md
+      - Mirrors: core-concepts/mirrors.md
+      - Sessions and workflows: core-concepts/sessions-and-workflows.md
       - Dependencies: core-concepts/dependencies.md
       - Fault tolerance: core-concepts/fault-tolerance.md
+  - Basics:
+      - basics/index.md
+      - Build a Warehouse pipeline: basics/warehouse-pipeline.md
+      - Build a Lakehouse pipeline with Python: basics/lakehouse-python.md
+      - Build a Lakehouse pipeline with Spark SQL: basics/lakehouse-spark-sql.md
+      - Add Tests and Assumptions: basics/tests-and-assumptions.md
+      - Connect items with shortcuts: basics/shortcuts.md
+      - Configure a workspace and Python runtime: basics/workspace-and-python-runtime.md
+      - Work in Sessions and workflows: basics/sessions-and-workflows.md
+      - The development cycle: basics/development-cycle.md
+      - Run and inspect an estate: basics/run-and-inspect-estate.md
+      - Troubleshooting: basics/troubleshooting.md
+      - Recover failed work: basics/recover-failed-work.md
+  - Advanced:
+      - advanced/index.md
+      - How incremental Build selection works: advanced/incremental-build-selection.md
+      - Incremental data processing: advanced/incremental-data-processing.md
+      - Row auditing and operational history: advanced/row-auditing-and-operational-history.md
+      - Schemas, keys and managed columns: advanced/schemas-keys-and-managed-columns.md
+      - Partial failures, rejected data and stability thresholds: advanced/partial-failures-rejected-data-and-thresholds.md
+      - Mirror and materialisation strategies: advanced/mirror-and-materialisation-strategies.md
+      - Build bundles and controlled installation: advanced/build-bundles-and-controlled-installation.md
+      - Automation and execution contexts: advanced/automation-and-execution-contexts.md
   - Reference:
       - reference/index.md
+      - Weaver documents:
+          - Overview: reference/weaver-documents/overview.md
+          - Common metadata: reference/weaver-documents/common-metadata.md
+          - Table: reference/weaver-documents/table.md
+          - Folder: reference/weaver-documents/folder.md
+          - View: reference/weaver-documents/view.md
+          - Test: reference/weaver-documents/test.md
+          - Assumption: reference/weaver-documents/assumption.md
+          - Shortcut: reference/weaver-documents/shortcut.md
+          - Schema metadata: reference/weaver-documents/schema-metadata.md
+          - Warehouse programmable: reference/weaver-documents/warehouse-programmable.md
+      - Python API:
+          - Overview: reference/python/index.md
+          - Operations: reference/python/operations.md
+          - Session and workspace: reference/python/session.md
+          - Authored objects: reference/python/objects.md
+          - Validation objects: reference/python/validation.md
+          - Results and reports: reference/python/results.md
+          - Exceptions: reference/python/errors.md
       - CLI:
           - Overview: reference/cli.md
           - Initialise: reference/cli/initialise.md
@@ -115,48 +148,23 @@ nav:
           - Fabric Environment: reference/cli/fabric-environment.md
           - Fabric Notebook: reference/cli/fabric-notebook.md
           - Fabric capacity: reference/cli/fabric-capacity.md
-      - Python API:
-          - Overview: reference/python/index.md
-          - Operations: reference/python/operations.md
-          - Session and workspace: reference/python/session.md
-          - Authored objects: reference/python/objects.md
-          - Validation objects: reference/python/validation.md
-          - Results and reports: reference/python/results.md
-          - Exceptions: reference/python/errors.md
-      - Machine-readable interfaces: reference/machine-readable-interfaces.md
-      - Fabric Environment definition: reference/environment-definition.md
-      - Build bundle: reference/build-bundle.md
+      - Configuration files:
+          - Overview: reference/configuration-files/index.md
+          - Workspace configuration: reference/configuration-files/workspace-config.md
+          - Workflow configuration: reference/configuration-files/workflow.md
+          - Fabric Environment definition: reference/configuration-files/fabric-environment.md
+      - Operation behaviour:
+          - Overview: reference/operation-behaviour/index.md
+          - Shared selection and identity: reference/operation-behaviour/shared-selection-and-identity.md
+          - Build: reference/operation-behaviour/build.md
+          - Load: reference/operation-behaviour/load.md
+          - Test: reference/operation-behaviour/test.md
+          - Health: reference/operation-behaviour/health.md
+          - Mirror: reference/operation-behaviour/mirror.md
+          - Wipe: reference/operation-behaviour/wipe.md
+          - Workflow: reference/operation-behaviour/workflow.md
+          - Session and runtime: reference/operation-behaviour/session-runtime.md
+          - Fault and outcome vocabulary: reference/operation-behaviour/fault-and-outcome-vocabulary.md
       - Catalogue schema: reference/catalogue-schema.md
-  - Contracts:
-      - contracts/index.md
-      - Project: contracts/project.md
-      - Weaver documents: contracts/documents.md
-      - Identity and naming: contracts/identity-and-naming.md
-      - Configuration: contracts/configuration.md
-      - Catalogue: contracts/catalogue.md
-      - Dependencies: contracts/dependencies.md
-      - Signatures and change detection: contracts/signatures-and-change-detection.md
-      - Build: contracts/build.md
-      - Load: contracts/load.md
-      - Test: contracts/test.md
-      - Workflow: contracts/workflow.md
-      - Selection: contracts/selection.md
-      - State and health: contracts/state-and-health.md
-      - Fault tolerance: contracts/fault-tolerance.md
-      - Incremental processing: contracts/incremental-processing.md
-      - History: contracts/history.md
-      - Mirror: contracts/mirror.md
-      - Schema: contracts/schema.md
-      - Runtime: contracts/runtime.md
-      - Host behaviour: contracts/host-behaviour.md
-      - CLI behaviour: contracts/cli-behaviour.md
-  - Advanced:
-      - advanced/index.md
-      - Specialised estate mirroring: advanced/specialised-estate-mirroring.md
-      - Fabric notebooks: advanced/fabric-notebooks.md
-      - Fabric capacity: advanced/fabric-capacity.md
-  - Contributing:
-      - contributing/index.md
-      - Write or revise a page: contributing/writing.md
-      - Update generated reference: contributing/generated-reference.md
-      - Validate a change: contributing/validation.md
+      - Build bundle format: reference/build-bundle-format.md
+      - Machine-readable output: reference/machine-readable-output.md

@@ -1,11 +1,14 @@
 # Advanced
 
-Use these routes when the ordinary Build, Load and Test cycle is not the whole task.
+Advanced pages explain mechanisms and operating patterns beyond the ordinary Build, Load and Test cycle.
 
-- [Mirror an estate for specialised development](specialised-estate-mirroring.md): branch installed state, borrow selected data or materialise one item locally.
-- [Push and run a Fabric notebook](fabric-notebooks.md): deploy a local notebook definition and start it with an explicit Lakehouse and Environment.
-- [Control a Fabric capacity](fabric-capacity.md): inspect, resume and suspend the Azure capacity around a workload.
+- [How incremental Build selection works](incremental-build-selection.md)
+- [Incremental data processing](incremental-data-processing.md)
+- [Row auditing and operational history](row-auditing-and-operational-history.md)
+- [Schemas, keys and managed columns](schemas-keys-and-managed-columns.md)
+- [Partial failures, rejected data and stability thresholds](partial-failures-rejected-data-and-thresholds.md)
+- [Mirror and materialisation strategies](mirror-and-materialisation-strategies.md)
+- [Build bundles and controlled installation](build-bundles-and-controlled-installation.md)
+- [Automation and execution contexts](automation-and-execution-contexts.md)
 
-These routes change different layers. Mirror reconstructs catalogue and item destinations. Notebook commands manage and execute a Fabric Notebook but do not Build project declarations. Capacity commands act on the Azure resource and do not read or write a Weaver catalogue.
-
-Use the [Guides](../guides/index.md) for ordinary authoring and estate operation. The [CLI reference](../reference/cli.md) owns complete command syntax; [Contracts](../contracts/index.md) owns operation behaviour and failure boundaries.
+Use [Basics](../basics/index.md) for normal authoring and estate operation. The [Reference](../reference/index.md) owns exact syntax and operation behaviour.

@@ -2,7 +2,7 @@
 
 These classes are the public Python surface for Lakehouse object modules and authored shortcut declarations. Import them from `weaver`; modules below the top-level package are implementation details.
 
-Python object classes are not the YAML metadata, SQL document, or CLI forms of the same concepts. See [Weaver documents](../../core-concepts/weaver-documents.md) for the document model, [Lakehouse pipeline](../../guides/lakehouse-pipeline.md) for an end-to-end authoring path, and [Shortcuts](../../guides/shortcuts.md) for shortcut target forms.
+Python object classes are not the YAML metadata, SQL document, or CLI forms of the same concepts. See [Weaver documents](../../core-concepts/weaver-documents.md) for the document model, [Lakehouse pipeline](../../basics/lakehouse-python.md) for an end-to-end authoring path, and [Shortcuts](../../basics/shortcuts.md) for shortcut target forms.
 
 <!-- BEGIN GENERATED PYTHON -->
 
@@ -57,7 +57,7 @@ status = Parcel__CurrentStatus(spark, catalogue="Warehouse/Catalogue")
 assert status.object_id == "Parcel.CurrentStatus"
 ```
 
-The module-level metadata attached to an authored class remains part of the Python document. The complete metadata and return contracts belong to the [Lakehouse pipeline guide](../../guides/lakehouse-pipeline.md) and [Incremental loads guide](../../guides/incremental-loads.md).
+The module-level metadata attached to an authored class remains part of the Python document. The complete metadata and return contracts belong to the [Lakehouse pipeline guide](../../basics/lakehouse-python.md) and [Incremental loads guide](../../advanced/incremental-data-processing.md).
 
 ## `Folder`
 
@@ -125,7 +125,7 @@ load(
 
 `load()` requires a catalogue anchor and records the outcome before returning. `reload=True` resets the selected table's bookmark and load state, empties the target, then calls `read()`. `ignore_stability_threshold=True` waives declared delete and update limits for that invocation.
 
-See [Incremental loads](../../guides/incremental-loads.md) for bookmark, delete-claim, and reload behaviour.
+See [Incremental loads](../../advanced/incremental-data-processing.md) for bookmark, delete-claim, and reload behaviour.
 
 ## `SparkSqlTable`
 
@@ -140,7 +140,7 @@ SparkSqlTable(
 
 Runtime class generated from an authored Spark SQL table document. Its `sql: str` attribute contains the program, and `read()` executes that program to produce staging and optional delete keys.
 
-Do not subclass `SparkSqlTable` in repository Python. Author a `.sql` document; Build generates the class. This distinction keeps Python class authoring separate from the Spark SQL form described by the [Lakehouse pipeline guide](../../guides/lakehouse-pipeline.md).
+Do not subclass `SparkSqlTable` in repository Python. Author a `.sql` document; Build generates the class. This distinction keeps Python class authoring separate from the Spark SQL form described by the [Lakehouse pipeline guide](../../basics/lakehouse-python.md).
 
 ## `View`
 
@@ -186,4 +186,4 @@ Parcel__Events = Shortcut(
 )
 ```
 
-The accepted shortcut types, target grammar, and logical/physical distinction are documented in [Shortcuts](../../guides/shortcuts.md). They are not interchangeable with workspace YAML target bindings or CLI item selection.
+The accepted shortcut types, target grammar, and logical/physical distinction are documented in [Shortcuts](../../basics/shortcuts.md). They are not interchangeable with workspace YAML target bindings or CLI item selection.

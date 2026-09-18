@@ -1,6 +1,6 @@
 # Weaver catalogue
 
-The Weaver catalogue is a configured Fabric Warehouse that records the installed estate and its operational state. Its tables live in the `_` schema. [Weaver operations](weaver-operations.md) explains how Build publishes installed state, Load and Test update runtime state, and Health reads both.
+The Weaver catalogue is a configured Fabric Warehouse that records the installed estate and its operational state. Its tables live in the `_` schema. [Weaver operations](build-load-and-test.md) explains how Build publishes installed state, Load and Test update runtime state, and Health reads both.
 
 Project source and catalogue state answer different questions:
 
@@ -84,4 +84,4 @@ Build compares Registry signatures with the selected project documents. A change
 
 The `_` schema is a queryable public surface, not a write extension point. Do not insert, update or delete catalogue rows by hand. Manual writes can separate logical identity from its target, certify an object that Build did not install, alter dependency ordering or detach a result from the workflow that produced it.
 
-Use Build, Load, Test, mirror and wipe as writers. Use Health, command output and read-only queries for inspection. Generated procedures and Weaver's internal write order are implementation details rather than additional catalogue contracts. The [Catalogue contract](../contracts/catalogue.md) defines publication and certification boundaries; the [Catalogue schema reference](../reference/catalogue-schema.md) records the current columns and keys without promising compatibility. The [Load contract](../contracts/load.md) defines Load's execution and recording boundary.
+Use Build, Load, Test, mirror and wipe as writers. Use Health, command output and read-only queries for inspection. Generated procedures and Weaver's internal write order are implementation details rather than additional catalogue contracts. The [Catalogue contract](../reference/catalogue-schema.md) defines publication and certification boundaries; the [Catalogue schema reference](../reference/catalogue-schema.md) records the current columns and keys without promising compatibility. The [Load contract](../reference/operation-behaviour/load.md) defines Load's execution and recording boundary.

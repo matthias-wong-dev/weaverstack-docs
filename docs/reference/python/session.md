@@ -23,7 +23,7 @@ The Session closes on leaving the block. Each operation leaves a supplied Sessio
 
 `current_workspace()` discovers `workspace-config.yml` from the current project first, then the current Fabric notebook workspace. Outside those contexts, pass a workspace name or configuration explicitly.
 
-The [Sessions and workflows guide](../../guides/sessions-and-workflows.md) covers interactive command composition. The [`weaver session` reference](../cli/session.md) documents the terminal prompt.
+The [Sessions and workflows guide](../../basics/sessions-and-workflows.md) covers interactive command composition. The [`weaver session` reference](../cli/session.md) documents the terminal prompt.
 
 ## Lakehouse locations
 

@@ -30,7 +30,7 @@ The same project can use different workspace configuration in development and pr
 
 ## Realise and operate the estate { #build }
 
-[Build, Load and Test](weaver-operations.md) connect the authored project to an operating estate. Build realises selected documents in Fabric and records the installed generation. Load runs that generation's data-producing work, and Test checks the resulting estate. Health reads and summarises the state they leave.
+[Build, Load and Test](build-load-and-test.md) connect the authored project to an operating estate. Build realises selected documents in Fabric and records the installed generation. Load runs that generation's data-producing work, and Test checks the resulting estate. Health reads and summarises the state they leave.
 
 The separation lets project source change without silently changing installed work. Build is the boundary at which edited declarations become operational.
 

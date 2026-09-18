@@ -1,11 +1,15 @@
 # Reference
 
-Reference pages describe current public interfaces tersely and precisely. Use them to look up syntax and shapes; use [Guides](../guides/index.md) for complete tasks and [Contracts](../contracts/index.md) for behavioural guarantees.
+Reference pages describe current public interfaces and exact operation behaviour.
 
-## Invoke Weaver
-
-- [CLI reference](cli.md) — shared options, selection grammar and a generated page for every executable command.
-- [Python API](python/index.md) — every public top-level export, its call shape and returned result types.
+- [Weaver documents](weaver-documents/overview.md) — authored locations, forms and metadata.
+- [Python API](python/index.md) — public exports, call shapes and result types.
+- [CLI](cli.md) — shared options and generated pages for executable commands.
+- [Configuration files](configuration-files/index.md) — workspace, workflow and Fabric Environment definitions.
+- [Operation behaviour](operation-behaviour/index.md) — selection, state changes, outcomes and failure boundaries.
+- [Catalogue schema](catalogue-schema.md) — public `_` tables, columns and keys.
+- [Build bundle format](build-bundle-format.md) — manifest, payload and installation handoff.
+- [Machine-readable output](machine-readable-output.md) — current CLI JSON documents and exit outcomes.
 
 For options in an installed CLI version, run:
 
@@ -13,14 +17,4 @@ For options in an installed CLI version, run:
 weaver <command> --help
 ```
 
-## Exchange and publish definitions
-
-- [Fabric Environment definition](environment-definition.md) — accepted directory parts, package overlays and publication boundaries.
-- [Build bundle](build-bundle.md) — current manifest, payload and installation handoff.
-
-## Inspect machine state
-
-- [Machine-readable interfaces](machine-readable-interfaces.md) — current CLI JSON documents and exit outcomes.
-- [Catalogue schema](catalogue-schema.md) — current public `_` tables, columns and keys.
-
-These pages record current formats where no separate compatibility policy exists. They do not make every machine shape or stored column a stable cross-version contract. For specified operation semantics, continue to the [Contracts index](../contracts/index.md).
+These pages record current formats where no separate compatibility policy exists. They do not make every machine shape or stored column a stable cross-version contract.

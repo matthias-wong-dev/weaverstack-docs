@@ -2,7 +2,7 @@
 
 Fault tolerance determines how much remaining work Weaver attempts after one piece of work fails. It does not change the result of the failed work, undo work that already completed or make the operation a transaction.
 
-The boundary differs across [Build, Load and Test](weaver-operations.md). A failure policy from one operation does not carry into the next.
+The boundary differs across [Build, Load and Test](build-load-and-test.md). A failure policy from one operation does not carry into the next.
 
 ## Build stops before later installation work
 
@@ -38,7 +38,7 @@ If a Session's Fabric execution capability fails, Weaver does not replace it par
 
 ## A failed operation stops a workflow
 
-A [workflow](weaver-operations.md#a-workflow-composes-ordinary-operations) stops when a command returns failure or raises a Weaver error. It does not continue to a later command because an earlier command preserved some independent progress.
+A [workflow](build-load-and-test.md#a-workflow-composes-ordinary-operations) stops when a command returns failure or raises a Weaver error. It does not continue to a later command because an earlier command preserved some independent progress.
 
 Fault tolerance remains local to a command inside the workflow. For example, a fault-tolerant Load may finish additional work, but its failed or partially successful result still stops the following workflow commands. Commands that completed before the failure remain applied; the workflow does not roll them back.
 
@@ -46,4 +46,4 @@ Fault tolerance remains local to a command inside the workflow. For example, a f
 
 Build reports the outcome of its planned installation actions. Load records each settled piece of work in the catalogue, including failed, blocked and pending outcomes. Installed Test runs record each validation outcome. Load statistics exist only for work that executed, and bookmarks advance only after a clean successful load. Direct source-file Tests do not publish estate evidence. A workflow's shared identifier correlates recorded Load and Test work before and including the command that stops it; later commands have no outcomes to record.
 
-Fault tolerance does not retry failed Build actions, Load work, validations or workflow commands. A later attempt is a new operation against the state left by the previous one. The [Fault-tolerance contract](../contracts/fault-tolerance.md) defines the operation-specific barriers; the [Load contract](../contracts/load.md) defines Load outcomes and recording.
+Fault tolerance does not retry failed Build actions, Load work, validations or workflow commands. A later attempt is a new operation against the state left by the previous one. The [Fault-tolerance contract](../reference/operation-behaviour/fault-and-outcome-vocabulary.md) defines the operation-specific barriers; the [Load contract](../reference/operation-behaviour/load.md) defines Load outcomes and recording.

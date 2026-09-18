@@ -9,7 +9,7 @@ Use [operations](operations.md) to run lifecycle work and [Session and workspace
 - [Results and reports](results.md)
 - [Exceptions](errors.md)
 
-The [CLI reference](../cli.md) covers equivalent command-line entry points. [Weaver operations](../../core-concepts/weaver-operations.md) explains the lifecycle boundaries rather than repeating them here.
+The [CLI reference](../cli.md) covers equivalent command-line entry points. [Weaver operations](../../core-concepts/build-load-and-test.md) explains the lifecycle boundaries rather than repeating them here.
 
 <!-- BEGIN GENERATED PYTHON -->
 

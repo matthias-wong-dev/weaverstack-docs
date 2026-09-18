@@ -15,7 +15,7 @@ except WeaverError as exc:
 
 `WeaverError` is the common public root. The narrower classes below identify failures callers can usually classify. Other operation-specific subclasses may appear at runtime but are not top-level public imports; catch `WeaverError` when none of the exported categories fits.
 
-These are Python exceptions, not CLI exit-code categories or YAML validation records. For command-line recovery and output, use [Troubleshooting](../../guides/troubleshooting.md), [Automation](../../guides/automation.md), and the [CLI reference](../cli.md).
+These are Python exceptions, not CLI exit-code categories or YAML validation records. For command-line recovery and output, use [Troubleshooting](../../basics/troubleshooting.md), [Automation](../../advanced/automation-and-execution-contexts.md), and the [CLI reference](../cli.md).
 
 <!-- BEGIN GENERATED PYTHON -->
 
@@ -57,7 +57,7 @@ ConfigError(message: object, *, executor: str | None = None)
 
 Raised when workspace configuration or supplied configuration-dependent values are invalid. This category covers configuration parsing and validation, not every missing runtime prerequisite.
 
-See [Workspaces and Environments](../../guides/environments.md) for the configuration boundary.
+See [Workspaces and Environments](../../basics/workspace-and-python-runtime.md) for the configuration boundary.
 
 ## `IdentityError`
 
@@ -85,4 +85,4 @@ Raised when a Test or Assumption cannot be evaluated, or when strict validation 
 
 The two attributes default to `None`. `ValidationError` does not accept the `executor` keyword exposed by the other constructors on this page.
 
-A validation that executes and finds discrepancies or violations is represented as a failed validation outcome. An evaluation failure is distinct and must not be interpreted as a passing result. See [Validate an installed estate](../../guides/validation.md).
+A validation that executes and finds discrepancies or violations is represented as a failed validation outcome. An evaluation failure is distinct and must not be interpreted as a passing result. See [Validate an installed estate](../../basics/tests-and-assumptions.md).
