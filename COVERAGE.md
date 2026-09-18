@@ -10,7 +10,7 @@ The foundation, lifecycle and interface contracts now own identity, source disco
 
 ## Guides
 
-The mapped authoring, operating and automation tasks have substantive guides and complete reader routes. Advanced pages now cover specialised mirroring, Fabric notebooks and capacity operations. Remaining work is visual alignment and reciprocal linking with the product site, followed by holistic editorial calibration.
+The mapped authoring, operating and automation tasks have substantive guides and complete reader routes. Advanced pages cover specialised mirroring, Fabric notebooks and capacity operations. The documentation now shares the product site's visual language and each site's header links to the other. Holistic editorial calibration remains deferred until Matthias reviews the assembled site.
 
 ## CLI commands
 
