@@ -77,6 +77,7 @@ nav:
   - Core concepts:
       - core-concepts/index.md
       - How Weaver works: core-concepts/how-weaver-works.md
+      - Design philosophy: core-concepts/design-philosophy.md
       - Projects and estates: core-concepts/projects-and-estates.md
       - Logical and physical items: core-concepts/logical-and-physical-items.md
       - Weaver documents: core-concepts/weaver-documents.md
@@ -104,6 +105,7 @@ nav:
       - advanced/index.md
       - How incremental Build selection works: advanced/incremental-build-selection.md
       - Incremental data processing: advanced/incremental-data-processing.md
+      - Portable execution between desktop and Fabric: advanced/portable-execution-between-desktop-and-fabric.md
       - Row auditing and operational history: advanced/row-auditing-and-operational-history.md
       - Schemas, keys and managed columns: advanced/schemas-keys-and-managed-columns.md
       - Partial failures, rejected data and stability thresholds: advanced/partial-failures-rejected-data-and-thresholds.md

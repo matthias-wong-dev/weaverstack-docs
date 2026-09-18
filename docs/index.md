@@ -1,6 +1,6 @@
 # Weaver
 
-A production data estate needs more than transformation code: it needs a definition of what should exist and recorded state of what is installed, what ran and what remains to do. Weaver defines and operates that stateful Microsoft Fabric estate from native SQL and Python, keeping logical project source separate from physical bindings so the same project can run from a desktop or inside Fabric and bind to different development and production estates.
+A production data estate needs more than transformation code: it needs a definition of what should exist and recorded state of what is installed, what changed, what succeeded or failed, where incremental work resumes and what remains to do. Weaver defines and operates that stateful Microsoft Fabric estate from native SQL and Python, keeping logical project source separate from physical bindings so the same project can run from a desktop or inside Fabric and bind to different development and production estates.
 
 ## Choose a route
 
@@ -18,4 +18,4 @@ Use [Run and inspect an estate](basics/run-and-inspect-estate.md) for the routin
 
 **Understanding or integrating Weaver**
 
-Read [How Weaver works](core-concepts/how-weaver-works.md) for the public model. Use [Reference](reference/index.md) for exact interfaces and operation behaviour.
+Read [How Weaver works](core-concepts/how-weaver-works.md) for the public model and [Design philosophy](core-concepts/design-philosophy.md) for the principles behind it. Use [Reference](reference/index.md) for exact interfaces and operation behaviour.

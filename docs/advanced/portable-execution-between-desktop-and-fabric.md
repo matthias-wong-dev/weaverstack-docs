@@ -10,7 +10,7 @@ The host supplies workspace discovery, credentials, storage and Spark. The proje
 
 ## 1. Project portability: use one source tree
 
-Notebook Resources are ordinary project source. There is no notebook-specific Weaver project format. A notebook item committed through Fabric Git can contain this tree:
+Notebook Resources are ordinary project source. There is no notebook-specific Weaver project format. The documentation repository includes a coherent parcel estate under `examples/parcel-portability`. Copy the contents of that directory into the notebook's built-in Resources as `project`, preserving this tree:
 
 ```text
 Parcel-Estate.Notebook/
@@ -19,8 +19,12 @@ Parcel-Estate.Notebook/
         └── project/
             ├── Lakehouse/
             │   └── Landing/
+            │       ├── Files/
+            │       ├── Tables/
+            │       └── assumptions/
             └── Warehouse/
                 └── Operations/
+                    └── programmables/
 ```
 
 Inside that notebook, `builtin/` is the root of its built-in Resources folder:
@@ -90,6 +94,8 @@ The CLI and top-level Python package expose the core lifecycle through both entr
 
 The entry point changes, but logical identities, catalogue selection, installed bindings and the operation's selection rules do not. This is not a claim that every CLI command has a notebook counterpart. CLI interaction, confirmation and output remain CLI concerns.
 
+Mirror and Wipe are also public Python operations. They retain their operation-specific planning and destructive boundaries, so they are not folded into the routine lifecycle shorthand above: inspect a Mirror or Wipe plan using the documented operation interface before executing it. See [Mirror behaviour](../reference/operation-behaviour/mirror.md) and [Wipe behaviour](../reference/operation-behaviour/wipe.md).
+
 A notebook can reuse one Session across the normal lifecycle. With no `workspace-config.yml` in the process working directory, `current_workspace()` supplies the attached Fabric workspace; each operation below supplies the catalogue explicitly:
 
 ```python
@@ -153,7 +159,7 @@ See [Python operations](../reference/python/operations.md) and the [CLI referenc
 
 Build deploys Lakehouse load modules under the target Lakehouse's `Files/_/Load` tree. Python-authored Folders and Tables remain importable modules. A Spark SQL Table is compiled into a generated Python module with the same `Schema__Object` class spelling.
 
-The following notebook code assumes that Build installed the parcel documents shown in the Lakehouse Python, Spark SQL and Assumption examples into the notebook's attached physical Lakehouse. Replace `<catalogue-name>` with the catalogue Warehouse for that installed estate:
+The following notebook code assumes that Build installed the checked-in `examples/parcel-portability` project into the notebook's attached physical `Lakehouse/Landing`. That project contains the Python Folder `Parcel.Events`, Python Table `Parcel.Event`, Spark SQL Table `Parcel.CurrentStatus` and Python Assumption `Parcel.HasDestination` used below. Replace `<catalogue-name>` with the catalogue Warehouse for that installed estate:
 
 ```python
 import sys
