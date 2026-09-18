@@ -1,24 +1,82 @@
 # Folder
 
-| Family | Lakehouse authored form | Warehouse authored form | Identity established by |
+A Folder manages files beneath a Lakehouse `Files` area. Shared source-header, identity and metadata rules are in [Common metadata](common-metadata.md).
+
+## Location and authored form
+
+A Folder is a Python file directly at:
+
+```text
+Lakehouse/<Item>/Files/<Schema>__<Object>.py
+```
+
+It declares `Folder ID: Schema.Object` and one class `Schema__Object` that directly inherits `Folder` and implements one synchronous `read()` method. Folder is not supported in a Warehouse or as SQL. Runtime constructors and helper signatures are in [Python authored objects](../python/objects.md).
+
+## Metadata
+
+A Folder accepts the [shared keys](common-metadata.md#shared-metadata-keys) plus these keys:
+
+| Key | Required | Accepted value | Default and effect |
 | --- | --- | --- | --- |
-| Table | Python or Spark SQL under `Tables/` | T-SQL at the item root | item path, `Tables` area for a Lakehouse, filename and `Table ID` |
-| Folder | Python under `Files/` | Not supported | item path, `Files` area, filename and `Folder ID` |
-| View | Spark SQL under `Tables/` | T-SQL at the item root | item path, `Tables` area for a Lakehouse, filename and `View ID` |
-| Test | Python or Spark SQL under `tests/` | T-SQL under `tests/` | item path, directory, filename and `Test ID` |
-| Assumption | Python or Spark SQL under `assumptions/` | T-SQL under `assumptions/` | item path, directory, filename and `Assumption ID` |
-| Shortcut | `shortcuts.py` | `shortcuts.yml` | declaring item, authored destination name and shortcut kind |
-| Warehouse programmable | Not supported | T-SQL under `programmables/` | item path, filename and the procedure created by the statement |
-| Schema metadata | YAML under `schemas/` | YAML under `schemas/` | item path, filename and `Schema ID` |
+| `Folder ID` | Yes | `Schema.Object` | No default. |
+| `File key` | Yes | One non-empty glob string or a non-empty YAML list of glob strings | No default. Patterns are relative to the Folder, use `/`, and cannot be absolute or contain a `..` path component. Backslashes are normalised to `/`. |
+| `Incremental` | No | Boolean | **`true`**. Incremental reconciliation preserves managed files omitted from staging unless `read()` explicitly deletes them. `false` makes staging a complete snapshot of the managed file set. |
 
-The owning item selects the SQL dialect: SQL in a Lakehouse is Spark SQL; SQL in a Warehouse is T-SQL. A suffix does not select another dialect.
+A snapshot Folder must therefore declare `Incremental: false`; omitting the key selects incremental behaviour.
 
-Exact metadata keys, method return values and SQL program forms remain in the [authoring guides](../../basics/index.md) and [Python API reference](../python/index.md). The placement and agreement rules below are part of the document contract because they decide whether a file is a declaration at all.
+`File key` defines the files Weaver manages. A non-incremental load deletes existing files that match a declared pattern and are absent from staging. Files outside every pattern are not owned by that reconciliation. A staged file outside the patterns is rejected rather than published.
 
-A Python object filename uses `Schema__Object.py`; a SQL object filename uses `Schema.Object.sql`. The metadata ID uses `Schema.Object`. All components must agree exactly, including case.
+`Incremental` and `Static` are compatible: Incremental controls reconciliation, while Static controls whether another ordinary Load runs after the first clean load. `Prohibit rebuild` controls Build, not file reconciliation.
 
-A Python document must contain exactly one directly declared Weaver class. The class name must equal the filename stem, inherit the class named by its metadata kind and provide that kind's required authored methods. Helper classes may coexist in the module but do not declare additional Weaver documents. A View is authored in SQL, not Python, and a Folder is authored in Python, not SQL.
+## `read()` contract
 
-A SQL document's metadata kind determines whether it is a Table, View, Test or Assumption. Weaver validates the supported result-query shape without submitting the SQL. SQL syntax and engine behaviour that cannot be established statically remain the responsibility of Spark SQL or the Warehouse endpoint when the installed work runs.
+`read()` writes into the exact `StagingFolder` returned by `self.staging_folder()` for that invocation.
 
-Tests and Assumptions are declarations but do not materialise relations. In a Lakehouse their identities carry no `Tables` or `Files` area; in a Warehouse they share the item's ordinary `Schema.Object` namespace with Tables and Views. Tests and Assumptions also share one validation namespace with each other.
+| Folder mode | Accepted return forms |
+| --- | --- |
+| Non-incremental | The issued `StagingFolder` only. `None` and any tuple are invalid. Return an empty issued staging folder for an empty snapshot. |
+| Incremental | The issued `StagingFolder`; `(staging, files_to_delete)`; `None` for no work; or `(None, files_to_delete)` for deletion-only work. |
+
+Returning a raw `Path`, a string, another `StagingFolder` instance or any staging directory not issued by Weaver is invalid.
+
+`files_to_delete` is a sequence of exact relative file-name strings. Each name must match `File key`; it cannot be absolute, contain `..` or backslashes, name a directory, contain glob characters, enter `_changes/`, or also be staged. A single string is not a sequence for this contract.
+
+A Load resets staging before `read()`. Successful publication removes staging; failure retains it for inspection. Rejected staged files are kept in the sibling `<Object>_Reject` folder. With fault tolerance disabled, any rejection leaves the destination unmodified; with it enabled, accepted files publish and rejected files do not.
+
+## Complete example
+
+A snapshot Folder at `Lakehouse/Landing/Files/Parcel__Manifest.py`:
+
+```python
+"""
+Folder ID: Parcel.Manifest
+
+Description: Current parcel manifest files.
+
+Lineage: Carrier manifest export.
+
+File key: "*.csv"
+
+Incremental: false
+"""
+
+from weaver import Folder
+
+
+class Parcel__Manifest(Folder):
+    def read(self):
+        staging = self.staging_folder()
+        (staging.path / "manifest.csv").write_text(
+            "parcel_id,status\n",
+            encoding="utf-8",
+        )
+        return staging
+```
+
+## Build, Load, Test and managed state
+
+Build installs the Folder declaration and its Python load code; it does not call `read()`. Load calls the installed `read()` and reconciles matching files. Folder does not support reload. Test does not execute a Folder, although validations or other load code may read its files.
+
+Weaver maintains `_changes/` inside the destination Folder. Each successful change writes a timestamped JSON document containing the actual inserted, updated and deleted relative paths. Authored code cannot stage or delete that tree. The sibling `_Staging` and `_Reject` paths are runtime-managed, not additional authored documents. Folder data has no row-audit, signature or identity columns.
+
+Build records the declaration in `_.FolderDictionary`, resolved dependencies in `_.Dependency`, and certification in `_.Registry`. Loads use current load state and bookmarks and contribute Load history/statistics. See the [catalogue schema](../catalogue-schema.md) for exact columns and [Incremental data processing](../../advanced/incremental-data-processing.md) for change-feed behaviour.

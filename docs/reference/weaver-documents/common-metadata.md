@@ -1,82 +1,100 @@
 # Common metadata
 
+Table, Folder and View documents share the identity, source-header and metadata rules on this page. Their kind pages list the additional keys and constraints for each document.
 
----
+## Location, filename and identity
 
-## Schema contract
+A document belongs to the item named by its path. Lakehouse data documents live directly under an area; Warehouse relations live directly under the item root.
 
-A Weaver schema declaration describes the business columns a Table is expected to expose: their names, order, data types and authored nullability. Primary, unique and foreign keys add logical row and relationship expectations. The declaration does not expose Weaver's parser objects or intermediate schema model as an API.
+| Kind | Lakehouse path | Warehouse path |
+| --- | --- | --- |
+| Table | `Lakehouse/<Item>/Tables/<Schema>__<Object>.py` or `Lakehouse/<Item>/Tables/<Schema>.<Object>.sql` | `Warehouse/<Item>/<Schema>.<Object>.sql` |
+| Folder | `Lakehouse/<Item>/Files/<Schema>__<Object>.py` | Not supported |
+| View | `Lakehouse/<Item>/Tables/<Schema>.<Object>.sql` | `Warehouse/<Item>/<Schema>.<Object>.sql` |
 
-## Declared columns
+Python filenames use `Schema__Object.py`; SQL filenames use `Schema.Object.sql`. The metadata ID is always `Schema.Object`. Path, filename, ID and case must agree. For Python, the class must also be named `Schema__Object`.
 
-A `Schema` mapping preserves authored column order. Column names are exact-case. A declared Table is installed in that order even when a SQL query returns the same columns in another order.
+The full logical identity includes the owning item. A Lakehouse identity also includes `Tables` or `Files`, so a Table and Folder may share `Schema.Object`. Documents must be directly under the location above; nested declaration directories are invalid. Exact and case-only identity collisions are invalid. Schema `_` is reserved for Weaver in ordinary items.
 
-The declared data type is the installed type. A business column is nullable unless it is named by `Not null` or belongs to the primary key. Primary-key columns are therefore not nullable without also being repeated under `Not null`.
+Files must be UTF-8 text. A Python document starts with a module docstring containing YAML metadata. A SQL document starts with a `/* ... */` YAML metadata block; the remaining text is its SQL body. The owning item selects Spark SQL for a Lakehouse and T-SQL for a Warehouse.
 
-Python Table documents must declare `Schema`. Spark SQL and Warehouse Table documents may declare it. When they do, it is authoritative: the query must return every declared business column, no undeclared business column, and the exact declared spelling. A mismatch fails Build rather than silently dropping, adding or renaming a query column.
+## Shared metadata keys
 
-A schema declaration does not coerce an authored Python result into shape. Authored code must return the declared columns with values the target engine can write as the declared types.
+Keys are case-sensitive. Unknown and duplicate keys are errors.
 
-## Inferred columns
+| Key | Applies to | Required | Accepted value and default |
+| --- | --- | --- | --- |
+| `<Kind> ID` | Table, Folder, View | Yes | Exactly one ID key matching the kind and filename; a two-part `Schema.Object` string. |
+| `Description` | Table, Folder, View | Yes | Non-empty prose or exactly one metadata reference. Placeholder-only values `not declared`, `n/a`, `tbd` and `todo` are invalid. |
+| `Lineage` | Table, Folder, View | Yes | Non-empty prose or exactly one metadata reference. It describes origin; it does not create a dependency. |
+| `Notes` | Table, Folder, View | No | Non-empty free text. Dollar signs and placeholder words have no special handling here. Default: absent. |
+| `Revision notes` | Table, Folder, View | No | Non-empty YAML list of dated, non-empty notes. Default: empty list. |
+| `Dependencies` | Table, Folder, View | Conditional | YAML list of distinct `Schema.Object` names. Default: inferred when the key is absent, except that every Spark SQL object must declare this key. |
+| `Static` | Table, Folder, View | No | Boolean. Default: `false`. On a loadable Table or Folder, a clean prior load causes later ordinary loads to skip it; reload can reopen the Table gate. A View has no Load step, so this field creates no View load. |
+| `Prohibit rebuild` | Table, Folder, View | No | Boolean. Default: `false`. When `true`, Build retains an existing object that would otherwise be dropped and recreated. It does not prevent first installation. |
 
-A Spark SQL or Warehouse Table may omit `Schema`. Its business column names and physical types are then obtained from the result shape established by the target engine during Build. A View also takes its columns from its query rather than a `Schema` mapping.
+A metadata reference is the whole value, not prose containing a reference:
 
-Inference supplies only facts available from that result shape. Authored metadata still controls primary keys, unique keys, foreign keys, comparison columns, column notes, nullability and any managed identity column. Every such metadata reference must match an inferred business column exactly.
+- `$Schema.Object` or `$Schema.Object[Column]` — object in the current item;
+- `$Files/Schema.Object` — Folder in the current Lakehouse item;
+- `$Lakehouse/<Item>/Tables/Schema.Object`, `$Lakehouse/<Item>/Files/Schema.Object` or `$Warehouse/<Item>/Schema.Object` — item-qualified logical identity.
 
-This boundary is deliberate:
+Use `$$` for a literal dollar sign. Metadata references in `Description`, `Lineage` and column notes are descriptive and do not add graph edges.
 
-- declared schema decides names, order, types and authored nullability;
-- inferred schema takes names and types from the built query shape;
-- metadata is not inferred from SQL constraints, indexes, Spark attributes or source data;
-- later physical changes do not rewrite the installed declaration without Build.
+Each `Revision notes` entry starts with a date-shaped value in a plausible day/month range and then a note. A document must use one date shape throughout. Accepted shapes are `YYYY-MM-DD`, `YYYY/MM/DD`, `DD/MM/YYYY`, `DD-MM-YYYY` and `DD.MM.YYYY`; slash-separated day-first and month-first dates are not distinguished.
 
-## Keys and relationships
+## Dependency inference and override
 
-`Primary key` is an ordered, non-empty set of business columns. It is required for incremental Table processing. The primary key identifies rows for comparison, update and explicit deletion, and its columns are not nullable.
+When `Dependencies` is absent, Weaver infers same-item dependencies from Python object imports and SQL relation references. Python object imports identify their Lakehouse area, for example `Tables.Parcel__Event` or `Files.Parcel__Manifest`. Two-part SQL relation names are candidates for managed objects; physically qualified SQL names and table-valued function calls are recorded as external references, not project graph edges.
 
-`Unique keys` is an ordered list of ordered column sets. Declaration order is significant when Load evaluates incoming duplicates. A unique key must not duplicate the primary key or another unique key.
+When `Dependencies` is present, its list **replaces** inferred dependencies. `Dependencies: []` explicitly declares no graph dependencies even if source analysis finds references. Entries resolve with exact case inside the declaring item and may name a native object or logical Shortcut. Entries cannot repeat, name the document itself, or target a Test or Assumption. Use a Shortcut for a cross-item dependency.
 
-`Foreign keys` pair an ordered set of this object's columns with an equally sized ordered set on another logical object. They record a relationship. They do not add a dependency by themselves and do not require Weaver to create or enforce a physical database constraint.
+Every Spark SQL Table or View must declare `Dependencies`, including `Dependencies: []` when it has none. T-SQL and Python documents may omit the key and use inference.
 
-Keys are logical Weaver metadata even where an installed engine representation includes a non-enforced key declaration. Do not treat them as a promise of an index, engine-enforced referential integrity or a particular constraint name.
+Foreign keys, Lineage and other descriptive references do not create dependencies.
 
-## Weaver-managed columns
+## Python and SQL structure
 
-Weaver can add columns that are not part of the authored business schema:
+A Python document contains exactly one top-level class that directly inherits the class named by its metadata kind. Helper classes may coexist. The Weaver class name must match the filename, and each required authored method must appear exactly once and must not be `async`. Check and Build parse this source without importing it or calling authored methods.
 
-- row-audit columns record insert, update and delete lifecycle times for Tables;
-- a row-signature column supports change comparison for keyed loadable Tables;
-- an authored `Identity` name requests a Weaver-managed, engine-generated surrogate value outside the business schema.
+SQL metadata chooses Table or View; the suffix does not. Weaver checks the body structure statically where it can, but the target engine remains responsible for SQL validity and for behaviour that source analysis cannot establish.
 
-Managed names are reserved. An authored business column, key or identity declaration that collides with a reserved managed name is invalid. An identity column must not also be declared under `Schema`, returned by the query or used as the primary key.
+These are Weaver **document-authoring** rules. Constructor parameters, runtime helpers and complete method signatures belong to [Python authored objects](../python/objects.md).
 
-`Table.columns()` and ordinary `Table.dataframe()` expose business columns. The public row-audit option adds the audit columns. The row signature remains managed state rather than an authored projection. Exact method signatures are in [Python authored objects](../python/objects.md).
+## Complete example
 
-Managed-column spellings, physical encodings and generated statements can differ between Lakehouse and Warehouse targets. Those implementation forms are not an additional authoring surface.
+`Lakehouse/Logistics/Tables/Parcel__Event.py`:
 
-## Validation and failure points
+```python
+"""
+Table ID: Parcel.Event
 
-Validation occurs at the earliest boundary that has the required evidence.
+Description: One row per parcel event.
 
-**Project discovery** rejects malformed schema values, duplicate or case-colliding columns, unknown metadata keys, missing required schemas, invalid key shapes, key or nullability references outside a declared schema, repeated keys and reserved-name collisions. Check reaches this boundary without contacting Fabric.
+Lineage: Parcel scanner messages.
 
-**Build** validates deferred references after an inferred result shape is available. It rejects missing or extra columns for a declared SQL schema, metadata references absent from an inferred shape, case mismatches, ambiguous case-only query columns and identity collisions. These failures do not turn the inferred result into new source metadata.
+Notes: Times are recorded in UTC.
 
-**Load** validates returned data against the installed contract. Missing required values, duplicate incoming keys and incompatible rows are reported under Load's fault-tolerance rules. A proposed incremental merge that would leave a declared unique key invalid fails without accepting the invalid target state. Target-engine type or expression errors remain execution failures.
+Revision notes:
+  - 2026-09-18 Added the event type.
 
-The same declaration is used after installation. Load does not reopen the project to discover a newer schema, and a source edit has no runtime effect until Build installs it.
+Schema:
+  parcel_id: string
+  event_type: string
+"""
 
-## Defined behaviour
+from weaver import Table
 
-The Schema contract specifies that Weaver:
 
-1. preserves authored business-column names, order, types and declared nullability;
-2. treats primary-key columns as non-null and keeps ordered primary, unique and foreign-key sets;
-3. uses a declared SQL schema as authoritative and otherwise obtains business names and types from the built query shape;
-4. keeps authored metadata authoritative when business columns are inferred;
-5. treats keys and relationships as logical metadata rather than a promise of physical enforcement;
-6. keeps managed audit, signature and identity columns outside the authored business schema;
-7. rejects declaration errors during discovery and deferred shape errors during Build; and
-8. executes Load against the installed schema contract rather than unbuilt source.
+class Parcel__Event(Table):
+    def read(self):
+        return self.spark.createDataFrame([], "parcel_id string, event_type string")
+```
 
-See [Weaver documents](overview.md), [Build](../operation-behaviour/build.md), [Load](../operation-behaviour/load.md), and [Python authored objects](../python/objects.md).
+This example uses dependency inference; it imports no other Weaver document.
+
+## Operation and catalogue boundary
+
+Check validates the complete project statically. Build validates it again, resolves dependencies and installs selected items; Build does not call Python `read()`. Load later executes installed Table and Folder load definitions. Test executes installed Tests and Assumptions, not these data documents. See [Build](../operation-behaviour/build.md), [Load](../operation-behaviour/load.md) and [Test](../operation-behaviour/test.md).
+
+Build records installed identity and signatures in `_.Registry`, declarations in the appropriate dictionary, and resolved graph edges in `_.Dependency`. Exact fields are in the [catalogue schema](../catalogue-schema.md). These tables describe current output; this page does not add a catalogue-format compatibility guarantee.

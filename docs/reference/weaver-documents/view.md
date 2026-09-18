@@ -1,24 +1,73 @@
 # View
 
-| Family | Lakehouse authored form | Warehouse authored form | Identity established by |
+A View installs a SQL query as a Lakehouse or Warehouse view. Shared source-header, identity and metadata rules are in [Common metadata](common-metadata.md).
+
+## Location and authored form
+
+| Target | Location | Dialect |
+| --- | --- | --- |
+| Lakehouse | `Lakehouse/<Item>/Tables/<Schema>.<Object>.sql` | Spark SQL |
+| Warehouse | `Warehouse/<Item>/<Schema>.<Object>.sql` | T-SQL |
+
+`View ID: Schema.Object` and the filename must agree exactly. A View is SQL-only; a Python class inheriting `View` is not a repository authoring form. The public runtime `View` class and `dataframe()` method are documented under [Python authored objects](../python/objects.md).
+
+## Metadata
+
+A View accepts the [shared keys](common-metadata.md#shared-metadata-keys) plus every key below.
+
+| Key | Required | Accepted value | Default and effect |
 | --- | --- | --- | --- |
-| Table | Python or Spark SQL under `Tables/` | T-SQL at the item root | item path, `Tables` area for a Lakehouse, filename and `Table ID` |
-| Folder | Python under `Files/` | Not supported | item path, `Files` area, filename and `Folder ID` |
-| View | Spark SQL under `Tables/` | T-SQL at the item root | item path, `Tables` area for a Lakehouse, filename and `View ID` |
-| Test | Python or Spark SQL under `tests/` | T-SQL under `tests/` | item path, directory, filename and `Test ID` |
-| Assumption | Python or Spark SQL under `assumptions/` | T-SQL under `assumptions/` | item path, directory, filename and `Assumption ID` |
-| Shortcut | `shortcuts.py` | `shortcuts.yml` | declaring item, authored destination name and shortcut kind |
-| Warehouse programmable | Not supported | T-SQL under `programmables/` | item path, filename and the procedure created by the statement |
-| Schema metadata | YAML under `schemas/` | YAML under `schemas/` | item path, filename and `Schema ID` |
+| `View ID` | Yes | `Schema.Object` | No default. |
+| `Column notes` | No | Non-empty mapping of result-column name to prose or one metadata reference | Empty. Names are checked against the built result shape. |
+| `Primary key` | No | One comma-separated, ordered, non-empty column set | Empty. Logical metadata only. |
+| `Unique keys` | No | Non-empty YAML list; each entry is one comma-separated, ordered column set | Empty. Logical metadata only; an entry cannot repeat the primary key or another unique key. |
+| `Foreign keys` | No | Non-empty YAML list of `child columns: target[parent columns]` mappings | Empty. `target` is `Schema.Object`, `Files/Schema.Object` or an item-qualified logical identity, without `$`. Logical metadata only; child and parent sets must have equal length. |
 
-The owning item selects the SQL dialect: SQL in a Lakehouse is Spark SQL; SQL in a Warehouse is T-SQL. A suffix does not select another dialect.
+A View cannot declare `Schema`, `Not null`, `Identity`, `Comparison columns`, `Incremental`, `Has load procedure` or stability thresholds. It stores no rows and has no Load definition. Its keys and relationships describe the result; they do not create indexes, constraints or dependencies.
 
-Exact metadata keys, method return values and SQL program forms remain in the [authoring guides](../../basics/index.md) and [Python API reference](../python/index.md). The placement and agreement rules below are part of the document contract because they decide whether a file is a declaration at all.
+Because the result shape is always inferred, Build checks every local column named by `Column notes`, `Primary key`, `Unique keys` and `Foreign keys` against the query result with exact case. Foreign-key parent columns describe the parent and are not checked against the View shape.
 
-A Python object filename uses `Schema__Object.py`; a SQL object filename uses `Schema.Object.sql`. The metadata ID uses `Schema.Object`. All components must agree exactly, including case.
+`Static` is accepted as shared build metadata and defaults to `false`, but a View has no Load gate for it to control. `Prohibit rebuild: true` is consequential: Build retains an existing protected View instead of replacing it when replacement would otherwise be required.
 
-A Python document must contain exactly one directly declared Weaver class. The class name must equal the filename stem, inherit the class named by its metadata kind and provide that kind's required authored methods. Helper classes may coexist in the module but do not declare additional Weaver documents. A View is authored in SQL, not Python, and a Folder is authored in Python, not SQL.
+## SQL body
 
-A SQL document's metadata kind determines whether it is a Table, View, Test or Assumption. Weaver validates the supported result-query shape without submitting the SQL. SQL syntax and engine behaviour that cannot be established statically remain the responsibility of Spark SQL or the Warehouse endpoint when the installed work runs.
+The body after the opening metadata block is the View query. It must contain one SQL statement and produce one result set where static analysis can determine that count. Do not write `CREATE VIEW`; Build wraps the body in the target-specific create statement. The target engine validates SQL syntax and any behaviour source analysis cannot establish.
 
-Tests and Assumptions are declarations but do not materialise relations. In a Lakehouse their identities carry no `Tables` or `Files` area; in a Warehouse they share the item's ordinary `Schema.Object` namespace with Tables and Views. Tests and Assumptions also share one validation namespace with each other.
+Spark SQL Views must explicitly declare `Dependencies`; use `Dependencies: []` for a query with no project dependencies. T-SQL Views may omit the key and use inferred two-part relation references. An explicit declaration replaces inferred dependencies in either dialect.
+
+## Complete examples
+
+Spark SQL, `Lakehouse/Logistics/Tables/Parcel.Active.sql`:
+
+```sql
+/*
+View ID: Parcel.Active
+
+Description: Parcels still in transit.
+
+Lineage: Parcel status feed.
+
+Dependencies: []
+*/
+select 'P-001' as parcel_id, 'in_transit' as status;
+```
+
+T-SQL, `Warehouse/Reporting/Parcel.Active.sql`:
+
+```sql
+/*
+View ID: Parcel.Active
+
+Description: Parcels still in transit.
+
+Lineage: Reporting intake.
+*/
+select cast('P-001' as varchar(32)) as [parcel_id],
+       cast('in_transit' as varchar(32)) as [status];
+```
+
+## Build, Load, Test and managed state
+
+Build installs or replaces the View and validates deferred result-column references. A View does not participate in Load and has no bookmark, load status, reject relation, row audit, row signature or identity column. Test does not execute the View itself; installed Tests and Assumptions may query it.
+
+Build records the declaration in `_.TableDictionary`, notes in `_.ColumnDictionary`, keys in `_.KeyDictionary`, relationships in `_.ForeignKeyDictionary`, dependencies in `_.Dependency`, and certification in `_.Registry`. See the [catalogue schema](../catalogue-schema.md) for exact columns and [Build](../operation-behaviour/build.md) for protected-rebuild behaviour.
