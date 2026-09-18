@@ -1,7 +1,7 @@
 site_name: Weaver documentation
 site_description: Technical documentation for building and operating Microsoft Fabric data estates with Weaver
 site_url: https://docs.weaverstack.dev
-repo_name: matthias-wong-dev/weaverstack-docs
+repo_name: GitHub
 repo_url: https://github.com/matthias-wong-dev/weaverstack-docs
 edit_uri: edit/main/docs/
 strict: true

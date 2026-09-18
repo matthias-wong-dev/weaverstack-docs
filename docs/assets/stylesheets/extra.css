@@ -38,6 +38,16 @@
   --md-typeset-a-color: var(--weaver-blue-dark);
   --md-code-fg-color: var(--weaver-code-text);
   --md-code-bg-color: var(--weaver-code);
+  --weaver-syntax-comment: #b8c4d6;
+  --weaver-syntax-docstring: #c4cdef;
+  --weaver-syntax-key: #9dccff;
+  --weaver-syntax-value: #bfe3bd;
+  --weaver-syntax-string: #bfe3bd;
+  --weaver-syntax-punctuation: #d0d8e6;
+  --weaver-syntax-operator: #efb8ff;
+  --weaver-syntax-keyword: #9dccff;
+  --weaver-syntax-number: #ffd19a;
+  --weaver-syntax-command: #e5ecfa;
 }
 
 [data-md-color-scheme="slate"] {
@@ -70,6 +80,16 @@
   --md-typeset-a-color: var(--weaver-blue-dark);
   --md-code-fg-color: var(--weaver-code-text);
   --md-code-bg-color: var(--weaver-code);
+  --weaver-syntax-comment: #aebdd0;
+  --weaver-syntax-docstring: #c5cdef;
+  --weaver-syntax-key: #91c7ff;
+  --weaver-syntax-value: #b6dfb5;
+  --weaver-syntax-string: #b6dfb5;
+  --weaver-syntax-punctuation: #c9d3e3;
+  --weaver-syntax-operator: #ebb5ff;
+  --weaver-syntax-keyword: #91c7ff;
+  --weaver-syntax-number: #f4c98f;
+  --weaver-syntax-command: #e5ecfa;
 }
 
 * {
@@ -153,7 +173,7 @@ input {
   letter-spacing: -0.025em;
 }
 
-.weaver-product-link {
+.weaver-home-link {
   flex: 0 0 auto;
   margin: 0 0.35rem;
   padding: 0.35rem 0.45rem;
@@ -163,7 +183,7 @@ input {
   text-decoration: none;
 }
 
-.weaver-product-link:hover {
+.weaver-home-link:hover {
   color: var(--weaver-blue);
 }
 
@@ -310,7 +330,11 @@ input {
 
 /* Tables remain dense and horizontally scrollable on narrow screens. */
 .md-typeset .md-typeset__table {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .md-typeset table:not([class]) {
@@ -365,6 +389,51 @@ input {
   background: var(--weaver-code);
   font-size: 0.69rem;
   line-height: 1.68;
+}
+
+/*
+ * Own the required Pygments token colours. Metadata comments and docstrings are
+ * authored source, so their contrast must not depend on Material's defaults.
+ */
+.md-typeset .highlight :is(.c, .c1, .cm, .cp, .cs) {
+  color: var(--weaver-syntax-comment);
+}
+
+.md-typeset .highlight .sd {
+  color: var(--weaver-syntax-docstring);
+}
+
+.md-typeset .highlight :is(.nt, .na) {
+  color: var(--weaver-syntax-key);
+}
+
+.md-typeset .highlight :is(.l, .ld) {
+  color: var(--weaver-syntax-value);
+}
+
+.md-typeset .highlight :is(.s, .s1, .s2, .sa, .sb, .sc, .dl, .se, .sh, .si, .sr, .ss, .sx) {
+  color: var(--weaver-syntax-string);
+}
+
+.md-typeset .highlight .p {
+  color: var(--weaver-syntax-punctuation);
+}
+
+.md-typeset .highlight :is(.o, .ow) {
+  color: var(--weaver-syntax-operator);
+}
+
+.md-typeset .highlight :is(.k, .kc, .kd, .kn, .kp, .kr, .kt) {
+  color: var(--weaver-syntax-keyword);
+}
+
+.md-typeset .highlight :is(.m, .mb, .mf, .mh, .mi, .mo, .il) {
+  color: var(--weaver-syntax-number);
+}
+
+.md-typeset :is(.language-bash.highlight, .language-shell.highlight, .language-console.highlight) code,
+.md-typeset :is(.language-bash.highlight, .language-shell.highlight, .language-console.highlight) :is(.nb, .nv) {
+  color: var(--weaver-syntax-command);
 }
 
 .md-typeset .highlight,
@@ -483,7 +552,7 @@ input {
     margin-left: 0.25rem;
   }
 
-  .weaver-product-link {
+  .weaver-home-link {
     margin: 0;
     padding-inline: 0.3rem;
     font-size: 0.68rem;

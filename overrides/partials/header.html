@@ -1,4 +1,4 @@
-{# Keep this close to Material's header partial; the only structural addition is the Product link. #}
+{# Keep this close to Material's header partial; preserve its responsive controls. #}
 {% set class = "md-header" %}
 {% if "navigation.tabs.sticky" in features %}
   {% set class = class ~ " md-header--shadow md-header--lifted" %}
@@ -14,7 +14,7 @@
       {% set icon = config.theme.icon.menu or "material/menu" %}
       {% include ".icons/" ~ icon ~ ".svg" %}
     </label>
-    <div class="md-header__title" data-md-component="header-title">
+    <a href="{{ config.extra.homepage | d(nav.homepage.url, true) | url }}" class="md-header__title" aria-label="{{ config.site_name }} home" data-md-component="header-title">
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">{{ config.site_name }}</span>
@@ -25,8 +25,8 @@
           </span>
         </div>
       </div>
-    </div>
-    <a class="weaver-product-link" href="https://weaverstack.dev/">Product</a>
+    </a>
+    <a class="weaver-home-link" href="https://weaverstack.dev/">Home page</a>
     {% if config.theme.palette %}
       {% if not config.theme.palette is mapping %}
         {% include "partials/palette.html" %}
