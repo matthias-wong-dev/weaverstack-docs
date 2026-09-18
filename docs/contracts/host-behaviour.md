@@ -1,6 +1,6 @@
 # Host-behaviour contract
 
-Weaver exposes the same lifecycle operations from a desktop process and from Python running in a Fabric notebook, but the host determines where execution resources and credentials come from. A Session selects that host behaviour for one workspace.
+Weaver exposes the same lifecycle operations from a desktop process and from Python running in a Fabric notebook, but the host determines where execution capabilities and credentials come from. A Session selects that host behaviour for one workspace.
 
 ## Desktop execution
 
@@ -11,7 +11,7 @@ Outside the Fabric workspace being addressed, Weaver uses a desktop Session. It 
 - Lakehouse Python or Spark SQL work requires a published Fabric Environment and a remote Spark session in the target workspace.
 - A Warehouse-only operation does not start Spark solely because other Weaver operations can use it.
 
-A Session can reuse healthy acquired resources across commands. Concurrent requests for the same resource share one acquisition. A failed authored statement does not by itself discard a healthy session; an acquisition or session failure can mark that resource for a bounded reacquisition before a later operation.
+A Session can reuse healthy acquired capabilities across commands. Concurrent requests for the same capability share one acquisition. A failed authored statement does not by itself discard a healthy session; an acquisition or session failure can mark that capability for a bounded reacquisition before a later operation.
 
 ## Execution inside the attached Fabric workspace
 
@@ -36,13 +36,13 @@ A qualified Fabric Environment may be owned by another workspace when Fabric acc
 
 Cross-workspace support is capability-specific. A supported Environment attachment does not imply that every notebook utility, mounted path, credential flow or item operation behaves as though both workspaces were one host.
 
-## Context and resource acquisition
+## Context and capability acquisition
 
 Constructing a Session resolves configuration and workspace context but does not by itself start Spark, open Warehouse SQL or resolve every item. Operations declare the capabilities they need, and the Session acquires them on demand.
 
-A lifecycle sequence may acquire its known resources and attach required Lakehouses before its first command. Preparation changes startup timing, not selection or authority: the catalogue still supplies the installed target context, each operation keeps its own write boundary and one Session still belongs to one workspace.
+A lifecycle sequence may acquire its known capabilities and attach required Lakehouses before its first command. Preparation changes startup timing, not selection or authority: the catalogue still supplies the installed target context, each operation keeps its own write boundary and one Session still belongs to one workspace.
 
-Resource cleanup follows ownership. An operation-created Session closes after the operation. A supplied Session remains open. Closing releases resources that were acquired and does not acquire unused resources for the sake of releasing them.
+Capability cleanup follows ownership. An operation-created Session closes after the operation. A supplied Session remains open. Closing releases capabilities that were acquired and does not acquire unused capabilities for the sake of releasing them.
 
 ## Supported differences
 

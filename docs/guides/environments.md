@@ -1,5 +1,7 @@
 # Configure workspaces and Fabric Environments
 
+The [Fabric Environment definition reference](../reference/environment-definition.md) owns the accepted directory parts, package overlay and publication boundary.
+
 Three settings are often called an environment even though they control different things:
 
 1. **Workspace configuration** selects a Fabric workspace, catalogue, physical targets, optional mirror source and optional Fabric Environment binding.

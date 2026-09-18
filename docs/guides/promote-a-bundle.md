@@ -1,5 +1,7 @@
 # Promote a build bundle
 
+The [Build bundle reference](../reference/build-bundle.md) records the current manifest, payload and installation handoff.
+
 Weaver has a public split-build route: `weaver build --bundle-only` writes a local bundle directory, and `weaver install` installs that frozen bundle later. Use it when one process prepares and approves installation work and another process applies exactly that work.
 
 This route is a bundle handoff, not a general retargeting mechanism. Build plans against a selected destination workspace and its current catalogue and target state. Install does not reopen project source, recalculate dependencies or replace the bundle's physical target names.

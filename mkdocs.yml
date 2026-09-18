@@ -121,6 +121,10 @@ nav:
           - Validation objects: reference/python/validation.md
           - Results and reports: reference/python/results.md
           - Exceptions: reference/python/errors.md
+      - Machine-readable interfaces: reference/machine-readable-interfaces.md
+      - Fabric Environment definition: reference/environment-definition.md
+      - Build bundle: reference/build-bundle.md
+      - Catalogue schema: reference/catalogue-schema.md
   - Contracts:
       - contracts/index.md
       - Project: contracts/project.md
@@ -140,5 +144,9 @@ nav:
       - Incremental processing: contracts/incremental-processing.md
       - History: contracts/history.md
       - Mirror: contracts/mirror.md
+      - Schema: contracts/schema.md
+      - Runtime: contracts/runtime.md
+      - Host behaviour: contracts/host-behaviour.md
+      - CLI behaviour: contracts/cli-behaviour.md
   - Advanced: advanced/index.md
   - Contributing: contributing/index.md

@@ -59,7 +59,7 @@ Targeted Test diagnostics belong to the invocation result. They are not durable 
 
 ## Cleanup and failure
 
-An operation closes only resources it created. A supplied Session and its healthy reusable resources remain available to the caller. Session close releases acquired resources; resources never acquired are not started merely to close them.
+An operation closes only capabilities it created. A supplied Session and its healthy reusable capabilities remain available to the caller. Session close releases acquired capabilities; capabilities never acquired are not started merely to close them.
 
 A runtime import scope is released after its run. Failure to release a still-live remote scope is reported without replacing the already settled operation outcome; the affected session should not be used for rebuilt Python until it has been restarted. An interpreter that has already ended needs no further cleanup.
 
@@ -76,6 +76,6 @@ The Runtime contract specifies that Weaver:
 5. keeps Spark execution and Warehouse SQL execution as distinct target capabilities;
 6. waits for cross-engine publication only where selected dependency work requires it;
 7. settles runtime outcomes and required catalogue writes before reporting completion; and
-8. releases operation-owned resources without closing a borrowed Session or rolling back completed effects.
+8. releases operation-owned capabilities without closing a borrowed Session or rolling back completed effects.
 
 See [Load](load.md), [Test](test.md), [Catalogue](catalogue.md), [Python operations](../reference/python/operations.md), and [Session and workspace helpers](../reference/python/session.md).

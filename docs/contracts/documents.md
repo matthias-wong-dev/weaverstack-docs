@@ -84,3 +84,5 @@ The Weaver documents contract specifies that Weaver:
 5. reads declarations without executing authored Python;
 6. keeps supporting files distinct from selectable documents;
 7. rejects unsupported combinations and identity collisions before Build changes Fabric.
+
+The [Schema contract](schema.md) defines columns, keys, inference and managed-column boundaries.

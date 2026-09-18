@@ -6,7 +6,7 @@ This maintainer-only map records what the public site does not yet explain. It l
 
 The accepted Core sequence now covers the public mental model: Weaver documents, operations, catalogue state, the development cycle, dependencies and fault tolerance. Task-specific detail belongs in Guides; precise behavioural commitments belong in Contracts. Do not create extra concept pages merely to mirror source modules.
 
-The foundation and lifecycle contracts now own identity, source discovery, change detection, validation, state and health. The final integration pass should remove conceptual repetition rather than create matching Core pages.
+The foundation, lifecycle and interface contracts now own identity, source discovery, change detection, schema, runtime, host, CLI, validation, state and health. The final integration pass should remove conceptual repetition rather than create matching Core pages.
 
 ## Guides
 
@@ -16,7 +16,7 @@ The mapped authoring, operating and automation tasks now have substantive guides
 
 The generated CLI reference owns all 17 current parser leaves across 15 pages. `tools/generate_cli_reference.py` rejects unassigned, duplicate and retired commands and detects checked-in generated-block drift.
 
-Compatibility promises for JSON shapes and exit-code taxonomy remain withheld pending the interface decisions recorded below.
+The machine-readable-interface reference records the current command-specific JSON shapes and exit outcomes. It does not turn unversioned output into a compatibility promise.
 
 ## Python API
 
@@ -26,18 +26,15 @@ The reference distinguishes public top-level exports from importable internal mo
 
 ## Contracts
 
-Foundation and lifecycle behaviour is covered through Build, Load, Test, Workflow, selection, state and health, fault tolerance, incremental processing, history and Mirror. The remaining contracts are exact authored formats and machine/host interfaces whose compatibility boundaries require care.
+Foundation, lifecycle and interface behaviour is covered through Build, Load, Test, Workflow, selection, state and health, schema, runtime, host behaviour, CLI behaviour, fault tolerance, incremental processing, history and Mirror. Current Environment, build-bundle, machine-output and catalogue shapes are recorded under Reference where no compatibility policy exists.
 
-| Missing contract | Current authority | Future authoritative home | Required precision |
+The following authored-format contracts remain optional post-launch depth rather than gaps in the accepted public model:
+
+| Possible contract | Current authority | Future authoritative home | Required precision |
 | --- | --- | --- | --- |
 | Python-authored objects | Object base classes and repository AST validation | `contracts/python-authoring.md` | Required class names/methods, static restrictions, runtime context and return contracts. |
 | SQL-authored objects | SQL program readers and tests | `contracts/sql-authoring.md` | Metadata blocks, statement structure, dialect-specific constraints, inferred versus declared schema and load/delete queries. |
 | Shortcut declarations | Shortcut readers and tests | `contracts/shortcuts.md` | Exact Python/YAML schema, target grammar and unsupported combinations. |
-| Build bundle | Build bundle model, serializer and invariant tests | `contracts/build-bundle.md` | Directory/archive layout, manifest and payload hashes, identity, compatibility and validation errors. |
-| CLI JSON | Renderers and representation tests | `contracts/cli-json.md` | Per-command schemas, format versions, nullability, partial reports and error envelope. |
-| Exit codes | CLI handlers and interaction tests | `contracts/exit-codes.md` | Success, domain failure, health status, refusal, parser failure and interruption. |
-| Catalogue compatibility | Catalogue table declarations and compatibility tests | existing `contracts/catalogue.md` or a generated schema reference | Decide whether columns, keys and schema versions form a supported consumer interface beyond the established table purposes and read-only boundary. |
-| Environment definition | Environment definition parser and publication tests | `contracts/environment.md` | Directory parts, package overlay ownership, local/remote authority and preservation guarantees. |
 
 ## Explicitly withheld claims
 
@@ -53,4 +50,4 @@ The site does not claim:
 - that `--json` schemas are stable where no format/version contract is documented;
 - that source design documents are themselves a supported public API.
 
-Those claims remain withheld until the mapped contract or reference page can state and test them precisely.
+Those claims remain withheld until the product establishes and tests them precisely.

@@ -4,7 +4,7 @@
 weaver [--version] command ...
 ```
 
-Run `weaver <command> --help` for the exact options in the installed version. This page records command responsibility and the selection grammar that differs between commands.
+Run `weaver <command> --help` for the exact options in the installed version. This page records command responsibility and the selection grammar that differs between commands. [Machine-readable interfaces](machine-readable-interfaces.md) records the current JSON documents; the [CLI-behaviour contract](../contracts/cli-behaviour.md) defines shared interaction and status semantics.
 
 ## Commands
 

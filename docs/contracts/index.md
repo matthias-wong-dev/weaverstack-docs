@@ -35,5 +35,9 @@ The contract surface includes:
 - [Incremental processing](incremental-processing.md) — bookmarks, keyed changes, Folder history, stability and reload.
 - [History](history.md) — current state, append-only records, workflow correlation and retention boundaries.
 - [Mirror](mirror.md) — estate copying, rebinding, borrowed forms, localisation and destructive boundaries.
+- [Schema](schema.md) — columns, keys, inference, managed columns and validation boundaries.
+- [Runtime](runtime.md) — installed execution, Session context, engine boundaries and result publication.
+- [Host behaviour](host-behaviour.md) — desktop, attached-notebook and cross-workspace execution positions.
+- [CLI behaviour](cli-behaviour.md) — parsing, interaction, authorisation, streams, status and interruption.
 
 A contract states only behaviour supported by current source and tests. Examples may illustrate that behaviour, but an example does not enlarge the guarantee.
