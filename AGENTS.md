@@ -35,14 +35,16 @@ Examples use a neutral parcel and logistics domain. Keep them small and independ
 
 ## Public site structure
 
-- Get started
-- Guides
-- Core concepts
-- Reference
-- Contracts
-- Advanced
-- Contributing
+The rendered site has five reader-facing sections, each with one job:
 
-`COVERAGE.md` is the internal documentation ledger. Keep it outside `docs/` and out of public navigation.
+- **Getting started** — the shortest complete path to a working Weaver project.
+- **Core concepts** — the mental model needed to reason about Weaver.
+- **Basics** — normal authoring, development and operating workflows, using defaults and inference first.
+- **Advanced** — deeper mechanisms and non-basic operating patterns.
+- **Reference** — exact supported syntax, interfaces and behaviour.
 
-Coverage comes before volume: give each public concept, command, API and contract an authoritative home before filling every page.
+Do not add public **Guides**, **Contracts**, **Contributing** or **Architecture** sections. Exact behavioural material belongs under Reference; maintainer instructions belong in root `CONTRIBUTING.md`, `AGENTS.md`, `PROSE.md` and `COVERAGE.md`.
+
+`COVERAGE.md` is the internal documentation ledger. Keep it outside `docs/` and out of public navigation. A target path records ownership, not completion.
+
+Coverage comes before volume: give each public concept, command, API and behaviour one authoritative home before filling every page. Keep concept, task, mechanism and reference material separate, and link to the owning page rather than repeating a partial specification.
