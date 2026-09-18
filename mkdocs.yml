@@ -113,6 +113,14 @@ nav:
           - Fabric Environment: reference/cli/fabric-environment.md
           - Fabric Notebook: reference/cli/fabric-notebook.md
           - Fabric capacity: reference/cli/fabric-capacity.md
+      - Python API:
+          - Overview: reference/python/index.md
+          - Operations: reference/python/operations.md
+          - Session and workspace: reference/python/session.md
+          - Authored objects: reference/python/objects.md
+          - Validation objects: reference/python/validation.md
+          - Results and reports: reference/python/results.md
+          - Exceptions: reference/python/errors.md
   - Contracts:
       - contracts/index.md
       - Load: contracts/load.md

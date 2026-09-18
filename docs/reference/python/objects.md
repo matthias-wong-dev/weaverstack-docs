@@ -4,6 +4,19 @@ These classes are the public Python surface for Lakehouse object modules and aut
 
 Python object classes are not the YAML metadata, SQL document, or CLI forms of the same concepts. See [Weaver documents](../../core-concepts/weaver-documents.md) for the document model, [Lakehouse pipeline](../../guides/lakehouse-pipeline.md) for an end-to-end authoring path, and [Shortcuts](../../guides/shortcuts.md) for shortcut target forms.
 
+<!-- BEGIN GENERATED PYTHON -->
+
+## Public exports
+
+- `weaver.Folder` — class
+- `weaver.Shortcut` — class
+- `weaver.SparkSqlTable` — class
+- `weaver.Table` — class
+- `weaver.View` — class
+- `weaver.WeaverObject` — class
+
+<!-- END GENERATED PYTHON -->
+
 ## `WeaverObject`
 
 ```python

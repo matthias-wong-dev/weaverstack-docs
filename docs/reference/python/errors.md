@@ -17,6 +17,18 @@ except WeaverError as exc:
 
 These are Python exceptions, not CLI exit-code categories or YAML validation records. For command-line recovery and output, use [Troubleshooting](../../guides/troubleshooting.md), [Automation](../../guides/automation.md), and the [CLI reference](../cli.md).
 
+<!-- BEGIN GENERATED PYTHON -->
+
+## Public exports
+
+- `weaver.CommandError` — class
+- `weaver.ConfigError` — class
+- `weaver.IdentityError` — class
+- `weaver.ValidationError` — class
+- `weaver.WeaverError` — class
+
+<!-- END GENERATED PYTHON -->
+
 ## `WeaverError`
 
 ```python

@@ -255,6 +255,12 @@ def build_manifest(
 def render_page(facts: list[dict[str, str]]) -> str:
     if not facts:
         raise ValueError("cannot render a page without public exports")
+    if all(fact["kind"] != "function" for fact in facts):
+        lines = [BEGIN, "", "## Public exports", ""]
+        for fact in sorted(facts, key=lambda item: item["name"]):
+            lines.append(f"- `weaver.{fact['name']}` — {fact['kind']}")
+        lines.extend(["", END])
+        return "\n".join(lines)
     lines = [BEGIN, "", "## Public exports", ""]
     for fact in sorted(facts, key=lambda item: item["name"]):
         name = fact["name"]

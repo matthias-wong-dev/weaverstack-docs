@@ -113,7 +113,10 @@ class PythonReferenceTests(unittest.TestCase):
             )
 
         page.write_text(
-            page.read_text(encoding="utf-8").replace("Kind: value", "Kind: changed"),
+            page.read_text(encoding="utf-8").replace(
+                "`weaver.__version__` — value",
+                "`weaver.__version__` — changed",
+            ),
             encoding="utf-8",
         )
         with self.assertRaisesRegex(ValueError, "generated Python block has drifted"):

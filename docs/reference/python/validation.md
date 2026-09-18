@@ -4,6 +4,17 @@ Python validations are Weaver documents implemented as classes. Import the four 
 
 This page documents their Python call shape. SQL validation files have a different program shape, and CLI Test selects installed or source-file validations rather than constructing these classes. See [Validate an installed estate](../../guides/validation.md) for those workflows and [Weaver documents](../../core-concepts/weaver-documents.md) for Test and Assumption semantics.
 
+<!-- BEGIN GENERATED PYTHON -->
+
+## Public exports
+
+- `weaver.Assumption` — class
+- `weaver.SparkSqlAssumption` — class
+- `weaver.SparkSqlTest` — class
+- `weaver.Test` — class
+
+<!-- END GENERATED PYTHON -->
+
 All four classes share this constructor through `WeaverObject`:
 
 ```python

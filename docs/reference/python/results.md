@@ -4,6 +4,33 @@ Weaver operations return frozen result and report values. Import every type on t
 
 The constructors below describe the returned shape and are useful in tests. Normal application code receives these values from the corresponding operation. `to_mapping()` methods produce the operation's current machine representation, but this page does not promise a version-independent JSON schema. See [Weaver operations](../../core-concepts/weaver-operations.md) for lifecycle semantics and the operation's [CLI reference](../cli.md) for command behaviour.
 
+<!-- BEGIN GENERATED PYTHON -->
+
+## Public exports
+
+- `weaver.BuildResult` — class
+- `weaver.ExampleOutcome` — class
+- `weaver.FabricItemOutcome` — class
+- `weaver.HealthFinding` — class
+- `weaver.HealthReport` — class
+- `weaver.HealthSection` — class
+- `weaver.InitialiseReport` — class
+- `weaver.LoadActivity` — class
+- `weaver.LoadMessage` — class
+- `weaver.LoadNodeReport` — class
+- `weaver.LoadResult` — class
+- `weaver.LoadRunReport` — class
+- `weaver.MirrorPlan` — class
+- `weaver.MirrorResult` — class
+- `weaver.ValidationNodeReport` — class
+- `weaver.ValidationRunReport` — class
+- `weaver.WipeItemResult` — class
+- `weaver.WipePlan` — class
+- `weaver.WipeReport` — class
+- `weaver.WipeResult` — class
+
+<!-- END GENERATED PYTHON -->
+
 ## Initialisation
 
 ### `FabricItemOutcome`

@@ -2,15 +2,20 @@
 
 The public Python surface is the set of names exported by `weaver.__all__`. Import these names from `weaver`; importable internal modules are not part of this reference.
 
-Use [operations](operations.md) to run lifecycle work and [Session and workspace helpers](session.md) to share a workspace context across calls. The [CLI reference](../cli.md) covers equivalent command-line entry points. [Weaver operations](../../core-concepts/weaver-operations.md) explains the lifecycle boundaries rather than repeating them here.
+Use [operations](operations.md) to run lifecycle work and [Session and workspace helpers](session.md) to share a workspace context across calls. The remaining pages own the public types:
+
+- [Authored objects](objects.md)
+- [Validation objects](validation.md)
+- [Results and reports](results.md)
+- [Exceptions](errors.md)
+
+The [CLI reference](../cli.md) covers equivalent command-line entry points. [Weaver operations](../../core-concepts/weaver-operations.md) explains the lifecycle boundaries rather than repeating them here.
 
 <!-- BEGIN GENERATED PYTHON -->
 
 ## Public exports
 
-### `weaver.__version__`
-
-Kind: value
+- `weaver.__version__` — value
 
 <!-- END GENERATED PYTHON -->
 
