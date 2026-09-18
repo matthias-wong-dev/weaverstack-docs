@@ -12,6 +12,8 @@ A document dependency says that one Weaver document reads another. Weaver can in
 
 Within a logical item, dependencies establish the document graph. Build uses that graph to install producers before consumers and to find downstream documents affected by a changed declaration. Load uses the installed form of the graph to order selected data-producing work.
 
+> **Design background:** [Load dependencies](https://principlesofdataengineering.org/docs/efficient-stable-pipeline/load-dependencies/) treats every dependency as coupling: reuse and consistent logic come with paths for upstream change and failure to propagate. Weaver records dependencies to order Build and Load work, but whether a dependency is valuable and appropriately scoped remains a design decision.
+
 Physical relation names can point outside the managed project estate. Weaver preserves such references, but they do not identify a managed producer that Build can select or Load can order.
 
 ## Item dependencies

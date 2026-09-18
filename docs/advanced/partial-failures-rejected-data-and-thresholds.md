@@ -37,6 +37,8 @@ A keyed Table can declare limits for the percentage of established target rows t
 
 Stability checks are not row-rejection rules. Fault tolerance does not waive them, and an incremental change that would leave a declared unique key invalid is also refused regardless of the fault-tolerance setting. The Table API has a separate, explicit one-run stability waiver for an intended large change; it applies only to that Table load.
 
+> **Design background:** [Load mechanics](https://principlesofdataengineering.org/docs/efficient-stable-pipeline/load-mechanics/) frames staging, comparison with the current target, rejects and stability thresholds as separate controls over proposed change. Weaver applies those ideas through the reject and threshold behaviours described here; the reference pages define its exact mechanics.
+
 Keep thresholds aligned with the scale and expected churn of each Table. A threshold low enough to catch an accidental replacement may also stop a legitimate backfill, while a high threshold may add no useful guard. Review the proposed change and use the explicit waiver only when the large update or deletion is the intended operation. See the [Table reference](../reference/weaver-documents/table.md) and [Python API](../reference/python/index.md) for exact metadata keys, defaults and API arguments.
 
 ## Read the estate as partial state

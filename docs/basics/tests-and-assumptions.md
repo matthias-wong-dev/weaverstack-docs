@@ -2,6 +2,8 @@
 
 A Test compares expected rows with actual rows. An Assumption returns rows that violate a condition. Build installs both kinds of validation, Test executes them and Health reads their current recorded outcomes.
 
+> **Design background:** [Principles of Data Engineering distinguishes tests from monitored assumptions](https://principlesofdataengineering.org/docs/quality-reliability/tests-and-assumptions/): tests compare independently calculated results, while Assumptions surface monitored violating records for attention rather than automatically invalidating the whole pipeline. Weaver still records an Assumption that returns rows as a failed validation under the Test operation semantics described below.
+
 This guide adds one Test and one Assumption to a small Warehouse pipeline.
 
 ## Prerequisites

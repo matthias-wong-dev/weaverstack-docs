@@ -10,6 +10,8 @@ The useful distinction is between three kinds of remaining work:
 
 These distinctions describe the state left by an operation, not just its terminal message.
 
+> **Design background:** [The fault-tolerance principle](https://principlesofdataengineering.org/docs/quality-reliability/fault-tolerance/) treats containment as preserving usable work while surfacing failures clearly. Weaver represents that containment through blocked, independent, pending, failed and completed states rather than treating a mixed result as success.
+
 ## Fail-fast and fault-tolerant execution
 
 Fail-fast execution stops scheduling otherwise-ready work after the first execution failure. Work downstream of an unsatisfied dependency is blocked; unrelated work that has not started remains pending.
