@@ -48,33 +48,31 @@ Incremental: true
 
 Dependencies: []
 */
-declare @bookmark datetime2(6);
-
-set @bookmark = coalesce(
+declare @bookmark_datetime datetime2(6);
+set @bookmark_datetime = coalesce(
     (
         select [Bookmark datetime]
         from [_].[Bookmark]
-        where [Item type] = 'Warehouse'
-          and [Item name] = 'Operations'
-          and [Schema name] = 'Parcel'
-          and [Object name] = 'CurrentStatus'
+        where [Item type] = N'Warehouse'
+          and [Item name] = N'Operations'
+          and [Schema name] = N'Parcel'
+          and [Object name] = N'CurrentStatus'
     ),
-    cast('1900-01-01T00:00:00' as datetime2(6))
+    cast('1900-01-01' as datetime2(6))
 );
 
 -- Rows to insert or update
 select [Parcel ID]
      , [Status]
      , [Depot]
-     , [Row update datetime]
 from [Source].[Parcel]
-where [Row update datetime] > @bookmark
+where [Row update datetime] > @bookmark_datetime
   and [Status] <> 'Cancelled';
 
 -- Keys to delete
 select [Parcel ID]
 from [Source].[Parcel]
-where [Row update datetime] > @bookmark
+where [Row update datetime] > @bookmark_datetime
   and [Status] = 'Cancelled';
 ```
 
@@ -93,7 +91,7 @@ The checked fixture is `examples/parcel-incremental-warehouse/Warehouse/Operatio
 
 A Weaver bookmark is this Table or Folder's last successful processing boundary: the UTC instant immediately before its latest clean Load began. Each consumer has its own boundary. A clean Load advances it, including a successful incremental no-op. Failed, rejected, blocked and static-skip outcomes do not advance it.
 
-For a direct source whose audit datetimes use the same time basis, a predicate such as `where [Row update datetime] > @bookmark` is a simple fit. The 1900 sentinel makes the initial run ask for all retained source rows. This pattern still depends on the source retaining a row or other evidence for every change that still needs a target action until the consumer can read it.
+For a direct source whose audit datetimes use the same time basis, a predicate such as `where [Row update datetime] > @bookmark_datetime` is a simple fit. The 1900 sentinel makes the initial run ask for all retained source rows. This pattern still depends on the source retaining a row or other evidence for every change that still needs a target action until the consumer can read it.
 
 Complex joins and multiple sources may have several audit rhythms rather than one usable `max(updated_at)`. The consumer still owns one bookmark, but each source must interpret that boundary through its own change evidence. One source may use an audit datetime, another CDC or a change table, another `files_since()`, and another an API cursor with overlap or polling logic. The query combines those source-specific interpretations into staging candidates and delete keys.
 

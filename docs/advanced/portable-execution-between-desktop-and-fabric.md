@@ -52,16 +52,15 @@ if not result.succeeded:
 
 Replace each angle-bracketed value with an existing physical item name in the notebook's workspace. The notebook's attached runtime must contain Weaver and any libraries imported by the project. Build installs Python definitions but does not call their authored `read()` methods.
 
-Workspace and runtime resolution remain explicit rules rather than a separate notebook mode:
+For the ordinary top-level operation calls shown on this page, workspace discovery follows a short chain:
 
 1. an explicit `workspace=` or `workspace_config=` selects the base workspace;
-2. otherwise a supplied Session's workspace is used;
-3. otherwise `workspace-config.yml` in the process working directory is used;
-4. otherwise Weaver reads the current Fabric workspace from `notebookutils.runtime`.
+2. otherwise `workspace-config.yml` in the process working directory is used;
+3. otherwise Weaver reads the current Fabric workspace from `notebookutils.runtime`.
 
 An explicit `catalogue=` or `environment=` overrides that value on the selected base. Build, Load, Test and Health need a catalogue such as `Warehouse/<catalogue-name>`; discovering the notebook workspace does not invent one. A Fabric Environment may be written as `<environment-name>` in the operation workspace or `<owner-workspace>/<environment-name>` when Fabric permits a cross-workspace attachment. The qualification changes the Environment's owner, not the operation's workspace.
 
-A notebook already executing in its attached workspace uses its active Spark session and notebook identity. It does not need an `environment=` argument merely to start a remote Livy session. Its attached runtime still needs Weaver and the project's Python dependencies. From a desktop, Lakehouse Python Load or Test instead needs a published Environment selected by configuration or `--environment`; Warehouse-only work does not, and Spark SQL can use the workspace's default Spark runtime. See [Session and runtime behaviour](../reference/operation-behaviour/session-runtime.md).
+A notebook already executing in its attached workspace uses its active Spark session and notebook identity. It does not need an `environment=` argument merely to start a remote Livy session. Its attached runtime still needs Weaver and the project's Python dependencies. From a desktop, Lakehouse Python Load or Test instead needs a published Environment selected by configuration or `--environment`; Warehouse-only work does not, and Spark SQL can use the workspace's default Spark runtime.
 
 ## 2. Move the project both ways with Fabric Git
 
