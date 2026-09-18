@@ -94,7 +94,7 @@ nav:
       - Build a Lakehouse pipeline with Python: basics/lakehouse-python.md
       - Build a Lakehouse pipeline with Spark SQL: basics/lakehouse-spark-sql.md
       - Add Tests and Assumptions: basics/tests-and-assumptions.md
-      - Connect items with shortcuts: basics/shortcuts.md
+      - Connect data with Shortcuts: basics/shortcuts.md
       - Configure a workspace and Python runtime: basics/workspace-and-python-runtime.md
       - Work in Sessions and workflows: basics/sessions-and-workflows.md
       - The development cycle: basics/development-cycle.md

@@ -13,7 +13,7 @@ Choose the engine and authoring form for the work:
 Then add the behaviour the pipeline needs:
 
 - [Add Tests and Assumptions](tests-and-assumptions.md) — install and run validations.
-- [Connect items with shortcuts](shortcuts.md) — connect logical items or an external Fabric location.
+- [Connect data with Shortcuts](shortcuts.md) — connect managed project data or an external Fabric location.
 
 ## Set up repeated work
 
