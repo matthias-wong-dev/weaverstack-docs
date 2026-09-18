@@ -76,4 +76,4 @@ The shared Session preserves workspace resolution and acquired execution context
 
 Health combines installed declarations, current Load and Test state and, when requested, physical inventory. It reports what Build installed and what later operations recorded; it does not advance the estate through another lifecycle stage.
 
-Exact commands and options belong in [Reference](../reference/index.md). Exact selection, ordering, state-change and failure guarantees belong in [Contracts](../contracts/index.md).
+Exact commands and options belong in [Reference](../reference/index.md). Exact selection, ordering, state-change and failure guarantees belong in [Contracts](../contracts/index.md); [Signatures and change detection](../contracts/signatures-and-change-detection.md) defines how Build distinguishes installed work from changed and impacted work.

@@ -123,6 +123,13 @@ nav:
           - Exceptions: reference/python/errors.md
   - Contracts:
       - contracts/index.md
+      - Project: contracts/project.md
+      - Weaver documents: contracts/documents.md
+      - Identity and naming: contracts/identity-and-naming.md
+      - Configuration: contracts/configuration.md
+      - Catalogue: contracts/catalogue.md
+      - Dependencies: contracts/dependencies.md
+      - Signatures and change detection: contracts/signatures-and-change-detection.md
       - Load: contracts/load.md
   - Advanced: advanced/index.md
   - Contributing: contributing/index.md

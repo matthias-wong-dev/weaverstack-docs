@@ -58,4 +58,4 @@ Schema metadata adds a description to a schema or declares a schema that no Tabl
 
 An item can include supporting code and data that travel with its installed work. Those files do not become independently selectable Weaver documents merely because they are beneath the item.
 
-The next concept is [Weaver operations](weaver-operations.md): how Build, Load and Test turn these documents into an installed and operating estate.
+The [Weaver documents contract](../contracts/documents.md) defines supported families, placement and agreement rules. The next concept is [Weaver operations](weaver-operations.md): how Build, Load and Test turn these documents into an installed and operating estate.

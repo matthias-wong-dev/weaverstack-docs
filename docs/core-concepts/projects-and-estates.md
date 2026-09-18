@@ -54,4 +54,4 @@ Load and Test add facts about an installed generation: which work ran, whether i
 
 A project can therefore differ from its installed estate while changes are being developed. Use project source to understand the intended model and catalogue state to understand the generation currently operating in a configured workspace.
 
-Next, [Logical and physical items](logical-and-physical-items.md) explains how stable project identities are bound to Fabric.
+The [Project contract](../contracts/project.md) defines the source boundary and discovery rules. Next, [Logical and physical items](logical-and-physical-items.md) explains how stable project identities are bound to Fabric.

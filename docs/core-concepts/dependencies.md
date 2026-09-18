@@ -38,4 +38,4 @@ Tests and Assumptions can depend on the data they inspect. Nothing can depend on
 
 Test selects installed validations from the requested items. Their dependencies do not add items to the Test run, and Tests and Assumptions run in stable identity order rather than dependency order among validations.
 
-Declare relationships in documents and Shortcuts, not through filenames or directory order. The [development cycle](development-cycle.md) shows where dependency impact enters the edit, Build, Load and Test loop. [Fault tolerance](fault-tolerance.md) explains how each operation proceeds after work fails.
+Declare relationships in documents and Shortcuts, not through filenames or directory order. The [Dependencies contract](../contracts/dependencies.md) defines resolution, impact and operation boundaries. The [development cycle](development-cycle.md) shows where dependency impact enters the edit, Build, Load and Test loop. [Fault tolerance](fault-tolerance.md) explains how each operation proceeds after work fails.

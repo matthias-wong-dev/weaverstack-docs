@@ -56,6 +56,6 @@ same project + production configuration → production targets and catalogue
 same project + development configuration → development targets and catalogue
 ```
 
-No declaration path changes between those builds. Selecting another workspace configuration changes the physical workspace context, catalogue and target mappings; it does not rename the logical items.
+No declaration path changes between those builds. Selecting another workspace configuration changes the physical workspace context, catalogue and target mappings; it does not rename the logical items. The [Identity and naming](../contracts/identity-and-naming.md) and [Configuration](../contracts/configuration.md) contracts define the exact boundaries.
 
 Continue with [Weaver documents](weaver-documents.md) for the files that declare the contents of each logical item.

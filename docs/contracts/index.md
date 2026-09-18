@@ -16,8 +16,15 @@ The contract surface includes:
 - mirrors and CLI behaviour;
 - machine-readable interfaces.
 
-## Established contract
+## Contracts
 
+- [Project](project.md) — project boundaries, source discovery and Check/Build consumption.
+- [Weaver documents](documents.md) — supported authored families, placement and agreement rules.
+- [Identity and naming](identity-and-naming.md) — logical identities, physical bindings, reserved namespaces and collisions.
+- [Configuration](configuration.md) — workspace configuration, precedence, target bindings and estate switching.
+- [Catalogue](catalogue.md) — ownership, publication, certification, runtime state and read boundaries.
+- [Dependencies](dependencies.md) — inferred and declared relationships, Build impact and execution boundaries.
+- [Signatures and change detection](signatures-and-change-detection.md) — installed equality, physical reconciliation, pruning and certification.
 - [Load](load.md) — selection, dependencies, execution, outcomes, bookmarks and fault tolerance.
 
 A contract states only behaviour supported by current source and tests. Examples may illustrate that behaviour, but an example does not enlarge the guarantee.
