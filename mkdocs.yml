@@ -1,5 +1,5 @@
 site_name: Weaver documentation
-site_description: Technical documentation for Weaver
+site_description: Technical documentation for building and operating Microsoft Fabric data estates with Weaver
 site_url: https://docs.weaverstack.dev
 repo_name: matthias-wong-dev/weaverstack-docs
 repo_url: https://github.com/matthias-wong-dev/weaverstack-docs
@@ -25,6 +25,7 @@ theme:
         icon: material/brightness-4
         name: Switch to light mode
   features:
+    - content.action.edit
     - content.code.annotate
     - content.code.copy
     - content.tabs.link
@@ -148,5 +149,13 @@ nav:
       - Runtime: contracts/runtime.md
       - Host behaviour: contracts/host-behaviour.md
       - CLI behaviour: contracts/cli-behaviour.md
-  - Advanced: advanced/index.md
-  - Contributing: contributing/index.md
+  - Advanced:
+      - advanced/index.md
+      - Specialised estate mirroring: advanced/specialised-estate-mirroring.md
+      - Fabric notebooks: advanced/fabric-notebooks.md
+      - Fabric capacity: advanced/fabric-capacity.md
+  - Contributing:
+      - contributing/index.md
+      - Write or revise a page: contributing/writing.md
+      - Update generated reference: contributing/generated-reference.md
+      - Validate a change: contributing/validation.md

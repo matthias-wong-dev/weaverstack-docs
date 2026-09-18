@@ -10,7 +10,7 @@ The foundation, lifecycle and interface contracts now own identity, source disco
 
 ## Guides
 
-The mapped authoring, operating and automation tasks now have substantive guides. Remaining work is integration: connect them to new contracts and reference pages, remove repetition, and check the complete reader journeys during Batch 12.
+The mapped authoring, operating and automation tasks have substantive guides and complete reader routes. Advanced pages now cover specialised mirroring, Fabric notebooks and capacity operations. Remaining work is visual alignment and reciprocal linking with the product site, followed by holistic editorial calibration.
 
 ## CLI commands
 
