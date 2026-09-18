@@ -17,9 +17,26 @@ The example below keeps current parcel status in a Table. A snapshot Folder copi
 
 - Create or reuse a project containing `Lakehouse/Tracking`.
 - Publish the project's Fabric Environment; both documents run Python in Fabric.
-- Make the external source snapshot available to the Fabric Spark session at `/mnt/parcel-source/parcel-status`. Keep this path outside the Lakehouse target that Build reconciles.
+- Use the physical Tracking Lakehouse as the source host for this example. In the Fabric portal, open that Lakehouse, create `Files/parcel-source/parcel-status`, and upload:
+  - `examples/parcel-incremental/source/parcel-status/P-1001.csv`
+  - `examples/parcel-incremental/source/parcel-status/P-1002.csv`
 
-The mounted directory is source data, not a Folder Weaver manages. The managed destination will be `Files/Parcel/StatusFiles` in `Lakehouse/Tracking`. Replace the example mount with the source acquisition used by your project.
+`Files/parcel-source/parcel-status` is source data, not a Folder Weaver manages. Keep it outside the managed destination, `Files/Parcel/StatusFiles`. Build and Load act on the latter through `Parcel.StatusFiles`; neither treats the source directory as that Folder's destination.
+
+Attach the physical Tracking Lakehouse to a Fabric notebook as its default Lakehouse, then verify the upload before running Load:
+
+```python
+from pathlib import Path
+
+source_root = Path("/lakehouse/default/Files/parcel-source/parcel-status")
+assert source_root.is_dir(), f"Source directory not found: {source_root}"
+assert sorted(path.name for path in source_root.glob("*.csv")) == [
+    "P-1001.csv",
+    "P-1002.csv",
+]
+```
+
+The `/lakehouse/default` path is only this verification notebook's attached-Lakehouse path. The authored Folder below resolves its installed Lakehouse instead.
 
 ## Declare the snapshot Folder
 
@@ -31,7 +48,7 @@ Folder ID: Parcel.StatusFiles
 
 Description: Current parcel status snapshots, one CSV file per parcel.
 
-Lineage: CSV snapshots supplied in the Lakehouse incoming area.
+Lineage: A carrier snapshot represented by this example.
 
 File key: "*.csv"
 
@@ -44,18 +61,23 @@ import shutil
 from weaver import Folder
 
 
-SOURCE = Path("/mnt/parcel-source/parcel-status")
-
-
 class Parcel__StatusFiles(Folder):
     def read(self):
+        source_root = Path(self.lakehouse.files_root()) / "parcel-source" / "parcel-status"
+        if not source_root.is_dir():
+            raise FileNotFoundError(
+                f"Parcel status source directory not found: {source_root}"
+            )
+
         staging = self.staging_folder()
-        for source in SOURCE.glob("*.csv"):
+        for source in source_root.glob("*.csv"):
             shutil.copy2(source, staging.path / source.name)
         return staging
 ```
 
-`Incremental: false` makes each successful Folder Load a complete snapshot of the managed `*.csv` files. A source file that disappears from the incoming directory is therefore retired from the managed Folder. After publication, Weaver records inserted, updated and deleted managed paths in the Folder's change history; byte-identical files are not updates.
+The source-directory check happens before Weaver issues or populates staging. An unavailable source raises `FileNotFoundError`; an available but intentionally empty source directory remains a valid complete snapshot.
+
+`Incremental: false` makes each successful Folder Load a complete snapshot of the managed `*.csv` files. A source file that disappears from the source directory is therefore retired from the managed Folder. After publication, Weaver records inserted, updated and deleted managed paths in the Folder's change history; byte-identical files are not updates.
 
 ## Declare the incremental Table
 
@@ -90,10 +112,10 @@ class Parcel__CurrentStatus(Table):
         changed = source.files_since(bookmark)
         deleted = source.deleted_since(bookmark)
 
-        staging = None
+        staged = None
         if changed:
             root = source.spark_path()
-            staging = (
+            staged = (
                 self.spark.read.option("header", True)
                 .csv([f"{root}/{path.name}" for path in sorted(changed)])
                 .select(*self.columns())
@@ -104,9 +126,9 @@ class Parcel__CurrentStatus(Table):
             parcel_ids = [(path.stem,) for path in sorted(deleted)]
             deletes = self.spark.createDataFrame(parcel_ids, ["Parcel ID"])
 
-        if staging is None and deletes is None:
+        if staged is None and deletes is None:
             return None
-        return staging, deletes
+        return staged, deletes
 ```
 
 The import establishes the managed dependency, so an item-wide Load runs the Folder before the Table.
@@ -117,7 +139,7 @@ An incremental Table treats staging as a change set. Rows absent from staging re
 
 ## Establish the first boundary
 
-Place these two source files in `/mnt/parcel-source/parcel-status`:
+The two uploaded fixture files contain:
 
 ```csv title="P-1001.csv"
 Parcel ID,Status,Depot
@@ -129,7 +151,7 @@ Parcel ID,Status,Depot
 P-1002,Delivered,South
 ```
 
-Check and install the declarations once, then run the first Load:
+After the notebook verification succeeds, check and install the declarations once, then run the first Load:
 
 ```bash
 weaver check
@@ -144,16 +166,20 @@ Inspect the managed Folder and `Parcel.CurrentStatus` in the Lakehouse. The Tabl
 
 ## Change source data, then Load without Build
 
-Do not edit either Weaver document. In the incoming source directory:
+Do not edit either Weaver document. In the same Fabric notebook, replace `P-1001.csv` and delete `P-1002.csv` from the same source directory:
 
-1. replace `P-1001.csv` with:
+```python
+from pathlib import Path
 
-    ```csv
-    Parcel ID,Status,Depot
-    P-1001,Delivered,Central
-    ```
+source_root = Path("/lakehouse/default/Files/parcel-source/parcel-status")
+(source_root / "P-1001.csv").write_text(
+    "Parcel ID,Status,Depot\nP-1001,Delivered,Central\n",
+    encoding="utf-8",
+)
+(source_root / "P-1002.csv").unlink()
 
-2. delete `P-1002.csv`.
+assert [path.name for path in source_root.glob("*.csv")] == ["P-1001.csv"]
+```
 
 Run Load again against the already installed definitions:
 

@@ -86,7 +86,7 @@ Re-mirror only when the intended result is to replace the development baseline w
 weaver mirror --workspace-config workspace-development.yml
 ```
 
-Inspect the displayed source catalogue, destination catalogue and target bindings, then decline confirmation. Rerun the same command and confirm after the boundary is correct.
+Inspect the displayed source catalogue, destination catalogue and target bindings. Confirm if that boundary is correct; decline if it is not. Mirror has no dry-run mode, and declining leaves the destinations unchanged.
 
 Mirror reconstructs the destination catalogue and selected targets. Local materialisations in that boundary are replaced; they are not preserved as a fallback. Run Health after Mirror, then Build any project changes that should become local.
 

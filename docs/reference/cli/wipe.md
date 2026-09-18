@@ -49,9 +49,9 @@ weaver wipe [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [
 
 ## Responsibility and selection
 
-`wipe` empties physical Fabric items. Each positional `TARGET` is a physical `Lakehouse/Name` or `Warehouse/Name`, not a logical Weaver item. Named targets select exactly those items. With no targets, Weaver reads the estate recorded by the resolved catalogue.
+`wipe` empties the named physical Fabric items and, when a catalogue resolves, empties that catalogue last. `--unbind` instead preserves the catalogue and removes its claims for the named targets.
 
-The catalogue is part of the plan and is emptied last. `--unbind` instead preserves the catalogue and removes its claims for the named targets; it requires a resolved catalogue and at least one target.
+Each positional `TARGET` is a physical `Lakehouse/Name` or `Warehouse/Name`, not a logical Weaver item. Named targets select exactly those items. With no targets, Weaver reads the estate recorded by the resolved catalogue. `--unbind` requires a resolved catalogue and at least one target.
 
 ## Execution
 

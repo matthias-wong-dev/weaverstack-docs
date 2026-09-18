@@ -6,19 +6,13 @@ Use a mirrored development estate to keep the project's logical identities while
 
 Choose the development workspace configuration. It should bind the project to the development catalogue and targets and name the source catalogue in `mirror`.
 
-Before changing anything, ask Weaver to settle and display the Mirror plan:
+Before changing anything, run Mirror once:
 
 ```bash
 weaver mirror --workspace-config workspace-development.yml
 ```
 
-Review the source catalogue, destination catalogue and every destination target. Decline the confirmation after inspection. Mirror has no dry-run mode; declining leaves the destinations unchanged.
-
-Run the same command again and confirm only when the displayed destination boundary is correct:
-
-```bash
-weaver mirror --workspace-config workspace-development.yml
-```
+Review the displayed source catalogue, destination catalogue and every destination target. Confirm if that boundary is correct; decline if it is not. Mirror has no dry-run mode, and declining leaves the destinations unchanged.
 
 Mirror empties and reconstructs the displayed destination catalogue and targets from the source estate. Unchanged objects begin as borrowed source data. The destination catalogue records that state, while the project's logical items and Weaver documents remain unchanged.
 
