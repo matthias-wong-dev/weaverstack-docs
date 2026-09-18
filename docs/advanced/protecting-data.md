@@ -1,6 +1,6 @@
 # Protecting data
 
-**Ownership should match recoverability.** Before bringing data under Weaver management, ask whether the physical contents can be reconstructed. If not, leave the source outside Weaver ownership and connect to it with a physical Shortcut. If Weaver should own the object but Build must preserve its existing contents, declare `Prohibit rebuild: true`.
+**Ownership should match recoverability.** Before bringing data under Weaver management, ask whether the physical contents can be reconstructed. For truly irreplaceable data, keep the contents in an external physical item and expose them through a physical Shortcut. If Weaver should own the object but Build must preserve its existing contents, declare `Prohibit rebuild: true`.
 
 ## Choose the ownership boundary
 
@@ -54,6 +54,8 @@ When planning finds an existing protected object that would otherwise be rebuilt
 A source change that requires a different physical shape does not update that shape in place. The old object remains. Review the plan and resulting physical shape rather than assuming the edited declaration has been materialised. [Build behaviour](../reference/operation-behaviour/build.md) owns the exact planning, certification and installation semantics; [Common metadata](../reference/weaver-documents/common-metadata.md) owns the accepted field and default.
 
 ## Know what `Prohibit rebuild` does not do
+
+**Warning:** `Prohibit rebuild` guards destructive replacement during Build only. It does not protect from Wipe, deliberate reload, or re-mirroring a destination containing it.
 
 `Prohibit rebuild` is a Build replacement guard, not a general freeze:
 

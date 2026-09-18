@@ -1,9 +1,9 @@
 /*
 Table ID: Parcel.CurrentStatus
 
-Description: Current parcel state from an external change feed.
+Description: Current state of active parcels.
 
-Lineage: staging.ParcelChanges.
+Lineage: Source.Parcel.
 
 Primary key: Parcel ID
 
@@ -11,12 +11,31 @@ Incremental: true
 
 Dependencies: []
 */
+declare @bookmark datetime2(6);
+
+set @bookmark = coalesce(
+    (
+        select [Bookmark datetime]
+        from [_].[Bookmark]
+        where [Item type] = 'Warehouse'
+          and [Item name] = 'Operations'
+          and [Schema name] = 'Parcel'
+          and [Object name] = 'CurrentStatus'
+    ),
+    cast('1900-01-01T00:00:00' as datetime2(6))
+);
+
+-- Rows to insert or update
 select [Parcel ID]
      , [Status]
      , [Depot]
-from [staging].[ParcelChanges]
-where [Operation] <> 'DELETE';
+     , [Row update datetime]
+from [Source].[Parcel]
+where [Row update datetime] > @bookmark
+  and [Status] <> 'Cancelled';
 
+-- Keys to delete
 select [Parcel ID]
-from [staging].[ParcelChanges]
-where [Operation] = 'DELETE';
+from [Source].[Parcel]
+where [Row update datetime] > @bookmark
+  and [Status] = 'Cancelled';

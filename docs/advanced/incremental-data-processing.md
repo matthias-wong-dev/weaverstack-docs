@@ -28,9 +28,9 @@ For a Python Table declared with `Incremental: true`, `read()` accepts four usef
 
 SQL-authored Tables express the same contract with result sets. The first result set supplies staging rows. An optional second supplies delete keys and requires both `Incremental: true` and a primary key. Setup statements may precede those result sets. See [Table](../reference/weaver-documents/table.md#body-and-return-contract) for the Spark SQL and T-SQL statement rules.
 
-### A Warehouse change-feed Table
+### A Warehouse Table over an ordinary source
 
-This complete T-SQL document reads an external `staging.ParcelChanges` feed. Non-delete records become staging candidates; records marked `DELETE` supply explicit delete keys. `Dependencies: []` keeps the external staging table out of Weaver's managed dependency graph.
+This complete T-SQL document reads an ordinary source Table with a source audit datetime. It reads the bookmark for this specific consumer from the Weaver catalogue. `Dependencies: []` keeps the external source Table out of Weaver's managed dependency graph.
 
 Create `Warehouse/Operations/Parcel.CurrentStatus.sql`:
 
@@ -38,9 +38,9 @@ Create `Warehouse/Operations/Parcel.CurrentStatus.sql`:
 /*
 Table ID: Parcel.CurrentStatus
 
-Description: Current parcel state from an external change feed.
+Description: Current state of active parcels.
 
-Lineage: staging.ParcelChanges.
+Lineage: Source.Parcel.
 
 Primary key: Parcel ID
 
@@ -48,26 +48,54 @@ Incremental: true
 
 Dependencies: []
 */
+declare @bookmark datetime2(6);
+
+set @bookmark = coalesce(
+    (
+        select [Bookmark datetime]
+        from [_].[Bookmark]
+        where [Item type] = 'Warehouse'
+          and [Item name] = 'Operations'
+          and [Schema name] = 'Parcel'
+          and [Object name] = 'CurrentStatus'
+    ),
+    cast('1900-01-01T00:00:00' as datetime2(6))
+);
+
+-- Rows to insert or update
 select [Parcel ID]
      , [Status]
      , [Depot]
-from [staging].[ParcelChanges]
-where [Operation] <> 'DELETE';
+     , [Row update datetime]
+from [Source].[Parcel]
+where [Row update datetime] > @bookmark
+  and [Status] <> 'Cancelled';
 
+-- Keys to delete
 select [Parcel ID]
-from [staging].[ParcelChanges]
-where [Operation] = 'DELETE';
+from [Source].[Parcel]
+where [Row update datetime] > @bookmark
+  and [Status] = 'Cancelled';
 ```
+
+- The first result set supplies rows that are candidates for insertion or update.
+- The second result set supplies explicit primary keys to delete.
+- Both result sets use the same bookmark owned by `Warehouse/Operations/Parcel/CurrentStatus`.
+- When a source row is updated to `Cancelled`, that source update becomes a target delete. Source change type and target action type differ.
+- A row's absence from the first result set is not a deletion claim; it remains in the target unless its key appears in the second result set.
+- A hard physical deletion from `[Source].[Parcel]` leaves no row for either query. If that deletion must propagate, the source process must retain evidence such as a tombstone, CDC record or audit entry until this consumer reads it.
 
 The checked fixture is `examples/parcel-incremental-warehouse/Warehouse/Operations/Parcel.CurrentStatus.sql`. Check can parse the document locally. Build must query a bound Fabric Warehouse to infer the SQL result shape, and Load executes the installed T-SQL there.
 
 ## Bookmarks separate processing state from source data
 
-`max(updated_at)` describes one query over one source shape. It can be enough for a direct source copy, but it does not record whether this particular consumer completed a load. A filtered target may not contain the source's latest timestamp, and a join or multi-source query can change through several routes that no single target column represents.
+`[Row update datetime]` in the example is a source audit datetime. `[_].[Bookmark].[Bookmark datetime]` is the processing boundary owned by this consumer. They are not the same state: the source records when its row changed, while the bookmark records how far this Table's successful Loads have processed.
 
 A Weaver bookmark is this Table or Folder's last successful processing boundary: the UTC instant immediately before its latest clean Load began. Each consumer has its own boundary. A clean Load advances it, including a successful incremental no-op. Failed, rejected, blocked and static-skip outcomes do not advance it.
 
-The bookmark says where the consumer got to; source logic translates that boundary into source-specific change detection. That logic may use `files_since()`, pipeline-managed audit datetimes, CDC or change tables, source event time, a translated API cursor, or several source queries whose changes are combined into staging and delete drivers. External source time may need its own polling or cursor mapping before it can be compared with the Weaver boundary.
+For a direct source whose audit datetimes use the same time basis, a predicate such as `where [Row update datetime] > @bookmark` is a simple fit. The 1900 sentinel makes the initial run ask for all retained source rows. This pattern still depends on the source retaining a row or other evidence for every change that still needs a target action until the consumer can read it.
+
+Complex joins and multiple sources may have several audit rhythms rather than one usable `max(updated_at)`. The consumer still owns one bookmark, but each source must interpret that boundary through its own change evidence. One source may use an audit datetime, another CDC or a change table, another `files_since()`, and another an API cursor with overlap or polling logic. The query combines those source-specific interpretations into staging candidates and delete keys.
 
 > **Design background:** The broader change model separates [tracking source changes](https://principlesofdataengineering.org/docs/efficient-stable-pipeline/tracking-changes/) from [translating those changes into target actions](https://principlesofdataengineering.org/docs/efficient-stable-pipeline/responding-to-change/); the Weaver contract above is self-contained, while those pages explain the underlying design in more depth.
 
