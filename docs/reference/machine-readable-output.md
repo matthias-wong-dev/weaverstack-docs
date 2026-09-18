@@ -1,10 +1,10 @@
-# Machine-readable interfaces
+# Machine-readable output
 
-This page records the JSON emitted by the current CLI. It is a representation reference, not one schema shared by every command. Unless a command exposes a `format_version`, the fields below have no schema-version or forward-compatibility promise.
+This page records current CLI machine output. Each command owns its result shape; there is no stream of records or schema shared by every command. Each supported invocation writes one indented JSON document. Unless that command exposes a `format_version`, the fields below have no schema-version or forward-compatibility promise.
 
 ## Stream and process behaviour
 
-Commands with `--json` write one JSON document to stdout and suppress interactive prompts and Session progress. Current representation tests also require stderr to stay empty for normal JSON load, test and health output. `fabric environment publish` is the exception to the flag rule: it always writes a JSON result to stdout and may write progress to stderr.
+Commands with `--json` write the result document to stdout and do not prompt. Their Session enters machine-output mode, suppressing its ordinary reports and progress; representation tests require stderr to remain empty for normal JSON Load, Test, and Health output. Parser help and parser usage errors happen before command JSON handling and retain `argparse`'s text streams. `fabric environment publish` is the exception to the flag rule: it has no `--json` option, always writes its successful result as JSON to stdout, and can write progress to stderr.
 
 A handled Weaver error under `--json` has this current shape:
 
@@ -41,6 +41,10 @@ Successful command outcomes normally exit `0`. A report that does not satisfy th
 | `fabric notebook run` | `workspace`, `notebook`, `notebook_id`, `job_url`, `status`, `exit_value` | Waited runs return `0` when completed or deduped. `--no-wait` returns `0` for the accepted job. A handled failure returns `1`. |
 
 Only Health currently includes a top-level JSON `format_version`; its current value is `2`. A Build result's `bundle_id` identifies the bundle contents, but the Build result is not the bundle manifest and has no result format version.
+
+## Commands without JSON result mode
+
+`session`, `workflow`, and `fabric capacity` currently have no `--json` option. A bare invocation, `--help`, and `--version` also use text output. Their lack of JSON support is an absence in the current parser, not a promise that their human output is a stable machine format or that those commands will never gain a machine representation. Do not parse their terminal presentation as a substitute JSON schema.
 
 ## Nested field shapes
 

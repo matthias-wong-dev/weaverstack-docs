@@ -1,116 +1,171 @@
-# Build bundle
+# Build bundle format
 
-A build bundle is frozen installation input. `weaver build --bundle-only` writes the supported CLI handoff as a local directory; `weaver install` accepts that directory or a local `.weaver.zip` archive.
+A build bundle is frozen installation input. `weaver build --bundle-only` writes the CLI handoff as a local directory. `weaver install` accepts that directory or a local path whose name ends with `.weaver.zip`.
 
-The CLI does not expose an archive-creation command. The Python implementation can persist archives for internal and programmatic workflows, but that does not create a CLI packaging interface. Do not rename a directory to `.weaver.zip`: Install chooses archive handling from the suffix.
+The CLI does not create archives. Python code can call the archive helpers, but renaming a directory or another ZIP to `.weaver.zip` does not make it a valid bundle. The format described here is the exact representation read and written by the referenced Weaver source, not a cross-version compatibility promise.
 
-## Directory shape
+## Directory representation
 
-The bundle root has this shape:
+Before installation, a bundle contains:
 
 ```text
 bundle/
 ├── plan.yml
 └── payload/
-    ├── <sequence-and-action path>.spark.sql
-    ├── <sequence-and-action path>.sql
-    ├── <sequence-and-action path>.json
-    └── <sequence-and-action path>.payload
+    └── <three-digit-sequence>-<stage>/
+        └── <action-specific file>
 ```
 
-`plan.yml` is the canonical manifest. Payload files are generated installation inputs, not copies of the project source. Some action executors are target-only and have no payload.
+`plan.yml` is the manifest. Files below `payload/` are generated, destination-specific installation inputs; they are not a copy of the source project. Payloadless actions create no file.
 
-The writer emits payloads first and `plan.yml` last. A directory without the manifest is not an installable bundle. `--bundle-path` requires `--bundle-only`; the requested path must not exist or must be an empty directory. When no path is supplied, Build creates a durable temporary directory and reports it as `bundle_path`.
+The writer stores payloads first and `plan.yml` last. A directory without the manifest is not loadable. `--bundle-path` is valid only with `--bundle-only`; the path must be absent or an empty directory. With no explicit path, bundle-only Build creates and reports a durable temporary directory.
 
-## Archive input
+Installing a directory writes `install-report.yml` beside `plan.yml` after execution. It contains the installation report, not part of the bundle identity or the input validation. The loader does not use it when loading the bundle.
 
-Install recognizes an archive only when its local path ends with `.weaver.zip`. The ZIP entries must contain `plan.yml` at the archive root and payload paths directly below `payload/`; an extra wrapping directory is not accepted because the extracted root then has no manifest.
+## Archive representation
 
-Archive extraction rejects:
-
-- absolute member paths;
-- empty, `.` or `..` path components; and
-- symbolic-link entries.
-
-The archive is materialized into a temporary local directory, validated there, and removed when installation finishes. Payload reads come from that materialized bundle, not from a target Lakehouse store.
-
-Install rejects URLs for both directories and archives. Download the complete handoff to local storage first.
-
-## Manifest
-
-The current manifest format is `format_version: 3`. This Weaver implementation writes and accepts only that value. An unsupported value is rejected with an instruction to regenerate the bundle using the installing Weaver version. This is exact-version acceptance, not a compatibility window or a promise that another Weaver release accepts format 3.
-
-Current top-level manifest fields are:
-
-| Field | Meaning |
-| --- | --- |
-| `format_version` | Bundle representation version; currently `3`. |
-| `bundle_id` | SHA-256 identity of the canonical manifest with this field blanked. |
-| `repository_name` | Name of the prepared source repository. |
-| `repository_signature` | Signature of the prepared repository state. |
-| `targets` | Frozen physical target descriptors. |
-| `sequences` | Ordered execution barriers containing target batches and actions. |
-| `omitted_nodes` | Repository nodes omitted from the plan and their reasons. |
-| `target_changes` | Added and removed object summaries keyed by target ID. |
-| `runtime_state` | Current-state rows the plan invalidates. |
-| `runtime_state_established` | Current-state rows the plan establishes. |
-| `selection` | Impact and selected build/drop identities. |
-
-A target contains required `id`, `kind`, and `item_id`, with optional `item_name`, workspace identifiers and names, `sql_endpoint_id`, and logical item type/name. The target `id` is local to the manifest. Physical names and IDs are frozen during Build; Install has no item-binding, catalogue, or Environment override.
-
-A sequence contains `number`, `description`, and `batches`. A batch contains `id`, `target_id`, and `actions`. An action contains:
+A `.weaver.zip` contains the same relative paths at the archive root:
 
 ```text
-id, kind, resource_node_id, executor, payload, payload_sha256
+plan.yml
+payload/...
 ```
 
-`source_path` appears when the action can identify an authored source, and `awaits_name_release: true` appears only for the shortcut-replacement case. Payloadless actions store null `payload` and `payload_sha256`.
+An extra wrapping directory is invalid because the extracted root then has no `plan.yml`. Archive extraction rejects an absolute member path, an empty, `.` or `..` path component, and a symbolic-link entry. The Python archive writer orders files by relative path, uses DEFLATE level 9, fixes each timestamp at `1980-01-01 00:00:00`, and writes regular-file mode `0644`.
 
-`selection` contains `impact`, `prohibited`, `selected_for_drop`, and `selected_for_build`. `impact` contains `new`, `changed`, and `impacted_descendants`.
+Install copies and extracts an archive into a temporary local directory, validates it there, executes it, and removes that temporary directory afterward. The resulting `install-report.yml` is therefore temporary for archive installation. Directory and archive URLs are rejected; Install requires a complete local handoff.
 
-## Identity and payload integrity
+## `plan.yml`
 
-`bundle_id` is the lowercase hexadecimal SHA-256 of a canonical JSON encoding of the whole manifest after replacing the stored `bundle_id` with an empty string. Canonicalization sorts keys, removes presentation whitespace, and uses UTF-8. The identity therefore includes the format version, repository signature, targets, ordered work, selection, runtime-state declarations, and every recorded payload hash. Timestamps do not participate.
+The manifest is YAML generated from one mapping. Its current `format_version` is `3`, and the loader accepts only `3`.
 
-Each payload-bearing action records its bundle-relative `payload` path and `payload_sha256`. Before returning a loaded bundle, Weaver validates that:
+| Field | Shape | Meaning |
+| --- | --- | --- |
+| `format_version` | integer | Exact bundle representation accepted by this implementation: `3`. |
+| `bundle_id` | string | Generation-time SHA-256 identity of the canonical manifest with this field blank. |
+| `repository_name` | string | Prepared source repository name. |
+| `repository_signature` | string | Signature of the prepared repository state. |
+| `targets` | array of target mappings | Frozen physical destinations. |
+| `sequences` | array of sequence mappings | Ordered execution barriers. |
+| `omitted_nodes` | array of omission mappings | Repository nodes not put in the plan. |
+| `target_changes` | mapping from target ID to change arrays | Frozen physical additions and removals. |
+| `runtime_state` | array of table/row mappings | Current-state rows to invalidate. |
+| `runtime_state_established` | array of table/row mappings | Current-state rows to establish. |
+| `selection` | mapping | Impact classification and selected identities. |
 
-- every required payload exists;
-- each payload's SHA-256 equals `payload_sha256`;
-- payload paths are relative, contain no empty, `.` or `..` component, contain no drive/URL colon, and begin with `payload/`;
-- the payload extension matches its executor; and
-- payloadless executors and delete-file actions do not carry unexpected payloads.
+All listed top-level fields are emitted. Deserialisation requires `format_version`, `bundle_id`, `repository_name`, `repository_signature`, and `selection`; omitted collection fields currently read as empty collections. That tolerance is current loader behaviour, not permission to author partial manifests.
 
-Payload edits are detected by their recorded checksums. The loader does not currently recompute `bundle_id` from the manifest, so `bundle_id` is generation-time content identity rather than a signature over an untrusted manifest. Treat any manifest edit as invalid handoff procedure and regenerate the bundle instead of repairing it manually.
+### Targets
 
-## Structural validation
+Each `targets[]` entry has required `id`, `kind`, and `item_id`. It can also have `item_name`, `workspace_id`, `workspace_name`, `sql_endpoint_id`, `logical_item_type`, and `logical_item_name`; absent optional values are omitted rather than written as null.
 
-Before checking payload bytes, the loader validates the complete plan structure. Current checks include:
+`kind` is `lakehouse` or `warehouse` for plans Weaver generates. If logical identity is present, both `logical_item_type` and `logical_item_name` must be present, and the item type must agree with the target kind. A target `id` is local to this manifest. Item, workspace, endpoint, and display values are resolved and frozen during Build.
 
-- exact format version;
+### Sequences, batches, and actions
+
+A sequence has:
+
+```yaml
+number: 40
+description: build dependency layer
+batches: []
+```
+
+A batch has `id`, `target_id`, and `actions`. Every batch in a sequence runs in manifest order; every batch in one sequence settles before the next sequence starts. An action has these always-emitted fields:
+
+```yaml
+id: build-Lakehouse-Landing-Tables-Parcel.Event
+kind: build_table
+resource_node_id: Lakehouse/Landing/Tables/Parcel.Event
+executor: spark_table
+payload: payload/040-build/table-Parcel.Event.spark-table.json
+payload_sha256: 0123456789abcdef...
+```
+
+`resource_node_id`, `payload`, and `payload_sha256` can be null. `source_path` is emitted only when an authored relative path is known. `awaits_name_release: true` is emitted only when a dropped shortcut's name will be reused; false is represented by absence.
+
+Current planner action kinds are:
+
+```text
+create_schema, create_shortcut,
+build_folder, build_table, build_view, build_procedure,
+write_file, refresh_sql_endpoint,
+drop_folder, drop_table, drop_view, drop_shortcut, drop_procedure, delete_file,
+prune_table, prune_view, prune_schema, prune_folder,
+delete_catalogue_claims, reconcile_runtime_state,
+publish_catalogue, publish_registry
+```
+
+The structural loader does not independently whitelist `kind`; executor code interprets it where needed. The list above records what the current planner writes, not an extensibility point.
+
+### Omitted nodes, changes, and runtime state
+
+An `omitted_nodes[]` entry has `node_id`, `reason`, and optional `detail`. Current reasons are `target_unbound`, `depends_on_omitted_node`, `unsupported_executor`, and `shortcut_unsupported`.
+
+`target_changes` maps a target ID to entries with `effect`, `object_kind`, `name`, and `action_id`. `effect` is `add` or `remove`. Current object kinds are `schema`, `table`, `view`, `folder`, `folder_schema`, `file`, `stored_procedure`, and `runtime_reference`.
+
+Each `runtime_state[]` or `runtime_state_established[]` entry has `table` and `rows`. For invalidation, each row is a key mapping to remove; for establishment, each row is the complete current-state row to write. Historical tables are not represented here. The separate `.runtime-state.json` action payload has its own `format_version: 2` and arrays named `establish` and `invalidate`.
+
+### Selection
+
+`selection` has `impact`, `prohibited`, `selected_for_drop`, and `selected_for_build`. The last three are arrays of installed identity strings. `impact` has identity arrays named `new`, `changed`, and `impacted_descendants`.
+
+## Payload and checksum forms
+
+Every payload-bearing action stores a bundle-relative `payload` path and the lowercase hexadecimal SHA-256 of its exact bytes in `payload_sha256`.
+
+| Executor | Required suffix | Payload form |
+| --- | --- | --- |
+| `spark_sql` | `.spark.sql` | One UTF-8 Spark SQL statement. |
+| `spark_sql_batch` | `.spark-sql-batch.json` | JSON array of non-empty Spark SQL strings, executed in order in one submission. |
+| `spark_table` | `.spark-table.json` | JSON table instruction with `object`, `source_query`, `setup`, `declared_columns`, `references`, `identity_column`, `audit_columns`, `internal_columns`, `schema_mode`, and `column_mapping`. Column entries are `[name, type, not_null]`. |
+| `tsql` | `.sql` | One UTF-8 T-SQL script. |
+| `tsql_batch` | `.tsql-batch.json` | JSON array of T-SQL scripts, executed separately in order. |
+| `shortcut` | `.shortcut.json` | JSON object containing either `shortcuts` create entries or `remove` entries with frozen source and destination addresses. |
+| `load_file` | `.payload` | Exact bytes to write for a `write_file` action. A `delete_file` action is the payloadless exception. |
+| `runtime_state` | `.runtime-state.json` | Versioned JSON current-state establishment and invalidation instructions. |
+| `folder` | none | Target-only folder reconciliation. |
+| `sql_endpoint_refresh` | none | Target-only SQL endpoint refresh. |
+
+Payload paths must start with `payload/`, be relative, contain no colon, and contain no empty, `.` or `..` component. A payloadless action has null `payload` and `payload_sha256`. `folder`, `sql_endpoint_refresh`, and `delete_file` reject an attached payload; all other accepted executor forms require one.
+
+## Identity
+
+`bundle_id` is the SHA-256 of UTF-8 canonical JSON for the complete manifest mapping after replacing `bundle_id` with an empty string. Canonical JSON sorts keys and removes presentation whitespace. The digest therefore includes repository identity, targets, ordered work, omissions, changes, runtime-state declarations, selection, and every payload checksum. It includes no timestamp.
+
+The loader verifies payload bytes against `payload_sha256`, but it does **not** recompute or compare `bundle_id` when loading. `bundle_id` is current generation-time content identity, not a cryptographic signature over a manifest received from an untrusted party. Regenerate an edited bundle rather than repairing its manifest.
+
+## Load-time validation
+
+Bundle loading finishes before the installer executes an action. It currently checks:
+
+- YAML parsing, a mapping at the document root, and required deserialisation fields;
+- `format_version == 3`;
 - supported omission reasons and executors;
-- unique target, batch, action, and sequence identities;
-- complete logical item identity where one half is present;
-- agreement between logical item type and physical target kind;
-- batches referring only to known targets;
-- strictly increasing, unique sequence numbers;
-- actions not installing an omitted node; and
-- the executor's required payload shape.
+- unique target IDs, batch IDs, action IDs, and sequence numbers;
+- strictly increasing sequence numbers;
+- complete logical item identity and agreement between logical item type and physical target kind;
+- non-empty batch target IDs that refer to a declared target;
+- no action whose `resource_node_id` is an omitted node;
+- required or forbidden payload presence for the executor and action kind;
+- executor-specific filename suffixes and safe bundle-relative payload paths;
+- presence of every referenced payload; and
+- equality between each payload's SHA-256 and `payload_sha256`.
 
-Malformed YAML, a non-mapping manifest, and missing required manifest fields are also rejected. Bundle loading and all these checks complete before the installer runs an action.
+Construction of nested model values also rejects unsupported target-change effects and object kinds, and empty runtime-state table names. The loader currently ignores unknown mapping keys and does not recompute `bundle_id`; neither behaviour is a format extension guarantee.
 
-## Installation boundary
+## Destination-bound installation
 
-Build plans against the selected destination's current catalogue and physical inventory. The manifest carries that settled plan. Install:
+Build reads the selected destination's catalogue and physical inventories before rendering this plan. Install then:
 
-1. loads and validates the local bundle;
-2. offers the bundle's Lakehouse targets to the Session for Spark attachment;
-3. executes sequences in manifest order; and
-4. returns an installation report with one result per planned action.
+1. loads and fully validates the local directory or materialised archive;
+2. offers the manifest's Lakehouse targets to the Session for Spark attachment;
+3. resolves execution capabilities in the selected workspace;
+4. executes manifest sequences and actions without replanning; and
+5. writes an installation report containing one result for every planned action.
 
-Install does not reopen project source, recompute dependencies, reclassify impact, or substitute later target bindings. It supplies the selected workspace as the execution context, but the manifest still names the planned physical targets. Generate a new bundle when source, bindings, or relevant destination state changes.
+The workspace option supplies execution context. It does not retarget the manifest. Install accepts no catalogue, Environment, item-binding, or target override. It does not reopen source, recompute dependencies, reclassify impact, or substitute later bindings. Generate a new bundle when source, bindings, or destination state changes.
 
-A failed action stops later sequences and leaves completed side effects in place; installation does not roll them back. The report marks subsequent work according to the installer's current failure handling.
+Actions within a batch run serially in manifest order, and the installer currently attempts every action in that batch even if an earlier one fails. If any action in the batch fails, later batches in that sequence are skipped. A failed sequence marks every later sequence and its actions skipped. Earlier side effects remain. Installation provides no operation-wide rollback.
 
-## Compatibility boundary
-
-The current loader accepts format 3 only. That fact does not guarantee that all format-3 bundles from another release are interchangeable, that future releases continue to accept format 3, or that there is an upgrade window. The supported handoff is a complete, unedited bundle generated for the destination and accepted by the installing Weaver version.
+The loader's acceptance of format 3 says only that this implementation accepts that exact format number. It does not establish interchangeability across Weaver releases or an upgrade window.

@@ -1,10 +1,5 @@
 # Catalogue schema
 
-
----
-
-## Catalogue schema
-
 The Weaver catalogue is a set of Warehouse tables in schema `_`. This page records the current physical inspection surface: table names, public column names, keys, nullability, types, and meanings.
 
 It is a read-only integration boundary. Query these tables for inspection and reporting; do not insert, update, delete, truncate, rebuild, or add application-owned objects under `_`. Build and runtime operations own their rows and lifecycle.
@@ -363,88 +358,37 @@ Current result of each Test and Assumption.
 | `Source target name` | `varchar(128)` | required | Physical source item. |
 | `Source schema name` | `varchar(128)` | required | Source schema. |
 | `Source object name` | `varchar(128)` | required | Source object. |
-| `Physical type` | `varchar(128)` | required | Local physical form: a Warehouse View or Lakehouse Table/Folder shortcut; current vocabulary also contains the general object-type values. |
+| `Physical type` | `varchar(128)` | required | Local physical form written by Mirror: `View` for a Warehouse; `Table`, `Folder`, or `View` for a Lakehouse. |
 
 Weaver removes a Mirror row when that object is built locally.
 
+## Ownership and relationships
+
+The configured catalogue Warehouse owns schema `_`; neighbouring schemas remain application-owned. Project source is desired state. These tables record only the generation Build installed, its bindings and later operation state. Editing source does not change them.
+
+Build reconciles projected rows for selected logical items. It publishes dictionaries and `_.Installation` before certifying installed objects in `_.Registry`; rows for unselected items are outside that Build's write scope. Load owns bookmarks, load status, load statistics and load log entries. Test owns test status and its log entries. Mirror writes borrowed state, and Wipe removes the state in its settled scope.
+
+Keys on this page are Weaver's row-identity rules, not declared Warehouse primary-key or foreign-key constraints. Relationships follow the stored identities:
+
+- the leading `Item type`, `Item name` columns scope projected and object-current rows to a logical item;
+- `_.Installation` resolves that item to its current physical target;
+- `_.Registry`, the dictionary tables, `_.Bookmark`, `_.LoadStatus`, `_.TestStatus`, and `_.Mirror` identify an object within that item; the applicable object keys align, but no database foreign key enforces the join;
+- `_.Dependency` records an authored reference and its resolved producer columns; `_.ForeignKeyDictionary` records a declared relationship; neither creates a physical database constraint;
+- `Workflow ID` associates status and statistic rows with operational evidence in `_.Log`; it is an operational join, not a declared key relationship; and
+- a matching `_.Mirror` row supplements a `_.Registry` certification with the borrowed source and local physical form.
+
+`_.Bookmark`, `_.LoadStatus`, and `_.TestStatus` are current state for an installed incarnation. Rebuilding the corresponding loadable object, data node, or validation invalidates that object's applicable rows. `_.Log` and `_.LoadStatistic` are append-only history and are not invalidated by Build. `_.Mirror` is borrowed state: it remains until the object is materialised locally or Mirror replaces the borrowed scope.
+
+A physical object is not installed state without its Registry certification and item binding. Build reconciles those claims against physical inventory. A selected item remains bound even when a successful Build certifies no objects.
+
+A successful operation includes its required catalogue publication. Build certifies only materialised objects; Load and Test settle their required catalogue writes before reporting successful completion. There is no operation-wide rollback of earlier physical or catalogue effects after a later action fails.
+
 ## Standard item surface
 
-For each installed Warehouse, Weaver projects `_.Installation`, `_.Log`, `_.Bookmark`, `_.LoadStatus`, `_.LoadStatistic`, and `_.TestStatus` as catalogue views. For each installed Lakehouse, it exposes the same standard surface through OneLake shortcuts. The catalogue Warehouse remains the owner of these records; the per-item surface is for inspection and runtime access, not an independent writable copy.
+For each installed Warehouse, Weaver projects `_.Installation`, `_.Log`, `_.Bookmark`, `_.LoadStatus`, `_.LoadStatistic`, and `_.TestStatus` as views. For each installed Lakehouse, it exposes the same tables as OneLake shortcuts. The catalogue Warehouse remains the owner; these per-item objects are inspection and runtime access paths, not writable copies.
 
----
+## Read and format boundary
 
-## Catalogue contract
+Read-only SQL over `_` is the supported inspection path. Direct writes, triggers, replacement procedures, or dependencies on Weaver's statement ordering are not supported.
 
-The Weaver catalogue is the installed record of a Weaver estate. It lives in the configured catalogue Warehouse and owns the `_` schema there. Weaver does not claim ownership of neighbouring schemas or their objects, even when the catalogue shares a Warehouse with application data.
-
-Project source describes the intended estate. The catalogue describes the generation Build installed, its physical bindings and the operational state later recorded by Load and Test. Editing source alone does not alter the catalogue.
-
-## Publication scope and ownership
-
-Catalogue rows are scoped by logical item type and name. A Build reads and reconciles the rows for the items it selects; rows for unselected items are outside its write boundary. A selected item remains bound even when its successful Build certifies no objects.
-
-Build owns publication of installed declarations, item bindings and certifications. Load and Test own their runtime results. Mirror and wipe perform their documented catalogue transitions. The `_` tables are public for read-only inspection, but direct inserts, updates and deletes are not a supported extension point.
-
-A successful catalogue write is part of the operation that reports it. Load and Test do not report successful completion before their required catalogue writes have become durable. A Build publishes only the selected state it installed; it does not certify an omitted or unmaterialised object.
-
-## Public `_` tables
-
-The table names below form the public inspection surface. Their behavioural meanings are:
-
-| Table | Recorded state |
-| --- | --- |
-| `_.Installation` | The physical target bound to each logical item and the Build that reconciled that binding. |
-| `_.Registry` | Objects certified as installed, including their logical identity, physical form, role and installed signature. |
-| `_.SchemaDictionary` | Installed schema declarations and descriptions. |
-| `_.TableDictionary` | Installed Table and View declarations, including load-related metadata. |
-| `_.FolderDictionary` | Installed Folder declarations and managed file scope. |
-| `_.ColumnDictionary` | Authored column descriptions and Weaver-managed surrogate-column metadata; not a complete physical-column inventory. |
-| `_.KeyDictionary` | Declared primary and unique keys as logical metadata, not physical database constraints or indexes. |
-| `_.ForeignKeyDictionary` | Declared relationships as logical metadata, including cross-item relationships; not physical database constraints. |
-| `_.TestDictionary` | Installed Test and Assumption declarations, not their latest outcomes. |
-| `_.Dependency` | Installed dependency references and their resolved managed producers, where one exists. |
-| `_.Shortcut` | Installed logical and physical Shortcut declarations. |
-| `_.Bookmark` | The current incremental boundary for a loadable installed object. |
-| `_.LoadStatus` | The current Load state of an installed data object. |
-| `_.TestStatus` | The current Test or Assumption state. |
-| `_.Log` | Append-only records of settled Weaver work. |
-| `_.LoadStatistic` | Append-only measurements for completed Load work. |
-| `_.Mirror` | Borrowed installed objects and the source and destination physical forms used for them. |
-
-`_.Bookmark`, `_.LoadStatus` and `_.TestStatus` describe the current installed generation. Rebuilding the corresponding loadable object or validation resets the applicable current state; state for objects outside the rebuild remains unchanged. `_.Log` and `_.LoadStatistic` are history and survive a rebuild.
-
-## Binding and certification
-
-`_.Installation` binds logical item identity to a physical target. Object and state rows use logical identity; interpret them through that binding rather than treating a physical target name as their owner.
-
-`_.Registry` is the installation certification boundary. A physical object without a matching certification is not installed merely because it exists. A certification is valid only with its item binding and expected physical inventory. If physical reconciliation disproves a certification, Build removes that installed claim and handles the object according to the selected declaration and physical reconciliation rules.
-
-Shortcut certification depends on the destination item binding because the same logical Shortcut can have different physical forms in a Lakehouse and a Warehouse. An unbound item is not published by guessing that form.
-
-## Mirrored state
-
-A mirror is not the same as a local installation. The destination catalogue carries copied installed declarations and current state, while `_.Mirror` marks objects whose data is still borrowed from the source estate. `_.Registry` continues to describe the installed logical object; a matching `_.Mirror` row supplies its borrowed physical form and source.
-
-A destination can contain both borrowed and local objects. An unchanged borrowed object remains borrowed. When a selected changed object or selected affected descendant is installed locally, its mirror record no longer describes the resulting state. Operational history remains in the catalogue where the work occurred; it is not copied as destination history.
-
-## Read and compatibility boundary
-
-Read-only SQL over `_` is supported for inspection and reporting. Application writes, triggers, replacement procedures and code that depends on Weaver's internal publication sequence are not supported.
-
-Weaver validates catalogue shape and the stored values it must understand before using them. A missing catalogue is a bootstrap case. An incomplete catalogue or one missing required state is rejected when Weaver cannot reconcile it without risking other installations. Weaver can introduce specifically supported newer tables during Build, but this is not a general promise that every older or newer catalogue is automatically migrated.
-
-This contract defines table purpose, ownership, scoping and state transitions. It does not freeze every column, key, data type, stored vocabulary, schema version, transport representation or generated statement. Use the Weaver version that created an incompatible catalogue, or rebuild or repair it with authority over every affected installation.
-
-## Defined behaviour
-
-The Catalogue contract specifies that Weaver:
-
-1. owns only `_` in the configured catalogue Warehouse;
-2. separates authored source from installed and runtime state;
-3. scopes Build reads and writes to selected logical items;
-4. publishes bindings separately from object certification;
-5. certifies only installed objects and reconciles certification against physical inventory;
-6. resets applicable current state when its installed generation is rebuilt while retaining history;
-7. distinguishes borrowed mirror state from local installed state;
-8. supports read-only inspection, not direct catalogue mutation; and
-9. rejects catalogue state it cannot interpret or reconcile within the requested authority.
+The catalogue has no schema-version row. Weaver checks the tables, columns, and stored vocabulary needed by an operation. A missing catalogue can be bootstrapped; state that cannot be interpreted or reconciled within the operation's authority is rejected. Some specifically introduced tables can be added by Build, but there is no general migration or cross-version compatibility promise for the inventory documented here.
