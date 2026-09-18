@@ -30,7 +30,7 @@ SQL-authored Tables express the same contract with result sets. The first result
 
 ### A Warehouse change-feed Table
 
-This complete T-SQL document reads an external `staging.ParcelChanges` feed. Operation codes `I` and `U` become staging candidates; `D` supplies explicit delete keys. `Dependencies: []` keeps the external staging table out of Weaver's managed dependency graph.
+This complete T-SQL document reads an external `staging.ParcelChanges` feed. Non-delete records become staging candidates; records marked `DELETE` supply explicit delete keys. `Dependencies: []` keeps the external staging table out of Weaver's managed dependency graph.
 
 Create `Warehouse/Operations/Parcel.CurrentStatus.sql`:
 
@@ -52,11 +52,11 @@ select [Parcel ID]
      , [Status]
      , [Depot]
 from [staging].[ParcelChanges]
-where [Operation code] in ('I', 'U');
+where [Operation] <> 'DELETE';
 
 select [Parcel ID]
 from [staging].[ParcelChanges]
-where [Operation code] = 'D';
+where [Operation] = 'DELETE';
 ```
 
 The checked fixture is `examples/parcel-incremental-warehouse/Warehouse/Operations/Parcel.CurrentStatus.sql`. Check can parse the document locally. Build must query a bound Fabric Warehouse to infer the SQL result shape, and Load executes the installed T-SQL there.

@@ -15,8 +15,8 @@ select [Parcel ID]
      , [Status]
      , [Depot]
 from [staging].[ParcelChanges]
-where [Operation code] in ('I', 'U');
+where [Operation] <> 'DELETE';
 
 select [Parcel ID]
 from [staging].[ParcelChanges]
-where [Operation code] = 'D';
+where [Operation] = 'DELETE';
