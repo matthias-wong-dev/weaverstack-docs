@@ -1,7 +1,11 @@
 # Advanced
 
-Advanced workflows combine ordinary Weaver operations across environments or execution positions. They include frozen bundle handoff, estate mirroring and running notebooks in Fabric.
+Use these routes when the ordinary Build, Load and Test cycle is not the whole task.
 
-The same public rules still apply: project declarations remain separate from physical bindings, destructive scope is settled before execution, and installed state belongs to the Weaver catalogue.
+- [Mirror an estate for specialised development](specialised-estate-mirroring.md): branch installed state, borrow selected data or materialise one item locally.
+- [Push and run a Fabric notebook](fabric-notebooks.md): deploy a local notebook definition and start it with an explicit Lakehouse and Environment.
+- [Control a Fabric capacity](fabric-capacity.md): inspect, resume and suspend the Azure capacity around a workload.
 
-Use the [CLI reference](../reference/cli.md) for current command syntax and [How Weaver works](../core-concepts/how-weaver-works.md) for the shared model.
+These routes change different layers. Mirror reconstructs catalogue and item destinations. Notebook commands manage and execute a Fabric Notebook but do not Build project declarations. Capacity commands act on the Azure resource and do not read or write a Weaver catalogue.
+
+Use the [Guides](../guides/index.md) for ordinary authoring and estate operation. The [CLI reference](../reference/cli.md) owns complete command syntax; [Contracts](../contracts/index.md) owns operation behaviour and failure boundaries.
