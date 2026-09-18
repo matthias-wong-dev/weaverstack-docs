@@ -44,7 +44,7 @@ Only Health currently includes a top-level JSON `format_version`; its current va
 
 ## Commands without JSON result mode
 
-`session`, `workflow`, and `fabric capacity` currently have no `--json` option. A bare invocation, `--help`, and `--version` also use text output. Their lack of JSON support is an absence in the current parser, not a promise that their human output is a stable machine format or that those commands will never gain a machine representation. Do not parse their terminal presentation as a substitute JSON schema.
+`session`, `workflow`, and `fabric capacity` have no `--json` option. A bare invocation, `--help`, and `--version` also use text output. Their terminal presentation is not a stable machine format; do not parse it as a substitute JSON schema.
 
 ## Nested field shapes
 

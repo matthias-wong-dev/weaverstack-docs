@@ -8,7 +8,7 @@ Weaver exposes the same lifecycle operations from a desktop process and from Pyt
 
 | Context | Workspace and identity | Spark and data access |
 | --- | --- | --- |
-| Desktop or external runner | Resolves the configured Fabric workspace and uses the desktop credential chain. | Uses Fabric APIs, OneLake and Warehouse SQL endpoints. Lakehouse Python or Spark SQL work acquires a remote Spark session in the target workspace and requires an available published Environment. |
+| Desktop or external runner | Resolves the configured Fabric workspace and uses the desktop credential chain. | Uses Fabric APIs, OneLake and Warehouse SQL endpoints. Lakehouse Python or Spark SQL work acquires a remote Spark session in the target workspace. Python work requires a published Environment containing Weaver; Spark SQL can use the workspace's default Spark runtime. |
 | Fabric process addressing its attached workspace | Uses the notebook's current workspace and notebook identity. | Uses the active Spark session, notebook storage context and Fabric-hosted item resolution. Desktop credentials are not substituted. |
 | Fabric process addressing another workspace | Uses the cross-workspace Session path and authenticates to the requested workspace independently. | Acquires capabilities for that target workspace; it does not reuse the notebook's attached Lakehouse or identity as though the workspaces were one host. |
 
@@ -47,7 +47,7 @@ Store service-principal secrets or certificate material in the runner's secret s
 
 Inside the attached Fabric workspace, notebook identity is the host credential. Supplying desktop credential environment variables does not replace that identity for the attached-workspace path. A request from a Fabric process to another workspace uses the independently authenticated cross-workspace context instead.
 
-Use Doctor in the same runner and interaction mode to separate credential and connectivity failures from lifecycle failures. Exact credential variables and diagnostic output belong in the [Session and runtime reference](../reference/operation-behaviour/session-runtime.md).
+Use Doctor in the same runner and interaction mode to separate credential and connectivity failures from lifecycle failures. See [Session and runtime behaviour](../reference/operation-behaviour/session-runtime.md) for credential selection and host boundaries.
 
 ## Treat machine-readable output as the automation interface
 

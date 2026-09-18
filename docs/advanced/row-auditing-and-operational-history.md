@@ -44,7 +44,7 @@ A direct source-file validation does not create installed Test history. Installe
 
 `_.LoadStatistic` records Load activity such as read, inserted, updated, deleted and rejected row counts, plus reload and static-skip distinctions. It exists only when Load work executed. A blocked node can therefore have a Log row and current Load status but no Load statistic; recording a row of zeroes would incorrectly imply that data work ran and moved nothing.
 
-These tables are append-oriented history. Weaver operations do not expose time-based retention, compaction or manual pruning as an operating interface. Query them read-only and copy them elsewhere if another retention policy is required.
+These tables are append-oriented history. The public operations do not expose time-based retention, compaction or manual pruning. Query them read-only and copy them elsewhere if another retention policy is required.
 
 ## Correlate a run by workflow and object
 

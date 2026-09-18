@@ -44,4 +44,4 @@ For an item-wide Load, Weaver orders the selected loadable documents using the i
 
 Test uses dependencies to understand what each validation reads and whether a previous result is stale. Dependencies do not turn data producers into additional Test work.
 
-Exact inference forms, declaration syntax and operation-specific selection rules belong in [Reference](../reference/operation-behaviour/shared-selection-and-identity.md). [Build, Load and Test](build-load-and-test.md) explains where each graph enters the lifecycle.
+See [Shared selection and identity](../reference/operation-behaviour/shared-selection-and-identity.md) for exact inference forms, declaration syntax and operation-specific selection rules. [Build, Load and Test](build-load-and-test.md) explains where each graph enters the lifecycle.

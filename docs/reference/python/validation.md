@@ -2,7 +2,7 @@
 
 Python validations are Weaver documents implemented as classes. Import the four public classes on this page from `weaver`.
 
-This page documents their Python call shape. SQL validation files have a different program shape, and CLI Test selects installed or source-file validations rather than constructing these classes. See [Validate an installed estate](../../basics/tests-and-assumptions.md) for those workflows and [Weaver documents](../../core-concepts/weaver-documents.md) for Test and Assumption semantics.
+This page documents their Python call shape. SQL validation files have a different program shape, and CLI Test selects installed or source-file validations rather than constructing these classes. See [Add Tests and Assumptions](../../basics/tests-and-assumptions.md) for those workflows and [Weaver documents](../../core-concepts/weaver-documents.md) for Test and Assumption semantics.
 
 <!-- BEGIN GENERATED PYTHON -->
 
@@ -117,7 +117,7 @@ SparkSqlTest(
 
 Runtime class generated from a Spark SQL Test document. Its `sql: str` attribute contains the program. After optional setup statements, the first result query is the expected relation and the second is the actual relation. `expected()`, `actual()`, `read()`, and `run()` expose the same semantics as `Test`.
 
-Do not subclass `SparkSqlTest` in repository Python. Author the SQL validation file described in [Validate an installed estate](../../basics/tests-and-assumptions.md); Build generates this class.
+Do not subclass `SparkSqlTest` in repository Python. Author the SQL validation file described in [Add Tests and Assumptions](../../basics/tests-and-assumptions.md); Build generates this class.
 
 ## `SparkSqlAssumption`
 

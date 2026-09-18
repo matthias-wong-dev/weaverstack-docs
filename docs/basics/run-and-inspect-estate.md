@@ -50,4 +50,4 @@ weaver health
 
 Green means the assessed Load, Tests and Build subjects have no current finding. Amber identifies work that is pending, stale or otherwise needs attention without a current failure. Red identifies a recorded failure or inconsistent installed state. Act on the finding rather than the overall colour alone.
 
-Use [Troubleshooting](troubleshooting.md) when the final report is not Green. Exact selection, freshness, inventory controls, named execution and machine-readable output belong in [Operation behaviour](../reference/operation-behaviour/index.md) and the [CLI reference](../reference/cli.md).
+Use [Troubleshooting](troubleshooting.md) when the final report is not Green. See [Operation behaviour](../reference/operation-behaviour/index.md) and the [CLI reference](../reference/cli.md) for selection, freshness, inventory controls, named execution and machine-readable output.

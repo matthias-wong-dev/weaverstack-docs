@@ -61,4 +61,4 @@ Build selects project items and resolves their configured physical targets. Load
 
 A workflow runs ordinary Weaver commands in order through one Session. Each operation keeps its normal boundary and state changes; the sequence is not a transaction.
 
-Exact selection, ordering, state changes and failure behaviour belong in [Operation behaviour reference](../reference/operation-behaviour/index.md). [Sessions and workflows](sessions-and-workflows.md) explains the shared execution context.
+See [Operation behaviour](../reference/operation-behaviour/index.md) for exact selection, ordering, state changes and failure behaviour. [Sessions and workflows](sessions-and-workflows.md) explains the shared execution context.

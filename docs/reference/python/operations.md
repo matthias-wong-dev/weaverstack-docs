@@ -12,7 +12,7 @@ A Session fixes the Fabric workspace. Operation arguments may supply a catalogue
 - `test` runs installed validations, or one uninstalled source file when `file=` is supplied. `strict=True` raises `ValidationError` for failed or invalid validation outcomes.
 - `health` reads catalogue and physical state. `inventories=False` omits physical inventory reads.
 
-The operation model and state transitions are in [Weaver operations](../../core-concepts/build-load-and-test.md). For command output, interaction policy and exit status, use the [CLI reference](../cli.md).
+The operation model and state transitions are in [Build, Load and Test](../../core-concepts/build-load-and-test.md). For command output, interaction policy and exit status, use the [CLI reference](../cli.md).
 
 ## Plan before changing state
 

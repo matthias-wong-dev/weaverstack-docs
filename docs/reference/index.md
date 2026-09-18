@@ -6,7 +6,7 @@ Use Reference to look up current public interfaces, exact representations and op
 | --- | --- |
 | [Weaver documents](weaver-documents/overview.md) | Authored locations, forms and metadata. |
 | [Python API](python/index.md) | Public exports, call shapes and result types. |
-| [CLI](cli.md) | Shared options and generated pages for executable commands. |
+| [CLI](cli.md) | Commands, options and shared CLI behaviour. |
 | [Configuration files](configuration-files/index.md) | Workspace, workflow and Fabric Environment definitions. |
 | [Operation behaviour](operation-behaviour/index.md) | Selection, state changes, outcomes and failure boundaries. |
 | [Catalogue schema](catalogue-schema.md) | Public `_` tables, columns, types and keys. |

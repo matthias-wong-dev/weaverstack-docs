@@ -1,6 +1,6 @@
 # Core concepts
 
-Core concepts explain the public model needed to design and operate a Weaver estate. They describe consequences visible to a user, not the internal arrangement of the source code.
+Core concepts explain the public model needed to design and operate a Weaver estate.
 
 Begin with [How Weaver works](how-weaver-works.md) for the complete model, then follow the sequence behind the work:
 

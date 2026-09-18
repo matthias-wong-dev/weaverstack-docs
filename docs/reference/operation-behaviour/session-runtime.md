@@ -48,7 +48,7 @@ Inside the attached Fabric workspace, notebook identity is used for Fabric and W
 
 An unqualified Environment name resolves in the operation's workspace. `Workspace/Environment` may name an Environment owned by another workspace where Fabric permits that attachment. The Spark session still runs in the operation's workspace; qualification changes Environment ownership, not the Session's workspace.
 
-Desktop Python execution requires a configured published Environment containing Weaver. Spark SQL can use Spark without importing Weaver, and Warehouse-only work does not require an Environment merely because other Weaver operations support Python. Inside an attached Fabric workspace, the active runtime supplies the Python and Spark environment.
+Desktop Python execution requires a configured published Environment containing Weaver. Spark SQL can use Spark without importing Weaver, and Warehouse-only work does not require an Environment merely because other operations support Python. Inside an attached Fabric workspace, the active runtime supplies the Python and Spark environment.
 
 A qualified Environment being attachable does not imply general host parity across workspaces. Notebook utilities, mounted paths, attached Lakehouses, credential flows and item operations remain host- and capability-specific.
 

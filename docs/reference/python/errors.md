@@ -85,4 +85,4 @@ Raised when a Test or Assumption cannot be evaluated, or when strict validation 
 
 The two attributes default to `None`. `ValidationError` does not accept the `executor` keyword exposed by the other constructors on this page.
 
-A validation that executes and finds discrepancies or violations is represented as a failed validation outcome. An evaluation failure is distinct and must not be interpreted as a passing result. See [Validate an installed estate](../../basics/tests-and-assumptions.md).
+A validation that executes and finds discrepancies or violations is represented as a failed validation outcome. An evaluation failure is distinct and must not be interpreted as a passing result. See [Add Tests and Assumptions](../../basics/tests-and-assumptions.md).

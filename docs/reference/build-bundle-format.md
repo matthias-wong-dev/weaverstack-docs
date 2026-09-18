@@ -148,7 +148,7 @@ Bundle loading finishes before the installer executes an action. It currently ch
 - non-empty batch target IDs that refer to a declared target;
 - no action whose `resource_node_id` is an omitted node;
 - required or forbidden payload presence for the executor and action kind;
-- executor-specific filename suffixes and safe bundle-relative payload paths;
+- executor-specific filename suffixes and payload paths that remain under the bundle root;
 - presence of every referenced payload; and
 - equality between each payload's SHA-256 and `payload_sha256`.
 
@@ -158,7 +158,7 @@ Construction of nested model values also rejects unsupported target-change effec
 
 Build reads the selected destination's catalogue and physical inventories before rendering this plan. Install then:
 
-1. loads and fully validates the local directory or materialised archive;
+1. loads and validates the local directory or materialised archive;
 2. offers the manifest's Lakehouse targets to the Session for Spark attachment;
 3. resolves execution capabilities in the selected workspace;
 4. executes manifest sequences and actions without replanning; and

@@ -46,4 +46,4 @@ The destination catalogue's `_.Mirror` table identifies installed objects whose 
 
 When Build successfully materialises an object locally, its `_.Mirror` record is removed as part of publishing the new installation. Objects whose rows remain are still borrowed. Health uses this distinction to read current Load state from the correct catalogue and to check the expected physical form.
 
-The [Catalogue](catalogue.md) places `_.Mirror` among the other installed and operational state. The [Mirror operation reference](../reference/operation-behaviour/mirror.md) owns command selection, confirmation, copied state, destructive scope and failure boundaries.
+The [Catalogue](catalogue.md) places `_.Mirror` among the other installed and operational state. See [Mirror behaviour](../reference/operation-behaviour/mirror.md) for command selection, confirmation, copied state, destructive scope and failure boundaries.

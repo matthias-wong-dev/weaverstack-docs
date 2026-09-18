@@ -238,4 +238,4 @@ environment: Shared Runtimes/ParcelRuntime
 
 The notebook and its default Lakehouse still run in the workspace selected for the command. Fabric must allow the consumer workspace to attach the qualified Environment, and the caller needs access to both workspaces. Qualifying the Environment does not make the Notebook or Lakehouse cross-workspace.
 
-See [`weaver fabric notebook`](fabric-notebook.md) for complete options and output behaviour. See the [Host-behaviour contract](../operation-behaviour/session-runtime.md) for attached-workspace and cross-workspace execution rules.
+See [`weaver fabric notebook`](fabric-notebook.md) for complete options and output behaviour. See [Session and runtime behaviour](../operation-behaviour/session-runtime.md) for attached-workspace and cross-workspace execution rules.

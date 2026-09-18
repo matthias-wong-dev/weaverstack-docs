@@ -97,4 +97,4 @@ Before asking for confirmation, Weaver:
 
 This validates local syntax and configuration. It does not prove that remote Fabric items exist or that every operation will succeed.
 
-Execution order, confirmation, stop-on-failure and non-rollback behaviour belong to [Workflow operation behaviour](../operation-behaviour/workflow.md). Command selection remains owned by [Shared selection and identity](../operation-behaviour/shared-selection-and-identity.md) and the individual operation pages.
+See [Workflow behaviour](../operation-behaviour/workflow.md) for execution order, confirmation, stop-on-failure and non-rollback behaviour. [Shared selection and identity](../operation-behaviour/shared-selection-and-identity.md) and the individual operation pages define command selection.

@@ -57,7 +57,7 @@ status = Parcel__CurrentStatus(spark, catalogue="Warehouse/Catalogue")
 assert status.object_id == "Parcel.CurrentStatus"
 ```
 
-The module-level metadata attached to an authored class remains part of the Python document. The complete metadata and return contracts belong to the [Lakehouse pipeline guide](../../basics/lakehouse-python.md) and [Incremental loads guide](../../advanced/incremental-data-processing.md).
+The module-level metadata attached to an authored class remains part of the Python document. See [Build a Lakehouse pipeline with Python](../../basics/lakehouse-python.md) for a complete document and [Incremental data processing](../../advanced/incremental-data-processing.md) for return forms across changed and unchanged inputs.
 
 ## `Folder`
 
@@ -125,7 +125,7 @@ load(
 
 `load()` requires a catalogue anchor and records the outcome before returning. `reload=True` resets the selected table's bookmark and load state, empties the target, then calls `read()`. `ignore_stability_threshold=True` waives declared delete and update limits for that invocation.
 
-See [Incremental loads](../../advanced/incremental-data-processing.md) for bookmark, delete-claim, and reload behaviour.
+See [Incremental data processing](../../advanced/incremental-data-processing.md) for bookmark, delete-claim, and reload behaviour.
 
 ## `SparkSqlTable`
 
@@ -140,7 +140,7 @@ SparkSqlTable(
 
 Runtime class generated from an authored Spark SQL table document. Its `sql: str` attribute contains the program, and `read()` executes that program to produce staging and optional delete keys.
 
-Do not subclass `SparkSqlTable` in repository Python. Author a `.sql` document; Build generates the class. This distinction keeps Python class authoring separate from the Spark SQL form described by the [Lakehouse pipeline guide](../../basics/lakehouse-python.md).
+Do not subclass `SparkSqlTable` in repository Python. Author a `.sql` document; Build generates the class. [Build a Lakehouse pipeline with Spark SQL](../../basics/lakehouse-spark-sql.md) shows the authored form.
 
 ## `View`
 

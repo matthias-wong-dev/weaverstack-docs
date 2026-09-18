@@ -33,7 +33,7 @@ A View declares a query-defined relation. Build installs its query as a definiti
 
 ### Test
 
-A Test compares expected and actual rows. The optional primary key helps correlate diagnostic rows when the two sides differ.
+A Test compares expected and actual rows.
 
 ### Assumption
 

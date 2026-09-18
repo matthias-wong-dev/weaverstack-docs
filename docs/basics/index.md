@@ -1,6 +1,6 @@
 # Basics
 
-Use these guides after [First project](../getting-started/first-project.md). They cover the normal path from project source to an installed, loaded and tested estate.
+Use these tasks after [First project](../getting-started/first-project.md). They cover the normal path from project source to an installed, loaded and tested estate.
 
 ## Build a pipeline
 

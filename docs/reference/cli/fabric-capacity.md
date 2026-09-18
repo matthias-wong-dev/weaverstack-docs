@@ -137,7 +137,7 @@ Then run the intended Weaver or notebook operation. Capacity state and workspace
 
 ## Suspend only after work has settled
 
-Check the Fabric jobs and Weaver operations sharing the capacity outside this command. When they have finished, request suspension:
+Check the Fabric jobs and other operations sharing the capacity outside this command. When they have finished, request suspension:
 
 ```bash
 weaver fabric capacity suspend \

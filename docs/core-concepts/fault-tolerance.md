@@ -18,7 +18,7 @@ A fault-tolerant Load keeps scheduling work after a failure. Independent branche
 
 The final operation still reports the failure. A run in which some work succeeded and some failed or was blocked leaves partial state rather than being converted into success.
 
-Fault tolerance also applies within supported Table and Folder loads when incoming rows or files can be rejected while accepted input is published. That is separate from graph continuation: a target-invalidating change or another non-recoverable condition can still fail the individual load. The exact distinction belongs in the Load reference.
+Fault tolerance also applies within supported Table and Folder loads when incoming rows or files can be rejected while accepted input is published. That is separate from graph continuation: a target-invalidating change or another non-recoverable condition can still fail the individual load. The [Load reference](../reference/operation-behaviour/load.md) defines the exact distinction.
 
 ## Policies belong to operations
 

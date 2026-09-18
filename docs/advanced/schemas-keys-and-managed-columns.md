@@ -89,4 +89,4 @@ The logical model is shared, but its physical form is engine-specific:
 
 Those representations support the same Weaver behaviour; they are not a portable cross-engine row format. A declaration should use the type vocabulary for its target and should not return managed columns from authored code or queries.
 
-Use [Table reference](../reference/weaver-documents/table.md) and [Common metadata](../reference/weaver-documents/common-metadata.md) for exact authoring fields and accepted forms. [Catalogue schema](../reference/catalogue-schema.md) owns the exact catalogue column inventory, and [Python authored objects](../reference/python/objects.md) defines author-facing projections.
+Use [Table reference](../reference/weaver-documents/table.md) and [Common metadata](../reference/weaver-documents/common-metadata.md) for exact authoring fields and accepted forms. [Catalogue schema](../reference/catalogue-schema.md) lists the catalogue columns, and [Python authored objects](../reference/python/objects.md) defines author-facing projections.

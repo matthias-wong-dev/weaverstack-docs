@@ -21,13 +21,3 @@ Use [Run and inspect an estate](basics/run-and-inspect-estate.md) for the routin
 **Understanding or integrating Weaver**
 
 Read [How Weaver works](core-concepts/how-weaver-works.md) for the public model. Use [Reference](reference/index.md) for exact interfaces and operation behaviour.
-
-## Documentation sections
-
-- [Getting started](getting-started/index.md) — install Weaver and complete the first lifecycle.
-- [Core concepts](core-concepts/index.md) — understand the model behind those tasks.
-- [Basics](basics/index.md) — complete normal authoring and operating work.
-- [Advanced](advanced/index.md) — understand deeper mechanisms and specialised operating patterns.
-- [Reference](reference/index.md) — look up commands, APIs, configuration and exact behaviour.
-
-This site documents public behaviour. Product positioning belongs at `weaverstack.dev`; implementation design and internal module ownership belong in the Weaver source repository.

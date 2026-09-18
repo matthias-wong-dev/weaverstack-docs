@@ -1,15 +1,10 @@
 # CLI reference
 
-
----
-
-## CLI reference
-
 ```text
 weaver [--version] command ...
 ```
 
-Run `weaver <command> --help` for the exact options in the installed version. This page records command responsibility and the selection grammar that differs between commands. [Machine-readable interfaces](machine-readable-output.md) records the current JSON documents; the [CLI-behaviour contract](cli.md) defines shared interaction and status semantics.
+Run `weaver <command> --help` for the exact options in the installed version. This page records command responsibility, shared interaction and status semantics, and the selection grammar that differs between commands. [Machine-readable output](machine-readable-output.md) records the current JSON documents.
 
 ## Commands
 
@@ -147,11 +142,9 @@ Installation executes the bundle without reopening project source or replanning 
 
 `mirror` also empties destination items. Inspect its plan and require `--yes` for unattended execution. The source catalogue is read before Weaver changes the destination, and the settled plan names the destination items it will empty.
 
----
+## Shared CLI behaviour
 
-## CLI-behaviour contract
-
-The Weaver CLI parses one command, applies one interaction policy and reports one command outcome. Command-specific arguments and current result fields belong to the [CLI reference](cli.md); this contract defines the shared behavioural boundary.
+The Weaver CLI parses one command, applies one interaction policy and reports one command outcome. Command-specific arguments are listed on the command pages, and current result fields are in [Machine-readable output](machine-readable-output.md).
 
 ## Parsing and help
 
@@ -209,7 +202,7 @@ Standalone commands do not define a separate cross-platform signal-to-status con
 
 ## Defined behaviour
 
-The CLI-behaviour contract specifies that Weaver:
+Across commands, Weaver:
 
 1. completes parser validation before invoking a command handler;
 2. prints help without running an operation and rejects usage errors as parser failures;
@@ -221,4 +214,4 @@ The CLI-behaviour contract specifies that Weaver:
 8. stops a Workflow at its first unsuccessful entry while keeping an interactive Session alive after command failures; and
 9. handles prompt and Session interruption as described without promising rollback or a universal standalone signal status.
 
-See the [CLI reference](cli.md), [Workflow](operation-behaviour/workflow.md), [Runtime](operation-behaviour/session-runtime.md), and [State and health](operation-behaviour/health.md).
+See [Workflow behaviour](operation-behaviour/workflow.md), [Session and runtime behaviour](operation-behaviour/session-runtime.md), and [Health behaviour](operation-behaviour/health.md) for operation-specific boundaries.

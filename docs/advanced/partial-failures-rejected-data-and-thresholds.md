@@ -37,7 +37,7 @@ A keyed Table can declare limits for the percentage of established target rows t
 
 Stability checks are not row-rejection rules. Fault tolerance does not waive them, and an incremental change that would leave a declared unique key invalid is also refused regardless of the fault-tolerance setting. The Table API has a separate, explicit one-run stability waiver for an intended large change; it applies only to that Table load.
 
-Keep thresholds aligned with the scale and expected churn of each Table. A threshold low enough to catch an accidental replacement may also stop a legitimate backfill, while a high threshold may add no useful guard. Review the proposed change and use the explicit waiver only when the large update or deletion is the intended operation. Exact metadata keys, defaults and API arguments belong in the [Table reference](../reference/weaver-documents/table.md) and [Python API](../reference/python/index.md).
+Keep thresholds aligned with the scale and expected churn of each Table. A threshold low enough to catch an accidental replacement may also stop a legitimate backfill, while a high threshold may add no useful guard. Review the proposed change and use the explicit waiver only when the large update or deletion is the intended operation. See the [Table reference](../reference/weaver-documents/table.md) and [Python API](../reference/python/index.md) for exact metadata keys, defaults and API arguments.
 
 ## Read the estate as partial state
 
@@ -51,4 +51,4 @@ After a mixed run, inspect each affected branch rather than reading only the top
 
 Bookmarks advance only after clean successful loads. A tolerated reject can publish accepted data without advancing the bookmark, so a later run still starts from the last clean boundary. A failed or blocked node likewise leaves its recorded state available for recovery.
 
-Recovery is a new operation against this partial estate. Correct the source, declaration, credentials or platform condition, then rerun the appropriate scope. Weaver does not resume an invisible transaction or automatically undo useful work from independent branches. The [fault and outcome vocabulary](../reference/operation-behaviour/fault-and-outcome-vocabulary.md) owns the exact node and run terms used in reports.
+Recovery is a new operation against this partial estate. Correct the source, declaration, credentials or platform condition, then rerun the appropriate scope. Weaver does not resume an invisible transaction or automatically undo useful work from independent branches. See [Fault and outcome vocabulary](../reference/operation-behaviour/fault-and-outcome-vocabulary.md) for the exact node and run terms used in reports.
