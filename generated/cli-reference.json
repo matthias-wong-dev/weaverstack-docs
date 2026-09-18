@@ -1,0 +1,966 @@
+{
+  "commands": [
+    {
+      "command": "build",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Weaver item to build. Its physical target comes from workspace configuration; use ITEM=TARGET to supply or override it. Repeat to select multiple items. Naming none builds every configured item.",
+          "invocation": "--item ITEM[=TARGET]",
+          "required": false
+        },
+        {
+          "help": "Create a deployment bundle without installing it.",
+          "invocation": "--bundle-only",
+          "required": false
+        },
+        {
+          "help": "Directory to write a bundle created with --bundle-only.",
+          "invocation": "--bundle-path PATH",
+          "required": false
+        },
+        {
+          "help": "Emit the result as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment name or Workspace/Environment reference.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        },
+        {
+          "help": "Where the Weaver catalogue lives, for example Warehouse/Weaver.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Project folder, or an abfss location inside a Fabric session. Defaults to the current directory or Notebook Resources.",
+          "invocation": "SOURCE",
+          "required": false
+        }
+      ],
+      "synopsis": "weaver build [-h] [--item ITEM[=TARGET]] [--bundle-only] [--bundle-path PATH] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [SOURCE]"
+    },
+    {
+      "command": "check",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Emit the result as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Project folder. Defaults to the current directory.",
+          "invocation": "PROJECT_FOLDER",
+          "required": false
+        }
+      ],
+      "synopsis": "weaver check [-h] [--json] [--non-interactive] [PROJECT_FOLDER]"
+    },
+    {
+      "command": "doctor",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Emit the result as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Fabric workspace to check.",
+          "invocation": "--workspace WORKSPACE",
+          "required": true
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        }
+      ],
+      "positionals": [],
+      "synopsis": "weaver doctor [-h] [--json] --workspace WORKSPACE [--non-interactive]"
+    },
+    {
+      "command": "fabric capacity",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": null,
+          "invocation": "--resource-group RESOURCE_GROUP",
+          "required": true
+        },
+        {
+          "help": null,
+          "invocation": "--capacity-name CAPACITY_NAME",
+          "required": true
+        },
+        {
+          "help": "Azure subscription ID when more than one subscription is available.",
+          "invocation": "--subscription-id SUBSCRIPTION_ID",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "choices": [
+            "status",
+            "resume",
+            "suspend"
+          ],
+          "help": null,
+          "invocation": "{status,resume,suspend}",
+          "required": true
+        }
+      ],
+      "synopsis": "weaver fabric capacity [-h] --resource-group RESOURCE_GROUP --capacity-name CAPACITY_NAME [--subscription-id SUBSCRIPTION_ID] [--non-interactive] {status,resume,suspend}"
+    },
+    {
+      "command": "fabric environment publish",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Local <Name>.Environment definition directory. It names the Environment and supplies the complete definition.",
+          "invocation": "--path DIRECTORY",
+          "required": false
+        },
+        {
+          "help": "Supply Weaver as a wheel built from this checkout.",
+          "invocation": "--dev",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Fabric Environment name or Workspace/Environment reference.",
+          "invocation": "ENVIRONMENT",
+          "required": false
+        }
+      ],
+      "synopsis": "weaver fabric environment publish [-h] [--path DIRECTORY] [--dev] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [ENVIRONMENT]"
+    },
+    {
+      "command": "fabric notebook push",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Fabric display name. Defaults to the filename.",
+          "invocation": "--name NAME",
+          "required": false
+        },
+        {
+          "help": null,
+          "invocation": "--description DESCRIPTION",
+          "required": false
+        },
+        {
+          "help": null,
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment name or Workspace/Environment reference.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Local .py or .ipynb notebook source.",
+          "invocation": "source",
+          "required": true
+        }
+      ],
+      "synopsis": "weaver fabric notebook push [-h] [--name NAME] [--description DESCRIPTION] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] source"
+    },
+    {
+      "command": "fabric notebook run",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Default Lakehouse for the notebook session.",
+          "invocation": "--lakehouse LAKEHOUSE",
+          "required": false
+        },
+        {
+          "help": null,
+          "invocation": "--no-wait",
+          "required": false
+        },
+        {
+          "help": null,
+          "invocation": "--timeout TIMEOUT",
+          "required": false
+        },
+        {
+          "help": null,
+          "invocation": "--poll-interval POLL_INTERVAL",
+          "required": false
+        },
+        {
+          "help": null,
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment name or Workspace/Environment reference.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        },
+        {
+          "help": "Where the Weaver catalogue lives, for example Warehouse/Weaver.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Fabric Notebook display name.",
+          "invocation": "name",
+          "required": true
+        }
+      ],
+      "synopsis": "weaver fabric notebook run [-h] [--lakehouse LAKEHOUSE] [--no-wait] [--timeout TIMEOUT] [--poll-interval POLL_INTERVAL] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] name"
+    },
+    {
+      "command": "health",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Weaver item to report on, as Lakehouse/Name or Warehouse/Name. Repeat to select more than one. Naming none reports on the whole installed estate.",
+          "invocation": "--item ITEM",
+          "required": false
+        },
+        {
+          "help": "ISO-8601 instant with a zone. A load settled before it reads as stale. Defaults to 24 hours ago.",
+          "invocation": "--as-of DATETIME",
+          "required": false
+        },
+        {
+          "help": "Skip the physical inventory check for certified objects.",
+          "invocation": "--no-inventory",
+          "required": false
+        },
+        {
+          "help": "Emit the report as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Where the Weaver catalogue lives, for example Warehouse/Weaver.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        }
+      ],
+      "positionals": [],
+      "synopsis": "weaver health [-h] [--item ITEM] [--as-of DATETIME] [--no-inventory] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--catalogue CATALOGUE]"
+    },
+    {
+      "command": "initialise",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Fabric workspace name. It must exist.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Project folder to create or reuse. Required for unattended setup.",
+          "invocation": "--project-folder PATH",
+          "required": false
+        },
+        {
+          "help": "Catalogue Warehouse. Defaults to Catalogue.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment for the project. It may already exist. Defaults to Weaver.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        },
+        {
+          "help": "Lakehouse for Delta tables and files.",
+          "invocation": "--lakehouse LAKEHOUSE",
+          "required": false
+        },
+        {
+          "help": "Warehouse for SQL tables and views.",
+          "invocation": "--warehouse WAREHOUSE",
+          "required": false
+        },
+        {
+          "help": "Add Sales example source files.",
+          "invocation": "--example",
+          "required": false
+        },
+        {
+          "help": "Do not add example source files.",
+          "invocation": "--no-example",
+          "required": false
+        },
+        {
+          "help": "Ask setup questions even when input is not a terminal.",
+          "invocation": "--interactive",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Preview the setup without making changes.",
+          "invocation": "--dry-run",
+          "required": false
+        },
+        {
+          "help": "Emit the result as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Publish the project Environment after setup.",
+          "invocation": "--publish-environment",
+          "required": false
+        }
+      ],
+      "positionals": [],
+      "synopsis": "weaver initialise [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]"
+    },
+    {
+      "command": "initialize",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Fabric workspace name. It must exist.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Project folder to create or reuse. Required for unattended setup.",
+          "invocation": "--project-folder PATH",
+          "required": false
+        },
+        {
+          "help": "Catalogue Warehouse. Defaults to Catalogue.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment for the project. It may already exist. Defaults to Weaver.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        },
+        {
+          "help": "Lakehouse for Delta tables and files.",
+          "invocation": "--lakehouse LAKEHOUSE",
+          "required": false
+        },
+        {
+          "help": "Warehouse for SQL tables and views.",
+          "invocation": "--warehouse WAREHOUSE",
+          "required": false
+        },
+        {
+          "help": "Add Sales example source files.",
+          "invocation": "--example",
+          "required": false
+        },
+        {
+          "help": "Do not add example source files.",
+          "invocation": "--no-example",
+          "required": false
+        },
+        {
+          "help": "Ask setup questions even when input is not a terminal.",
+          "invocation": "--interactive",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Preview the setup without making changes.",
+          "invocation": "--dry-run",
+          "required": false
+        },
+        {
+          "help": "Emit the result as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Publish the project Environment after setup.",
+          "invocation": "--publish-environment",
+          "required": false
+        }
+      ],
+      "positionals": [],
+      "synopsis": "weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]"
+    },
+    {
+      "command": "install",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Emit the report as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Bundle directory or .weaver.zip archive.",
+          "invocation": "BUNDLE",
+          "required": true
+        }
+      ],
+      "synopsis": "weaver install [-h] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] BUNDLE"
+    },
+    {
+      "command": "load",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Legacy spelling for a positional Weaver item.",
+          "invocation": "--item ITEM",
+          "required": false
+        },
+        {
+          "help": "Load one installed object, as Tables/Schema.Object or Files/Schema.Object in a Lakehouse and Schema.Object in a Warehouse. A bare Schema.Object is accepted where it names one object. Repeat to select more than one.",
+          "invocation": "--name NAME",
+          "required": false
+        },
+        {
+          "help": "Continue independent branches after a failure.",
+          "invocation": "--fault-tolerant",
+          "required": false
+        },
+        {
+          "help": "Rebuild each selected table: reset its bookmark, empty it, then load. Does not affect unselected tables.",
+          "invocation": "--reload",
+          "required": false
+        },
+        {
+          "help": "Load only the objects whose load health is not green.",
+          "invocation": "--stale",
+          "required": false
+        },
+        {
+          "help": "ISO-8601 instant with a zone, used as the health freshness threshold when selecting objects. Defaults to 24 hours ago. Only valid with --stale.",
+          "invocation": "--as-of DATETIME",
+          "required": false
+        },
+        {
+          "help": "Show the load plan without running it.",
+          "invocation": "--dry-run",
+          "required": false
+        },
+        {
+          "help": "Emit the report as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment name or Workspace/Environment reference.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        },
+        {
+          "help": "Where the Weaver catalogue lives, for example Warehouse/Weaver.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Weaver items to load, as Lakehouse/Name or Warehouse/Name. Naming none loads every installed item.",
+          "invocation": "ITEM",
+          "required": true
+        }
+      ],
+      "synopsis": "weaver load [-h] [--item ITEM] [--name NAME] [--fault-tolerant] [--reload] [--stale] [--as-of DATETIME] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]"
+    },
+    {
+      "command": "mirror",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "A logical item to rebind, such as Warehouse/Model or Warehouse/Model=Warehouse/Model_Dev. Repeat to select multiple items. Naming none selects every configured target.",
+          "invocation": "--item ITEM[=TARGET]",
+          "required": false
+        },
+        {
+          "help": "Fork the catalogue and rebind no physical item.",
+          "invocation": "--no-item",
+          "required": false
+        },
+        {
+          "help": "Catalogue to fork, for example Warehouse/Weaver. Overrides mirror: in workspace configuration.",
+          "invocation": "--mirror CATALOGUE",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment name or Workspace/Environment reference.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        },
+        {
+          "help": "Where the Weaver catalogue lives, for example Warehouse/Weaver.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        },
+        {
+          "help": "Authorise emptying the destinations without asking.",
+          "invocation": "--yes",
+          "required": false
+        },
+        {
+          "help": "Emit the result as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        }
+      ],
+      "positionals": [],
+      "synopsis": "weaver mirror [-h] [--item ITEM[=TARGET]] [--no-item] [--mirror CATALOGUE] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--yes] [--json] [--non-interactive]"
+    },
+    {
+      "command": "session",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment name or Workspace/Environment reference.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        },
+        {
+          "help": "Where the Weaver catalogue lives, for example Warehouse/Weaver.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        },
+        {
+          "help": "Report Fabric access timings when the session ends.",
+          "invocation": "--timings",
+          "required": false
+        }
+      ],
+      "positionals": [],
+      "synopsis": "weaver session [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--timings]"
+    },
+    {
+      "command": "test",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Legacy spelling for a positional Weaver item.",
+          "invocation": "--item ITEM",
+          "required": false
+        },
+        {
+          "help": "Run one installed validation and return diagnostic rows.",
+          "invocation": "--name Schema.Object",
+          "required": false
+        },
+        {
+          "help": "Compile and run a source file without installing it.",
+          "invocation": "--file PATH",
+          "required": false
+        },
+        {
+          "help": "Show the test plan without running it.",
+          "invocation": "--dry-run",
+          "required": false
+        },
+        {
+          "help": "Emit the report as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment name or Workspace/Environment reference.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        },
+        {
+          "help": "Where the Weaver catalogue lives, for example Warehouse/Weaver.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Weaver items to validate, as Lakehouse/Name or Warehouse/Name. Naming none validates every installed item.",
+          "invocation": "ITEM",
+          "required": true
+        }
+      ],
+      "synopsis": "weaver test [-h] [--item ITEM] [--name Schema.Object | --file PATH] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]"
+    },
+    {
+      "command": "wipe",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment name or Workspace/Environment reference.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        },
+        {
+          "help": "Where the Weaver catalogue lives, for example Warehouse/Weaver.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        },
+        {
+          "help": "Keep the catalogue and remove its claims for the named targets. Requires a catalogue and at least one target.",
+          "invocation": "--unbind",
+          "required": false
+        },
+        {
+          "help": "Show the estate this would empty.",
+          "invocation": "--dry-run",
+          "required": false
+        },
+        {
+          "help": "Authorise the removal without asking.",
+          "invocation": "--yes",
+          "required": false
+        },
+        {
+          "help": "Emit the result as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Physical items to empty, as Lakehouse/Name or Warehouse/Name. Naming none empties the estate the catalogue records.",
+          "invocation": "TARGET",
+          "required": true
+        }
+      ],
+      "synopsis": "weaver wipe [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--unbind] [--dry-run] [--yes] [--json] [--non-interactive] [TARGET ...]"
+    },
+    {
+      "command": "workflow",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Workflow file. Defaults to ./workflow.yml.",
+          "invocation": "--file PATH",
+          "required": false
+        },
+        {
+          "help": "Report Fabric access timings after the workflow.",
+          "invocation": "--timings",
+          "required": false
+        },
+        {
+          "help": "Authorise the workflow and all its commands.",
+          "invocation": "--yes",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Fabric Environment name or Workspace/Environment reference.",
+          "invocation": "--environment ENVIRONMENT",
+          "required": false
+        },
+        {
+          "help": "Where the Weaver catalogue lives, for example Warehouse/Weaver.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Workflow name in workflow.yml.",
+          "invocation": "name",
+          "required": true
+        }
+      ],
+      "synopsis": "weaver workflow [-h] [--file PATH] [--timings] [--yes] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] name"
+    }
+  ],
+  "leaf_count": 17,
+  "ownership": {
+    "build": "docs/reference/cli/build.md",
+    "check": "docs/reference/cli/check.md",
+    "doctor": "docs/reference/cli/doctor.md",
+    "fabric capacity": "docs/reference/cli/fabric-capacity.md",
+    "fabric environment publish": "docs/reference/cli/fabric-environment.md",
+    "fabric notebook push": "docs/reference/cli/fabric-notebook.md",
+    "fabric notebook run": "docs/reference/cli/fabric-notebook.md",
+    "health": "docs/reference/cli/health.md",
+    "initialise": "docs/reference/cli/initialise.md",
+    "initialize": "docs/reference/cli/initialise.md",
+    "install": "docs/reference/cli/install.md",
+    "load": "docs/reference/cli/load.md",
+    "mirror": "docs/reference/cli/mirror.md",
+    "session": "docs/reference/cli/session.md",
+    "test": "docs/reference/cli/test.md",
+    "wipe": "docs/reference/cli/wipe.md",
+    "workflow": "docs/reference/cli/workflow.md"
+  },
+  "page_count": 15,
+  "schema_version": 1
+}

@@ -1,0 +1,7 @@
+workspace: Parcel Operations
+catalogue: Warehouse/ParcelCatalogueDev
+mirror: Warehouse/ParcelCatalogue
+
+targets:
+  Lakehouse/Landing: ParcelLandingDev
+  Warehouse/Operations: ParcelOperationsDev

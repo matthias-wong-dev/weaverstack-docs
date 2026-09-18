@@ -1,0 +1,7 @@
+workflows:
+  verify:
+    - check .
+    - build .
+    - load
+    - test
+    - health

@@ -1,0 +1,596 @@
+/*
+ * Weaver documentation theme.
+ * Brand values and the four-stroke mark follow weaverstack.dev/assets/site.css.
+ * Overrides stay under Material's classes so reference-page structure remains intact.
+ */
+:root {
+  --weaver-paper: #f7f7f6;
+  --weaver-paper-deep: #ececea;
+  --weaver-surface: #ffffff;
+  --weaver-ink: #0c1520;
+  --weaver-ink-soft: #232e3a;
+  --weaver-muted: #4b5661;
+  --weaver-blue: #1d44d4;
+  --weaver-blue-dark: #112a76;
+  --weaver-blue-soft: #e2e8ff;
+  --weaver-line: rgba(12, 21, 32, 0.2);
+  --weaver-line-strong: rgba(12, 21, 32, 0.42);
+  --weaver-code: #101c2c;
+  --weaver-code-text: #dfe7f7;
+  --weaver-focus: rgba(29, 68, 212, 0.55);
+  --weaver-sans: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --weaver-mono: "SFMono-Regular", "Cascadia Code", "Liberation Mono", Menlo, monospace;
+}
+
+[data-md-color-scheme="default"] {
+  --md-default-fg-color: var(--weaver-ink);
+  --md-default-fg-color--light: var(--weaver-ink-soft);
+  --md-default-fg-color--lighter: var(--weaver-muted);
+  --md-default-fg-color--lightest: var(--weaver-line);
+  --md-default-bg-color: var(--weaver-paper);
+  --md-default-bg-color--light: var(--weaver-surface);
+  --md-default-bg-color--lighter: var(--weaver-paper-deep);
+  --md-default-bg-color--lightest: var(--weaver-paper-deep);
+  --md-primary-fg-color: var(--weaver-paper);
+  --md-primary-bg-color: var(--weaver-ink);
+  --md-accent-fg-color: var(--weaver-blue);
+  --md-typeset-color: var(--weaver-ink-soft);
+  --md-typeset-a-color: var(--weaver-blue-dark);
+  --md-code-fg-color: var(--weaver-code-text);
+  --md-code-bg-color: var(--weaver-code);
+  --weaver-syntax-comment: #b8c4d6;
+  --weaver-syntax-docstring: #c4cdef;
+  --weaver-syntax-key: #9dccff;
+  --weaver-syntax-value: #bfe3bd;
+  --weaver-syntax-string: #bfe3bd;
+  --weaver-syntax-punctuation: #d0d8e6;
+  --weaver-syntax-operator: #efb8ff;
+  --weaver-syntax-keyword: #9dccff;
+  --weaver-syntax-number: #ffd19a;
+  --weaver-syntax-command: #e5ecfa;
+}
+
+[data-md-color-scheme="slate"] {
+  --weaver-paper: #0c1520;
+  --weaver-paper-deep: #111e2d;
+  --weaver-surface: #162334;
+  --weaver-ink: #f7f7f6;
+  --weaver-ink-soft: #dbe1e8;
+  --weaver-muted: #aeb8c3;
+  --weaver-blue: #8fb0ff;
+  --weaver-blue-dark: #b9ccff;
+  --weaver-blue-soft: #1b315e;
+  --weaver-line: rgba(247, 247, 246, 0.18);
+  --weaver-line-strong: rgba(247, 247, 246, 0.36);
+  --weaver-code: #080f18;
+  --weaver-code-text: #e5ecfa;
+  --weaver-focus: rgba(143, 176, 255, 0.7);
+  --md-default-fg-color: var(--weaver-ink);
+  --md-default-fg-color--light: var(--weaver-ink-soft);
+  --md-default-fg-color--lighter: var(--weaver-muted);
+  --md-default-fg-color--lightest: var(--weaver-line);
+  --md-default-bg-color: var(--weaver-paper);
+  --md-default-bg-color--light: var(--weaver-surface);
+  --md-default-bg-color--lighter: var(--weaver-paper-deep);
+  --md-default-bg-color--lightest: var(--weaver-paper-deep);
+  --md-primary-fg-color: var(--weaver-paper);
+  --md-primary-bg-color: var(--weaver-ink);
+  --md-accent-fg-color: var(--weaver-blue);
+  --md-typeset-color: var(--weaver-ink-soft);
+  --md-typeset-a-color: var(--weaver-blue-dark);
+  --md-code-fg-color: var(--weaver-code-text);
+  --md-code-bg-color: var(--weaver-code);
+  --weaver-syntax-comment: #aebdd0;
+  --weaver-syntax-docstring: #c5cdef;
+  --weaver-syntax-key: #91c7ff;
+  --weaver-syntax-value: #b6dfb5;
+  --weaver-syntax-string: #b6dfb5;
+  --weaver-syntax-punctuation: #c9d3e3;
+  --weaver-syntax-operator: #ebb5ff;
+  --weaver-syntax-keyword: #91c7ff;
+  --weaver-syntax-number: #f4c98f;
+  --weaver-syntax-command: #e5ecfa;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body,
+input {
+  font-family: var(--weaver-sans);
+}
+
+::selection {
+  color: #ffffff;
+  background: #1d44d4;
+}
+
+:where(a, button, input, label, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--weaver-focus);
+  outline-offset: 3px;
+  border-radius: 0.2rem;
+}
+
+/* Header: retain Material's controls and responsive drawer, but use Weaver's mark. */
+.md-header {
+  color: var(--weaver-ink);
+  background: color-mix(in srgb, var(--weaver-paper) 92%, transparent);
+  border-bottom: 1px solid var(--weaver-line);
+  box-shadow: none;
+  backdrop-filter: blur(14px);
+}
+
+.md-header__inner {
+  min-height: 3.3rem;
+}
+
+.md-header__button {
+  color: var(--weaver-ink);
+}
+
+.md-header__button:hover {
+  color: var(--weaver-blue);
+  opacity: 1;
+}
+
+.md-header__button.md-logo {
+  width: 1.7rem;
+  height: 1.5rem;
+  margin: 0 0.55rem 0 0;
+  padding: 0;
+}
+
+.weaver-mark {
+  position: relative;
+  display: block;
+  width: 1.3rem;
+  height: 1.2rem;
+}
+
+.weaver-mark i {
+  position: absolute;
+  top: 0.05rem;
+  width: 0.225rem;
+  height: 1.1rem;
+  background: var(--weaver-ink);
+  border-radius: 0.45rem;
+  transform: rotate(-22deg);
+}
+
+.weaver-mark i:nth-child(1) { left: 0.1rem; }
+.weaver-mark i:nth-child(2) { left: 0.4rem; transform: rotate(22deg); background: var(--weaver-blue); }
+.weaver-mark i:nth-child(3) { left: 0.7rem; }
+.weaver-mark i:nth-child(4) { left: 1rem; transform: rotate(22deg); background: var(--weaver-blue); }
+
+.md-header__title {
+  color: var(--weaver-ink);
+  font-weight: 750;
+  letter-spacing: -0.025em;
+}
+
+.weaver-home-link {
+  flex: 0 0 auto;
+  margin: 0 0.35rem;
+  padding: 0.35rem 0.45rem;
+  color: var(--weaver-muted);
+  font-size: 0.72rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.weaver-home-link:hover {
+  color: var(--weaver-blue);
+}
+
+/* Navigation uses weight and a blue keyline rather than marketing-card treatments. */
+.md-sidebar,
+.md-nav,
+.md-nav__title,
+.md-nav__list {
+  background: transparent;
+}
+
+.md-sidebar__scrollwrap {
+  scrollbar-color: var(--weaver-line-strong) transparent;
+}
+
+.md-nav__title {
+  color: var(--weaver-ink);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  box-shadow: none;
+}
+
+.md-nav__link {
+  color: var(--weaver-muted);
+  line-height: 1.45;
+}
+
+.md-nav__link:hover,
+.md-nav__link:focus {
+  color: var(--weaver-blue);
+}
+
+.md-nav__link--active,
+.md-nav__link[aria-current="page"] {
+  color: var(--weaver-blue-dark);
+  font-weight: 680;
+}
+
+.md-nav--primary .md-nav__item--active > .md-nav__link,
+.md-nav--secondary .md-nav__link--active {
+  border-left: 2px solid var(--weaver-blue);
+  padding-left: 0.5rem;
+}
+
+.md-tabs {
+  color: var(--weaver-ink);
+  background: var(--weaver-paper);
+  border-bottom: 1px solid var(--weaver-line);
+}
+
+.md-search__form {
+  background: var(--weaver-paper-deep);
+  border: 1px solid var(--weaver-line);
+  border-radius: 0.4rem;
+}
+
+.md-search__input,
+.md-search__icon {
+  color: var(--weaver-ink);
+}
+
+.md-search__output,
+.md-search-result__meta {
+  background: var(--weaver-paper);
+}
+
+.md-search-result__link:hover {
+  background: var(--weaver-paper-deep);
+}
+
+.md-search-result mark {
+  color: var(--weaver-blue-dark);
+  background: var(--weaver-blue-soft);
+}
+
+/* Technical content keeps a compact reading measure and clear hierarchy. */
+.md-content {
+  min-width: 0;
+}
+
+.md-content__inner {
+  max-width: 48rem;
+  margin-bottom: 2.8rem;
+}
+
+.md-typeset {
+  color: var(--weaver-ink-soft);
+  font-size: 0.84rem;
+  line-height: 1.68;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4 {
+  color: var(--weaver-ink);
+  font-weight: 680;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.md-typeset h1 {
+  margin-bottom: 1.1rem;
+  font-size: 2rem;
+  letter-spacing: -0.035em;
+}
+
+.md-typeset h2 {
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--weaver-line);
+}
+
+.md-typeset h2,
+.md-typeset h3 {
+  scroll-margin-top: 4.4rem;
+}
+
+.md-typeset a {
+  color: var(--weaver-blue-dark);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--weaver-blue) 55%, transparent);
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.16em;
+}
+
+.md-typeset a:hover {
+  color: var(--weaver-blue);
+  text-decoration-color: currentColor;
+}
+
+.md-typeset .headerlink {
+  color: var(--weaver-blue);
+  text-decoration: none;
+}
+
+.md-typeset hr {
+  border-color: var(--weaver-line);
+}
+
+.md-typeset blockquote {
+  color: var(--weaver-muted);
+  border-left-color: var(--weaver-blue);
+}
+
+/* Tables remain dense and horizontally scrollable on narrow screens. */
+.md-typeset .md-typeset__table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.md-typeset table:not([class]) {
+  display: table;
+  width: 100%;
+  border: 1px solid var(--weaver-line);
+  border-radius: 0.45rem;
+  background: var(--weaver-surface);
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.md-typeset table:not([class]) th {
+  color: var(--weaver-ink);
+  background: var(--weaver-paper-deep);
+  font-size: 0.72rem;
+  letter-spacing: 0.015em;
+}
+
+.md-typeset table:not([class]) th,
+.md-typeset table:not([class]) td {
+  padding: 0.58rem 0.75rem;
+  border-color: var(--weaver-line);
+  vertical-align: top;
+}
+
+.md-typeset table:not([class]) tbody tr:hover {
+  background: color-mix(in srgb, var(--weaver-blue-soft) 42%, transparent);
+}
+
+/* Product code treatment: dark blocks, quiet chrome, readable inline tokens. */
+.md-typeset code,
+.md-typeset pre,
+.md-typeset kbd {
+  font-family: var(--weaver-mono);
+  font-variant-ligatures: none;
+}
+
+.md-typeset code {
+  border-radius: 0.25rem;
+}
+
+.md-typeset :not(pre) > code {
+  color: var(--weaver-blue-dark);
+  background: var(--weaver-blue-soft);
+  box-shadow: none;
+  word-break: break-word;
+}
+
+.md-typeset pre > code {
+  color: var(--weaver-code-text);
+  background: var(--weaver-code);
+  font-size: 0.69rem;
+  line-height: 1.68;
+}
+
+/*
+ * Own the required Pygments token colours. Metadata comments and docstrings are
+ * authored source, so their contrast must not depend on Material's defaults.
+ */
+.md-typeset .highlight :is(.c, .c1, .cm, .cp, .cs) {
+  color: var(--weaver-syntax-comment);
+}
+
+.md-typeset .highlight .sd {
+  color: var(--weaver-syntax-docstring);
+}
+
+.md-typeset .highlight :is(.nt, .na) {
+  color: var(--weaver-syntax-key);
+}
+
+.md-typeset .highlight :is(.l, .ld) {
+  color: var(--weaver-syntax-value);
+}
+
+.md-typeset .highlight :is(.s, .s1, .s2, .sa, .sb, .sc, .dl, .se, .sh, .si, .sr, .ss, .sx) {
+  color: var(--weaver-syntax-string);
+}
+
+.md-typeset .highlight .p {
+  color: var(--weaver-syntax-punctuation);
+}
+
+.md-typeset .highlight :is(.o, .ow) {
+  color: var(--weaver-syntax-operator);
+}
+
+.md-typeset .highlight :is(.k, .kc, .kd, .kn, .kp, .kr, .kt) {
+  color: var(--weaver-syntax-keyword);
+}
+
+.md-typeset .highlight :is(.m, .mb, .mf, .mh, .mi, .mo, .il) {
+  color: var(--weaver-syntax-number);
+}
+
+.md-typeset :is(.language-bash.highlight, .language-shell.highlight, .language-console.highlight) code,
+.md-typeset :is(.language-bash.highlight, .language-shell.highlight, .language-console.highlight) :is(.nb, .nv) {
+  color: var(--weaver-syntax-command);
+}
+
+.md-typeset .highlight,
+.md-typeset .highlighttable {
+  border: 1px solid var(--weaver-line);
+  border-radius: 0.55rem;
+  background: var(--weaver-code);
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.md-typeset .highlighttable .linenos {
+  color: #9fb0c8;
+  background: #0b1624;
+}
+
+.md-clipboard {
+  color: #b9c7da;
+}
+
+.md-clipboard:hover,
+.md-clipboard:focus {
+  color: #ffffff;
+}
+
+/* Admonitions use restrained semantic keylines, not card-like shadows. */
+.md-typeset .admonition,
+.md-typeset details {
+  color: var(--weaver-ink-soft);
+  background: var(--weaver-surface);
+  border: 1px solid var(--weaver-line);
+  border-left: 3px solid var(--weaver-blue);
+  border-radius: 0 0.45rem 0.45rem 0;
+  box-shadow: none;
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  color: var(--weaver-ink);
+  background: color-mix(in srgb, var(--weaver-blue-soft) 62%, var(--weaver-surface));
+  font-weight: 680;
+}
+
+.md-typeset .admonition-title::before,
+.md-typeset summary::before {
+  color: var(--weaver-blue);
+  background-color: currentColor;
+}
+
+.md-typeset .warning,
+.md-typeset .danger,
+.md-typeset .failure {
+  border-left-color: #b84a28;
+}
+
+.md-typeset .success,
+.md-typeset .check,
+.md-typeset .done {
+  border-left-color: #07793d;
+}
+
+.md-typeset .tabbed-labels {
+  box-shadow: 0 -1px var(--weaver-line) inset;
+}
+
+.md-typeset .tabbed-labels > label {
+  color: var(--weaver-muted);
+}
+
+.md-typeset .tabbed-labels > label:hover,
+.md-typeset .tabbed-set > input:checked + label {
+  color: var(--weaver-blue-dark);
+}
+
+.md-typeset .tabbed-set > input:checked + label {
+  border-color: var(--weaver-blue);
+}
+
+.md-footer {
+  color: var(--weaver-muted);
+  background: var(--weaver-paper-deep);
+  border-top: 1px solid var(--weaver-line);
+}
+
+.md-footer-meta {
+  background: var(--weaver-paper-deep);
+}
+
+.md-footer__link,
+.md-footer-meta a {
+  color: var(--weaver-muted);
+}
+
+.md-footer__link:hover,
+.md-footer-meta a:hover {
+  color: var(--weaver-blue);
+}
+
+@media screen and (max-width: 76.234375em) {
+  .md-nav--primary .md-nav__title[for="__drawer"] {
+    color: var(--weaver-ink);
+    background: var(--weaver-paper-deep);
+  }
+
+  .md-nav--primary .md-nav__title .md-logo {
+    color: var(--weaver-ink);
+  }
+}
+
+@media screen and (max-width: 44.984375em) {
+  .md-header__inner {
+    min-height: 2.9rem;
+  }
+
+  .md-header__title {
+    margin-left: 0.25rem;
+  }
+
+  .weaver-home-link {
+    margin: 0;
+    padding-inline: 0.3rem;
+    font-size: 0.68rem;
+  }
+
+  .md-typeset {
+    font-size: 0.8rem;
+  }
+
+  .md-typeset h1 {
+    font-size: 1.65rem;
+  }
+
+  .md-typeset table:not([class]) {
+    min-width: 32rem;
+  }
+}
+
+@media screen and (max-width: 29.984375em) {
+  .md-header__topic:first-child {
+    font-size: 0.75rem;
+  }
+
+  .md-header__source {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

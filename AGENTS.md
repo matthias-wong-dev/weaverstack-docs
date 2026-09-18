@@ -27,18 +27,24 @@ Read `/opt/data/repos/weaverstack/PROSE.md` before writing. Use the public terms
 
 Write as one senior engineer to another. Use plain, direct language. Prefer small working examples to ceremonial explanation. Reference pages should be terse and searchable; concept pages should explain the mental model needed to reason correctly.
 
-Avoid claims such as “powerful”, “seamless”, “robust” and “enterprise-grade”. State concrete behaviour instead. Do not document a feature merely because it would complete a pattern.
+Avoid claims such as “powerful”, “seamless”, “robust”, “safe”, “predictable” and “enterprise-grade”. State the mechanism or property instead. Do not tell readers what behaviour or state they “can rely on”; describe the defined behaviour or recorded state directly. Do not write “current versions of Weaver” unless a version distinction matters.
+
+Use Weaver's user model rather than deriving a taxonomy from internal nouns. A project contains Weaver documents such as Tables, Folders, Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata. Do not introduce `resource` or `artefact` as a user-facing category.
 
 Examples use a neutral parcel and logistics domain. Keep them small and independent rather than building one giant tutorial estate.
 
-## Initial site structure
+## Public site structure
 
-- Get started
-- Guides
-- Architecture and concepts
-- Reference
-- Contracts
-- Advanced
-- Contributing
+The rendered site has five reader-facing sections, each with one job:
 
-Coverage comes before volume: give each public concept, command, API and contract an authoritative home before filling every page.
+- **Getting started** — the shortest complete path to a working Weaver project.
+- **Core concepts** — the mental model needed to reason about Weaver.
+- **Basics** — normal authoring, development and operating workflows, using defaults and inference first.
+- **Advanced** — deeper mechanisms and non-basic operating patterns.
+- **Reference** — exact supported syntax, interfaces and behaviour.
+
+Do not add public **Guides**, **Contracts**, **Contributing** or **Architecture** sections. Exact behavioural material belongs under Reference; maintainer instructions belong in root `CONTRIBUTING.md`, `AGENTS.md`, `PROSE.md` and `COVERAGE.md`.
+
+`COVERAGE.md` is the internal documentation ledger. Keep it outside `docs/` and out of public navigation. A target path records ownership, not completion.
+
+Coverage comes before volume: give each public concept, command, API and behaviour one authoritative home before filling every page. Keep concept, task, mechanism and reference material separate, and link to the owning page rather than repeating a partial specification.

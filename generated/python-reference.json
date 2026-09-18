@@ -1,0 +1,278 @@
+{
+  "export_count": 51,
+  "exports": [
+    {
+      "kind": "class",
+      "name": "Assumption"
+    },
+    {
+      "kind": "class",
+      "name": "BuildResult"
+    },
+    {
+      "kind": "class",
+      "name": "CommandError"
+    },
+    {
+      "kind": "class",
+      "name": "ConfigError"
+    },
+    {
+      "kind": "class",
+      "name": "ExampleOutcome"
+    },
+    {
+      "kind": "class",
+      "name": "FabricItemOutcome"
+    },
+    {
+      "kind": "class",
+      "name": "Folder"
+    },
+    {
+      "kind": "class",
+      "name": "HealthFinding"
+    },
+    {
+      "kind": "class",
+      "name": "HealthReport"
+    },
+    {
+      "kind": "class",
+      "name": "HealthSection"
+    },
+    {
+      "kind": "class",
+      "name": "IdentityError"
+    },
+    {
+      "kind": "class",
+      "name": "InitialiseReport"
+    },
+    {
+      "kind": "class",
+      "name": "Lakehouse"
+    },
+    {
+      "kind": "class",
+      "name": "LoadActivity"
+    },
+    {
+      "kind": "class",
+      "name": "LoadMessage"
+    },
+    {
+      "kind": "class",
+      "name": "LoadNodeReport"
+    },
+    {
+      "kind": "class",
+      "name": "LoadResult"
+    },
+    {
+      "kind": "class",
+      "name": "LoadRunReport"
+    },
+    {
+      "kind": "class",
+      "name": "MirrorPlan"
+    },
+    {
+      "kind": "class",
+      "name": "MirrorResult"
+    },
+    {
+      "kind": "class",
+      "name": "Shortcut"
+    },
+    {
+      "kind": "class",
+      "name": "SparkSqlAssumption"
+    },
+    {
+      "kind": "class",
+      "name": "SparkSqlTable"
+    },
+    {
+      "kind": "class",
+      "name": "SparkSqlTest"
+    },
+    {
+      "kind": "class",
+      "name": "Table"
+    },
+    {
+      "kind": "class",
+      "name": "Test"
+    },
+    {
+      "kind": "class",
+      "name": "ValidationError"
+    },
+    {
+      "kind": "class",
+      "name": "ValidationNodeReport"
+    },
+    {
+      "kind": "class",
+      "name": "ValidationRunReport"
+    },
+    {
+      "kind": "class",
+      "name": "View"
+    },
+    {
+      "kind": "class",
+      "name": "WeaverError"
+    },
+    {
+      "kind": "class",
+      "name": "WeaverObject"
+    },
+    {
+      "kind": "class",
+      "name": "WipeItemResult"
+    },
+    {
+      "kind": "class",
+      "name": "WipePlan"
+    },
+    {
+      "kind": "class",
+      "name": "WipeReport"
+    },
+    {
+      "kind": "class",
+      "name": "WipeResult"
+    },
+    {
+      "kind": "value",
+      "name": "__version__"
+    },
+    {
+      "kind": "function",
+      "name": "build",
+      "signature": "(source=None, *, items: str | Sequence[str] | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, bundle_only: bool=False, bundle_path: str | Path | None=None, session=None) -> BuildResult"
+    },
+    {
+      "kind": "function",
+      "name": "check_mirror",
+      "signature": "(plan: MirrorPlan, *, session=None) -> ResolvedMirror"
+    },
+    {
+      "kind": "function",
+      "name": "current_workspace",
+      "signature": "() -> Workspace"
+    },
+    {
+      "kind": "function",
+      "name": "default_lakehouse",
+      "signature": "(spark: Any) -> Lakehouse"
+    },
+    {
+      "kind": "function",
+      "name": "health",
+      "signature": "(items: str | Sequence[str] | None=None, *, as_of: str | datetime | None=None, workspace: str | None=None, catalogue: str | None=None, workspace_config: str | Path | None=None, inventories: bool=True, session=None) -> HealthReport"
+    },
+    {
+      "kind": "function",
+      "name": "initialise",
+      "signature": "(project_folder, *, workspace: str | None=None, catalogue: str=DEFAULT_CATALOGUE, environment: str=DEFAULT_ENVIRONMENT, lakehouse: str | None=None, warehouse: str | None=None, example: bool=False, publish_environment: bool=False, install_weaver: bool | None=None, dry_run: bool=False, session=None, client=None) -> InitialiseReport"
+    },
+    {
+      "kind": "function",
+      "name": "lakehouse_for",
+      "signature": "(resolver: Any, item: ItemRef | str) -> Lakehouse"
+    },
+    {
+      "kind": "function",
+      "name": "load",
+      "signature": "(items: str | Sequence[str] | None=None, *, names: str | Sequence[str] | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, fault_tolerant: bool=False, dry_run: bool=False, reload: bool=False, stale: bool=False, as_of: str | datetime | None=None, session=None) -> LoadRunReport"
+    },
+    {
+      "kind": "function",
+      "name": "mirror",
+      "signature": "(items: str | Sequence[str] | None=None, *, no_item: bool=False, plan: MirrorPlan | ResolvedMirror | None=None, workspace: str | None=None, catalogue: str | None=None, mirror: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, session=None) -> MirrorResult"
+    },
+    {
+      "kind": "function",
+      "name": "plan_mirror",
+      "signature": "(items: str | Sequence[str] | None=None, *, no_item: bool=False, workspace: str | None=None, catalogue: str | None=None, mirror: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, session=None) -> MirrorPlan"
+    },
+    {
+      "kind": "function",
+      "name": "plan_wipe",
+      "signature": "(targets: str | Iterable[str]=(), *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, session=None) -> WipePlan"
+    },
+    {
+      "kind": "function",
+      "name": "session",
+      "signature": "(*, workspace: Any=None, catalogue: str | None=None, environment: str | None=None, workspace_config: Any=None, credential: Any=None)"
+    },
+    {
+      "kind": "function",
+      "name": "test",
+      "signature": "(items: str | Sequence[str] | None=None, *, name: str | None=None, file: str | Path | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, dry_run: bool=False, strict: bool=False, session=None) -> ValidationRunReport"
+    },
+    {
+      "kind": "function",
+      "name": "wipe",
+      "signature": "(targets: str | Iterable[str]=(), *, plan: WipePlan | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, dry_run: bool=False, session=None) -> WipeResult"
+    }
+  ],
+  "ownership": {
+    "Assumption": "docs/reference/python/validation.md",
+    "BuildResult": "docs/reference/python/results.md",
+    "CommandError": "docs/reference/python/errors.md",
+    "ConfigError": "docs/reference/python/errors.md",
+    "ExampleOutcome": "docs/reference/python/results.md",
+    "FabricItemOutcome": "docs/reference/python/results.md",
+    "Folder": "docs/reference/python/objects.md",
+    "HealthFinding": "docs/reference/python/results.md",
+    "HealthReport": "docs/reference/python/results.md",
+    "HealthSection": "docs/reference/python/results.md",
+    "IdentityError": "docs/reference/python/errors.md",
+    "InitialiseReport": "docs/reference/python/results.md",
+    "Lakehouse": "docs/reference/python/session.md",
+    "LoadActivity": "docs/reference/python/results.md",
+    "LoadMessage": "docs/reference/python/results.md",
+    "LoadNodeReport": "docs/reference/python/results.md",
+    "LoadResult": "docs/reference/python/results.md",
+    "LoadRunReport": "docs/reference/python/results.md",
+    "MirrorPlan": "docs/reference/python/results.md",
+    "MirrorResult": "docs/reference/python/results.md",
+    "Shortcut": "docs/reference/python/objects.md",
+    "SparkSqlAssumption": "docs/reference/python/validation.md",
+    "SparkSqlTable": "docs/reference/python/objects.md",
+    "SparkSqlTest": "docs/reference/python/validation.md",
+    "Table": "docs/reference/python/objects.md",
+    "Test": "docs/reference/python/validation.md",
+    "ValidationError": "docs/reference/python/errors.md",
+    "ValidationNodeReport": "docs/reference/python/results.md",
+    "ValidationRunReport": "docs/reference/python/results.md",
+    "View": "docs/reference/python/objects.md",
+    "WeaverError": "docs/reference/python/errors.md",
+    "WeaverObject": "docs/reference/python/objects.md",
+    "WipeItemResult": "docs/reference/python/results.md",
+    "WipePlan": "docs/reference/python/results.md",
+    "WipeReport": "docs/reference/python/results.md",
+    "WipeResult": "docs/reference/python/results.md",
+    "__version__": "docs/reference/python/index.md",
+    "build": "docs/reference/python/operations.md",
+    "check_mirror": "docs/reference/python/operations.md",
+    "current_workspace": "docs/reference/python/session.md",
+    "default_lakehouse": "docs/reference/python/session.md",
+    "health": "docs/reference/python/operations.md",
+    "initialise": "docs/reference/python/operations.md",
+    "lakehouse_for": "docs/reference/python/session.md",
+    "load": "docs/reference/python/operations.md",
+    "mirror": "docs/reference/python/operations.md",
+    "plan_mirror": "docs/reference/python/operations.md",
+    "plan_wipe": "docs/reference/python/operations.md",
+    "session": "docs/reference/python/session.md",
+    "test": "docs/reference/python/operations.md",
+    "wipe": "docs/reference/python/operations.md"
+  },
+  "page_count": 7,
+  "schema_version": 1
+}

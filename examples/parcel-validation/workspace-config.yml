@@ -1,0 +1,5 @@
+workspace: Parcel Development
+catalogue: Warehouse/Catalogue
+
+targets:
+  Warehouse/Operations: Operations_Dev

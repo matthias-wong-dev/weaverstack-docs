@@ -1,0 +1,6 @@
+workflows:
+  full:
+    - build
+    - load
+    - test
+    - health
