@@ -1,71 +1,93 @@
-# Fault-tolerance contract
+# Fault and outcome vocabulary
 
-Fault tolerance controls how much selected work is attempted after a failure. It does not change a failed outcome, retry work, widen selection, undo completed changes or make an operation transactional.
+Status words are operation-specific. The same spelling can appear at different levels, and different operations do not share one report schema, state machine or compatibility contract.
 
-Failure barriers differ by operation. A continuation rule for Load does not apply to Build, Test or a workflow.
+## Build and install
 
-## Build barriers
+A final installation action is:
 
-Build has no fault-tolerant mode. Installation is divided by ordered barriers. When an action fails, that sequence fails, every planned action receives a reported outcome and later installation work is skipped. Catalogue certification that depends on failed physical work is not published as successful.
+- `succeeded` — the action completed;
+- `failed` — the action was attempted and failed; or
+- `skipped` — the action was not attempted because an earlier installation barrier failed, or the action is a supported host skip.
 
-Actions completed before the barrier remain applied. Build does not roll them back as one operation. A later Build reads the project, catalogue and inventory again and reconciles the state it finds; it does not resume the earlier report.
+`pending` and `running` are action/report lifecycle states in the public report types; a completed installation report settles planned actions to the final terms above. An installation report is `succeeded` when no action failed and `failed` otherwise. A supported skipped action does not by itself fail the report.
 
-A Build result reports failure and preserves its per-action evidence. Preflight failures that occur before installation runs leave the plan unexecuted rather than producing successful action outcomes.
+A Build result uses `succeeded` or `failed`. Pre-installation command errors have no installation report.
 
-## Load barriers
+## Load
 
-An item-wide Load uses the installed dependency graph. There are two distinct kinds of upstream problem.
+Execution nodes use:
 
-A **resolved execution failure** occurs after Weaver resolved the node and attempted its installed work. Without fault tolerance, the first such failure stops later scheduling, blocks its dependants and leaves otherwise independent nodes that were not reached pending. With fault tolerance:
+| Node status | Meaning |
+| --- | --- |
+| `pending` | Selected but not started, including work left unreached by fail-fast scheduling. |
+| `running` | Execution has started and has not yet settled. |
+| `succeeded` | Executed work established a clean result. |
+| `succeeded_with_rejects` | Valid work was published and the primitive reported rejected rows or files. |
+| `failed` | The primitive or its dispatch failed. |
+| `blocked` | Upstream work could not establish the prerequisite for this node. |
+| `skipped` | Execution policy or supported host behaviour omitted the work; dependency failures use `blocked`, not `skipped`. |
 
-- independent selected branches continue; and
-- a selected dependant may run after the failed upstream node has settled.
+Load dry-run nodes instead use `validated`, `invalid` and `blocked`. `validated` means the target and primitive resolved without execution. `invalid` means the node's own primitive or target could not be resolved. Dry-run `blocked` means an upstream prerequisite did not validate.
 
-The dependant reads the state left by that failed execution. The upstream node is not treated as successful.
+An execution report is:
 
-An **unresolved or invalid node** cannot be dispatched as valid installed work. Its descendants remain blocked under either policy. Fault tolerance still permits unrelated valid branches to run. A dependency cycle is invalid before this continuation rule can apply.
+- `succeeded` when no executed branch failed or reported rejects;
+- `succeeded_with_rejects` when all executable branches completed and at least one reported rejects;
+- `partially_succeeded` when at least one branch completed and at least one failed or was blocked; or
+- `failed` when no requested branch completed, or fail-fast stopped the task.
 
-Name selection remains an override: it contains only the named installed objects and has no dependency expansion or dependency ordering to continue through.
+A dry-run report is `succeeded` when the plan validates and `invalid` otherwise. An empty execution report is `succeeded`; the current empty dry-run report is `invalid`, except the operation's empty stale selection is returned as a successful no-work run before that generic final-status rule.
 
-The final report retains failed, blocked and pending outcomes. Fault tolerance can therefore produce more completed work, but a mixed report is still partially successful and exits non-zero. When no requested branch completes, or fail-fast stops the run, the run fails.
+## Test
 
-## Rejected input and invalid target state
+Test node and run reports use the same four terms:
 
-For a Table or Folder, fault tolerance also controls recoverable incoming-row or incoming-file rejection. Without it, rejected input stops that object's load before the target is modified through the reconciliation path. With it, rejected input is excluded and accepted input can be published; the result records rejects and does not advance the bookmark.
+| Status | Meaning |
+| --- | --- |
+| `passed` | The validation ran and found no discrepancy or violation. |
+| `failed` | The validation ran and found discrepancy or violation rows. |
+| `invalid` | The validation could not be evaluated. This is not a failed data finding. |
+| `planned` | Dry-run resolution completed and the validation did not run. |
 
-Fault tolerance does not permit a change that would leave a declared unique key invalid. It also does not waive a stability threshold. Those conditions fail the object without applying the proposed target change through that path. A separate explicit threshold waiver applies only to the Table load that receives it.
+A run is `invalid` if any selected node is invalid; otherwise `failed` if any node failed; otherwise `planned` when all selected nodes are planned; otherwise `passed`. An empty installed selection is `passed`.
 
-## Test barriers
+These are report terms. Persisted `_.TestStatus` uses the catalogue vocabulary below rather than storing `passed` and `invalid` under those spellings.
 
-An installed Test run evaluates every selected Test and Assumption. A failed validation is a completed finding; a validation that cannot run is an invalid outcome. Neither blocks another selected validation because validations are independent consumers, not a producer chain.
+## Health
 
-Test therefore uses continuation internally but exposes no Load fault-tolerance switch. A one-file source Test has one selected validation and publishes no installed-estate status or history.
+Health findings, sections and the overall report use `green`, `amber` and `red`:
 
-## Workflow barriers
+- `green` — no worse finding was produced for the assessed subjects;
+- `amber` — state is pending, stale, rejected or otherwise not established as current without being a recorded hard failure; and
+- `red` — recorded failure, error, blockage or Build inconsistency makes the assessed state failed.
 
-A workflow parses and settles its sequence before execution, then runs commands in file order. It stops at the first command that returns failure or raises a Weaver error. Later commands do not run.
+The overall status is the worst section severity. Only `green` is a successful Health CLI result.
 
-Fault tolerance remains local to a nested Load. If that Load finishes with a failed or partially successful report, the workflow stops even though the Load attempted additional branches. Commands completed earlier in the workflow remain applied.
+## Mirror, Wipe and Workflow
 
-An interactive Session has a different boundary: a failed command returns to its prompt, allowing a later command to be issued as a new operation. If an acquired execution capability fails, Weaver does not replace it part-way through the failed operation; a later operation may attempt to reacquire it.
+A returned Mirror result currently has `status: succeeded`. Mirror raises on failure rather than returning a partial failed `MirrorResult`.
 
-## Recording partial work
+Each completed Wipe item is `emptied`. A catalogue retained by `unbind` is `preserved` and carries `unbound: true`. A raised Wipe failure has no completed aggregate result for later or partly processed targets.
 
-Build reports each planned installation action as succeeded, failed or skipped. Load and installed Test runs record settled node outcomes with their workflow identifier. A blocked Load records current status and log evidence but no Load statistic because no data work ran. Bookmarks advance only for clean successful loads.
+Workflow has no nested universal outcome vocabulary. It returns success only when all entries return success, or when an available confirmation was explicitly declined before execution. Missing authorisation, a failed command status or a Weaver error returns failure and identifies the first stopped entry. Nested reports retain their own vocabularies.
 
-A workflow shares one workflow identifier across recorded Load and Test work that actually ran. The failed command and earlier commands can therefore be correlated; later commands have no outcomes because they were not executed.
+## Persisted catalogue outcomes
 
-No operation in this contract retries failed work automatically. A later attempt is a new operation against the state left behind.
+Current Load/Test state and operational Log evidence use these catalogue values:
 
-## Defined behaviour
+- `Pending` — no outcome for the current installed incarnation;
+- `Skipped` — work was deliberately omitted;
+- `Succeeded` — work completed acceptably;
+- `Failed` — evaluated work produced an unacceptable result;
+- `Error` — work could not be evaluated;
+- `Blocked` — an upstream prerequisite prevented execution; and
+- `Rejected` — Load completed with rejected input while valid input may have landed.
 
-The Fault-tolerance contract specifies that Weaver:
+Capitalisation above is the stored display value; Python constants and report mappings use lowercase spellings. Catalogue terms are not interchangeable with Load report, Test report, Build action or Health terms. For example, Test report `passed` maps to persisted `Succeeded`, Test report `invalid` maps to persisted `Error` or `Blocked` according to cause, and Load report `succeeded_with_rejects` maps to persisted `Rejected`.
 
-1. stops Build at its installation barrier and skips later planned work;
-2. stops ordinary Load scheduling after an execution failure while reporting every planned node;
-3. lets fault-tolerant Load continue independent work and descendants of settled execution failures;
-4. keeps descendants of unresolved or invalid Load work blocked;
-5. keeps row-rejection continuation separate from target-validity and stability checks;
-6. evaluates selected validations independently;
-7. stops a workflow after its first unsuccessful command; and
-8. preserves completed effects and evidence without operation-wide rollback or automatic retry.
+## Message severity and compatibility
+
+Load message objects currently use `info`, `warning` and `error` severity. These describe messages, not node or report success.
+
+The terms on this page are the exact current surfaced vocabularies. Their containing fields and JSON documents are command-specific and mostly unversioned. Do not parse one operation's term set as another operation's schema or infer compatibility between them. See [Machine-readable interfaces](../machine-readable-output.md) for current field placement.

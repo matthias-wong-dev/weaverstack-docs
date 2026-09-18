@@ -1,72 +1,51 @@
-# Workflow contract
+# Workflow behaviour
 
-A Workflow is a named sequence of Weaver CLI commands. It composes existing commands in one Session and workspace; it does not introduce a second operation language or a transaction around the sequence.
+A Workflow is an ordered list of ordinary Weaver CLI command lines executed through one Session. It is not a shell, a second operation language or a transaction.
 
-## Workflow file
+## Discovery and YAML shape
 
-The default file is `./workflow.yml`. `--file PATH` selects another YAML file. The document must contain a top-level `workflows` mapping, and the requested name must map to a non-empty list of strings:
+`weaver workflow NAME` reads `./workflow.yml` relative to the process working directory. `--file PATH` selects another file; Weaver does not search parent directories or alternate filenames.
+
+The YAML document must be a top-level mapping containing `workflows`. `workflows` must map names to non-empty lists, and every entry in the selected list must be a non-empty string.
 
 ```yaml
 workflows:
   refresh:
-    - build ./parcel --item Warehouse/Operations
+    - build . --item Warehouse/Operations
     - load Warehouse/Operations
     - test Warehouse/Operations
 ```
 
-Each string is one ordinary Weaver command line. A leading `weaver` is optional, and quoted arguments are preserved:
+A missing file, malformed YAML, missing or non-mapping `workflows`, unknown name, empty sequence, non-string entry or empty entry fails before execution.
 
-```yaml
-workflows:
-  refresh:
-    - weaver build . --workspace-config "parcel development.yml"
-```
+## Command parsing
 
-Every entry is parsed by the normal Weaver command parser before anything runs. An invalid command or option fails the Workflow before its first entry.
+Each entry is tokenised as one command line and parsed by the ordinary Weaver parser. A leading `weaver` is optional. Shell quoting is honoured, but shell operators, redirection, environment expansion, command substitution and chaining are rejected. Non-Weaver programs fail parser validation.
 
-A Workflow is not a shell. Pipes, redirection, command substitution, environment expansion, command chaining and non-Weaver programs are rejected. `session` is excluded because the Workflow already owns a Session, and `workflow` is excluded so Workflows cannot nest.
+`session` and `workflow` entries are forbidden: a Workflow already owns its Session, and Workflows cannot nest.
 
-## Shared workspace and Session
+Every entry is parsed before the sequence is displayed, confirmed or run. One invalid command or option therefore prevents the first command from running.
 
-Every entry runs in one Session and one Fabric workspace. Outer `--workspace`, `--workspace-config`, `--catalogue` and `--environment` values provide defaults inherited by entries that do not set them. An entry may resolve to the same workspace configuration, but entries cannot select different workspaces.
+## One workspace and one Session
 
-If the caller supplies an open Session, the Workflow joins it and leaves it open. Otherwise the Workflow opens one Session for the complete sequence. Entries share one workflow identifier, which correlates catalogue evidence produced by Load and Test.
+Outer `--workspace`, `--workspace-config`, `--catalogue` and `--environment` values form the Workflow's default workspace context. If neither the outer command nor an entry names one, normal workspace discovery may use `workspace-config.yml` in the working directory. An entry's ordinary explicit values still apply within that context.
 
-The Workflow prepares the union of capabilities and known Lakehouse attachments required by its entries before running the first command. This reuse does not alter the individual operation contracts or permit an entry to move to another workspace.
+All explicitly resolved entry configurations must equal the Workflow's resolved `Workspace`. If more than one distinct configuration is named, the Workflow fails before execution. One Workflow cannot switch Fabric workspace.
 
-## Validation, display and confirmation
+A caller-supplied open Session is reused and left open. Otherwise the Workflow creates one Session and closes it after the sequence. Before the first command it may prepare the union of declared capabilities and known physical Lakehouse attachments for all entries. Preparation changes acquisition timing only; each command retains its own selection and capability requirements.
 
-Weaver loads the named sequence, parses every entry and resolves the shared workspace before displaying or executing it. It displays the workflow file and the complete numbered sequence.
+All executed entries share one workflow identifier for Load and Test catalogue evidence.
 
-Without `--yes`, an interactive invocation asks once whether to execute that displayed sequence. Declining runs nothing and is not an execution failure. If confirmation is required but no prompt is available, the Workflow fails and names `--yes` as the required action.
+## Confirmation
 
-Confirmation authorises the complete displayed sequence, including destructive entries, so individual commands do not ask again. `--non-interactive` is inherited by every entry and can only make interaction stricter; it prevents input, keypress waits and browser sign-in but does not imply approval. Unattended execution therefore requires `--non-interactive --yes`.
+After parsing and workspace resolution, the CLI displays the selected file and complete numbered sequence.
 
-## Ordered execution and failure
+Without `--yes`, an interactive run asks once about that sequence. Declining runs nothing and returns success because execution was cancelled by an answered prompt. If no prompt is available, missing `--yes` is an error and returns failure.
 
-Entries run in file order with their ordinary parsed arguments. The Workflow stops at the first entry that returns a failure status or raises a Weaver error. The failing entry is reported, and later entries do not run.
+The one Workflow confirmation sets authorisation for every entry, including Mirror and Wipe, so nested commands do not prompt again. Outer `--non-interactive` propagates to every entry and can only make an entry stricter; it disables input, keypress waits and browser sign-in but does not imply authorisation. Unattended execution therefore needs `--non-interactive --yes` when those policies are required.
 
-A Workflow is not transactional. State changed by completed entries, and partial state left by the failing entry under that operation's own contract, remains in place. Weaver does not roll earlier Build, Load, Test, Mirror or Wipe effects back when a later entry fails. Recovery is the recovery procedure for the operation that failed, followed by rerunning an appropriate sequence.
+## Execution and failure
 
-Each entry retains its own selection, dry-run, fault-tolerance, strictness, confirmation and result semantics. Workflow composition changes only Session reuse, shared workspace resolution, one-time confirmation, correlation and stop-on-first-failure behaviour.
+Entries run in file order with their ordinary parsed arguments. The Workflow stops at the first handler that returns a non-zero status or raises a Weaver error. It reports that entry and does not run later entries. A successful Workflow reports the number of completed commands; `--timings` reports Session timings after success or failure.
 
-## Outcome
-
-A Workflow succeeds only when every entry succeeds. It reports the number of completed commands. On failure it identifies the first unsuccessful entry and returns a non-zero status. `--timings` reports Session timings after either success or failure.
-
-A user who declines an available confirmation receives a zero status because no execution was attempted. Missing non-interactive authorisation is a failure and returns non-zero.
-
-## Defined behaviour
-
-The Workflow contract specifies that Workflow:
-
-1. reads one named, non-empty sequence from the selected YAML file;
-2. accepts ordinary Weaver command lines and rejects shell language and nested sessions or Workflows;
-3. parses every entry and resolves one shared workspace before execution;
-4. runs entries in file order through one supplied or managed Session;
-5. applies outer interaction and workspace values as inherited defaults without allowing a workspace change;
-6. displays and confirms the complete sequence once;
-7. stops at the first failed status or Weaver error; and
-8. leaves completed and partial operation state in place rather than rolling the sequence back.
-
-See [`weaver workflow`](../cli/workflow.md), [Session and workspace helpers](../python/session.md), and the contracts for each command placed in the sequence.
+Each command keeps its own selection, dry-run, fault-tolerance, strictness, publication and result semantics. A Workflow does not retry failed work. State changed by completed commands and partial state left by the failing command remain. There is no Workflow rollback; recovery follows the failed operation's behaviour and starts a new command or Workflow against the remaining state.

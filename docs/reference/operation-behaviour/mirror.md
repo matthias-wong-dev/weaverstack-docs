@@ -1,105 +1,70 @@
-# Mirror contract
+# Mirror behaviour
 
-Mirror creates a destination estate from another installed catalogue. It copies installed and current state, optionally rebinds logical items to destination targets, and represents their data as borrowed until a later Build materialises selected work locally.
+Mirror reconstructs a destination catalogue from another installed catalogue. It can also replace selected destination items with borrowed representations of their source installations.
 
-Mirror is destructive at every displayed destination. It is not a data backup, a dry run or an operation-wide transaction.
+## Source and destination
 
-## Source, destination and configuration
+`mirror` / `--mirror` names the source catalogue. `catalogue` / `--catalogue` names the destination when a mirror source is configured or both values are supplied explicitly. Explicit values override the corresponding configuration values.
 
-The mirror source is the catalogue read from. The destination catalogue is emptied and rebuilt.
+Without a configured `mirror`, configured `catalogue` is the source and a separate destination is required. With both configured, `mirror` is the source and `catalogue` is the destination.
 
-- `mirror` or `--mirror` names the source.
-- `catalogue` or `--catalogue` names the destination when a configured mirror source is present or when both sides are supplied explicitly.
-- an explicit source or destination overrides the corresponding configured value.
+Source and destination must resolve to distinct Warehouses in the operation's workspace. A workspace-qualified source or destination in another workspace is refused. Mirror does not copy between resolved workspaces.
 
-A configuration that names only `catalogue` describes a source estate; Mirror still requires a separately named destination. Weaver does not infer that one Warehouse is both sides. With both `mirror` and `catalogue` configured, `mirror` is the source and `catalogue` is the destination.
+The source must contain the catalogue tables required by this Weaver revision. A missing, unreadable or incompatible source fails before any destination is emptied.
 
-Source and destination catalogues must be distinct Warehouses in the resolved workspace. The source must contain a compatible Weaver catalogue. A missing, unreadable or incompatible source is rejected before any destination is emptied.
+## Item selection
 
-Omitting item selection chooses every target declared by the selected workspace configuration. `--item ITEM` uses that logical item's configured destination; `ITEM=TARGET` supplies or overrides it. `--no-item`, or `no_item=True`, copies only the catalogue. Item selection and no-item selection are mutually exclusive.
+Repeatable `--item ITEM[=TARGET]` selects logical items. `ITEM` uses its configured destination; `ITEM=TARGET` supplies or overrides it. Naming no item selects every configured target. `--no-item` selects no item and copies only the catalogue; it is mutually exclusive with `--item`.
 
-Each selected logical item must have a source installation. A destination cannot be shared by two selected items, overlap a physical source read by the same run or collide with the destination catalogue. Rebinding items from an already mirrored source is refused because borrowed state records one source hop; a catalogue-only copy may carry that state without adding another hop.
+Each selected item must have a source installation. Selected logical items cannot repeat. Destination identities are type plus name: two selected outputs cannot share one physical target, collide with the destination catalogue, or overlap any source catalogue or item read by the same run.
 
-## Planning and checking
+A source catalogue containing `_.Mirror` rows may be copied in catalogue-only mode. Selected items cannot be rebound from it: borrowed state records one source hop, so a second hop is refused.
 
-The Python operation separates three boundaries:
+Recorded logical Shortcuts are resolved against the run's final bindings before mutation. Physical Shortcuts retain their recorded workspace and item. Selected producers precede selected consumers where a logical Shortcut requires that order; an unorderable selected cycle is refused.
 
-1. `plan_mirror()` resolves workspace, source, destination and written item selection without reading Fabric.
-2. `check_mirror()` reads and validates the source, resolves source installations, destination bindings, borrowable relations, installed work and recreatable Shortcuts, and returns a settled plan without mutation.
-3. `mirror()` executes that settled plan. Passing an unresolved plan causes it to be checked first.
+## Preflight and authorisation
 
-All logical-to-physical bindings are settled before any write. Logical Shortcuts use the final bindings from that plan; physical Shortcuts retain their recorded workspace and item. Selected producer items are ordered before selected consumers when recorded logical Shortcuts require it.
+The public operation has three boundaries:
 
-The CLI plans and checks before asking for destructive authorisation, displays the settled source, destination and selected target mappings, and executes that same settled plan.
+1. `plan_mirror()` resolves workspace, catalogue roles and written item selection without reading Fabric.
+2. `check_mirror()` proves the source, resolves source installations and final destinations, and checks borrowed relations, deployed work and recreatable Shortcuts without mutation.
+3. `mirror()` executes the settled plan. An unresolved `MirrorPlan` is checked first; a `ResolvedMirror` is executed as supplied.
 
-## Destructive authorisation
+The CLI completes both planning and checking, displays the source, destination and selected mappings, then asks about that settled plan. Mirror has no dry-run mode.
 
-Mirror has no dry-run mode. In an interactive CLI invocation, withholding or declining confirmation leaves destinations unchanged. In non-interactive or JSON mode, `--yes` is required before mutation. `--non-interactive` prevents prompts and browser sign-in but does not grant authorisation.
+An interactive CLI run requires confirmation unless `--yes` is present. JSON mode, a non-interactive run, or a run without a prompt requires `--yes`; otherwise nothing is changed. `--non-interactive` disables prompts and browser sign-in but does not authorise destruction.
 
-Authorisation applies to the destination catalogue and every selected destination target in the displayed plan. It does not change selection or preserve their existing contents.
+Authorisation covers the destination catalogue and every displayed destination target. Existing contents in that scope are not preserved.
 
-## Copied catalogue state
+## Catalogue copy
 
-Execution empties and rebuilds the destination catalogue, then copies installed projection and current state from the source. This includes source item bindings, Registry certification, declaration dictionaries, dependencies, Shortcuts, bookmarks and current Load and Test status. The destination catalogue keeps its own built-in catalogue installation rather than copying the source catalogue's self-binding.
+Execution first empties and rebuilds the destination catalogue, then copies installed projection and current state from the source. The copied state includes source item bindings, Registry certification, declaration dictionaries, dependencies, Shortcuts, bookmarks, and current Load and Test status. The destination keeps its own built-in catalogue installation.
 
-`_.Log` and `_.LoadStatistic` rows are not copied. Their destination tables are rebuilt empty. An existing `_.Mirror` table is copied for a catalogue-only copy, but a run that rebinds selected items refuses an already mirrored source.
+`_.Log` and `_.LoadStatistic` are rebuilt empty rather than copied. In catalogue-only mode, existing `_.Mirror` rows are copied. Unselected logical items retain the copied source bindings.
 
-Unselected logical items retain the physical bindings copied from the source. Each selected item's `_.Installation` binding is switched to its settled destination only after its borrowed physical forms and installed execution work have been created. The destination can therefore describe both selected borrowed items and unselected source-bound items.
+## Selected item state
 
-## Borrowed physical forms
+Each selected destination target is emptied before its borrowed forms are created.
 
-`_.Registry` retains each installed logical object's declared type and signature. `_.Mirror` records the source address and the physical form that represents borrowed data at the destination.
+| Destination | Borrowed data | Local execution state |
+| --- | --- | --- |
+| Warehouse | Views over source Tables and Views; supported recorded Shortcuts become local Views | Required procedures and functions are copied into the destination |
+| Lakehouse | OneLake shortcuts for Tables and Folders; source Views use local wrapper Views; recorded Shortcuts are recreated | The deployed Load and Test file tree is copied into the destination |
 
-For a Warehouse destination:
+`_.Mirror` records each borrowed relation's source and physical form. The selected item's installation binding changes to the destination only after its borrowed forms and deployed work have been created. Copied code is local because execution is dispatched from the destination; it does not make borrowed data locally owned or loadable there.
 
-- borrowed Tables and Views are local Views over source relations;
-- installed procedures and functions needed by Load and Test are copied locally; and
-- recorded Shortcuts are recreated as supported local Views using settled bindings.
+A later Build compares project source with copied Registry certification and destination inventory. An unchanged borrowed object keeps its borrowed form and `_.Mirror` row. A changed or affected selected object has its recorded borrowed form removed, is installed locally, and loses its `_.Mirror` row after the physical work. The estate can therefore contain borrowed and local objects together.
 
-For a Lakehouse destination:
+## Failure, partial effects and re-mirroring
 
-- borrowed Tables and Folders are OneLake shortcuts;
-- a source View is exposed through a local wrapper View;
-- the installed Load and Test file tree is copied locally; and
-- recorded Shortcuts are recreated against their settled physical sources.
+Planning and checking failures leave all destinations intact. Once execution starts, effects are not transactional:
 
-The copied execution work is local because dispatch occurs in the destination item. It does not make borrowed data locally owned. A borrowed object is not loadable at the destination; its current Load state remains sourced from the catalogue where its data is loaded.
+1. the destination catalogue is emptied, rebuilt and populated;
+2. selected targets are then emptied and reconstructed in settled order; and
+3. each selected binding changes last for that item.
 
-## Localisation on Build
+A failure in catalogue rebuild or copy, target emptying, borrowed-form creation, deployed-work copy, Shortcut recreation, mirror recording or binding publication stops the operation. Earlier destructive and completed effects remain. No successful `MirrorResult` is returned for an incomplete run, and Weaver performs no operation-wide rollback.
 
-An unchanged borrowed object remains in its borrowed form and keeps its `_.Mirror` row. Build compares the copied Registry signature and destination inventory with selected project source.
+Running Mirror again is a new reconstruction from the selected source. It empties the same settled destination scope again, so local materialisation inside that scope is replaced by a fresh borrowed baseline. This is a reset, not rollback or continuation of the earlier run.
 
-When a selected borrowed object changes, or is an affected selected descendant, Build:
-
-1. removes the borrowed physical representation using its recorded physical form;
-2. installs the authored local form in the configured destination target;
-3. removes that object's `_.Mirror` record after physical work; and
-4. publishes the resulting local certification.
-
-Unchanged borrowed objects stay borrowed. Unselected items and descendants remain outside that Build. The result may be a mixed estate containing both borrowed and local objects.
-
-## Failure and non-rollback boundaries
-
-Checking the source, item installations, final bindings and recreatable Shortcuts completes before execution begins. These failures leave every destination intact.
-
-Once authorised execution starts, Weaver empties and rebuilds the destination catalogue, then processes selected destination targets in settled order. A later Fabric, copy, Shortcut, installed-work or binding failure does not restore the previous destination catalogue or targets and does not undo earlier completed destinations. No Mirror result is returned as successful unless the complete selected operation finishes.
-
-A later Mirror is a new reconstruction against the source and settled plan. Repeating a successful request converges to the same copied estate, but it is not rollback of an interrupted request.
-
-## Result boundary
-
-A successful result identifies the workspace, source and destination catalogues, emptied destinations, copied catalogue-table counts, historical tables left uncopied, selected logical items and operation-specific counts. These meanings are public; the exact JSON object shape and field ordering are not frozen by this contract.
-
-## Defined behaviour
-
-The Mirror contract specifies that Weaver:
-
-1. resolves source, destination and item bindings without treating one catalogue as both sides;
-2. proves and settles the complete read/write boundary before destructive authorisation;
-3. requires explicit authorisation and exposes no dry-run mode;
-4. rebuilds the destination catalogue from copied installed and current state without copying operational history;
-5. rebinds selected logical items while retaining copied source bindings for unselected items;
-6. represents borrowed Warehouse data as Views and borrowed Lakehouse data as shortcuts or wrapper Views;
-7. keeps installed execution work local while borrowed data remains source-owned;
-8. localises changed and affected selected borrowed objects during Build; and
-9. preserves completed destructive effects when a later Mirror step fails rather than rolling back the operation.
+A successful result reports `status: succeeded`, the workspace and catalogue pair, emptied destinations, copied and uncopied catalogue tables, selected logical items, and kind-specific work counts. See [Machine-readable interfaces](../machine-readable-output.md) for the current unversioned JSON shape.

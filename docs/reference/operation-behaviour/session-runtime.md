@@ -1,170 +1,59 @@
-# Session and runtime
+# Session and runtime behaviour
 
+A Session is a reusable execution context. It resolves and acquires capabilities when operations need them, then reuses healthy acquisitions across commands in the same resolved context.
 
----
+## Workspace binding
 
-## Runtime contract
+`weaver.session()` resolves workspace configuration at construction. Explicit `workspace`, `catalogue` and `environment` values override values read from `workspace_config`; an already resolved `Workspace` cannot be combined with `workspace_config`.
 
-The Weaver runtime executes work from one resolved workspace, catalogue and installed target context. Project discovery establishes declarations; Build installs executable definitions; Load and Test run those installed definitions except for the explicit source-file Test mode.
+A Session constructed with a workspace keeps that workspace name for its lifetime. A command may name the same workspace and may override catalogue or Environment within it. A command naming another workspace is refused before its operation runs.
 
-## When authored work executes
+The interactive `weaver session` command is the exception: when it starts outside a project and no workspace option is supplied, it opens with no default workspace and requires each command to name or discover one. Resources are then cached under each resolved workspace context. Notebook Sessions always have their attached workspace. A closed Session is refused rather than reopened.
 
-Check and project discovery read Python statically and parse supported SQL forms. They do not import authored Python or run a data load or validation.
+Installed Load and Test targets come from the selected catalogue's installation bindings. A current workspace configuration does not redirect installed work to a different physical item.
 
-Build does not call authored Python `read()`, `expected()` or `actual()` methods. It can submit SQL needed to establish and install a SQL definition, including obtaining a Table's result shape when no schema was declared. That Build-time work establishes installable structure; it is not a successful Load or Test and publishes no such outcome.
+## Host position
 
-Load executes installed data work:
+Session selection depends on where Weaver runs relative to the requested workspace:
 
-- an installed Lakehouse Python Table or Folder imports its deployed module and calls its load implementation;
-- an installed Spark SQL Table executes through the generated runtime definition installed for that document;
-- an installed Warehouse Table executes its installed load procedure;
-- a View has no independent authored Load method.
+| Position | Workspace and execution context |
+| --- | --- |
+| Desktop or another process outside the requested workspace | Weaver resolves the target through Fabric and acquires remote capabilities for that workspace. |
+| Fabric notebook or Livy process addressing its attached workspace | Weaver uses the active Spark session, notebook workspace context, notebook storage and notebook identity. |
+| Fabric process addressing a different workspace | Weaver uses the cross-workspace desktop-style path for that target; it does not reuse the notebook's attached Lakehouse, Spark context or identity as though they belonged to the other workspace. |
 
-Test executes installed Test and Assumption definitions. `test --file`, or `file=` in Python, is the exception: it compiles and executes the selected source validation for one installed target without installing or publishing it as estate state.
+An attached Fabric Session refuses a different workspace. Host selection does not fall back to local execution when workspace resolution, authentication or a required Fabric capability fails.
 
-A source edit does not change Load or installed Test behaviour until Build installs a new definition. Runtime execution does not reopen the project to choose between source and installed code.
+## Capability acquisition, reuse and close
 
-## Session, catalogue and target context
+Creating a Session resolves configuration but does not resolve Fabric items, start Spark, open Warehouse SQL or publish anything. Operations request authentication, item resolution, OneLake storage, Spark and Warehouse SQL as needed.
 
-Every remote operation runs through one Session. A caller-supplied Session is borrowed and remains open; an operation-created Session closes when the operation finishes. A closed Session is rejected rather than reopened.
+A Warehouse-only operation does not start Spark. A command that names only a logical Lakehouse does not choose a Spark attachment until the installed or configured physical target has been resolved. Workflow and interactive-session preparation may start likely acquisitions early, but an unused declared capability is not treated as executed work.
 
-A Session fixes one Fabric workspace. The operation may select a catalogue and Environment within that workspace, but it cannot move the Session to another workspace. Catalogue-backed execution resolves logical items and installed objects from the selected catalogue. The recorded installation binding decides the physical target; current workspace configuration does not redirect an installed Load or Test.
+Concurrent requests for one capability share one acquisition. While healthy, resolved items, credentials, storage clients, the Spark session and per-Warehouse SQL connections can be reused by later commands in the Session.
 
-An installed Lakehouse object receives:
+An authored statement failure does not by itself discard a healthy capability. An acquisition or transport/session failure marks that capability failed for the current operation. Weaver does not replace it part-way through that operation. At the next operation task boundary, the Session permits one bounded reacquisition; an exhausted capability remains failed and the operation that next needs it reports the failure.
 
-- the Spark session selected for the operation;
-- the resolved physical Lakehouse for its installed item;
-- the installed logical identity and selected catalogue context when recording is required.
+A standalone operation owns the Session it creates and closes it afterward. A caller-supplied Session is borrowed and remains open. Closing flushes pending catalogue writes, releases only capabilities the Session acquired, waits for an in-progress acquisition for a bounded period, and does not acquire an unused capability merely to close it. Close and cleanup do not roll back completed target or catalogue changes.
 
-Objects created by authored Python from another runtime object inherit its Spark, Lakehouse and catalogue context. Warehouse work executes against the resolved installed Warehouse. A command without the Session capability required by its installed work fails rather than executing in an unrelated local context.
+## Credentials
 
-## Installed Python scope
+The Python API accepts an injected object with the Azure `TokenCredential` shape. Without one, core library use follows `DefaultAzureCredential`; the library does not promise a narrower chain.
 
-Deployed Python modules are resolved from the installed runtime tree for one logical item and physical target. Modules deployed together can import their own supporting `lib/` and object modules. Identically named modules in another item or target remain separate.
+The desktop CLI selects, in order, a configured service principal, an existing Azure CLI sign-in, and—only when interaction is allowed—browser sign-in. `--non-interactive` omits browser sign-in. Authentication success does not supply permissions to every workspace, item, SQL endpoint, OneLake path or capacity.
 
-One run may reuse modules from the same installed tree. The import scope closes at the end of the run so a later run imports the definition left by the latest Build. A failed import, missing deployed module or missing declared class fails that runtime node and identifies the installed definition that must be rebuilt.
+Inside the attached Fabric workspace, notebook identity is used for Fabric and Warehouse access. Desktop credential environment variables are not substituted into that path. A different workspace addressed from a Fabric process must authenticate in its own cross-workspace context.
 
-This isolation is runtime behaviour, not a public package layout. The generated package names, import finder and installed directory structure are not application APIs.
+## Fabric Environment qualification
 
-## Spark and Warehouse execution boundaries
+An unqualified Environment name resolves in the operation's workspace. `Workspace/Environment` may name an Environment owned by another workspace where Fabric permits that attachment. The Spark session still runs in the operation's workspace; qualification changes Environment ownership, not the Session's workspace.
 
-Lakehouse Python and Spark SQL work requires Spark in the target workspace. Warehouse data work executes through the Warehouse SQL endpoint and does not require Spark merely because the operation also supports Lakehouses.
+Desktop Python execution requires a configured published Environment containing Weaver. Spark SQL can use Spark without importing Weaver, and Warehouse-only work does not require an Environment merely because other Weaver operations support Python. Inside an attached Fabric workspace, the active runtime supplies the Python and Spark environment.
 
-A mixed installed graph can require an explicit readiness boundary between Warehouse production and a downstream Lakehouse read. Weaver waits only where the installed graph requires that publication. If the Warehouse load moved no rows, there is nothing new to publish. If new data cannot become readable before the boundary settles, the dependent runtime work fails rather than reading a result that Weaver has not established as ready.
+A qualified Environment being attachable does not imply general host parity across workspaces. Notebook utilities, mounted paths, attached Lakehouses, credential flows and item operations remain host- and capability-specific.
 
-The runtime does not imply engine parity. Spark SQL and Warehouse T-SQL retain their own syntax, type systems, execution errors and physical capabilities.
+## Runtime definition boundary
 
-## Result publication
+Ordinary Load and Test execute installed definitions. Editing project source has no runtime effect until Build installs the change. `test --file` is the explicit exception: it compiles and runs one source validation without installing or publishing it.
 
-Runtime work produces an operation result in Weaver's public outcome vocabulary. Load and installed Test settle each selected node before the operation completes. Required current status, history and bookmark writes are flushed before a completed report is returned or an intolerant failure is raised.
-
-A returned primitive failure remains a failed node; it is not converted to success because no Python exception escaped. An unhandled authored exception or malformed primitive result also fails that node. Fault tolerance decides what other selected work may still run, as defined by the [Fault-tolerance contract](fault-and-outcome-vocabulary.md).
-
-Targeted Test diagnostics belong to the invocation result. They are not durable catalogue evidence. Source-file Test and dry-run modes publish no installed runtime state.
-
-## Cleanup and failure
-
-An operation closes only capabilities it created. A supplied Session and its healthy reusable capabilities remain available to the caller. Session close releases acquired capabilities; capabilities never acquired are not started merely to close them.
-
-A runtime import scope is released after its run. Failure to release a still-live remote scope is reported without replacing the already settled operation outcome; the affected session should not be used for rebuilt Python until it has been restarted. An interpreter that has already ended needs no further cleanup.
-
-Cleanup does not roll back target changes or catalogue evidence already committed. Recovery starts from the remaining installed and runtime state under the owning operation's contract.
-
-## Defined behaviour
-
-The Runtime contract specifies that Weaver:
-
-1. does not execute authored Python during Check, discovery or Build;
-2. runs installed definitions for Load and ordinary Test, with source-file Test as the explicit non-installed mode;
-3. resolves runtime work through one Session, workspace, catalogue and installed physical binding;
-4. isolates deployed Python by installed item and target within a run and releases that scope before a later run;
-5. keeps Spark execution and Warehouse SQL execution as distinct target capabilities;
-6. waits for cross-engine publication only where selected dependency work requires it;
-7. settles runtime outcomes and required catalogue writes before reporting completion; and
-8. releases operation-owned capabilities without closing a borrowed Session or rolling back completed effects.
-
-See [Load](load.md), [Test](test.md), [Catalogue](../catalogue-schema.md), [Python operations](../python/operations.md), and [Session and workspace helpers](../python/session.md).
-
----
-
-## Host-behaviour contract
-
-Weaver exposes the same lifecycle operations from a desktop process and from Python running in a Fabric notebook, but the host determines where execution capabilities and credentials come from. A Session selects that host behaviour for one workspace.
-
-## Desktop execution
-
-Outside the Fabric workspace being addressed, Weaver uses a desktop Session. It resolves the workspace through Fabric APIs and acquires capabilities only when an operation needs them.
-
-- Fabric control-plane and OneLake access use the selected desktop credential context.
-- Warehouse work uses the target Warehouse SQL endpoint.
-- Lakehouse Python or Spark SQL work requires a published Fabric Environment and a remote Spark session in the target workspace.
-- A Warehouse-only operation does not start Spark solely because other Weaver operations can use it.
-
-A Session can reuse healthy acquired capabilities across commands. Concurrent requests for the same capability share one acquisition. A failed authored statement does not by itself discard a healthy session; an acquisition or session failure can mark that capability for a bounded reacquisition before a later operation.
-
-## Execution inside the attached Fabric workspace
-
-When Weaver is running in a Fabric notebook and the requested workspace is the notebook's current workspace, it uses the notebook host:
-
-- the active Spark session supplies Spark execution;
-- notebook runtime context supplies the attached workspace;
-- notebook identity supplies Fabric and Warehouse authentication;
-- notebook storage and item resolution are used for that workspace.
-
-Desktop credentials are not substituted into this in-workspace path. An injected client or Session remains authoritative when the public operation accepts one.
-
-The notebook Session is attached to one physical workspace. It refuses a request to execute against another workspace rather than applying the attached Spark session or notebook identity to that target.
-
-## Cross-workspace requests from a notebook process
-
-Running inside Fabric does not make every workspace an in-workspace target. When the requested workspace differs from the notebook's current workspace, host selection uses the cross-workspace Session path rather than the attached notebook Session.
-
-That path must independently resolve and authenticate to the target workspace and acquire any remote Spark, Warehouse or storage capability the operation requires. It does not reuse the notebook's attached Lakehouse as the target, and logical item names do not become Spark attachments.
-
-A qualified Fabric Environment may be owned by another workspace when Fabric accepts that attachment. The Spark session still runs in the consumer workspace named by the operation. Cross-workspace Environment access therefore requires both the consumer workspace context and access to the qualified Environment; an unqualified Environment name is resolved in the selected workspace.
-
-Cross-workspace support is capability-specific. A supported Environment attachment does not imply that every notebook utility, mounted path, credential flow or item operation behaves as though both workspaces were one host.
-
-## Context and capability acquisition
-
-Constructing a Session resolves configuration and workspace context but does not by itself start Spark, open Warehouse SQL or resolve every item. Operations declare the capabilities they need, and the Session acquires them on demand.
-
-A lifecycle sequence may acquire its known capabilities and attach required Lakehouses before its first command. Preparation changes startup timing, not selection or authority: the catalogue still supplies the installed target context, each operation keeps its own write boundary and one Session still belongs to one workspace.
-
-Capability cleanup follows ownership. An operation-created Session closes after the operation. A supplied Session remains open. Closing releases capabilities that were acquired and does not acquire unused capabilities for the sake of releasing them.
-
-## Supported differences
-
-The shared Session contract covers Python execution, Spark SQL batches, Warehouse SQL, Delta Table creation and host-position reporting. Equal call shape does not mean equal mechanism or universal host parity.
-
-| Behaviour | Desktop | Attached Fabric workspace | Different workspace from a notebook process |
-| --- | --- | --- | --- |
-| Workspace context | Explicit or configured target workspace | Current notebook workspace | Explicit or configured target workspace |
-| Spark | Acquired remotely when required | Active notebook Spark session | Acquired for the target workspace when required |
-| Warehouse SQL | Target SQL endpoint with desktop credential context | Target SQL endpoint with notebook identity | Target SQL endpoint under the cross-workspace Session context |
-| Browser sign-in | May be available in interactive mode | Not used for the attached notebook path | Depends on the selected cross-workspace Session and interaction policy |
-| Workspace change inside one Session | Not supported | Not supported | Not supported |
-| Attached Lakehouse | Not implicit | Available to the notebook host | Not reused as the target workspace's Lakehouse |
-
-Commands and operations must fail when the selected host cannot supply a required capability. They must not fall back to local execution merely because remote workspace resolution, authentication or resource acquisition failed.
-
-## Evidence boundary
-
-Source and automated tests define Session selection, same-workspace refusal, credential separation, lazy acquisition, capability signatures and cleanup. Hosted tests also exercise deployed Python dispatch and a qualified cross-workspace Environment against configured Fabric test estates.
-
-Those checkpoints do not make live Fabric state part of this contract. Capacity availability, tenant policy, workspace permissions, Environment publication, item existence and service-side timing are established only by the workspace where an operation runs. No live Fabric operation was performed to author this page, and this contract does not claim an observed outcome for an arbitrary tenant or workspace.
-
-## Defined behaviour
-
-The Host-behaviour contract specifies that Weaver:
-
-1. selects an attached notebook Session only for the Fabric workspace the process is currently running in;
-2. uses notebook context and identity in that attached workspace without constructing desktop credentials for it;
-3. uses the cross-workspace Session path when a notebook process addresses another workspace;
-4. fixes each Session to one workspace and refuses a workspace switch;
-5. acquires Spark, Warehouse SQL, storage and resolution capabilities only when required;
-6. does not start Spark for work whose resolved requirements do not include it;
-7. shares healthy resources within a Session and releases only acquired, owned resources; and
-8. reports unsupported or unavailable host capabilities instead of changing the execution target.
-
-See [Configuration](../configuration-files/workspace-config.md), [Runtime](session-runtime.md), [Session and workspace helpers](../python/session.md), and [Fabric notebook commands](../cli/fabric-notebook.md).
+Lakehouse Python and Spark SQL use Spark; Warehouse work uses the target SQL endpoint. The engines retain their own syntax, types, errors and physical capabilities. A mixed graph may wait for a required Warehouse result to become readable by downstream Lakehouse work; Weaver applies that boundary only where the selected installed graph requires it.
