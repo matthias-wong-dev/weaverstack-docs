@@ -1,32 +1,30 @@
-# Connect parcel items with Shortcuts
+# Connect items with a Shortcut
 
-This guide presents a Table owned by `Lakehouse/Tracking` inside `Lakehouse/Reporting` and `Warehouse/Dispatch`. The logical Shortcuts retain the Weaver document identity, so Build can record a cross-item dependency instead of treating the source as an unrelated Fabric location.
+This guide presents a Table owned by `Lakehouse/Tracking` as a View in `Warehouse/Dispatch`. The logical Shortcut keeps the source's Weaver identity, so Build can manage the cross-item relationship.
 
 ## Prerequisites
 
 - [Install Weaver](../getting-started/installation.md) and confirm `weaver --version` works.
-- Create or reuse a project whose workspace configuration binds `Lakehouse/Tracking`, `Lakehouse/Reporting` and `Warehouse/Dispatch` to Fabric items.
-- Publish the project's Fabric Environment before loading the Python Table in `Lakehouse/Reporting`.
+- Use a Fabric workspace where you can create or modify a catalogue Warehouse, a Lakehouse and a second Warehouse.
 
-The checked logical fixture is `examples/parcel-shortcuts/logical/`. The separate physical declaration is under `examples/parcel-shortcuts/physical/` so it can be checked without requiring an external Fabric item.
+## 1. Initialise both items
 
-## Add the source Table
+Create a project containing the producer and consumer:
 
-Create this project structure:
-
-```text
-Lakehouse/
-├── Tracking/
-│   └── Tables/
-│       └── Parcel.Event.sql
-└── Reporting/
-    ├── shortcuts.py
-    └── Tables/
-        └── Parcel__EventSummary.py
-Warehouse/
-└── Dispatch/
-    └── shortcuts.yml
+```bash
+weaver initialise \
+  --workspace "Parcel Development" \
+  --project-folder ./parcel-shortcut \
+  --catalogue Catalogue \
+  --lakehouse Tracking \
+  --warehouse Dispatch \
+  --no-example
+cd parcel-shortcut
 ```
+
+Replace `Parcel Development` with your workspace. Weaver writes bindings for `Lakehouse/Tracking` and `Warehouse/Dispatch` to `workspace-config.yml`. The command ends with `Weaver project ready in .../parcel-shortcut.`
+
+## 2. Add the source Table
 
 Create `Lakehouse/Tracking/Tables/Parcel.Event.sql`:
 
@@ -36,7 +34,7 @@ Table ID: Parcel.Event
 
 Description: One row per parcel tracking event.
 
-Lineage: A carrier event feed represented by this example.
+Lineage: A deterministic carrier feed represented by this example.
 
 Dependencies: []
 
@@ -55,131 +53,57 @@ from values
 as event(`Parcel ID`, `Event sequence`, `Status`);
 ```
 
-`Parcel.Event` belongs to the logical `Lakehouse/Tracking` item. The next declarations refer to that logical identity rather than a workspace-specific Lakehouse name.
+The source is a Spark SQL Table, so it explicitly declares that it has no managed dependencies.
 
-## Present the Table in another Lakehouse
+## 3. Present it in the Warehouse
 
-Create `Lakehouse/Reporting/shortcuts.py`:
-
-```python
-from weaver import Shortcut
-
-Parcel__Event = Shortcut(
-    shortcut_type="table",
-    target_type="logical",
-    target="Lakehouse/Tracking/Tables/Parcel.Event",
-)
-```
-
-The symbol names the destination: `Lakehouse/Reporting/Tables/Parcel.Event`. The `target` names the source Weaver document. A logical Shortcut cannot name `workspace`; workspace configuration supplies the physical bindings for both logical items.
-
-Create `Lakehouse/Reporting/Tables/Parcel__EventSummary.py`:
-
-```python
-"""
-Table ID: Parcel.EventSummary
-
-Description: Tracking events read through the local Shortcut destination.
-
-Lineage: $Parcel.Event
-
-Primary key: Parcel ID, Event sequence
-
-Schema:
-  Parcel ID: string
-  Event sequence: integer
-  Status: string
-"""
-
-from shortcuts import Parcel__Event
-
-from weaver import Table
-
-
-class Parcel__EventSummary(Table):
-    def read(self):
-        return Parcel__Event(self).dataframe().select(*self.columns())
-```
-
-Import from `shortcuts`, not from the authored `weaver.Shortcut` declaration. Build deploys a runtime `shortcuts` module whose reader opens the local destination in `Lakehouse/Reporting`. The import also tells Weaver that `Parcel.EventSummary` depends on `Lakehouse/Tracking/Tables/Parcel.Event` through the Shortcut.
-
-## Present the same Table in a Warehouse
-
-Warehouse Shortcuts use a YAML mapping. Create `Warehouse/Dispatch/shortcuts.yml`:
+Create `Warehouse/Dispatch/shortcuts.yml`:
 
 ```yaml
 logical:
   "Warehouse/Dispatch/Parcel.Event": "Lakehouse/Tracking/Tables/Parcel.Event"
 ```
 
-The mapping is destination to target. Build creates the Warehouse destination as a local View over the source. It is not separate Load work; queries against `Parcel.Event` in the Dispatch Warehouse read through that View.
+The mapping reads from destination to target. Build creates `Parcel.Event` in the Dispatch Warehouse as a View over the Table owned by the Tracking Lakehouse. Because the target is logical, Weaver records a managed dependency from `Warehouse/Dispatch` to `Lakehouse/Tracking`.
 
-The Lakehouse and Warehouse forms express the same logical relationship on different authoring surfaces. Lakehouse declarations choose `table`, `folder` or a physical `schema` destination in `shortcuts.py`. Warehouse declarations create Views and group mappings under `logical` or `physical` in `shortcuts.yml`. Use the [Reference](../reference/index.md) for the full accepted syntax rather than extrapolating from this task.
+This is the normal cross-item form when the source is another document in the same Weaver project. The [Shortcut reference](../reference/weaver-documents/shortcut.md) lists Lakehouse destinations, physical targets and the exact accepted target forms.
 
-## Check and build all participating items
+## 4. Check and build the relationship
 
-Run the local check:
+Validate the declarations, then install all configured items:
 
 ```bash
 weaver check
+weaver build
 ```
 
-A successful check confirms that the logical target exists in this project, the destination names are valid and the imported Shortcut resolves to its source. It does not contact Fabric or prove that OneLake can create the destination.
+Check prints `Project valid.` It confirms that the logical target exists and that both Shortcut identities are valid without contacting Fabric. Build should report no failed actions and install the Tracking Table before the Dispatch View.
 
-For the first installation, select every participating item:
+## 5. Load the producer
+
+Run the loadable work in the source item and read both items' state:
 
 ```bash
-weaver build \
+weaver load Lakehouse/Tracking
+weaver health \
   --item Lakehouse/Tracking \
-  --item Lakehouse/Reporting \
   --item Warehouse/Dispatch
 ```
 
-Build uses the logical dependency to order selected work and to include affected selected descendants when the source changes. Selection remains the boundary: naming `Lakehouse/Reporting` does not silently add `Lakehouse/Tracking`, and leaving `Warehouse/Dispatch` unselected leaves its installed View unchanged. On a first build, select the producer and consumers together.
+Load should report `Tables/Parcel.Event` as succeeded with three rows. The Shortcut View has no separate Load step. Health should show the installed relationship without a failed Build or Load finding.
 
-After Build succeeds, the [catalogue](../core-concepts/catalogue.md) records the Shortcut and resolved dependency. Fabric should contain:
+Dependencies order selected work but do not widen selection. When both sides contain loadable work, name both items in the item-wide Load command.
 
-- `Tables/Parcel/Event` as a OneLake Shortcut in the Reporting Lakehouse;
-- `Parcel.Event` as a View in the Dispatch Warehouse.
+## 6. Query through the Shortcut
 
-These are Fabric checkpoints. `weaver check` cannot observe either physical destination.
+Query the Dispatch Warehouse SQL endpoint:
 
-## Load the producer before its Lakehouse consumer
-
-Publish the Environment, preview the selected items and then load them:
-
-```bash
-weaver fabric environment publish \
-  --path Environment/Weaver.Environment
-weaver load Lakehouse/Tracking Lakehouse/Reporting --dry-run
-weaver load Lakehouse/Tracking Lakehouse/Reporting
+```sql
+select [Parcel ID], [Event sequence], [Status]
+from [Parcel].[Event]
+order by [Parcel ID], [Event sequence];
 ```
 
-The dry run should place the Tracking source before `Tables/Parcel.EventSummary`. Cross-item dependency does not widen Load selection, so name both items when both should run. The Warehouse Shortcut is a View and has no separate load step.
+The View returns the three rows stored in `Lakehouse/Tracking/Tables/Parcel.Event`. The physical Lakehouse and Warehouse names remain in `workspace-config.yml`; the Shortcut declaration keeps only logical project identities.
 
-After the Fabric load succeeds, query `Parcel.EventSummary` in the Reporting Lakehouse and `Parcel.Event` in the Dispatch Warehouse. Each should expose the three source rows. Those outcomes depend on Fabric execution and are not established by local parsing.
-
-## Use a physical Shortcut for an external location
-
-A physical Shortcut names a Fabric location directly. It is appropriate when the source is outside the managed Weaver estate. For example, the independently checked `examples/parcel-shortcuts/physical/Lakehouse/Reporting/shortcuts.py` contains:
-
-```python
-from weaver import Shortcut
-
-Parcel__Milestone = Shortcut(
-    shortcut_type="table",
-    target_type="physical",
-    target="Lakehouse/Carrier/Tables/Parcel.Milestone",
-    workspace="Carrier Shared",
-)
-```
-
-Here `Lakehouse/Carrier` is a physical item in the named workspace, not a logical item from this project. `weaver check` validates the declaration shape without contacting that workspace. Build must resolve the workspace and source item and Fabric must permit the Shortcut creation.
-
-A physical Shortcut is a dependency boundary: Weaver does not infer a managed producer or Build order from the external address. Its runtime reader can read the local destination, but source bookmark and Folder change-history methods require logical metadata and therefore are unavailable. If the source is another Weaver document, use a logical Shortcut instead.
-
-## Troubleshooting and next action
-
-If `weaver check` cannot resolve a logical target, correct the exact `ItemType/ItemName/Area/Schema.Object` identity or add the missing source document. If Build reports that the source has no installation, include the source item in the first Build or install it before rebuilding the consumer. If Fabric reports a conflict at the destination, remove or rename the existing object; do not place a Weaver document at the same destination as a Shortcut.
-
-Use [Weaver documents](../core-concepts/weaver-documents.md) for Shortcut ownership, [Dependencies](../core-concepts/dependencies.md) for cross-item ordering and selection, and [Weaver operations](../core-concepts/build-load-and-test.md) for the Build/Load boundary. [Development cycle](development-cycle.md) explains how Shortcut changes materialise in a mirrored estate. Command forms are in the [CLI reference](../reference/cli.md), and Load selection behaviour is in the [Load contract](../reference/operation-behaviour/load.md).
+After changing the source declaration, Build the affected items and use `weaver load Lakehouse/Tracking --stale` for post-Build catch-up. [Dependencies](../core-concepts/dependencies.md) explains cross-item ordering and selection boundaries.

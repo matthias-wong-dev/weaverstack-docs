@@ -1,11 +1,15 @@
-# Author a Warehouse pipeline
+# Build a Warehouse pipeline
 
-This guide adds a T-SQL Table and a dependent View to an existing Weaver Warehouse item. The entire path uses the Warehouse SQL endpoint and does not require Spark or a published Fabric Environment.
+This guide creates one Warehouse Table and a dependent View, installs them, loads the Table and queries the View.
 
 ## Prerequisites
 
 - [Install Weaver](../getting-started/installation.md) and confirm `weaver --version` works.
-- Complete [First project](../getting-started/first-project.md), or initialise a project with the logical item `Warehouse/Operations`:
+- Use a Fabric workspace where you can create or modify a catalogue Warehouse and a target Warehouse.
+
+## 1. Initialise the project
+
+Create a project containing `Warehouse/Operations`:
 
 ```bash
 weaver initialise \
@@ -17,20 +21,9 @@ weaver initialise \
 cd parcel-warehouse
 ```
 
-Initialisation records the physical workspace, catalogue Warehouse and target Warehouse in `workspace-config.yml`. The declarations below contain no tenant-specific names.
+Replace `Parcel Development` with your workspace. Weaver creates or reuses the Fabric items, writes `workspace-config.yml` and creates an empty `Warehouse/Operations` directory. The command ends with `Weaver project ready in .../parcel-warehouse.`
 
-## Add the Table
-
-Create these files:
-
-```text
-parcel-warehouse/
-├── workspace-config.yml
-└── Warehouse/
-    └── Operations/
-        ├── Parcel.StatusEvent.sql
-        └── Parcel.CurrentStatus.sql
-```
+## 2. Add the Table
 
 Create `Warehouse/Operations/Parcel.StatusEvent.sql`:
 
@@ -61,9 +54,9 @@ from (values
 ) as v ([Parcel ID], [Event sequence], [Status], [Depot]);
 ```
 
-A `.sql` declaration directly under a Warehouse item uses T-SQL. `Table ID` and the filename identify the same `Schema.Object`. The query supplies the rows that Load reconciles into the declared table.
+The Warehouse item now contains a Table document named `Parcel.StatusEvent`. Its query will produce three rows when Load runs it.
 
-## Add the View
+## 3. Add the dependent View
 
 Create `Warehouse/Operations/Parcel.CurrentStatus.sql`:
 
@@ -73,9 +66,7 @@ View ID: Parcel.CurrentStatus
 
 Description: The latest recorded status for each parcel.
 
-Lineage: $Parcel.StatusEvent
-
-Primary key: Parcel ID
+Lineage: Parcel status events ordered by event sequence.
 */
 with ranked as (
     select [Parcel ID]
@@ -94,32 +85,40 @@ from ranked
 where [Event rank] = 1;
 ```
 
-`View ID` makes this a View rather than a loadable Table. Its lineage reference records the dependency on `Parcel.StatusEvent`. Build creates the view definition; Load populates the Table it reads.
+Weaver infers the dependency from the relation referenced in the query. `Lineage` is descriptive metadata; it does not create the dependency. Build installs the View definition, while Load runs the Table that supplies its rows.
 
-## Check and build
+## 4. Check the documents
 
-From the project root, run:
+Validate the project locally:
 
 ```bash
 weaver check
-weaver build --item Warehouse/Operations
 ```
 
-A successful check confirms that the two files parse, their identities agree with their paths and the dependency resolves. It does not submit the T-SQL. Build applies the Table and View structure and installs the Table's load definition.
+Weaver prints `Project valid.` The check confirms that both documents parse, their filenames agree with their declared identities and the View reference resolves. It does not submit T-SQL to Fabric.
 
-Neither command needs Spark for this Warehouse-only item. Do not publish an Environment for these T-SQL declarations; no authored Python runs in Fabric.
+## 5. Build the item
 
-## Preview and load the Table
-
-Preview the installed work, then run it:
+Install the project:
 
 ```bash
-weaver load Warehouse/Operations --dry-run
+weaver build
+```
+
+The installation summary should report no failed actions. The installed estate now contains the `Parcel.StatusEvent` Table, its load work and the `Parcel.CurrentStatus` View. Build does not run the Table query.
+
+## 6. Load and inspect the result
+
+Run all installed load work in the item, then read its state:
+
+```bash
 weaver load Warehouse/Operations
 weaver health --item Warehouse/Operations
 ```
 
-The dry run should include `Parcel.StatusEvent`; the View is not separate load work. After Load succeeds, query the Warehouse SQL endpoint:
+Load should report `Parcel.StatusEvent` as succeeded with three rows read. Health should show Green Build and Load sections for the item.
+
+Query the Warehouse SQL endpoint:
 
 ```sql
 select [Parcel ID], [Status], [Depot]
@@ -127,19 +126,11 @@ from [Parcel].[CurrentStatus]
 order by [Parcel ID];
 ```
 
-The observable result is two rows: `P-1001` at `Central` with status `In transit`, and `P-1002` at `South` with status `Delivered`. Health should report the Warehouse item as Green.
+The View returns:
 
-For a targeted rerun, select the installed Table by its Warehouse object name:
+| Parcel ID | Status | Depot |
+| --- | --- | --- |
+| P-1001 | In transit | Central |
+| P-1002 | Delivered | South |
 
-```bash
-weaver load Warehouse/Operations \
-  --name Parcel.StatusEvent
-```
-
-Name selection runs exactly the named installed object. Use item-wide selection when Weaver should apply dependency ordering; the [Load contract](../reference/operation-behaviour/load.md) defines both forms.
-
-## Next action and troubleshooting
-
-Replace the `values` source with a query over your landed Warehouse data, keep the declared schema aligned with its result and rerun `check`, `build` and `load`. [How Weaver works](../core-concepts/how-weaver-works.md) explains why source changes take effect only after Build.
-
-If a command rejects an option or object name, check the [CLI reference](../reference/cli.md). If Fabric access fails, use `weaver doctor` as described in [Installation](../getting-started/installation.md). If the project lifecycle is unfamiliar, return to [First project](../getting-started/first-project.md).
+Edit either document, run `weaver check` and `weaver build` again, then use `weaver load Warehouse/Operations --stale` to catch up work made stale by that Build. Use `--name` only when deliberately diagnosing or reconstructing selected installed work. Exact selection rules are in the [Load operation reference](../reference/operation-behaviour/load.md).

@@ -1,40 +1,30 @@
-# Author a Lakehouse pipeline
+# Build a Lakehouse pipeline with Python
 
-This guide adds a managed file folder and a Python Delta table to an existing Weaver Lakehouse item. A separate Spark SQL example shows the path that does not import Weaver-authored Python.
+This guide creates a snapshot Folder and a Python Delta Table in one Lakehouse. The Table imports the Folder, so Weaver discovers their dependency from the source.
 
 ## Prerequisites
 
 - [Install Weaver](../getting-started/installation.md) and confirm `weaver --version` works.
-- Create a project with a logical `Lakehouse/Landing` item. Follow [First project](../getting-started/first-project.md) for the lifecycle, but initialise a Lakehouse instead of a Warehouse:
+- Use a Fabric workspace where you can create or modify a catalogue Warehouse, a Lakehouse and a Fabric Environment.
+
+## 1. Initialise the project
+
+Create a project containing `Lakehouse/Landing` and the `Weaver` runtime Environment:
 
 ```bash
 weaver initialise \
   --workspace "Parcel Development" \
-  --project-folder ./parcel-lakehouse \
+  --project-folder ./parcel-lakehouse-python \
   --catalogue Catalogue \
+  --environment Weaver \
   --lakehouse Landing \
   --no-example
-cd parcel-lakehouse
+cd parcel-lakehouse-python
 ```
 
-The names above are examples. Initialisation writes the physical workspace and item bindings to `workspace-config.yml`; keep those environment-specific values out of the declaration files.
+Replace `Parcel Development` with your workspace. Weaver writes `workspace-config.yml`, an empty `Lakehouse/Landing` directory and `Environment/Weaver.Environment`. The command ends with `Weaver project ready in .../parcel-lakehouse-python.`
 
-## Add the Folder and Python Table
-
-Create these files:
-
-```text
-parcel-lakehouse/
-├── workspace-config.yml
-├── Environment/
-│   └── Weaver.Environment/
-└── Lakehouse/
-    └── Landing/
-        ├── Files/
-        │   └── Parcel__Events.py
-        └── Tables/
-            └── Parcel__Event.py
-```
+## 2. Add the snapshot Folder
 
 Create `Lakehouse/Landing/Files/Parcel__Events.py`:
 
@@ -65,10 +55,12 @@ class Parcel__Events(Folder):
     def read(self):
         with self.staging_folder() as staging:
             (staging.path / "events.csv").write_text(EVENTS, encoding="utf-8")
-        return staging, []
+        return staging
 ```
 
-`read()` writes to Weaver's staging folder and returns that folder with no explicit deletions. `Incremental: false` makes each successful load replace the managed folder's file set.
+`read()` returns the staging Folder directly because this snapshot does not need an explicit deletion list. `Incremental: false` is significant: Folders default to incremental loading, while this Folder treats each staged file set as the complete snapshot.
+
+## 3. Add the Python Table
 
 Create `Lakehouse/Landing/Tables/Parcel__Event.py`:
 
@@ -78,7 +70,7 @@ Table ID: Parcel.Event
 
 Description: One row per parcel tracking event.
 
-Lineage: $Files/Parcel.Events
+Lineage: The parcel event CSV snapshot managed in this Lakehouse.
 
 Primary key: Parcel ID, Event sequence
 
@@ -108,85 +100,58 @@ class Parcel__Event(Table):
         )
 ```
 
-The import declares the dependency as well as making the Folder available to the table. Constructing it from `self` keeps the same Spark session and Lakehouse. `spark_path()` returns the path Spark can read.
+The import makes `Parcel__Events` available to the Table and establishes its dependency. No `Dependencies` field is needed. The prose in `Lineage` describes the source but has no effect on execution order.
 
-## Check, build and load
+## 4. Check the documents
 
-Check the declarations locally:
+Validate the project locally:
 
 ```bash
 weaver check
 ```
 
-A successful check confirms that Weaver can parse the metadata, identities, dependency and Spark SQL statement boundaries in the project. It does not execute Python or Spark, and it does not prove that the code will run in Fabric.
+Weaver prints `Project valid.` The check parses the metadata and Python syntax, matches paths to declared identities and resolves the imported Folder. It does not execute the Python or contact Fabric.
 
-Build the Lakehouse item:
+## 5. Publish the Python runtime
 
-```bash
-weaver build --item Lakehouse/Landing
-```
-
-Build installs the Folder and Table definitions. It does not run their `read()` methods.
-
-The Folder and Python Table import `weaver` when Load runs them in Fabric. Publish the generated Environment before that load:
+Publish the generated Environment before running Python work in Fabric:
 
 ```bash
 weaver fabric environment publish \
   --path Environment/Weaver.Environment
 ```
 
-A published Environment is required here because the installed work imports Weaver-authored Python. It is not required for `weaver check`, for this build, or for the Spark SQL-only variant below. Republish after changing the Weaver package or Environment definition; ordinary edits to these project modules are installed by Build.
+The command should report the `Weaver` Environment as published. Build can install the documents without publication, but Load needs the published Environment because both modules import `weaver` in Fabric.
 
-Preview and run the item:
+## 6. Reuse one Session for remote work
+
+Repeated remote work begins with Build, Load and Health. Open one Session so those commands can reuse its Fabric execution context:
 
 ```bash
-weaver load Lakehouse/Landing --dry-run
-weaver load Lakehouse/Landing
-weaver health --item Lakehouse/Landing
+weaver session --workspace-config workspace-config.yml
 ```
 
-The dry run should name `Files/Parcel.Events` before `Tables/Parcel.Event`. After Load succeeds, the Lakehouse contains `Files/Parcel/Events/events.csv` and the `Parcel.Event` Delta table with three rows. Health should report the selected item as Green.
+At the `weaver>` prompt, run:
 
-## Use Spark SQL instead
+```text
+weaver> weaver build
+weaver> weaver load Lakehouse/Landing
+weaver> weaver health --item Lakehouse/Landing
+weaver> exit
+```
 
-Spark SQL is a separate authoring form. Add `Lakehouse/Landing/Tables/Parcel.ServiceLevel.sql`:
+Build should install both definitions without failed actions. Load should run `Files/Parcel.Events` before `Tables/Parcel.Event`; the Folder writes one CSV file and the Table reads three rows. Health should show Green Build and Load sections. See [Sessions and workflows](../core-concepts/sessions-and-workflows.md) for the execution-context model.
+
+## 7. Inspect the result
+
+Query the Lakehouse SQL analytics endpoint:
 
 ```sql
-/*
-Table ID: Parcel.ServiceLevel
-
-Description: Service levels used to classify parcel deliveries.
-
-Lineage: Reference data maintained in this project.
-
-Dependencies: []
-
-Primary key: Service level
-
-Schema:
-  Service level: string
-  Target days: integer
-*/
-select *
-from values
-    ('Express', 1),
-    ('Standard', 3)
-as service_level(`Service level`, `Target days`);
+select [Parcel ID], [Event sequence], [Status], [Depot]
+from [Parcel].[Event]
+order by [Parcel ID], [Event sequence];
 ```
 
-Check and build it with the rest of the item, then select only this installed table:
+The Table returns the three rows authored in `EVENTS`. The Lakehouse also contains `Files/Parcel/Events/events.csv` beneath the managed Folder.
 
-```bash
-weaver check
-weaver build --item Lakehouse/Landing
-weaver load Lakehouse/Landing \
-  --name Tables/Parcel.ServiceLevel
-```
-
-This load requires Fabric Spark, but the authored SQL does not import Weaver and therefore does not require a published Environment. `Dependencies: []` states that the SQL reads no other managed object. Local `weaver check` validates the document and the supported one-result-query shape; Spark decides whether the SQL itself executes successfully.
-
-## Next action and troubleshooting
-
-Replace the embedded CSV with your source acquisition while preserving the Folder return contract, then add downstream tables one dependency at a time. [How Weaver works](../core-concepts/how-weaver-works.md) explains how declarations, Build and Load relate.
-
-If a command rejects an option or selection, check the [CLI reference](../reference/cli.md). If Load selects unexpected work or a dependency fails, use the [Load contract](../reference/operation-behaviour/load.md) to inspect selection and ordering. For authentication, connectivity or Environment publication failures, return to [Installation](../getting-started/installation.md).
+After changing either document, run Check and Build again, then use `weaver load Lakehouse/Landing --stale` for post-Build catch-up. Use ordinary item-wide Load when you intend to run the whole item. Exact Folder and Table forms are in [Weaver documents reference](../reference/weaver-documents/overview.md).
