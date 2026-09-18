@@ -3,7 +3,7 @@ Table ID: Parcel.Event
 
 Description: One row per parcel tracking event.
 
-Lineage: A carrier event feed represented by this example.
+Lineage: A deterministic carrier feed represented by this example.
 
 Dependencies: []
 

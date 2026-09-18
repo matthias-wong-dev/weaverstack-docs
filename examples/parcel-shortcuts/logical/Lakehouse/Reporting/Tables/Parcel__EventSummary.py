@@ -3,7 +3,7 @@ Table ID: Parcel.EventSummary
 
 Description: Tracking events read through the local Shortcut destination.
 
-Lineage: $Parcel.Event
+Lineage: Parcel events exposed through the local Shortcut destination.
 
 Primary key: Parcel ID, Event sequence
 

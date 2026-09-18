@@ -2,9 +2,6 @@
 Assumption ID: Parcel.StatusIsKnown
 
 Description: Every parcel has a status recognised by this example.
-
-Dependencies:
-  - Parcel.Status
 */
 select [Parcel ID]
      , [Status]

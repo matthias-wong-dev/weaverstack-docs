@@ -3,9 +3,7 @@ View ID: Parcel.CurrentStatus
 
 Description: The latest recorded status for each parcel.
 
-Lineage: $Parcel.StatusEvent
-
-Primary key: Parcel ID
+Lineage: Parcel status events ordered by event sequence.
 */
 with ranked as (
     select [Parcel ID]

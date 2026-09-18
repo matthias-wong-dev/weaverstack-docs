@@ -3,7 +3,7 @@ Table ID: Parcel.Event
 
 Description: One row per parcel tracking event.
 
-Lineage: $Files/Parcel.Events
+Lineage: The parcel event CSV snapshot managed in this Lakehouse.
 
 Primary key: Parcel ID, Event sequence
 

@@ -10,17 +10,21 @@ File key: "*.csv"
 Incremental: false
 """
 
-from weaver import Folder
+from pathlib import Path
+import shutil
 
-SNAPSHOT = {
-    "P-1001.csv": "Parcel ID,Status,Depot\nP-1001,In transit,Central\n",
-    "P-1002.csv": "Parcel ID,Status,Depot\nP-1002,Delivered,South\n",
-}
+from weaver import Folder
 
 
 class Parcel__StatusFiles(Folder):
     def read(self):
+        source_root = Path(self.lakehouse.files_root()) / "parcel-source" / "parcel-status"
+        if not source_root.is_dir():
+            raise FileNotFoundError(
+                f"Parcel status source directory not found: {source_root}"
+            )
+
         staging = self.staging_folder()
-        for name, content in SNAPSHOT.items():
-            (staging.path / name).write_text(content, encoding="utf-8")
+        for source in source_root.glob("*.csv"):
+            shutil.copy2(source, staging.path / source.name)
         return staging

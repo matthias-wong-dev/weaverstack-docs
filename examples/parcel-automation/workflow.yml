@@ -1,7 +1,7 @@
 workflows:
   verify:
-    - weaver check .
-    - weaver build . --item Warehouse/Operations --workspace-config workspace-config.yml
-    - weaver load Warehouse/Operations --workspace-config workspace-config.yml
-    - weaver test Warehouse/Operations --workspace-config workspace-config.yml
-    - weaver health --item Warehouse/Operations --workspace-config workspace-config.yml
+    - check .
+    - build .
+    - load
+    - test
+    - health

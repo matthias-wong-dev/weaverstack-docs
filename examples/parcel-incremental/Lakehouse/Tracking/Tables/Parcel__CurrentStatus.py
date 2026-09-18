@@ -3,7 +3,7 @@ Table ID: Parcel.CurrentStatus
 
 Description: The latest status supplied for each parcel.
 
-Lineage: $Files/Parcel.StatusFiles
+Lineage: Parcel status snapshots managed by Parcel.StatusFiles.
 
 Primary key: Parcel ID
 
@@ -16,7 +16,6 @@ Schema:
 """
 
 from Files.Parcel__StatusFiles import Parcel__StatusFiles
-
 from weaver import Table
 
 

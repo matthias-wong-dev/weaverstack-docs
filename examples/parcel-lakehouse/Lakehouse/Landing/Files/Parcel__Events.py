@@ -24,4 +24,4 @@ class Parcel__Events(Folder):
     def read(self):
         with self.staging_folder() as staging:
             (staging.path / "events.csv").write_text(EVENTS, encoding="utf-8")
-        return staging, []
+        return staging

@@ -16,4 +16,4 @@ select v.ParcelId as [Parcel ID]
 from (values
     ('P-1001', 'In transit'),
     ('P-1002', 'Delivered')
-) as v (ParcelId, ParcelStatus)
+) as v (ParcelId, ParcelStatus);

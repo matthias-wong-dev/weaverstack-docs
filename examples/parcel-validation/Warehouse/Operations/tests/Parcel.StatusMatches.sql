@@ -1,12 +1,9 @@
 /*
 Test ID: Parcel.StatusMatches
 
-Description: Current parcel status matches the independently stated expected rows.
+Description: Current parcel status matches the expected rows.
 
 Primary key: Parcel ID
-
-Dependencies:
-  - Parcel.Status
 */
 select v.[Parcel ID]
      , v.[Status]

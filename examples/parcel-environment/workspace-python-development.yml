@@ -1,7 +1,6 @@
 workspace: Parcel Operations
 environment: ParcelRuntime
 catalogue: Warehouse/ParcelCatalogueDev
-mirror: Warehouse/ParcelCatalogue
 
 targets:
   Lakehouse/Landing: ParcelLandingDev
