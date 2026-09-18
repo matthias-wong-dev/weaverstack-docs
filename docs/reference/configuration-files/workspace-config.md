@@ -1,29 +1,22 @@
-# Configuration contract
+# Workspace configuration
 
-Workspace configuration binds a project to one Fabric estate. It names the Fabric workspace, catalogue Warehouse, optional Fabric Environment, optional mirror source, execution settings and logical-item targets. It does not declare project documents or change their logical identities.
+A workspace configuration binds logical Weaver items to physical Fabric items. It also selects the catalogue, optional Spark runtime and optional Mirror source used in that estate.
 
-The conventional filename is `workspace-config.yml`. Automatic discovery checks only the current working directory; it does not search parent directories or infer the configuration from a separately supplied Build source path.
+## File and discovery
 
-## Keys
+The conventional filename is exactly `workspace-config.yml`. Automatic discovery checks only the process's current working directory. It does not search parent directories, inspect the Build source path or try other filenames.
 
-`workspace` is the only required top-level key. The supported keys are:
+`--workspace-config PATH` selects that file instead of the discovered file. The path may name any file; its basename has no semantic meaning.
 
-| Key | Value | Behaviour |
-| --- | --- | --- |
-| `workspace` | non-empty Fabric workspace name | Workspace in which unqualified bindings are resolved |
-| `catalogue` | `Warehouse/Name` | Warehouse that records the installed estate and operational state |
-| `environment` | `Environment` or `Workspace/Environment` | Published Fabric Environment attached when Spark work requires it |
-| `mirror` | `Warehouse/Name` or `Workspace/Warehouse/Name` | Source catalogue for an explicit Mirror operation |
-| `execution.parallel_workers` | positive integer | Default parallel-worker setting |
-| `targets` | mapping keyed by logical item identity | Physical Lakehouse and Warehouse bindings used by Build |
+The file must contain one YAML mapping. An empty document, YAML `null` and a mapping without `workspace` all fail because `workspace` is required.
 
-A complete form is:
+## Complete shape
 
 ```yaml
 workspace: Parcel Operations
 catalogue: Warehouse/ParcelCatalogueDev
-environment: ParcelRuntime
-mirror: Parcel Production/Warehouse/ParcelCatalogue
+environment: Platform Runtimes/ParcelRuntime
+mirror: Warehouse/ParcelCatalogue
 
 execution:
   parallel_workers: 8
@@ -36,32 +29,97 @@ targets:
       parallel_workers: 4
 ```
 
-A target key is an exact `Lakehouse/<Name>` or `Warehouse/<Name>` logical item. Its value is either a physical item name or a mapping containing `name` and optional `execution.parallel_workers`. The logical key supplies the physical kind. An item-level worker setting overrides the workspace default for that item; when absent, the workspace default applies.
+Only the keys shown above are accepted. Unknown keys are rejected at the top level and inside `execution` or a target mapping. The retired top-level keys `lakehouses` and `warehouses` are rejected; use `targets`.
 
-The `catalogue` key must name a Warehouse. It is not a project target and does not satisfy a missing `targets` entry. The `environment` key binds a published runtime definition; it neither creates nor publishes that Environment. The `mirror` key records a source catalogue; loading the configuration does not run Mirror.
+## Top-level keys
 
-## Resolution and precedence
+| Key | Shape | Required | Default | Meaning and restrictions |
+| --- | --- | --- | --- | --- |
+| `workspace` | non-empty string | yes | — | Fabric workspace in which the workload, catalogue and targets are resolved. Fabric-name validation applies. |
+| `catalogue` | `Warehouse/Name` | no | unset | Warehouse holding the Weaver catalogue. The kind must be the literal `Warehouse`; a workspace-qualified value is not accepted here. |
+| `environment` | `Environment` or `Workspace/Environment` | no | unset | Published Fabric Environment attached to Spark work. A qualified reference may select an Environment owned by another workspace. This key does not create or publish it. |
+| `mirror` | `Warehouse/Name` or `Workspace/Warehouse/Name` | no | unset | Source catalogue for Mirror and mirrored-state reads. Although the qualified form parses, Mirror and mirrored-state reads reject a source outside the resolved `workspace`. |
+| `execution` | mapping | no | `{}` | Workspace-level execution settings. |
+| `targets` | mapping from logical item to target declaration | no | `{}` | Build and Mirror destination bindings. An operation that needs an absent binding fails when resolving that item. |
 
-Workspace context resolves in this order:
+`workspace`, Environment components, catalogue names and physical target names use Fabric-name validation. Leading and trailing whitespace is removed. A name must not be empty, consist only of dots, or contain `/`, `\\`, `:`, `*`, `?`, `"`, `<`, `>` or `|`. The `/` characters shown in catalogue and Environment references are separators between validated components.
 
-1. an explicitly supplied workspace name or workspace-configuration file;
-2. a Workspace already owned by the supplied Session;
-3. `workspace-config.yml` in the current working directory;
-4. the current Fabric notebook workspace;
-5. an error stating that a workspace is required.
-
-An explicit `--workspace-config` path is loaded instead of the discovered file. Within a resolved configuration, explicit workspace, catalogue and Environment arguments override the corresponding configured values. Supplying an explicit workspace without a configuration bypasses automatic configuration discovery; it does not inherit discovered catalogue or target values. Supplying both an explicit workspace and an explicit configuration retains the configuration's other values while replacing its workspace.
-
-A Session's Workspace takes precedence over automatic file discovery, but an explicit workspace or configuration takes precedence over the Session. Explicit catalogue and Environment arguments can override whichever base Workspace was selected.
-
-Target bindings come from the selected configuration unless Build's item selection supplies an explicit `ITEM=TARGET` binding. Load, Test and Health do not reinterpret the current `targets` mapping; they read the installed item bindings from the selected catalogue.
-
-## Development and production switching
-
-Development and production are selected by choosing different configuration files, not by changing project paths or logical identities. For example:
+### `execution`
 
 ```yaml
-# workspace-production.yml
+execution:
+  parallel_workers: 8
+```
+
+| Key | Accepted value | Default |
+| --- | --- | --- |
+| `parallel_workers` | integer greater than zero; booleans are not integers here | unset |
+
+An unset value leaves parallelism to the operation or executor. There is no configuration-level numeric default.
+
+### `targets`
+
+Each key is an exact logical item identity:
+
+```text
+Lakehouse/Name
+Warehouse/Name
+```
+
+Each value has one of two shapes:
+
+```yaml
+# Short form
+Lakehouse/Landing: ParcelLandingDev
+
+# Long form
+Warehouse/Operations:
+  name: ParcelOperationsDev
+  execution:
+    parallel_workers: 4
+```
+
+The short-form string and long-form `name` are physical Fabric item names, not typed target references. The logical key supplies the physical kind: a `Lakehouse/...` key binds a Lakehouse and a `Warehouse/...` key binds a Warehouse.
+
+The long form accepts only `name` and `execution`. `name` is required. Its `execution` mapping has the same single `parallel_workers` key as the top-level mapping. A target-level value overrides the workspace-level value for that item; otherwise the workspace-level setting applies.
+
+`targets` may be absent or empty. Two logical items may parse with the same physical name, but one Build or Mirror cannot install two ordinary items of the same kind into one destination. A valid configuration therefore does not prove that all its bindings can be used together.
+
+## What each binding controls
+
+- `workspace` chooses the Fabric workspace context.
+- `catalogue` is a separate Warehouse binding for installed definitions and operational state. It is never an implicit target for a logical Warehouse.
+- `targets` supplies physical destinations to Build and Mirror. Build records the settled bindings in the catalogue.
+- Load, Test and Health read installed bindings from the selected catalogue; they do not retarget installed work from the current `targets` mapping.
+- `environment` selects a published runtime for Spark work. It is neither a target nor a publication instruction.
+- `mirror` identifies a source catalogue. Loading the configuration neither reads that catalogue nor runs Mirror.
+
+## Workspace resolution and precedence
+
+An operation resolves its base workspace in this order:
+
+1. an explicit `--workspace` and/or `--workspace-config`;
+2. the Workspace already owned by a supplied Session;
+3. `workspace-config.yml` in the current working directory;
+4. the current Fabric notebook workspace;
+5. an error if no workspace can be resolved.
+
+The details are consequential:
+
+- `--workspace-config FILE` loads `FILE` and bypasses automatic discovery.
+- `--workspace NAME` without `--workspace-config` bypasses automatic discovery and creates a workspace with no configured catalogue, Environment, Mirror source, execution settings or targets.
+- Supplying both uses the file as the base and replaces only its `workspace` value.
+- Explicit `--catalogue` and `--environment` values replace the corresponding value on whichever base won, including a Session-owned Workspace.
+- A Session is considered only when neither an explicit workspace nor an explicit configuration was supplied.
+- A discovered file is considered before Fabric notebook context. Discovery is not based on the project directory passed to `build SOURCE`.
+
+Health has no Environment argument because it executes no authored Spark work. Check reads project source locally and does not resolve this configuration.
+
+## Configuration selection
+
+Development and production are ordinary files selected by path. Their filenames and suffixes have no recognised meaning.
+
+```yaml title="workspace-production.yml"
 workspace: Parcel Operations
 catalogue: Warehouse/ParcelCatalogue
 targets:
@@ -69,8 +127,7 @@ targets:
   Warehouse/Operations: ParcelOperations
 ```
 
-```yaml
-# workspace-development.yml
+```yaml title="workspace-development.yml"
 workspace: Parcel Operations
 catalogue: Warehouse/ParcelCatalogueDev
 mirror: Warehouse/ParcelCatalogue
@@ -79,45 +136,37 @@ targets:
   Warehouse/Operations: ParcelOperationsDev
 ```
 
-Both files bind `Lakehouse/Landing` and `Warehouse/Operations`. Selecting one changes the physical workspace context, catalogue, optional mirror source, Environment and targets for that operation. It does not rename the items or alter their Weaver documents. The filenames and physical-name suffixes above are examples, not recognised environment labels.
+```bash
+weaver build . --workspace-config workspace-development.yml
+weaver load --workspace-config workspace-development.yml
+weaver test --workspace-config workspace-development.yml
+```
 
-Use one selected configuration throughout a Build, Load and Test lifecycle. Selecting another file addresses another estate even when the project source is unchanged. Mirror uses the selected configuration's `catalogue` as its destination, `mirror` as its source and `targets` as destination bindings; it runs only when explicitly requested.
+Both files bind the same logical items. Selecting a file changes the physical estate addressed by the operation; it does not rename the project, items or documents.
 
-## Failure boundaries
+## Mirror source and destination resolution
 
-Configuration loading fails before an operation proceeds when:
+Mirror resolves its two catalogue roles separately:
 
-- the file is absent, is not a YAML mapping or omits `workspace`;
-- a top-level, execution or target key is unknown;
-- a workspace, catalogue, Environment, mirror or physical target has an invalid shape or name;
-- `catalogue` does not name a Warehouse;
-- a target key is not a canonical logical item identity;
-- a target mapping omits `name`;
-- `parallel_workers` is not a positive integer.
+1. source: explicit `--mirror`, then configured `mirror`, then configured `catalogue`;
+2. destination: explicit `--catalogue`, otherwise configured `catalogue` only when a configured `mirror` is present.
 
-Retired `lakehouses` and `warehouses` sections are rejected; use one item-keyed `targets` mapping.
+A configuration containing only `catalogue` therefore describes a possible source estate, not an inferred destination. The destination must be supplied separately. A configuration containing both uses `mirror` as the source and `catalogue` as the destination.
 
-Parsing a configuration does not require `catalogue` or `targets`. Individual operations enforce what they need:
+Both catalogues must resolve to distinct Warehouses in the selected `workspace`. A value such as `Production/Warehouse/ParcelCatalogue` is accepted by the configuration parser but rejected by Mirror when `workspace` is not `Production`; it does not enable cross-workspace mirroring. Destination targets also belong to the selected workspace because target declarations carry names, not workspace qualifiers.
 
-- Check reads no workspace configuration;
-- catalogue-backed operations fail if no catalogue is resolved;
-- Build without explicit items fails when no configured targets select an item;
-- resolving an item fails when it has no configured or explicit target;
-- a configuration may map two logical items to one physical name, but Build refuses an installation that conflicts with another logical item's claim;
-- remote workspace, item, Environment and permission failures occur after local configuration has parsed and are not configuration-schema success.
+The development example above is valid because its source catalogue, destination catalogue and destination targets all belong to `Parcel Operations`.
 
-A valid configuration therefore establishes names and bindings, not the existence, accessibility or compatibility of the referenced Fabric items.
+## Validation boundary
 
-## Defined behaviour
+Configuration loading validates YAML shape, accepted keys, logical item syntax, reference syntax, Fabric names and positive worker counts. It does not contact Fabric. Existence, item kind, permissions, Environment publication state and catalogue compatibility are checked only by operations that use those references.
 
-The Configuration contract specifies that Weaver:
+Operation-specific requirements remain separate:
 
-1. accepts only the documented keys and value shapes;
-2. discovers `workspace-config.yml` only in the current working directory;
-3. applies explicit values, Session inheritance, file discovery and notebook fallback in the stated order;
-4. binds logical target keys to same-kind physical Fabric items;
-5. keeps catalogue, Environment, mirror and project-target roles separate;
-6. switches estates by selecting configuration, without changing logical identity;
-7. rejects malformed or incomplete values before remote work and leaves remote existence checks to the operation that uses them.
+- catalogue-backed operations require a resolved `catalogue`;
+- Build and Mirror require a destination binding for each selected item unless `ITEM=TARGET` supplies it;
+- Build with no `--item` requires at least one configured target;
+- Mirror applies the source/destination rules above;
+- remote runtime work may require a published Environment.
 
-See [Configure workspaces and Fabric Environments](../../basics/workspace-and-python-runtime.md) for an end-to-end setup and the [CLI reference](../cli.md) for command options.
+See [Fabric Environment definition](fabric-environment.md), [Shared selection and identity](../operation-behaviour/shared-selection-and-identity.md) and the individual [operation behaviour](../operation-behaviour/index.md) pages.

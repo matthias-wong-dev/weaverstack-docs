@@ -1,98 +1,179 @@
 # Fabric Environment definition
 
-`weaver fabric environment publish` accepts either an existing Fabric Environment reference or a local Environment definition. The two inputs have different authority boundaries.
+`weaver fabric environment publish` has two publication routes:
 
-## Local directory shape
+- `--path <Name>.Environment` sends a local definition as the complete desired Environment definition;
+- positional `ENVIRONMENT` updates Weaver's libraries in an existing remote Environment while leaving the remote definition authoritative.
 
-A local definition is a directory named exactly `<Name>.Environment`. The final `.Environment` suffix is case-sensitive, and `<Name>` must not be empty. The directory may live anywhere; `Environment/` is a project convention, not part of the parser contract.
+This publication is separate from workspace configuration. The `environment` key in `workspace-config.yml` selects a published Environment for Spark work; it does not create or publish one.
 
-The directory name supplies the Fabric Environment name. Workspace configuration may name a different Environment and is not consulted for that name when `--path` is used.
+## Local definition directory
 
-The accepted relative files are:
+A local definition is a directory whose basename is exactly `<Name>.Environment`.
 
-| Relative path | Meaning |
-| --- | --- |
-| `.platform` | Fabric platform metadata. |
-| `Libraries/PublicLibraries/environment.yml` | External package declaration. |
-| `Setting/Sparkcompute.yml` | Spark compute settings. |
-| `Libraries/CustomLibraries/<file>` | A custom library. Any file name below this directory is accepted as definition content. |
+- `.Environment` is case-sensitive.
+- `<Name>` must be non-empty.
+- The directory may be anywhere. `Environment/` is a project convention, not a discovery rule.
+- The basename supplies the Fabric Environment name. A positional Environment reference and the workspace configuration's `environment` value do not rename a `--path` publication.
 
-Subdirectories may be absent. Any file outside those four parts is a validation error. A missing path, a file in place of the `<Name>.Environment` directory, and a malformed directory name are also errors.
+A complete definition can have this shape:
 
-`initialise` writes the conventional path `Environment/<Name>.Environment/` with `.platform` and `Libraries/PublicLibraries/environment.yml`. It does not generate `Setting/Sparkcompute.yml`; Fabric then applies the workspace's Spark settings.
+```text
+Environment/
+└── ParcelRuntime.Environment/
+    ├── .platform
+    ├── Libraries/
+    │   ├── PublicLibraries/
+    │   │   └── environment.yml
+    │   └── CustomLibraries/
+    │       └── parcel_rules-1.0.0-py3-none-any.whl
+    └── Setting/
+        └── Sparkcompute.yml
+```
 
-## `environment.yml`
+Only these file paths are accepted:
 
-`Libraries/PublicLibraries/environment.yml` may be absent or empty. When present, it must be a YAML mapping. If it has `dependencies`, that value must be a list. A `pip` entry under that list must itself be a list:
+| Relative path | Cardinality | Weaver validation |
+| --- | --- | --- |
+| `.platform` | zero or one | Carried as bytes. Weaver does not define or validate its JSON schema. |
+| `Libraries/PublicLibraries/environment.yml` | zero or one | YAML container shape and the first `pip` list are validated as described below. |
+| `Setting/Sparkcompute.yml` | zero or one | Carried as bytes. Weaver does not define or validate its keys. |
+| `Libraries/CustomLibraries/<relative-file>` | zero or more | Any file beneath this directory is carried as bytes, including files in nested subdirectories. |
+
+Directories may be absent, and the definition may initially contain no files. Any file outside those paths is rejected before publication. Fabric remains authoritative for the contents it accepts inside `.platform`, `Setting/Sparkcompute.yml` and custom library files.
+
+`weaver initialise` writes only `.platform` and `Libraries/PublicLibraries/environment.yml` beneath `Environment/<Name>.Environment/`. It omits `Setting/Sparkcompute.yml`, so Fabric applies the workspace's Spark settings.
+
+## Complete example
+
+`.platform`:
+
+```json
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Environment",
+    "displayName": "ParcelRuntime"
+  },
+  "config": {
+    "version": "2.0"
+  }
+}
+```
+
+`Libraries/PublicLibraries/environment.yml`:
 
 ```yaml
 dependencies:
   - pip:
       - pandas==2.3.0
       - --index-url https://packages.example.invalid/simple
-      - weaverstack
+      - pyarrow==20.0.0
 ```
 
-Weaver edits this pip list as text rather than round-tripping the full YAML document. Comments, ordering, pip options, unrelated dependencies, and authored spellings of dependencies Weaver does not replace are retained. If no pip section exists, publication adds one.
+`Setting/Sparkcompute.yml`:
 
-Invalid YAML, a non-mapping document, non-list `dependencies`, or a non-list `pip` section is rejected before publication.
+```yaml
+runtime_version: "1.3"
+driver_cores: 8
+```
 
-## Weaver's overlay
+The `.platform` and Spark settings above are passed to Fabric; their keys are not a Weaver configuration schema. The custom wheel and external requirements are independent inputs.
 
-The selected publication mode owns Weaver's package entries; it does not treat an authored Weaver requirement as authoritative.
+## `environment.yml` shape
 
-### Released mode
+`Libraries/PublicLibraries/environment.yml` is optional and may be empty. When non-empty, it must parse as a YAML mapping.
 
-Released mode removes case-insensitive variants and duplicates of the `weaverstack` requirement, then adds the requirement for the publishing client:
+| Key or entry | Accepted shape | Default when absent |
+| --- | --- | --- |
+| document | mapping | empty library list |
+| `dependencies` | list | no declared dependencies |
+| a `pip` entry inside `dependencies` | mapping key whose value is a list | publication adds a pip section when Weaver needs one |
+| each pip-list value | YAML value converted to text | — |
 
-- a released client adds `weaverstack==<client-version>`;
-- a development or prerelease client adds unpinned `weaverstack` because that version has no corresponding released package.
+Other top-level keys and non-`pip` dependency entries are preserved rather than interpreted by Weaver. Weaver edits the first dependency mapping containing `pip`. Invalid YAML, a non-mapping document, non-list `dependencies`, or a non-list `pip` value is rejected.
 
-It removes staged Weaver custom wheels. Other external requirements and custom libraries remain.
+The pip list may contain package requirements and pip options such as `--index-url`. Weaver edits it as text so comments, ordering, options, unrelated dependency entries and authored requirement spellings can remain intact.
 
-### Development mode
+## Released publication
 
-`--dev` finds the Weaver source checkout by walking upward from the installed module until it finds `pyproject.toml`. It builds a wheel into that checkout's `dist/` directory using the running Python interpreter and `python -m build`.
+Released mode is the default. It owns the `weaverstack` distribution entry:
+
+1. remove all requirements whose distribution name normalises to `weaverstack`, including case, hyphen, underscore and dot variants;
+2. remove staged custom wheels named `weaverstack-*.whl`;
+3. add `weaverstack==<client-version>` for a released client, or unpinned `weaverstack` when the publishing client is a development or prerelease build.
+
+Duplicate Weaver requirements collapse to one managed requirement. Other requirements and custom libraries remain.
+
+```bash
+weaver fabric environment publish \
+  --path Environment/ParcelRuntime.Environment \
+  --workspace-config workspace-development.yml
+```
+
+## Development publication
+
+`--dev` publishes the running checkout rather than a PyPI Weaver requirement. Weaver finds the checkout by walking upward from its installed module until it finds `pyproject.toml`, then runs the active Python interpreter with:
+
+```text
+python -m build --wheel --outdir <checkout>/dist <checkout>
+```
 
 Development mode:
 
 - removes every `weaverstack` requirement from `environment.yml`;
-- adds the checkout's Fabric runtime requirements explicitly, because Fabric does not install dependencies from a custom wheel;
-- uploads the newly built Weaver wheel under `Libraries/CustomLibraries/`; and
-- removes stale Weaver wheels while preserving unrelated custom libraries.
+- builds and uploads one `weaverstack-*.whl` beneath `Libraries/CustomLibraries/`;
+- removes stale Weaver wheels while preserving unrelated custom libraries;
+- reads `project.dependencies` from the checkout and adds the dependencies needed inside Fabric; and
+- excludes desktop transports and build tools: `azure-identity`, `requests`, `build`, `prompt-toolkit` and `packaging`.
 
-Runtime requirements come from the checkout's `project.dependencies`. Desktop transports and build tools are excluded: `azure-identity`, `requests`, `build`, `prompt-toolkit`, and `packaging`. Existing authored requirements are retained when they can satisfy Weaver's requirement. A provable exact-pin or bounds conflict is rejected before any Environment changes are staged, with the conflicting authored and required specifiers named in the error.
+An existing authored requirement is retained when Weaver cannot prove a conflict. A conflicting exact pin or non-overlapping bound is rejected before Environment changes are staged, and the error names both specifiers.
 
-A missing checkout root, failed wheel build, or wheel build that produces no matching `weaverstack-*.whl` is an error.
+A checkout without `pyproject.toml`, a failed wheel build or a build producing no matching wheel is an error.
 
-## Local and remote authority
+## Local-definition authority
 
-### Publishing with `--path`
+With `--path`, the local directory supplies the complete desired definition. Weaver overlays its released requirement or development libraries in memory and does not modify the local files. It then creates the named remote Environment if absent, or updates it if present.
 
-The local directory supplies the complete desired definition. Weaver overlays its released requirement or development wheel and dependencies, then creates or updates the named Fabric Environment from that definition.
+Files absent from the local directory are absent from the desired definition. Do not use `--path` as a partial patch to preserve remote definition parts that are not represented locally.
 
-This route makes local content authoritative for `.platform`, Spark settings, external libraries, and custom libraries represented by the directory. Do not use `--path` as a partial patch: remote definition parts absent locally are absent from the desired definition.
+Publishing a local definition requires a workspace from `--workspace`, `--workspace-config` or normal workspace discovery. The selected configuration's `environment` key is not consulted for the Environment name.
 
-### Publishing an existing Environment by name
+## Existing-Environment authority
 
-The remote Fabric Environment is authoritative for everything except Weaver's own library entries. The Environment must already exist. Weaver reads its staged libraries, changes the Weaver requirement or Weaver wheel and required runtime packages, and preserves other libraries and settings.
+Without `--path`, name an Environment that already exists:
 
-An unqualified Environment needs `--workspace` or workspace configuration. A `Workspace/Environment` reference supplies the owner. If an explicit workspace conflicts with that owner, publication fails.
+```bash
+weaver fabric environment publish ParcelRuntime \
+  --workspace-config workspace-development.yml
 
-`--path` and a positional Environment reference are mutually exclusive; one of them is required.
+weaver fabric environment publish "Platform Runtimes/ParcelRuntime"
+```
 
-## Publication and preservation
+The positional reference accepts `Environment` or `Workspace/Environment`.
 
-After staging a change, Weaver asks Fabric to publish and waits for a terminal result. `success` and `succeeded` are accepted. A failed or cancelled result is an error; when Fabric identifies failed components, the error names them. A timeout reports the last observed state.
+- An unqualified reference requires a resolved workspace.
+- A qualified reference supplies its owner workspace. With neither `--workspace` nor `--workspace-config`, this form uses that owner directly and does not perform automatic workspace-configuration discovery.
+- A workspace selected with `--workspace` or `--workspace-config` must match the qualified owner.
+- The Environment must already exist; only the `--path` route creates one.
+- A positional reference and `--path` are alternative inputs; supply exactly one.
 
-If the desired definition already matches what Fabric preserves and the Environment's published state is successful, no update or publish request is sent. The result uses `action: unchanged`, `published: false`, and `publish_status: AlreadyInstalled`.
+On this route, the remote Environment is authoritative for platform metadata, Spark settings, external libraries other than Weaver's managed entries and unrelated custom libraries. Weaver reads staged libraries and changes only the Weaver requirement, Weaver wheel and required development dependencies.
 
-Definition comparison accounts for Fabric's observed normalization of line endings, JSON/YAML formatting, and `runtime_version` quoting. Weaver custom-wheel bytes are compared by their content-addressed filename; unrelated custom libraries are compared by bytes.
+## Publication result and unchanged definitions
 
-Environment publication is not a catalogue operation. It changes the Python runtime available to notebooks and Livy sessions; it does not build project documents or install a build bundle.
+After staging a change, Weaver asks Fabric to publish and waits up to 1,800 seconds. Terminal `success` and `succeeded` states are accepted. Failed or cancelled publication is an error; failed component names are included when Fabric provides them. A timeout reports the last observed state.
 
-## Current validation boundary
+No update or publish request is sent when the desired managed definition already matches and the Environment's published state is successful. The result then reports:
 
-Validation covers the directory name and supported files, the `environment.yml` container shapes, Weaver dependency conflicts, workspace ownership, wheel creation, and Fabric's publish result. It does not define a general schema for `.platform`, `Setting/Sparkcompute.yml`, arbitrary external packages, or arbitrary custom-library bytes beyond what Fabric accepts.
+```text
+action: unchanged
+published: false
+publish_status: AlreadyInstalled
+```
 
-The paths and overlay rules on this page describe the current implementation. They are not a versioned Environment-definition compatibility promise.
+For comparison, Weaver accounts for Fabric's observed normalisation of line endings, JSON/YAML formatting and `runtime_version` quoting. A Weaver wheel is compared by its content-addressed filename; unrelated custom libraries are compared by bytes.
+
+Environment publication changes the Python runtime available to notebooks and Livy sessions. It does not Build project documents, install a build bundle, select a catalogue or run Mirror.
+
+The file paths, overlay and comparison rules above describe the implemented interface. Weaver does not define a general schema for Fabric's `.platform` or `Sparkcompute.yml` content.

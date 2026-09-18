@@ -1,277 +1,209 @@
 # Shared selection and identity
 
+Weaver keeps authored identity separate from physical Fabric placement. An operation's argument position decides whether `Lakehouse/Name` denotes a logical item or a physical target.
 
----
+This page defines the shared names and selection grammars. The individual operation pages define planning, state changes, outcomes and failure handling.
 
-## Identity and naming contract
+## Project identity
 
-Weaver identities name authored intent. Physical names identify Fabric items in one workspace. Changing a physical binding does not change a project, item, schema or document identity.
+A parsed project's identity is the basename of its selected source directory. Build and Check select a project by path, not by a declared key inside the project.
 
-Identity is exact-case. Case is not normalised for lookup, comparison or collision handling.
+```bash
+weaver check ./parcel-project
+weaver build ./parcel-project
+```
 
-## Identity levels
+The project name must be one non-empty logical name with no surrounding whitespace and no `/`, `\\`, `.` or `:`. Project source defaults are operation-specific:
 
-| Level | Canonical form | Example |
+- `weaver check` defaults to the current directory;
+- desktop `weaver build` defaults to the current directory;
+- Build inside a Fabric session defaults to Notebook Resources and may also accept an `abfss://` directory.
+
+Workspace configuration is discovered from the process's current working directory, not from the selected project source path.
+
+## Logical item identity
+
+A logical item is exactly:
+
+```text
+Lakehouse/ItemName
+Warehouse/ItemName
+```
+
+`Lakehouse` and `Warehouse` are the only item kinds and use that spelling. The kind is part of identity, so `Lakehouse/Shared` and `Warehouse/Shared` are different items.
+
+An item component is a non-empty, exact-case logical name with no surrounding whitespace and no `/`, `\\`, `.` or `:`. Internal spaces are permitted. Parsers do not infer a missing kind or trim logical components.
+
+`Warehouse/_weaver` is Weaver's built-in catalogue item and cannot be authored by a project.
+
+## Schema and document identity
+
+Schemas and documents are item-qualified. Their canonical forms are:
+
+| Declaration | Canonical identity | Example |
 | --- | --- | --- |
-| Project | project-root folder name | `parcel-project` |
-| Logical item | `ItemType/ItemName` | `Lakehouse/Landing` |
-| Item-owned schema | `ItemType/ItemName/Schema` | `Warehouse/Operations/Parcel` |
+| Schema | `ItemType/ItemName/Schema` | `Warehouse/Operations/Parcel` |
 | Lakehouse Table or View | `Lakehouse/ItemName/Tables/Schema.Object` | `Lakehouse/Landing/Tables/Parcel.Status` |
 | Lakehouse Folder | `Lakehouse/ItemName/Files/Schema.Object` | `Lakehouse/Landing/Files/Parcel.Events` |
 | Lakehouse Test or Assumption | `Lakehouse/ItemName/Schema.Object` | `Lakehouse/Landing/Parcel.StatusIsKnown` |
-| Warehouse relation or validation | `Warehouse/ItemName/Schema.Object` | `Warehouse/Operations/Parcel.Status` |
+| Warehouse Table, View, Test or Assumption | `Warehouse/ItemName/Schema.Object` | `Warehouse/Operations/Parcel.Status` |
+| Deployed Lakehouse file | `Lakehouse/ItemName/file:Path/Name.ext` | `Lakehouse/Landing/file:_/Load/lib/rules.py` |
+| Warehouse programmable | `Warehouse/ItemName/procedure:Schema/Object` | `Warehouse/Operations/procedure:Parcel/Refresh Status` |
 
-Only `Lakehouse` and `Warehouse` are item types, with that exact spelling. The item type is part of identity: `Lakehouse/Shared` and `Warehouse/Shared` are distinct.
+A Lakehouse's `Tables` or `Files` area is part of a data document's identity. A Table and Folder may therefore share one `Schema.Object`. Lakehouse validations have no area because they materialise no data, so a validation may also share its `Schema.Object` with an area-qualified data declaration.
 
-A schema or document identity is item-qualified. The same `Schema.Object` in two items is two declarations. A Lakehouse area is also part of data identity, so `Tables/Parcel.Events` and `Files/Parcel.Events` may coexist in one Lakehouse.
+A Warehouse has no area syntax. Its relations and validations use one `Schema.Object` namespace and cannot reuse the same identity.
 
-A Lakehouse Test or Assumption has no area because it materialises no data. A Warehouse has no area syntax. Consequently, a Warehouse validation cannot reuse the `Schema.Object` identity of a Table or View in the same item, while a Lakehouse validation may use the same `Schema.Object` as a Table or Folder because the data declarations include their areas.
+For ordinary schema and object components, `.` separates `Schema` from `Object`; it is not allowed inside either component. Python filenames and class names encode that separator as `__`, while SQL filenames use `.`. Those are authored spellings, not alternative canonical identities. Deployed-file paths and programmable names have the specialised forms shown above.
 
-## Logical names
+The schema `_` is reserved for Weaver-managed definitions in every item. Names that merely begin with an underscore, such as `_Control`, are ordinary logical names.
 
-Project, item, schema and object components are non-empty, exact-case logical names without surrounding whitespace. A single logical component cannot contain `/`, `\\`, `.` or `:`. The dot in `Schema.Object` and slashes in qualified identities are separators, not characters inside a component.
+## Case, lookup and collisions
 
-Parsers require the complete canonical shape. They do not infer a missing item type, Lakehouse area, schema or object. Extra path components, an unrecognised item type and padded or empty components are identity errors.
+Canonical authored identity preserves case. Within one logical namespace:
 
-Python filenames and class names encode the schema/object separator as `__`; SQL filenames use `.`. Those are authored spellings of the same `Schema.Object` identity, not alternative runtime identities. The [Weaver documents contract](../weaver-documents/overview.md) defines their agreement rules.
+- an exact duplicate is rejected;
+- identities that differ only by case are also rejected;
+- no source file, generated layer or composition source wins a collision;
+- a Shortcut destination cannot collide with a native declaration;
+- a Test and Assumption cannot share one validation identity; and
+- explicit and implied schemas that differ only by case collide.
 
-## Logical and physical names
+Logical item selection uses the canonical item spelling. Installed `--name` lookup for Load and Test is case-insensitive, but the result and catalogue retain the canonical installed identity. Case-insensitive selector lookup does not permit case-only declarations to coexist.
 
-A logical item remains stable across workspace configurations:
+## Physical Fabric identities
 
-```text
-Lakehouse/Landing → Lakehouse/ParcelLandingDev
-Lakehouse/Landing → Lakehouse/ParcelLanding
-```
-
-The left side is the project identity. The right side is the typed physical target resolved for one Build. The logical item's type determines the physical target type; a logical Lakehouse cannot bind to a Warehouse, or the reverse.
-
-Workspace configuration writes a target value as a Fabric item name because its logical key already supplies the kind. Fabric names are trimmed and may contain spaces or dots, but may not be empty, consist only of dots, or contain `/`, `\\`, `:`, `*`, `?`, `"`, `<`, `>` or `|`.
-
-The catalogue Warehouse is a separate physical binding. It records installed logical identities and their target bindings; it does not become the implicit target of a logical Warehouse item.
-
-## Reserved namespaces
-
-`Warehouse/_weaver` is Weaver's built-in catalogue item. A project must not author that item.
-
-Within ordinary items, the schema named `_` is reserved for Weaver-managed definitions. An authored Table, View, Folder, validation, schema document or Warehouse programmable cannot claim it. Names that merely begin with an underscore, such as `_Control`, are ordinary logical names.
-
-Other reserved column names and runtime-specific names belong to the contracts for those authored forms. They do not change the project, item, area, schema and object grammar defined here.
-
-## Parsing, lookup and collisions
-
-Canonical identities round-trip without case folding. Lookup requires the declared spelling. A reference with the wrong case does not bind to the matching declaration under another spelling; where possible, the error identifies the declared spelling.
-
-Within one logical namespace:
-
-- declaring the same identity more than once is an error;
-- declaring identities that differ only by case is also an error;
-- a shortcut destination colliding with a native document is an error;
-- a Test and Assumption cannot share one validation identity;
-- an explicit schema and an implied schema that differ only by case collide.
-
-No file, declaration source or composition layer wins a collision. The project must contain one exact spelling.
-
-Some namespaces are deliberately separate. The same object name may coexist across different items, across the `Tables` and `Files` areas of one Lakehouse, and between a Lakehouse data declaration and an area-less validation. Warehouse relations and validations are not separate namespaces.
-
-## Failure semantics
-
-Malformed identity values fail at the boundary that reads them:
-
-- project and declaration identities fail project discovery;
-- malformed target keys or physical names in workspace YAML fail configuration loading;
-- malformed command selections fail command validation;
-- unresolved or wrongly cased logical references fail project validation.
-
-Weaver reports these as errors rather than trimming logical names, changing case, guessing a missing component or silently choosing one colliding declaration.
-
-## Defined behaviour
-
-The Identity and naming contract specifies that Weaver:
-
-1. keeps project, item, area, schema and object identity exact and item-qualified;
-2. treats a Lakehouse area as part of data identity;
-3. keeps logical identity independent of physical Fabric naming;
-4. preserves item kind across a binding;
-5. reserves `Warehouse/_weaver` and the `_` schema for Weaver-managed definitions;
-6. rejects malformed, duplicate and case-only-colliding identities;
-7. resolves logical references using exact declared spelling.
-
----
-
-## Selection contract
-
-Weaver operations share identity forms, but selection is defined by each operation's authority. A logical item, an installed object name and a physical target are different selectors even when their display names happen to match.
-
-## Shared identity forms
-
-### Logical items
-
-A logical item is written as:
+A whole physical item is written:
 
 ```text
-Lakehouse/Name
-Warehouse/Name
+Lakehouse/PhysicalName
+Warehouse/PhysicalName
 ```
 
-The kind and name identify the item in project source and catalogue state. Logical item selection never means “every dependency reachable from this item”. Dependencies can order selected work without widening its item boundary.
+A Fabric item name is trimmed and must not be empty, consist only of dots, or contain `/`, `\\`, `:`, `*`, `?`, `"`, `<`, `>` or `|`.
 
-### Installed object names
+Workspace configuration omits the physical kind in a target value because the logical mapping key supplies it:
 
-An installed relational or validation name is `Schema.Object`. A Lakehouse data object may be qualified with its area:
-
-```text
-Tables/Parcel.Status
-Files/Parcel.Events
+```yaml
+targets:
+  Lakehouse/Landing: ParcelLandingDev
+  Warehouse/Operations: ParcelOperationsDev
 ```
 
-The area distinguishes a Lakehouse Table from a Folder with the same `Schema.Object`. An operation may accept a bare Lakehouse `Schema.Object` only when the installed selection resolves it unambiguously. Warehouse objects and all Test or Assumption names use `Schema.Object` without a Lakehouse area.
-
-An object name is interpreted inside selected logical items. It is not a physical Fabric path and does not grant authority over another item.
-
-### Physical targets
-
-A physical target is also written `Lakehouse/Name` or `Warehouse/Name`, but its position determines that it names a Fabric item rather than a logical Weaver item. Build and Mirror make this distinction explicit with a binding:
+Build and Mirror command selectors include both kinds in an explicit binding:
 
 ```text
 LOGICAL_ITEM=PHYSICAL_TARGET
 ```
 
-Both sides must have the same item kind. The right side supplies or overrides workspace configuration; it does not rename the logical item.
+Both sides must have the same kind. The right side changes the destination for that request; it does not rename the logical item. Physical targets are names within the resolved workspace and cannot carry another workspace qualifier.
 
-## Build
+The catalogue is a separate physical Warehouse binding. It never becomes an implicit target for a logical Warehouse.
 
-Build selects logical items with repeatable `--item ITEM[=TARGET]`. `ITEM` is the source and catalogue ownership boundary; optional `TARGET` is its physical destination. Without `=TARGET`, workspace configuration must provide the binding.
+## Selector summary
 
-Naming no Build item selects every configured target. Build does not accept object-name selection: it reconciles the selected items and computes changed and impacted documents within them. Dependencies can add selected descendants to the Build plan but cannot add an unselected item.
+| Operation | Item or target grammar | Omitted selection | Narrower selector |
+| --- | --- | --- | --- |
+| Check | positional project directory | current directory | none |
+| Build | repeatable `--item ITEM[=TARGET]` | every configured target, in logical identity order | none |
+| Load | positional `ITEM ...`; repeatable `--item ITEM` is the legacy equivalent | every item installed in the catalogue, in logical identity order | repeatable `--name NAME` |
+| Test | positional `ITEM ...`; repeatable `--item ITEM` is the legacy equivalent | every item installed in the catalogue, in logical identity order | one of `--name Schema.Object` or `--file PATH` |
+| Health | repeatable `--item ITEM` | the complete installed estate | none |
+| Wipe | positional physical `TARGET ...` | the physical estate recorded by the catalogue | none |
+| Mirror | repeatable `--item ITEM[=TARGET]` | every configured target, in logical identity order | `--no-item` selects the catalogue only |
+| Install | positional build-bundle path | — | selection is fixed by the bundle |
+| Workflow | positional workflow name | — | each entry keeps its command's grammar |
+| Session | no operation selection of its own | — | each entered command keeps its grammar |
 
-## Load
+## Build selection
 
-Load accepts logical items positionally; repeatable `--item ITEM` is a legacy spelling for the same selection. Naming no item selects every installed item from the catalogue, not every configured project target.
+`SOURCE` selects the complete project snapshot to parse. Repeatable `--item` values select the logical items Build may reconcile:
 
-Repeatable `--name NAME` selects exact installed Tables or Folders inside that item boundary. Named selection does not expand or order through dependencies. Item-wide and stale selection do use the installed graph for ordering, while still excluding unselected items.
+```bash
+weaver build ./parcel \
+  --item Lakehouse/Landing \
+  --item Warehouse/Operations=Warehouse/OperationsDev
+```
 
-Load does not accept `ITEM=TARGET`: physical bindings come from the installed catalogue.
+The left side of each binding must identify an item in project source. Without `=TARGET`, the selected workspace configuration must provide that item's target. With `=TARGET`, the physical target must have the same kind and overrides the configured target for that request.
 
-## Test
+Naming no item selects every key in the configuration's `targets` mapping. An empty mapping does not mean every project item; Build then requires explicit items with explicit or configured destinations.
 
-Test uses the same positional and legacy `--item` logical-item grammar as Load. Naming no item selects every installed item.
+Build has no object-name selector. It reads the whole project for validation and dependency resolution, but selected logical items remain its installation boundary. Selecting the same logical item twice is rejected rather than deduplicated. Two ordinary selected items of the same kind cannot use one physical target.
 
-`--name Schema.Object` selects one installed Test or Assumption inside the item boundary. `--file PATH` instead selects one source validation and requires exactly one installed item to provide its target. The selectors are mutually exclusive. Validation dependencies identify inspected data; they do not expand Test selection or order validations as producers and consumers.
+## Load selection
 
-Test does not accept physical target overrides or Lakehouse `Tables/` and `Files/` object areas for validation names.
+Load combines positional items followed by legacy `--item` values. Items use logical `Lakehouse/Name` or `Warehouse/Name` syntax. Repeated items are deduplicated in first-requested order. `ITEM=TARGET` is rejected because Load reads the installed physical binding from the catalogue.
 
-## Health
+```bash
+weaver load Lakehouse/Landing Warehouse/Operations
+weaver load Lakehouse/Landing --name Tables/Parcel.Status
+```
 
-Health selects installed logical items only through repeatable `--item ITEM`. Naming none assesses the complete installed estate. It has no object-name, source-file or physical-target selector: Load, Test and Build health are assessed together for each selected installed item.
+`--name` is repeatable. Inside the selected items, it accepts:
 
-## Wipe
+```text
+Tables/Schema.Object   # Lakehouse Table
+Files/Schema.Object    # Lakehouse Folder
+Schema.Object           # Warehouse object, or one unambiguous Lakehouse object
+```
 
-Wipe positional values are physical `Lakehouse/Name` or `Warehouse/Name` targets. They are not logical item identities, even if a target has the same name as its logical item.
+Lookup is case-insensitive. A bare Lakehouse `Schema.Object` is rejected when both `Tables/...` and `Files/...` match. A selector matching the same installed node more than once is deduplicated in first-resolved order. A name matching the same identity in more than one selected item is ambiguous; select one item.
 
-Named targets select exactly those physical Fabric items. Naming none derives the installed physical estate from the catalogue. `--unbind` preserves the catalogue while removing claims for named targets and therefore requires at least one target. Wipe does not traverse project or installed dependencies to add targets.
+Named Load selection runs exactly the resolved installed objects. It does not add their dependencies or dependency-order edges. Item-wide and stale selection use the installed graph, but traversal never adds an unselected item.
 
-## Mirror
+## Test selection
 
-Mirror selects logical items with repeatable `--item ITEM[=TARGET]`. The optional right side is the destination physical target; without it, the destination comes from workspace configuration. Naming no item selects every configured destination target, not every installed item in the source catalogue.
+Test combines and deduplicates positional and legacy `--item` values in the same way as Load. It rejects `ITEM=TARGET` and reads targets from the catalogue.
 
-`--no-item` selects no physical item and forks only the catalogue. It is mutually exclusive with `--item`. Mirror maps the selected source installations to settled destination bindings; it does not accept object names or Wipe-style positional physical targets.
+Without a narrower selector, Test selects all installed Tests and Assumptions owned by the selected items. Data dependencies do not select additional validations, objects or items.
 
-## Empty, duplicate and invalid selections
+`--name Schema.Object` selects one installed Test or Assumption inside the item boundary. Lookup is case-insensitive. The selector is ambiguous if the same `Schema.Object` exists in more than one selected item, so select one item. Validation names never use Lakehouse `Tables/` or `Files/` prefixes.
 
-Where an omitted item selection means “all”, the source of “all” remains operation-specific:
+`--file PATH` selects one source Test or Assumption without installing it. It requires exactly one installed item to supply the target and dialect. `--file` and `--name` are mutually exclusive. The path is a source-file selector, not a document identity or physical target.
 
-| Operation | Omitted item selection |
-| --- | --- |
-| Build | every configured target |
-| Load | every installed item |
-| Test | every installed item |
-| Health | the complete installed estate |
-| Wipe | physical estate recorded by the catalogue |
-| Mirror | every configured destination target |
+## Health selection
 
-Repeated Load and Test items are deduplicated in request order. Build and Mirror bindings must not select one logical item more than once or bind two ordinary logical items to the same physical target. A named item that is unknown to the relevant project, configuration or installed catalogue is an error; Weaver does not reinterpret it as a physical target or silently reduce the selection.
+Health accepts repeatable `--item ITEM` values. Repeated logical items are deduplicated in request order. Naming none selects the complete estate recorded by the catalogue.
 
-## Defined behaviour
+Health maps selected logical items to their installed physical targets and deduplicates targets when several selected items resolve to the same target. It has no document, source-file or physical-target selector. Dependency ancestry may still be read to assess selected subjects; it does not add reported item scope.
 
-The Selection contract specifies that Weaver:
+## Wipe selection
 
-1. distinguishes logical items, installed object names, source files and physical targets by their operation and argument position;
-2. uses `Lakehouse/Name` and `Warehouse/Name` for typed item identities;
-3. uses `ITEM=TARGET` only where Build or Mirror binds a logical item to a same-kind physical target;
-4. keeps dependency traversal inside the authority granted by the operation's item selection;
-5. preserves exact named-object selection for Load and single-validation selection for Test;
-6. treats Wipe targets as physical rather than logical; and
-7. resolves omitted selection from configuration, installed state or physical estate according to the operation rather than applying one universal “all” rule.
+Wipe's positional values are physical targets:
 
-See [Identity and naming](shared-selection-and-identity.md), [Build](build.md), [Load](load.md), and [Test](test.md).
+```bash
+weaver wipe Lakehouse/ParcelLandingDev Warehouse/ParcelOperationsDev
+```
 
----
+They are not logical item selectors, even when a logical and physical item share a name. Repeated identical typed targets are deduplicated in first-requested order. Wipe does not inspect project source or traverse dependencies to add targets.
 
-## Dependencies contract
+Naming no target reads distinct physical targets from the catalogue's installation records. `--unbind` still requires at least one named target because it preserves the catalogue while removing its claims for exactly those targets.
 
-A dependency records that one Weaver document reads another managed document. Weaver uses that relationship to determine Build order and change impact. Load and Test use the installed graph for their own execution rules; a dependency is not a request to operate on every item it reaches.
+## Mirror selection
 
-## Inferred and declared dependencies
+Mirror uses Build's `ITEM[=TARGET]` grammar for destination bindings:
 
-When a document does not declare dependencies, Weaver can infer managed references from supported Python imports and SQL relation references. Discovery is static: Weaver does not execute authored Python or SQL to find edges.
+```bash
+weaver mirror \
+  --item Lakehouse/Landing=Lakehouse/ParcelLandingDev \
+  --item Warehouse/Operations=Warehouse/ParcelOperationsDev
+```
 
-A declared dependency list replaces inferred dependencies for that document. It does not add to them. An explicitly empty list declares no managed dependencies. Document forms that require an explicit list are invalid without one.
+The logical item must have an installation in the source catalogue. Without `=TARGET`, its destination comes from the selected workspace configuration. Naming no item selects every configured target; it does not select every item installed in the source catalogue.
 
-A two-part SQL relation or a supported item-object Python import resolves in the document's logical item. A logical Shortcut can resolve that local name to a producer owned by another item. Qualified physical SQL names and physical Shortcuts remain physical references: Weaver records that the consumer reads them but does not invent a managed project producer or Build edge.
+`--no-item` selects no physical item and forks only the catalogue. It is mutually exclusive with `--item`.
 
-Metadata text references and foreign-key metadata are not execution dependencies unless the document also declares or exposes a dependency through the rules above.
+Mirror does not accept object names or Wipe-style positional targets. A logical item selected twice is rejected after binding resolution. Destination physical identity includes kind and name: a Lakehouse and Warehouse may share a display name, but two selected items of the same kind cannot share one destination. The source catalogue, destination catalogue, source item targets and destination item targets must all be usable within the one resolved workspace; workspace-qualified Mirror configuration does not widen this boundary.
 
-## Validation and failure
+## Selection and dependency boundary
 
-Every managed dependency must resolve to exactly one document or logical Shortcut using its declared spelling and area. A missing object, missing Shortcut, ambiguous identity, wrong-case spelling or invalid import form fails project discovery. Weaver does not silently discard or retarget the edge.
+A selected logical item grants authority over work owned by that item. A managed dependency may:
 
-Tests and Assumptions may depend on data objects. They cannot be dependency targets because they validate data rather than produce data for another document.
+- order selected Build or item-wide Load work;
+- carry Build impact to a selected descendant; or
+- supply ancestry used by Health.
 
-The managed document graph and the cross-item graph must be acyclic. A cycle has no valid Build order and is rejected; source-file or directory order is not used to break it.
+It does not select an unselected item. To operate on both sides of a cross-item relationship, select both items. Named Load intentionally omits graph expansion and ordering, while Test dependencies describe inspected data rather than a producer chain.
 
-## Build impact and selection
-
-Build selection starts with documents and installed work owned by the selected logical items. Dependencies do not add an unselected item to the Build.
-
-Within that boundary:
-
-- new selected objects are selected for installation;
-- selected objects whose installed declaration or generated work differs are changed;
-- an existing selected descendant of a changed object is impacted, even if its own source is unchanged;
-- impact crosses a logical Shortcut when both producer and consumer items are selected;
-- a descendant in an unselected item is deferred until that item is built;
-- changed and impacted work is ordered so managed producers precede their consumers.
-
-A logical Shortcut is a distinct installed hop between producer and consumer. Changing what it points to changes the Shortcut; an unchanged installed Shortcut is not replaced merely because it was considered during planning.
-
-These are Build rules. They describe which installed definitions may need reconciliation. They do not mean that a later Load or Test run automatically executes the same affected subgraph.
-
-## Load dependencies
-
-An item-wide Load starts from the installed objects in the selected items and uses their installed dependencies for execution order. Upstream selected load work precedes downstream selected load work.
-
-A dependency outside the selected items does not widen the run. A named-object Load is narrower still: it executes only the named installed objects and does not expand or order that selection through dependencies. The [Load contract](load.md) defines its failure and fault-tolerance behaviour.
-
-## Test dependencies
-
-Test selects installed Tests and Assumptions owned by the requested items. Their data dependencies identify what they inspect, but do not add data objects or other items to the Test run. Validations do not form a producer chain: they run in stable identity order rather than dependency order among validations.
-
-## Item and run boundaries
-
-An item boundary controls what Build may reconcile and what Load or Test may execute. A dependency can cross that boundary for resolution and ordering without granting write or execution authority over the other item.
-
-To operate on both sides of a cross-item relationship, select both items. Selecting only the consumer can read an already installed producer through its Shortcut; it does not rebuild, load or test the producer as a side effect.
-
-## Defined behaviour
-
-The Dependencies contract specifies that Weaver:
-
-1. infers supported imports and SQL relation references only when no dependency list is declared;
-2. treats a declared list, including an empty list, as the complete managed dependency set for that document;
-3. distinguishes managed logical edges from unresolved physical references;
-4. rejects invalid managed references, validation targets and cycles;
-5. expands Build impact through selected existing descendants without adding unselected items;
-6. orders selected Build work from producer to consumer;
-7. keeps Load selection within its item or named-object boundary; and
-8. uses Test dependencies as inspected-data relationships, not as execution expansion or validation ordering.
+See [Workspace configuration](../configuration-files/workspace-config.md) for physical binding precedence and the individual [operation behaviour](index.md) pages for state and failure boundaries.
