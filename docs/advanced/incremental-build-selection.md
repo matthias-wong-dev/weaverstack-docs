@@ -1,83 +1,84 @@
-# Signatures and change-detection contract
+# How incremental Build selection works
 
-Build compares the selected authored estate with the installed estate recorded in the catalogue and with current physical inventory. Signatures identify whether an installed definition still represents what Weaver would install; inventory establishes whether the certified physical object is actually present in the expected form.
+You changed one Weaver document, but Build selected several objects and left the rest alone. The selection comes from three questions:
 
-A signature is an equality token, not a public content digest. Its algorithm, encoding and length are not part of this contract.
+1. Does the selected declaration still match the installed certification?
+2. Does the selected target still contain the certified physical object in the expected form?
+3. Which selected descendants depend on work that must be reconciled?
 
-## What counts as a detectable change
+Build answers those questions inside the logical items you selected. It does not turn a dependency into permission to change another item.
 
-For selected items, Weaver detects changes that alter the installable meaning of a document or generated work. This includes, where applicable:
+## Certification is the starting point
 
-- authored structure, query, Python or SQL body;
-- installed metadata such as descriptions, lineage, keys, load behaviour and declared dependencies;
-- a Shortcut's destination and source identity;
-- generated Load or validation work derived from a document; and
-- a change in Weaver's installation implementation for generated or managed physical work.
+A successful Build records certification for the installed definitions and generated work in `_.Registry`. Certification connects a logical object, its installed form and a signature. A physical Table or View with the same name but no matching certification is not automatically Weaver-owned.
 
-The comparison is against the installed certification, not file modification times or source-control history. Rewriting a file without changing its interpreted installable meaning need not select physical work. Conversely, generated work can change after a Weaver implementation change even when authored source is unchanged.
+The signature is an equality token for installable meaning. Changes to authored code, queries, relevant metadata, dependencies or generated work can move it. File modification time and source-control history do not decide equality, and the hash algorithm or encoding is not a public interface.
 
-Build also detects certified objects that are absent from the selected target or present in a different physical form. Such an object is not treated as unchanged merely because its recorded signature matches.
+Build also reads the selected targets' physical inventory. A matching signature cannot prove that the certified object still exists or still has the expected physical kind. Certification and inventory are therefore reconciled before Build decides what work to retain.
 
-## New, unchanged, changed and impacted
+## How an object is classified
 
-Within the selected items:
+Within the selected items, the useful classifications are:
 
-- **new** means the declared installable object is not present in the expected physical form;
-- **unchanged** means its installed signature matches and physical reconciliation confirms the expected form;
-- **changed** means the installed signature does not represent the selected declaration or generated work;
-- **impacted** means an existing selected descendant must be reconciled because a changed or stale upstream object can affect what it installs.
+- **New** — the declaration has no object in the expected installed form. Build installs it without first dropping an earlier Weaver installation.
+- **Unchanged** — certification matches the declaration and inventory confirms the expected physical form. Build leaves it alone.
+- **Changed** — the installed certification no longer represents the declaration or generated work, or physical reconciliation disproves the certified form. Build reconciles it to the selected declaration.
+- **Impacted** — the object's own declaration is unchanged, but it is an existing selected descendant of changed or stale work and must be rebuilt against that upstream generation.
 
-Changed objects are impact roots. Impact follows the managed dependency graph through existing descendants selected for the same Build. A new object is installed, but newness alone does not classify all existing descendants as impacted. Cross-item impact reaches a consumer only when that consumer's item is selected.
+An uncertified physical name is not promoted to an unchanged Weaver object. A certified Table that is missing, or is now a View, is not unchanged either. Build withdraws the disproved claim and reconciles the selected desired state.
 
-A selected consumer can also be stale when an installed producer behind a logical Shortcut was rebuilt later. Weaver selects the stale Shortcut path and affected selected consumers even if their source signatures still match. Once the consumer has been rebuilt against the newer producer, the same state converges to unchanged.
+A settled second Build can therefore select no work at all: no physical changes, catalogue publication or unrelated recertification are needed.
 
-An unchanged Build selects no physical or catalogue work. A changed Build does not republish unrelated unchanged catalogue tables merely because some other table changed.
+## Why descendants appear
 
-## Physical reconciliation and pruning
+Consider this managed dependency chain:
 
-Signatures do not establish physical existence or ownership. Build compares catalogue certification with target inventory before deciding what to retain, install or remove.
+```text
+Parcel.Event → Parcel.CurrentStatus → Parcel.DispatchSummary
+```
 
-- A matching certified object in the expected form can remain unchanged.
-- A certified object missing physically loses the claims that describe it and is handled as new work if still declared and selected.
-- An object whose installed physical kind differs from the declared kind is reconciled to the selected declaration.
-- A physical object with no Weaver certification does not become Weaver-owned merely because its name matches a declaration.
-- Removing a declaration from a selected item removes the obsolete certification and permits pruning within that item's managed target scope.
-- Objects and catalogue rows outside the selected items remain outside reconciliation.
+If `Parcel.Event` changes, it is a change root. Existing descendants in the same Build boundary can be impacted because their installed definitions were established against the earlier upstream generation. They may be rebuilt even when their own source files and signatures did not change.
 
-`Prohibit rebuild` prevents replacement of an existing owned data object when a change would otherwise rebuild it. It does not suppress installation of a genuinely new object. A retained protected object keeps its applicable runtime state.
+Newness is narrower. Installing a new producer does not, by itself, classify every existing descendant as impacted. Build uses the managed relationships and installed state it has, rather than treating any new file as a reason to rebuild the whole estate.
 
-## Certification and runtime state
+The dependency order also explains why generated work can appear beside the document you edited. A Table declaration can own a physical Table, installed Load work and catalogue declarations; Build selects the parts whose installed meaning must change, not merely the source filename.
 
-`_.Registry` records the installed signature only for work Build certifies. Physical presence without certification is not enough, and a declaration is not certified merely because it was discovered.
+## The item boundary stops propagation
 
-When Build replaces or refreshes installed work, the resulting object is certified again, including an unchanged descendant rebuilt because of impact. A borrowed mirrored object remains borrowed while unchanged; selected changed or impacted borrowed work becomes local when successfully installed.
+Suppose a producer is in `Lakehouse/Tracking` and a consumer is in `Warehouse/Dispatch`:
 
-Rebuilding a loadable object resets its current bookmark and Load state. Rebuilding a Test or Assumption resets its current Test state. Current state for unaffected objects and append-only operational history remain unchanged. Physical reconciliation alone does not erase runtime state before the selected lifecycle determines that the corresponding installed generation is being replaced or removed.
+```text
+Lakehouse/Tracking/Parcel.Event
+              ↓ logical Shortcut
+Warehouse/Dispatch/Parcel.CurrentStatus
+```
 
-## Boundaries
+Building only `Lakehouse/Tracking` can reconcile the producer, but it does not modify `Warehouse/Dispatch`. The consumer remains on its installed generation until its item is included in a later Build.
 
-This contract does not expose:
+```bash
+weaver build \
+  --item Lakehouse/Tracking \
+  --item Warehouse/Dispatch
+```
 
-- signature hash algorithms, byte encodings or salts;
-- bundle identity algorithms;
-- internal planning node names or action ordering;
-- a guarantee that every textual edit changes a signature;
-- a guarantee that signatures are portable between different object kinds or execution engines; or
-- permission to compare or manufacture catalogue signatures outside Weaver.
+When both items are selected, impact can cross the logical Shortcut and reach the consumer. This is why two Builds against the same source can select different object sets: the requested item set is the write boundary.
 
-A signature should be compared only in the context of the same installed logical object and its Weaver-managed physical form.
+## Logical Shortcuts can reveal deferred staleness
 
-## Defined behaviour
+A consumer behind a logical Shortcut can become stale when its producer was installed by an earlier Build after the consumer. On the next Build that selects the consumer item, Weaver refreshes the Shortcut path and affected consumers even when their authored signatures still match.
 
-The Signatures and change-detection contract specifies that Weaver:
+After those consumers are rebuilt against the newer producer, another identical Build settles to unchanged. The recorded installation generations make this possible; applications should not reproduce Weaver's freshness comparison or depend on its internal planning sequence.
 
-1. compares selected installable meaning with installed certification rather than timestamps or source-control state;
-2. detects authored, generated and supported installation-implementation changes;
-3. confirms physical presence and form separately from signature equality;
-4. leaves a matching selected object unchanged and performs no work at a settled fixed point;
-5. selects changed roots and existing selected descendants affected through managed dependencies;
-6. does not widen impact into unselected items;
-7. removes obsolete or disproved claims only within the selected managed boundary;
-8. certifies rebuilt and refreshed work, including impacted descendants;
-9. preserves unaffected current state and history while resetting state owned by rebuilt work; and
-10. treats signature representation and internal installation sequencing as implementation details.
+## Mirrored objects become local only when selected work needs them
+
+In a mirrored development estate, an unchanged borrowed object keeps its borrowed physical form. If Build selects that object as changed or impacted, successful installation replaces the borrowed form with the authored local form and removes its `_.Mirror` state. Unrelated borrowed objects remain borrowed.
+
+This transition follows the same item boundary. Building a producer does not materialise consumers in an unselected item.
+
+## Rebuild starts a new current state
+
+Rebuilding a loadable Table or Folder resets its bookmark and current Load state for the new installed generation. Rebuilding a Test or Assumption resets its current Test state. An impacted descendant that is rebuilt is recertified and receives the same applicable reset even though its own source was unchanged.
+
+Objects Build leaves unchanged keep their current state. `_.Log` and `_.LoadStatistic` are operational history and are not erased by an ordinary rebuild. A protected existing data object declared with `Prohibit rebuild` is retained instead of being dropped and rebuilt; that protection does not turn a genuinely new declaration into an existing object.
+
+Use [Build behaviour](../reference/operation-behaviour/build.md) for exact selection, removal, certification and failure rules. [Dependencies](../core-concepts/dependencies.md) explains the managed graph, and [Mirrors](../core-concepts/mirrors.md) explains borrowed and local state.

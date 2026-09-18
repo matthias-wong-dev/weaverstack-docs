@@ -1,74 +1,86 @@
-# History contract
+# Row auditing and operational history
 
-The catalogue separates current state from append-only operational history. Current state answers what is true for the installed generation now. History answers what settled during earlier and current workflows.
+Weaver records state at three different levels:
 
-## Current state
+- managed columns describe the current lifecycle state of each stored row;
+- current catalogue tables describe the latest state of an installed object; and
+- history tables record settled Load and Test work across workflows.
 
-`_.Bookmark`, `_.LoadStatus` and `_.TestStatus` contain the current row for a logical object.
+These surfaces answer different questions. Row audit columns do not replace operation history, and the latest Load status is not a list of every earlier Load.
 
-- `_.Bookmark` is the next incremental boundary for a loadable object.
-- `_.LoadStatus` is the latest Load outcome and timing for a Table, Folder or View lifecycle state.
-- `_.TestStatus` is the latest installed Test or Assumption outcome, timing and available failure count.
+## Row audit columns describe current rows
 
-A later settled attempt replaces the object's current status by key. It does not append another current-state row. A partial run updates only objects it reaches, so the estate's current Load state can be composed from several workflow identifiers.
+Weaver adds three managed audit timestamps to Tables: when a row was inserted, when it was last updated and its delete-lifecycle value. A live row carries a non-null maximum-date sentinel in the delete field. These columns are outside the authored business schema and cannot be used as authored business columns.
 
-A Build that replaces a loadable object resets its Bookmark and Load status for the new installed generation. Rebuilding a validation resets its Test status. Unaffected current rows remain unchanged.
+For a Python Table, `dataframe()` returns business columns by default. Pass `row_audit_columns=True` to append the three audit columns:
 
-## Append-only records
+```python
+current = Parcel__CurrentStatus(self).dataframe(row_audit_columns=True)
+```
 
-`_.Log` and `_.LoadStatistic` are history.
+The result still describes rows currently held by the Table. It is not an append-only record of every prior value or of rows that have already been physically removed. Use upstream history, a deliberately modelled history Table or Change Data Feed when the application needs business-row version history.
 
-`_.Log` receives one row for each settled unit of installed Load or Test work, including failures and blocked work. It records the workflow, task, logical object where one exists, physical target, result, times, message and available detail.
+The row signature used for keyed comparisons is also managed, but it is never returned by `dataframe()`. [Schemas, keys and managed columns](schemas-keys-and-managed-columns.md) explains that boundary.
 
-`_.LoadStatistic` receives one row when Load work executed. It records the workflow and logical object, timing, row counts, reload mode and static-skip marker. A blocked node has Log and current Load status but no statistic because no data work ran. A static skip is executed lifecycle work and is distinguished from a clean read that moved zero rows.
+## Bookmarks are current cursor state
 
-History is append-only through supported operations. Direct catalogue updates or deletes are not a retention interface.
+`_.Bookmark` contains the current incremental boundary for each loadable object. The boundary is the UTC instant immediately before its latest clean Load began. An object with no clean Load for its installed generation uses the initial boundary so incremental code asks for all available history.
 
-## Workflow correlation
+A clean Load advances the bookmark, including an incremental no-op. A failure, rejected-row result, blocked or pending node, or static skip does not. The row is current state: a later clean Load replaces the boundary for that logical object rather than appending another bookmark.
 
-Each orchestrated Load or installed Test run has a workflow identifier. Commands inside one workflow share its identifier, so Log and status rows from the commands that ran can be correlated. A standalone object load or validation also receives a workflow identifier for its own recorded unit.
+A Table and Folder with the same `Schema.Object` name remain distinct because their installed identities include the Lakehouse area.
 
-Current status stores the workflow that most recently settled that object. It is not necessarily the workflow most recently started for the estate. After partial work, filtering Log by one workflow reconstructs that attempt, while reading current statuses reconstructs the present estate from every workflow that last touched an object.
+## Load and Test status answer “what is true now?”
 
-Load statistics correlate to a Load execution by workflow identifier and logical object identity together. Health uses that boundary when presenting activity behind current Load state. It does not read an arbitrary recent prefix of accumulated statistics.
+`_.LoadStatus` holds the latest recorded Load state for each managed Table, Folder or View. `_.TestStatus` holds the latest recorded outcome for each installed Test or Assumption. A later settled attempt replaces that object's current row.
 
-A direct source-file Test has no installed workflow evidence: it neither updates Test status nor appends installed-estate history.
+A partial run updates only the objects it reaches. Current estate state can therefore contain rows produced by several workflow identifiers. Read these tables, or Health, when the question is whether the installed estate is pending, current, failed, rejected, blocked or stale now.
 
-## Retention boundary
+A direct source-file validation does not create installed Test history. Installed Test and Assumption execution is the boundary that updates `_.TestStatus` and appends operational evidence.
 
-Weaver appends operational history but does not define a time-based retention duration, automatic compaction policy or public pruning operation for `_.Log` and `_.LoadStatistic`. This contract therefore does not promise indefinite physical retention outside operations that preserve these tables, nor does it authorise manual deletion.
+## `_.Log` and `_.LoadStatistic` answer “what happened?”
 
-Use read-only queries for historical reporting. If external retention or export is required, treat it as management of copied data rather than mutation of the Weaver catalogue.
+`_.Log` receives evidence for settled units of installed Load or Test work, including unsuccessful, blocked and pending outcomes recorded for an executed plan. It is the broad history surface for reconstructing a run.
 
-## Rebuild boundary
+`_.LoadStatistic` records Load activity such as read, inserted, updated, deleted and rejected row counts, plus reload and static-skip distinctions. It exists only when Load work executed. A blocked node can therefore have a Log row and current Load status but no Load statistic; recording a row of zeroes would incorrectly imply that data work ran and moved nothing.
 
-Build reconciliation does not erase `_.Log` or `_.LoadStatistic`. Rebuilding a Table, Folder, Test or Assumption resets only the applicable current state for that installed generation. Historical records remain evidence of what happened to earlier generations.
+These tables are append-oriented history. Weaver operations do not expose time-based retention, compaction or manual pruning as an operating interface. Query them read-only and copy them elsewhere if another retention policy is required.
 
-An unchanged Build changes neither current state nor history. Item-scoped Build leaves current state and history for unselected items outside its boundary.
+## Correlate a run by workflow and object
 
-## Mirror boundary
+Each orchestrated Load or installed Test run receives a workflow identifier. Commands composed in one Weaver workflow share that identifier. Standalone object execution also receives an identifier for its recorded unit.
 
-Mirror copies installed declaration state and current state into the destination catalogue. It does not copy source `_.Log` or `_.LoadStatistic` rows. The destination rebuild creates those history tables empty, while source history remains in the source catalogue.
+Use the workflow identifier to gather the Log rows from one attempt. For Load statistics, combine it with logical object identity: a partial run may leave another object's current status pointing to an older workflow, and several objects can have statistics under the same workflow.
 
-Mirror is destructive at the destination: it empties and rebuilds the destination catalogue. Consequently, history that existed only in the previous destination catalogue is not preserved by the mirror. This is not deletion from the source and not a transfer of source history.
+This distinction is useful when Health shows a mixed current state:
 
-After the mirror, new destination Load and Test work appends destination history. Work on objects still borrowed remains recorded where that work executes. Health can combine current borrowed Load state and matching source statistics for reporting, but it does not copy those rows into destination history.
+```text
+workflow A settled Parcel.StatusFiles
+workflow B later settled Parcel.CurrentStatus
+current estate = latest row for each object
+history for workflow A = only work recorded under A
+```
 
-## Publication and failure
+Health reads current status and the matching statistics behind that status. It does not present an arbitrary recent slice of all accumulated history.
 
-A Load or installed Test does not report successful completion until its required catalogue writes have been flushed. If work completes but its record cannot be made durable, the operation reports a recording failure rather than claiming a fully recorded success.
+## Rebuild resets current state, not history
 
-History records settled units, not every planning, authentication, configuration or preflight message. Preserve command output for failures that happen before a node settles or before catalogue recording is available.
+Build starts a new current-state incarnation for work it rebuilds:
 
-## Defined behaviour
+- rebuilding a loadable object resets its bookmark and current Load state;
+- rebuilding a Test or Assumption resets its current Test state; and
+- unaffected objects retain their current rows.
 
-The History contract specifies that Weaver:
+`_.Log` and `_.LoadStatistic` remain as evidence of earlier generations. An unchanged Build changes neither current state nor history. An item-scoped Build leaves unselected items outside the reset boundary.
 
-1. keeps one current Bookmark, Load status and Test status per applicable logical object;
-2. appends Log evidence for settled installed work and Load statistics only for executed Load work;
-3. correlates current and historical evidence by workflow and logical identity;
-4. permits present estate state to span several workflows after partial runs;
-5. preserves history when Build resets current state for a rebuilt generation;
-6. copies current and installed state, but not source history, during Mirror;
-7. replaces rather than preserves previous destination history when Mirror rebuilds the destination catalogue; and
-8. defines no automatic history-retention or pruning promise beyond these operation boundaries.
+Reload is a different boundary. For each selected Table that execution reaches, Reload resets its bookmark and Load status before emptying and rereading the target. If that execution fails, the earlier bookmark and contents are not restored.
+
+## Mirror starts destination history at the boundary
+
+Mirror copies installed declaration state and current operational state into the destination catalogue. It does not copy the source estate's `_.Log` or `_.LoadStatistic` rows. The destination history tables begin empty and record only later work performed there.
+
+Mirror reconstructs the destination catalogue, so history that existed only in the previous destination catalogue is not preserved through that reset. Source history remains in the source catalogue.
+
+Borrowed data keeps its Load ownership at the source. Health can use source current state and the matching source statistics when assessing borrowed objects, but those rows are not copied into destination history. Once an object is materialised locally, later local Load and Test work records destination state and history.
+
+Use [Catalogue schema](../reference/catalogue-schema.md) for exact tables, columns, keys and stored values. [Load behaviour](../reference/operation-behaviour/load.md), [Test behaviour](../reference/operation-behaviour/test.md) and [Mirror behaviour](../reference/operation-behaviour/mirror.md) define their publication and reset boundaries.

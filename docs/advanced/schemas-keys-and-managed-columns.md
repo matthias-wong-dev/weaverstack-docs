@@ -1,77 +1,92 @@
-# Schema contract
+# Schemas, keys and managed columns
 
-A Weaver schema declaration describes the business columns a Table is expected to expose: their names, order, data types and authored nullability. Primary, unique and foreign keys add logical row and relationship expectations. The declaration does not expose Weaver's parser objects or intermediate schema model as an API.
+A Weaver Table has two column layers:
 
-## Declared columns
+- the **business schema** comes from an authored `Schema` or from the query shape Build establishes; and
+- **managed columns** are added by Weaver for identity, row auditing and keyed change comparison.
 
-A `Schema` mapping preserves authored column order. Column names are exact-case. A declared Table is installed in that order even when a SQL query returns the same columns in another order.
+Keys and column metadata apply to the business schema. They describe row identity and relationships without promising a physical index or enforced database constraint.
 
-The declared data type is the installed type. A business column is nullable unless it is named by `Not null` or belongs to the primary key. Primary-key columns are therefore not nullable without also being repeated under `Not null`.
+## Declared schema and inferred schema
 
-Python Table documents must declare `Schema`. Spark SQL and Warehouse Table documents may declare it. When they do, it is authoritative: the query must return every declared business column, no undeclared business column, and the exact declared spelling. A mismatch fails Build rather than silently dropping, adding or renaming a query column.
+Python Tables must declare `Schema`. Spark SQL and Warehouse Tables may either declare it or let Build infer their business columns from the query result shape. Views always take their columns from their query.
 
-A schema declaration does not coerce an authored Python result into shape. Authored code must return the declared columns with values the target engine can write as the declared types.
+With a declared schema:
 
-## Inferred columns
+- authored names, case, order and types define the installed business shape;
+- a SQL query must return every declared business column and no undeclared one;
+- query order may differ because declared order wins; and
+- Python code must return values the target engine can write as the declared types—Weaver does not coerce an arbitrary frame into shape.
 
-A Spark SQL or Warehouse Table may omit `Schema`. Its business column names and physical types are then obtained from the result shape established by the target engine during Build. A View also takes its columns from its query rather than a `Schema` mapping.
+With an inferred SQL schema, Build obtains business names and physical types from the target engine. Column-referencing metadata remains authored. A primary key, comparison column, column note or nullability declaration must still name an inferred column exactly, so Build can reject a reference only after it has the query shape.
 
-Inference supplies only facts available from that result shape. Authored metadata still controls primary keys, unique keys, foreign keys, comparison columns, column notes, nullability and any managed identity column. Every such metadata reference must match an inferred business column exactly.
+Inference does not derive Weaver metadata from SQL constraints, indexes, Spark attributes or sample data. Changing a physical query shape also does not update the installed contract until Build installs the changed document.
 
-This boundary is deliberate:
+## Primary keys identify rows for Load
 
-- declared schema decides names, order, types and authored nullability;
-- inferred schema takes names and types from the built query shape;
-- metadata is not inferred from SQL constraints, indexes, Spark attributes or source data;
-- later physical changes do not rewrite the installed declaration without Build.
+A primary key is an ordered, non-empty set of business columns. Its columns are implicitly non-null. An incremental Table requires one because updates and explicit deletes must identify existing rows.
 
-## Keys and relationships
+For a keyed Load, the primary key decides whether a staged row is an insert or a match. It is also the required shape of an explicit incremental delete claim. Key order is preserved, so a composite key is not an unordered set.
 
-`Primary key` is an ordered, non-empty set of business columns. It is required for incremental Table processing. The primary key identifies rows for comparison, update and explicit deletion, and its columns are not nullable.
+Declaring a key does not promise that Fabric creates an index or enforces a relational constraint. Weaver uses the logical key in generated and runtime Load work and records it in the catalogue.
 
-`Unique keys` is an ordered list of ordered column sets. Declaration order is significant when Load evaluates incoming duplicates. A unique key must not duplicate the primary key or another unique key.
+## Unique keys and foreign keys add logical rules
 
-`Foreign keys` pair an ordered set of this object's columns with an equally sized ordered set on another logical object. They record a relationship. They do not add a dependency by themselves and do not require Weaver to create or enforce a physical database constraint.
+Unique keys are ordered lists of ordered column sets. They cannot duplicate the primary key or one another. Load uses their declaration order while handling incoming duplicate rows, and an incremental merge that would leave the target non-unique fails rather than publishing that invalid state.
 
-Keys are logical Weaver metadata even where an installed engine representation includes a non-enforced key declaration. Do not treat them as a promise of an index, engine-enforced referential integrity or a particular constraint name.
+Foreign keys pair this Table's ordered columns with equally sized ordered columns on another logical object. They record a relationship, including across logical items, but they do not by themselves:
 
-## Weaver-managed columns
+- create an execution dependency;
+- create or name a database constraint;
+- build an index; or
+- enforce referential integrity in the target engine.
 
-Weaver can add columns that are not part of the authored business schema:
+Use authored imports, relation references or explicit `Dependencies` for execution order. [Dependencies](../core-concepts/dependencies.md) explains that separate graph.
 
-- row-audit columns record insert, update and delete lifecycle times for Tables;
-- a row-signature column supports change comparison for keyed loadable Tables;
-- an authored `Identity` name requests a Weaver-managed, engine-generated surrogate value outside the business schema.
+## Nullability is authored
 
-Managed names are reserved. An authored business column, key or identity declaration that collides with a reserved managed name is invalid. An identity column must not also be declared under `Schema`, returned by the query or used as the primary key.
+Business columns are nullable unless they are in the primary key or named under `Not null`. Primary-key columns must not be repeated under `Not null`; they are already non-null by definition.
 
-`Table.columns()` and ordinary `Table.dataframe()` expose business columns. The public row-audit option adds the audit columns. The row signature remains managed state rather than an authored projection. Exact method signatures are in [Python authored objects](../reference/python/objects.md).
+For a declared schema, Check can validate these references locally. For an inferred SQL shape, Build performs the reference check after the engine exposes the result columns. Load then applies the installed nullability contract to returned rows under its normal rejection and fault-tolerance rules.
 
-Managed-column spellings, physical encodings and generated statements can differ between Lakehouse and Warehouse targets. Those implementation forms are not an additional authoring surface.
+Managed audit, signature and identity columns are physically non-null and do not belong under authored `Not null`.
 
-## Validation and failure points
+## Comparison columns decide whether a matched row changed
 
-Validation occurs at the earliest boundary that has the required evidence.
+A keyed Table compares matched rows using its comparison columns. By default, that set is every business column outside the primary key. `Comparison columns` can narrow the set when another business column should not cause an update.
 
-**Project discovery** rejects malformed schema values, duplicate or case-colliding columns, unknown metadata keys, missing required schemas, invalid key shapes, key or nullability references outside a declared schema, repeated keys and reserved-name collisions. Check reaches this boundary without contacting Fabric.
+Weaver computes and stores a managed row signature over that set. A matching key with a different signature is an update; changing a column excluded from the comparison set does not make the row an update. The primary key and Weaver-managed columns are not part of the digest.
 
-**Build** validates deferred references after an inferred result shape is available. It rejects missing or extra columns for a declared SQL schema, metadata references absent from an inferred shape, case mismatches, ambiguous case-only query columns and identity collisions. These failures do not turn the inferred result into new source metadata.
+The signature is local bookkeeping for one physical Table. Lakehouse and Warehouse representations need not contain the same bytes, and applications should not compare, author or populate it.
 
-**Load** validates returned data against the installed contract. Missing required values, duplicate incoming keys and incompatible rows are reported under Load's fault-tolerance rules. A proposed incremental merge that would leave a declared unique key invalid fails without accepting the invalid target state. Target-engine type or expression errors remain execution failures.
+## Identity is a managed surrogate
 
-The same declaration is used after installation. Load does not reopen the project to discover a newer schema, and a source edit has no runtime effect until Build installs it.
+`Identity` requests a managed, engine-generated `bigint` surrogate outside the business schema. Authored staging data does not supply it.
 
-## Defined behaviour
+The identity name must not also appear under `Schema`, collide with an inferred query column or name the primary key. The primary key must come from source data so a later Load can match an existing row; an engine-generated identity cannot serve that purpose.
 
-The Schema contract specifies that Weaver:
+`Table.columns()` and `Table.dataframe()` omit the identity along with the other managed columns. It remains part of the physical Table and its installed metadata.
 
-1. preserves authored business-column names, order, types and declared nullability;
-2. treats primary-key columns as non-null and keeps ordered primary, unique and foreign-key sets;
-3. uses a declared SQL schema as authoritative and otherwise obtains business names and types from the built query shape;
-4. keeps authored metadata authoritative when business columns are inferred;
-5. treats keys and relationships as logical metadata rather than a promise of physical enforcement;
-6. keeps managed audit, signature and identity columns outside the authored business schema;
-7. rejects declaration errors during discovery and deferred shape errors during Build; and
-8. executes Load against the installed schema contract rather than unbuilt source.
+## Audit and signature columns are not business columns
 
-See [Weaver documents](../reference/weaver-documents/overview.md), [Build](../reference/operation-behaviour/build.md), [Load](../reference/operation-behaviour/load.md), and [Python authored objects](../reference/python/objects.md).
+Weaver adds three row-audit timestamps to Tables for insertion, update and delete lifecycle state. Live rows use a maximum-date sentinel for the non-null delete value. Python code can opt into those audit columns with `dataframe(row_audit_columns=True)`; the row signature is never exposed through that projection.
+
+A keyed loadable Table also carries the managed row signature. An unkeyed Table replaces its target wholesale and does not need one. Folders have neither Table row-audit columns nor a row signature.
+
+Managed names are reserved in both their Lakehouse and Warehouse spellings. Check rejects authored columns that collide with them.
+
+## Physical representation follows the engine
+
+The logical model is shared, but its physical form is engine-specific:
+
+| Concern | Lakehouse Delta | Fabric Warehouse |
+| --- | --- | --- |
+| Business types | Spark/Delta types | T-SQL types |
+| Audit names | lower snake case | spaced public names |
+| Audit timestamp type | Spark `timestamp` | `datetime2(6)` |
+| Row signature | SHA-256 hex text stored as `string` | SHA-256 bytes stored as `varbinary(32)` |
+| Identity | engine-generated `bigint` | engine-generated `bigint` |
+
+Those representations support the same Weaver behaviour; they are not a portable cross-engine row format. A declaration should use the type vocabulary for its target and should not return managed columns from authored code or queries.
+
+Use [Table reference](../reference/weaver-documents/table.md) and [Common metadata](../reference/weaver-documents/common-metadata.md) for exact authoring fields and accepted forms. [Catalogue schema](../reference/catalogue-schema.md) owns the exact catalogue column inventory, and [Python authored objects](../reference/python/objects.md) defines author-facing projections.

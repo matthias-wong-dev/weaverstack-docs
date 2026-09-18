@@ -1,32 +1,27 @@
 # Incremental data processing
 
+Incremental Build selection and incremental data processing solve different problems. Build decides which definitions to install. Load decides which source changes an installed Table or Folder should apply.
 
----
+The ordinary data loop does not require another Build:
 
-## Load changed parcel files incrementally
+```text
+initial Build + first Load
+→ change source data only
+→ Load again without Build
+→ inspect changed files and rows
+```
 
-This guide keeps a current parcel-status Table in sync with a managed Folder. The Folder publishes a complete file snapshot; the Table reads only files changed since its own last clean load and explicitly retires rows for deleted files. The [Incremental-processing contract](incremental-data-processing.md) owns the precise bookmark, change and commit semantics.
+The example below keeps current parcel status in a Table. A snapshot Folder copies CSV files from an incoming area, and the incremental Table consumes only the Folder changes since that Table's last clean Load.
 
 ## Prerequisites
 
-- [Install Weaver](../getting-started/installation.md) and confirm `weaver --version` works.
-- Create or reuse a project with a logical `Lakehouse/Tracking` item. [First project](../getting-started/first-project.md) covers initialisation and workspace binding.
-- Publish the project's Fabric Environment before Load. Both declarations below run Python in Fabric.
+- Create or reuse a project containing `Lakehouse/Tracking`.
+- Publish the project's Fabric Environment; both documents run Python in Fabric.
+- Make the external source snapshot available to the Fabric Spark session at `/mnt/parcel-source/parcel-status`. Keep this path outside the Lakehouse target that Build reconciles.
 
-The checked fixture for this guide is `examples/parcel-incremental/`.
+The mounted directory is source data, not a Folder Weaver manages. The managed destination will be `Files/Parcel/StatusFiles` in `Lakehouse/Tracking`. Replace the example mount with the source acquisition used by your project.
 
-## Add the managed Folder
-
-Create this structure beneath the project root:
-
-```text
-Lakehouse/
-└── Tracking/
-    ├── Files/
-    │   └── Parcel__StatusFiles.py
-    └── Tables/
-        └── Parcel__CurrentStatus.py
-```
+## Declare the snapshot Folder
 
 Create `Lakehouse/Tracking/Files/Parcel__StatusFiles.py`:
 
@@ -36,34 +31,33 @@ Folder ID: Parcel.StatusFiles
 
 Description: Current parcel status snapshots, one CSV file per parcel.
 
-Lineage: A carrier snapshot represented by this example.
+Lineage: CSV snapshots supplied in the Lakehouse incoming area.
 
 File key: "*.csv"
 
 Incremental: false
 """
 
+from pathlib import Path
+import shutil
+
 from weaver import Folder
 
-SNAPSHOT = {
-    "P-1001.csv": "Parcel ID,Status,Depot\nP-1001,In transit,Central\n",
-    "P-1002.csv": "Parcel ID,Status,Depot\nP-1002,Delivered,South\n",
-}
+
+SOURCE = Path("/mnt/parcel-source/parcel-status")
 
 
 class Parcel__StatusFiles(Folder):
     def read(self):
         staging = self.staging_folder()
-        for name, content in SNAPSHOT.items():
-            (staging.path / name).write_text(content, encoding="utf-8")
+        for source in SOURCE.glob("*.csv"):
+            shutil.copy2(source, staging.path / source.name)
         return staging
 ```
 
-`Incremental: false` means each successful Folder load treats staging as the complete managed snapshot. A file removed from `SNAPSHOT` is removed from the destination. Weaver records changes to files matching `File key` in the Folder's change history; files outside that managed scope do not enter this history.
+`Incremental: false` makes each successful Folder Load a complete snapshot of the managed `*.csv` files. A source file that disappears from the incoming directory is therefore retired from the managed Folder. After publication, Weaver records inserted, updated and deleted managed paths in the Folder's change history; byte-identical files are not updates.
 
-Replace the in-module `SNAPSHOT` with source acquisition appropriate to your project. Keep the declaration and the `staging_folder()` return contract unchanged.
-
-## Read the Folder from the Table's bookmark
+## Declare the incremental Table
 
 Create `Lakehouse/Tracking/Tables/Parcel__CurrentStatus.py`:
 
@@ -73,7 +67,7 @@ Table ID: Parcel.CurrentStatus
 
 Description: The latest status supplied for each parcel.
 
-Lineage: $Files/Parcel.StatusFiles
+Lineage: Parcel status snapshots managed by Parcel.StatusFiles.
 
 Primary key: Parcel ID
 
@@ -86,7 +80,6 @@ Schema:
 """
 
 from Files.Parcel__StatusFiles import Parcel__StatusFiles
-
 from weaver import Table
 
 
@@ -97,10 +90,10 @@ class Parcel__CurrentStatus(Table):
         changed = source.files_since(bookmark)
         deleted = source.deleted_since(bookmark)
 
-        staged = None
+        staging = None
         if changed:
             root = source.spark_path()
-            staged = (
+            staging = (
                 self.spark.read.option("header", True)
                 .csv([f"{root}/{path.name}" for path in sorted(changed)])
                 .select(*self.columns())
@@ -111,48 +104,32 @@ class Parcel__CurrentStatus(Table):
             parcel_ids = [(path.stem,) for path in sorted(deleted)]
             deletes = self.spark.createDataFrame(parcel_ids, ["Parcel ID"])
 
-        if staged is None and deletes is None:
+        if staging is None and deletes is None:
             return None
-        return staged, deletes
+        return staging, deletes
 ```
 
-`self.bookmark()` is the Table's boundary, not the Folder's. It is the UTC instant immediately before this Table's latest clean load began. Before the first clean load it is a sentinel, so the first read includes all recorded files.
+The import establishes the managed dependency, so an item-wide Load runs the Folder before the Table.
 
-`files_since(bookmark)` returns current files whose latest change is strictly after the boundary. `deleted_since(bookmark)` returns paths retired strictly after it; those paths normally no longer exist. Both mappings also carry each change time as their value. This example only needs their path keys.
+The bookmark belongs to `Parcel.CurrentStatus`, not to the source Folder. `files_since()` returns current managed files whose latest recorded event is strictly after that boundary. `deleted_since()` returns paths whose latest event is a deletion after the boundary; those paths normally no longer exist.
 
-The Table is incremental, so absence from the changed-file window does not delete a row. The second return value is an explicit delete claim. It contains the declared primary key derived from each deleted filename. Returning `None` when both windows are empty is a successful no-op and avoids starting a table reconciliation job.
+An incremental Table treats staging as a change set. Rows absent from staging remain in the target. Deletion therefore requires the second return value, containing the declared primary-key columns. `None` means a successful no-op when neither window contains work.
 
-## Check, build and load
+## Establish the first boundary
 
-From the project root, run the local check:
+Place these two source files in `/mnt/parcel-source/parcel-status`:
 
-```bash
-weaver check
+```csv title="P-1001.csv"
+Parcel ID,Status,Depot
+P-1001,In transit,Central
 ```
 
-A successful check confirms that metadata, paths, identities, the import dependency and Python syntax parse. It does not execute `read()`, Spark or Folder change-history access, and it does not prove the load will run in Fabric.
-
-Install the declarations and publish the Environment:
-
-```bash
-weaver build --item Lakehouse/Tracking
-weaver fabric environment publish \
-  --path Environment/Weaver.Environment
+```csv title="P-1002.csv"
+Parcel ID,Status,Depot
+P-1002,Delivered,South
 ```
 
-Preview and run the item-wide load:
-
-```bash
-weaver load Lakehouse/Tracking --dry-run
-weaver load Lakehouse/Tracking
-weaver health --item Lakehouse/Tracking
-```
-
-The dry run should place `Files/Parcel.StatusFiles` before `Tables/Parcel.CurrentStatus`. In Fabric, the first successful Load should leave two managed CSV files and two rows in `Parcel.CurrentStatus`. Confirm those outcomes in the Lakehouse; local `weaver check` cannot observe them.
-
-## Exercise a changed file and a deletion
-
-Edit `SNAPSHOT`: change the status in `P-1001.csv` and remove the `P-1002.csv` entry. Then reinstall the changed source and load the item:
+Check and install the declarations once, then run the first Load:
 
 ```bash
 weaver check
@@ -161,122 +138,53 @@ weaver load Lakehouse/Tracking --dry-run
 weaver load Lakehouse/Tracking
 ```
 
-The Folder load records the changed `P-1001.csv` and deleted `P-1002.csv`. The dependent Table reads both changes from the same Table bookmark, updates the `P-1001` row and deletes the `P-1002` row by primary key. Verify the resulting row and the Load statistics in Fabric.
+The first Folder Load publishes both files and records their insertions. The Table has its initial bookmark, so its first read includes both changes and inserts two rows. A clean Load records a new Table bookmark at the instant immediately before that read began.
 
-A later clean run with no Folder changes reaches `return None`. That no-op is still a clean load, so the Table bookmark advances. A failed load or a load with rejected rows does not advance it; the next attempt reads from the previous clean boundary.
+Inspect the managed Folder and `Parcel.CurrentStatus` in the Lakehouse. The Table should contain `P-1001` and `P-1002`.
 
-## Recover without corrupting the window
+## Change source data, then Load without Build
 
-Use reload only when a Table must be reconstructed from zero:
+Do not edit either Weaver document. In the incoming source directory:
+
+1. replace `P-1001.csv` with:
+
+    ```csv
+    Parcel ID,Status,Depot
+    P-1001,Delivered,Central
+    ```
+
+2. delete `P-1002.csv`.
+
+Run Load again against the already installed definitions:
 
 ```bash
-weaver load Lakehouse/Tracking \
-  --name Tables/Parcel.CurrentStatus \
-  --reload
+weaver load Lakehouse/Tracking --dry-run
+weaver load Lakehouse/Tracking
 ```
 
-Reload resets the selected Table's bookmark, empties it before `read()` and then runs the incremental code from the initial boundary. It does not reload the Folder; Folders do not support reload. Because name selection runs exactly the named object, make sure the Folder's current files contain every row needed to reconstruct the Table.
+There is deliberately no `weaver build` in this sequence. The Folder publishes one changed file and one deletion. The Table reads both events from its previous clean boundary, updates `P-1001` and deletes `P-1002` by primary key.
 
-`Static: true` is a separate load-once policy. After an object's first clean load, later ordinary loads record a static skip without calling `read()`. A Table reload clears that state and runs the Table again. Do not mark a changing Folder or Table static.
+Inspect three results:
 
-If `files_since()` reports managed files without usable change history, load the Folder successfully to publish a new change before retrying the Table. Do not manufacture `_changes` records or edit the [catalogue](../core-concepts/catalogue.md) by hand.
+- `Files/Parcel/StatusFiles` contains the current `P-1001.csv` and no `P-1002.csv`;
+- `Parcel.CurrentStatus` contains one `P-1001` row with status `Delivered`; and
+- the latest Load activity reports the Folder changes and the Table's updated and deleted rows.
 
-## Next action
+A later clean run with no source changes reaches the Table's `return None`. That no-op still consumes a complete source window and advances the bookmark. Failed, rejected, blocked and static-skip outcomes do not advance it.
 
-Use [Weaver documents](../core-concepts/weaver-documents.md) for Folder and Table ownership, [Weaver operations](../core-concepts/build-load-and-test.md) for the Build/Load boundary, and [Dependencies](../core-concepts/dependencies.md) for item-wide ordering. [Development cycle](../basics/development-cycle.md) explains how these edits move through a mirrored estate. Command selection is in the [CLI reference](../reference/cli.md); clean-load recording and failure behaviour are in the [Load contract](../reference/operation-behaviour/load.md).
+## Declaration changes cross the Build boundary
 
----
+The sequence above changes data while leaving the installed code and metadata alone. If you instead edit either Weaver document, the installed declaration does not change until Build runs:
 
-## Incremental-processing contract
+```text
+edit declaration
+→ check
+→ Build
+→ Load the new installed generation
+```
 
-Incremental processing reconciles one installed Table or Folder against a boundary recorded in the catalogue. The authored declaration decides whether the source is a complete replacement or an incremental change set. Load does not infer incremental intent from the amount of data returned.
+Build can select changed work and affected descendants. For each loadable object it rebuilds, Weaver resets the current Load state and bookmark to the initial boundary. The next Load therefore asks that installed generation for all available history, not only events since the pre-Build bookmark. In the normal development loop, use `weaver load --stale` after Build to run the objects whose state is now non-Green.
 
-## Bookmark boundary
+That reset is why editing a source constant inside a Weaver document and rebuilding it is not an ordinary incremental-data demonstration: it combines a declaration change, Build impact and bookmark reset with the data change being measured.
 
-A bookmark is the timezone-aware UTC instant immediately before an object's latest clean load began. A newly built or reset loadable object has the sentinel boundary, which asks an incremental source for its complete available history.
-
-The boundary is captured before authored `read()` work starts. It advances only after a clean successful load, including a successful incremental no-op that returns `None`. It does not advance after:
-
-- a failed or errored load;
-- a blocked or pending node;
-- a load that completed with rejected input; or
-- a static skip that consumed no source window.
-
-Bookmarks are keyed by logical item, Lakehouse area where applicable, schema and object. A Table and Folder with the same `Schema.Object` therefore have distinct boundaries.
-
-Rebuilding a loadable object resets its current bookmark and Load status for the new installed generation. Unchanged objects keep their boundaries.
-
-## Keyed Table updates and deletes
-
-An incremental Table has a declared primary key. Its staging rows are a partial change set:
-
-- a key absent from the target is inserted;
-- a key already present is updated when its comparison values changed;
-- a target key absent from staging is retained; and
-- a delete occurs only when the authored result explicitly claims that primary key.
-
-`read()` may return staging alone or `(staging, deletes)`. The delete value is a relation containing the declared primary-key columns. `(None, deletes)` is a deletion-only load. `None` or `(None, None)` is a successful no-op for an incremental Table.
-
-A non-incremental keyed Table treats staging as the complete source. Target rows absent from staging are deleted, and the authored method must not return a separate delete claim. An unkeyed Table replaces its contents wholesale. Returning `None` for a non-incremental Table is invalid because an empty complete source must be represented as an empty staging relation.
-
-Incoming rows that violate recoverable key or nullability checks can be rejected under the selected fault-tolerance policy. A proposed incremental merge that would leave a declared unique key duplicated is a fatal target-validity failure under either policy.
-
-## Folder publication and history
-
-A Folder publishes files matching its declared managed scope. An incremental Folder adds or replaces staged files and deletes only explicitly named files. A non-incremental Folder treats staging as the complete managed snapshot and retires managed files omitted from it. Files outside the declared managed scope are not removed by replacement.
-
-After a Folder changes, Weaver writes a change document recording inserted, updated and deleted relative paths. Byte-identical staged files are not recorded as updates. Change history is the evidence used by:
-
-- `files_since(bookmark)` — current files whose latest recorded event after the boundary is an insert or update;
-- `deleted_since(bookmark)` — paths whose latest recorded event after the boundary is a delete; and
-- `latest_files()` — surviving files from the newest recorded change that left files in place.
-
-The boundary is strict: an event at the bookmark instant is excluded. A later event for the same path supersedes an earlier event in the requested window. Returned change times are UTC, and a naive bookmark is invalid.
-
-Physical files without a change document are not historical events. Before an ordinary non-static Folder's first authored read, Weaver records existing destination files once when no Folder history exists, so retained files enter subsequent history. Existing history suppresses that adoption. The change-history directory is Weaver metadata rather than managed Folder content.
-
-An incremental Folder may return `None` for a no-op or `(None, deletes)` for deletion-only work. A non-incremental Folder must return its issued staging folder. Folders do not support reload.
-
-## Stability thresholds
-
-A keyed Table can declare delete and update percentage thresholds and a minimum target-row count at which they apply. Defaults are 5% deletes, 20% updates and 1,000,000 target rows.
-
-The gate is evaluated after the proposed insert, update and delete sets are settled but before the target is mutated. It does not apply to wholesale replacement, an empty target or a target smaller than the minimum. A change breaches only when its percentage is strictly greater than the declared limit.
-
-A breach leaves the target unchanged through that reconciliation path and records failure evidence. Fault tolerance does not make the proposed change acceptable. The public Python Table load can explicitly waive the stability gate for that invocation; the waiver does not alter the installed declaration.
-
-## Stale selection
-
-`load --stale`, or `stale=True`, narrows the selected item boundary to loadable objects whose Load health is not Green. This includes pending, failed, errored, blocked, rejected and stale objects. It uses the same freshness assessment and zoned `as_of` cutoff as Health.
-
-Stale selection does not include borrowed objects as destination work, does not select Views and does not widen into unselected items. A local descendant can be selected because a borrowed ancestor advanced. A plan with no non-Green local work succeeds without mutation.
-
-`as_of` is valid on Load only with stale selection. Stale and reload modes cannot be combined.
-
-## Reload and commit boundaries
-
-Reload applies only to selected Tables. For each Table as the run reaches it, Weaver:
-
-1. writes and durably flushes Pending Load status and the sentinel bookmark;
-2. empties the target while preserving the installed Table definition;
-3. calls the ordinary authored load against the empty target and reset boundary; and
-4. records the resulting Load status, statistic and clean bookmark where applicable.
-
-The reset occurs per reached node, not across the whole plan. A fail-fast run does not reset a later node it never reaches. Reload does not add descendants or reset unselected Tables. Selecting a Folder makes the reload request invalid before execution.
-
-If execution fails after reset or emptying, the old bookmark and target contents are not restored. The Table remains in the state established by the reset and partial execution evidence. A later reload is a new reconstruction attempt.
-
-Ordinary successful Table and Folder loads publish target changes before their clean bookmark is committed. Catalogue recording is part of completion: an operation does not report clean success before its required state writes are durable. There is no operation-wide transaction across several selected objects.
-
-## Defined behaviour
-
-The Incremental-processing contract specifies that Weaver:
-
-1. uses the instant before a clean load starts as that object's next incremental boundary;
-2. advances a bookmark only for a clean success, including a no-op;
-3. applies keyed incremental inserts and updates from staging and deletes only from explicit primary-key claims;
-4. treats non-incremental staging as complete source state;
-5. records Folder insert, update and delete history and queries it with a strict boundary;
-6. selects stale work from the same assessment as Health without widening item scope;
-7. evaluates stability before target mutation and keeps it independent of fault tolerance; and
-8. resets and flushes each reached Table before reload empties and rereads it, without rollback.
+Use [Load behaviour](../reference/operation-behaviour/load.md) for exact bookmark, reload and selection rules. [Python authored objects](../reference/python/objects.md) defines the Folder and Table return forms, and [Row auditing and operational history](row-auditing-and-operational-history.md) explains where current state and Load activity are recorded.
