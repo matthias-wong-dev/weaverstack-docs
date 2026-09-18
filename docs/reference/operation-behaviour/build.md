@@ -1,165 +1,53 @@
 # Build behaviour
 
+Build turns one snapshot of project source into a deployment bundle and, unless `--bundle-only` is set, installs that bundle.
 
----
+## Inputs and selection
 
-## Build contract
+`SOURCE` is a project directory. It defaults to the current directory on a desktop and to the process working tree exposed as Notebook Resources inside a Fabric session. An `abfss` source is accepted only inside a Fabric session.
 
-Build turns a project snapshot into installed Weaver definitions. It validates project source, compares selected logical items with their installed and physical state, creates a deployment bundle and, unless asked for a bundle only, installs that bundle.
+Repeatable `--item ITEM[=TARGET]` selects logical items and may supply or override each physical binding. Naming no item selects every target in workspace configuration; an empty selection is an error. See [Shared selection and identity](shared-selection-and-identity.md) for the accepted forms and item boundary.
 
-## Source and item selection
+Build copies the complete source directory to a temporary snapshot before parsing. Later edits to, removal of, or additions under the original directory do not change that Build. The snapshot is removed after success or failure.
 
-`SOURCE` names a project directory. On the CLI it defaults to the current directory; inside a Fabric session the default is Notebook Resources and an `abfss` directory is also accepted. Weaver snapshots the complete source tree before parsing it, so edits made after discovery do not alter the bundle being prepared.
+## Validation, preflight and planning
 
-Build selects logical items with repeatable `--item` values:
+Before installation, Build:
 
-```bash
-weaver build ./parcel \
-  --item Lakehouse/Landing \
-  --item Warehouse/Operations=Warehouse/Operations_Dev
-```
+1. parses and validates the complete project snapshot, including identities, dependencies and cycles;
+2. validates the selected items and bindings;
+3. on a desktop, verifies the workspace, catalogue, Environment when named, and all selected physical targets in one Fabric inventory read before opening Spark; this REST preflight is skipped inside a Fabric session;
+4. reads the installed catalogue and selected physical inventories; and
+5. compares source, installed certification and physical state to prepare a bundle.
 
-A value before `=` is a logical `Lakehouse/Name` or `Warehouse/Name`. The optional value after `=` is a physical target of the same kind. Without an override, the target comes from workspace configuration. Naming no item selects every configured target; if neither an item nor a configured target exists, Build fails.
+Source validation reads the whole project, but selected items are the reconciliation boundary. Dependencies do not add an unselected item. Within the boundary, planning classifies new and changed work, selected existing descendants affected by a change, protected work, and installed work removed from source. Producers precede consumers; removal uses the reverse dependency boundary. Cross-item impact reaches a consumer only when both items are selected.
 
-The selected items are the write boundary. Build reads the whole project to resolve and validate declarations, but it does not install, remove or recertify project items outside the selection. Dependencies do not add an unselected item.
+Installed signatures are equality tokens, not public content digests. Build also checks physical presence and form: a matching signature does not make a missing or differently typed object unchanged. Uncertified physical objects are not adopted merely because their names match. `Prohibit rebuild` retains an existing protected data object when replacement would otherwise be required; it does not prevent first installation.
 
-## Validation and planning
+## Bundle-only mode
 
-Before changing Fabric, Build parses the project and rejects invalid declarations, identities, dependencies, cycles, item selections and target bindings. It then reads the catalogue and the physical inventory of selected targets.
+Every Build prepares a self-contained deployment bundle before installation. The bundle contains the frozen plan and payloads, not project source.
 
-For each selected item, Build compares source, installed certification and physical inventory:
+`--bundle-only` writes the bundle and stops before installation. It still validates source and reads the destination catalogue and inventories because the plan is destination-state-specific. `--bundle-path` is valid only with `--bundle-only` and must name a new or empty directory; without it, Weaver creates a temporary-directory path and returns that path. Build has no `--dry-run` mode: bundle-only mode writes a bundle but changes no installed objects or catalogue state.
 
-- a source document with no installed certification is new;
-- a changed declaration, generated definition or disproved physical certification is changed;
-- an installed descendant of changed work is impacted when it is inside the selected items;
-- installed work removed from source is selected for removal;
-- unchanged, physically present work is not rebuilt;
-- a document that prohibits rebuilding is retained rather than dropped and rebuilt.
+`weaver install` accepts a local bundle directory or `.weaver.zip` archive. It validates the plan and payload checksums before any action, then executes that frozen plan without reopening source or replanning against destination state. Bundle representation and identity are current formats, not compatibility guarantees; see [Build bundle format](../build-bundle-format.md).
 
-Changed and impacted work follows dependency order. Producers are installed before consumers; removals reverse the applicable dependency order. Cross-item impact is followed only where both items are selected.
+## Installation barriers and certification
 
-## Deployment bundles
+Installation executes plan sequences in order. Actions in a batch run serially. If an action fails, the remaining actions already in that batch still receive their actual results; later batches in that sequence and every later sequence are `skipped`. Every planned action therefore ends as `succeeded`, `failed` or `skipped`.
 
-Every plan is written as a deployment bundle with a bundle identifier, selected targets, ordered work and the payloads required for installation. The bundle contains the prepared installation, not a copy of project source.
+Runtime-state reconciliation occurs before physical rebuild work. A selected loadable being rebuilt is set to pending and its bookmark is reset to the initial boundary; a selected Test or Assumption is set to pending. Removed declarations lose their current-state rows. Operational history in Log and LoadStatistic is retained, and unchanged or unselected objects keep their current state. A failed later action does not restore an earlier reset.
 
-`--bundle-only` stops after creating that bundle. `--bundle-path` retains it in a new or empty directory and is valid only with `--bundle-only`. The resulting directory or `.weaver.zip` archive can be passed to `weaver install`; installation validates the bundle and its payloads before executing anything and does not reopen source or replan against it.
+Physical work and runtime artefacts precede catalogue publication. Dictionaries and item bindings are published before Registry certification, and Registry is a final barrier. Physical work can therefore exist without matching certification if a later publication action fails; Build health reports that inconsistency. A Lakehouse SQL-endpoint refresh that the current host cannot perform is recorded as `skipped` and does not by itself fail installation.
 
-A bundle created from the same source and prepared state has the same identity. Installation uses the plan in the bundle rather than inferring additional work from the destination host.
+A report status is `succeeded` when no action failed, including a plan containing supported host skips, and `failed` otherwise. Installation writes `install-report.yml` beside the bundle plan; a direct Build also returns that report, although its internal temporary bundle is removed.
 
-## Installation and certification
+## Failures, partial state and reruns
 
-Installation applies the bundle in its declared order. Catalogue certification follows the physical work it certifies. A physical object is installed only when the selected item binding and matching certification have been published successfully.
+Source, request, desktop preflight, state-read and bundle-validation errors stop before installation and produce no installation report. During installation, failures are captured in the report; the CLI renders the result and exits `1`. A successful or bundle-only Build exits `0`.
 
-When a selected definition is rebuilt, its applicable current Load or Test state is reset to pending. Historical Load and Test records are retained. Unselected items and their current state remain outside the Build write boundary.
+Build has no operation-wide transaction or rollback. Runtime-state resets, removals, physical changes and catalogue writes completed before a later failure remain. Rerunning Build takes a new source snapshot and replans from the catalogue and physical state that remain; an unchanged settled rerun selects no physical or catalogue work.
 
-A successful Build reports `succeeded`. Its result identifies the source snapshot, selected logical items, bundle identifier, whether installation occurred and the retained bundle path when there is one.
+Build may remove obsolete Weaver-certified objects and catalogue claims inside selected items. It does not reconcile or remove state outside that boundary.
 
-## Failure and partial state
-
-Source, request, state-read and bundle-validation failures stop before installation. During installation, a failed piece of work is reported as `failed`; work that cannot run after that failure is reported as `skipped`. The Build result is `failed` and carries the failed installed objects and source paths where available.
-
-Build has no operation-wide rollback. Physical changes and catalogue updates that completed before a later failure remain in place. Certification is ordered after the physical work so a failed installation does not certify later work that never ran, but earlier successful changes are not undone. Rerunning Build replans from the state that remains.
-
-For a retained bundle, installation writes an installation report beside its plan with one outcome for every planned piece of work. A normal Build returns the same installation report through its result.
-
-## Defined behaviour
-
-The Build contract specifies that Build:
-
-1. snapshots and validates the project before planning installation;
-2. treats selected logical items as its installation and catalogue boundary;
-3. derives new, changed, impacted and removed work from source, certification and physical inventory;
-4. orders selected changes by managed dependencies without adding unselected items;
-5. creates a self-contained, validated deployment bundle before installation;
-6. installs exactly the prepared bundle rather than reopening source or replanning;
-7. publishes certification only for installed selected state;
-8. stops later installation work after a failure and reports every planned outcome; and
-9. does not roll back successful work from earlier in a failed installation.
-
-See [`weaver build`](../cli/build.md), [`weaver install`](../cli/install.md), [Catalogue](../catalogue-schema.md), and [Dependencies](shared-selection-and-identity.md).
-
----
-
-## Signatures and change-detection contract
-
-Build compares the selected authored estate with the installed estate recorded in the catalogue and with current physical inventory. Signatures identify whether an installed definition still represents what Weaver would install; inventory establishes whether the certified physical object is actually present in the expected form.
-
-A signature is an equality token, not a public content digest. Its algorithm, encoding and length are not part of this contract.
-
-## What counts as a detectable change
-
-For selected items, Weaver detects changes that alter the installable meaning of a document or generated work. This includes, where applicable:
-
-- authored structure, query, Python or SQL body;
-- installed metadata such as descriptions, lineage, keys, load behaviour and declared dependencies;
-- a Shortcut's destination and source identity;
-- generated Load or validation work derived from a document; and
-- a change in Weaver's installation implementation for generated or managed physical work.
-
-The comparison is against the installed certification, not file modification times or source-control history. Rewriting a file without changing its interpreted installable meaning need not select physical work. Conversely, generated work can change after a Weaver implementation change even when authored source is unchanged.
-
-Build also detects certified objects that are absent from the selected target or present in a different physical form. Such an object is not treated as unchanged merely because its recorded signature matches.
-
-## New, unchanged, changed and impacted
-
-Within the selected items:
-
-- **new** means the declared installable object is not present in the expected physical form;
-- **unchanged** means its installed signature matches and physical reconciliation confirms the expected form;
-- **changed** means the installed signature does not represent the selected declaration or generated work;
-- **impacted** means an existing selected descendant must be reconciled because a changed or stale upstream object can affect what it installs.
-
-Changed objects are impact roots. Impact follows the managed dependency graph through existing descendants selected for the same Build. A new object is installed, but newness alone does not classify all existing descendants as impacted. Cross-item impact reaches a consumer only when that consumer's item is selected.
-
-A selected consumer can also be stale when an installed producer behind a logical Shortcut was rebuilt later. Weaver selects the stale Shortcut path and affected selected consumers even if their source signatures still match. Once the consumer has been rebuilt against the newer producer, the same state converges to unchanged.
-
-An unchanged Build selects no physical or catalogue work. A changed Build does not republish unrelated unchanged catalogue tables merely because some other table changed.
-
-## Physical reconciliation and pruning
-
-Signatures do not establish physical existence or ownership. Build compares catalogue certification with target inventory before deciding what to retain, install or remove.
-
-- A matching certified object in the expected form can remain unchanged.
-- A certified object missing physically loses the claims that describe it and is handled as new work if still declared and selected.
-- An object whose installed physical kind differs from the declared kind is reconciled to the selected declaration.
-- A physical object with no Weaver certification does not become Weaver-owned merely because its name matches a declaration.
-- Removing a declaration from a selected item removes the obsolete certification and permits pruning within that item's managed target scope.
-- Objects and catalogue rows outside the selected items remain outside reconciliation.
-
-`Prohibit rebuild` prevents replacement of an existing owned data object when a change would otherwise rebuild it. It does not suppress installation of a genuinely new object. A retained protected object keeps its applicable runtime state.
-
-## Certification and runtime state
-
-`_.Registry` records the installed signature only for work Build certifies. Physical presence without certification is not enough, and a declaration is not certified merely because it was discovered.
-
-When Build replaces or refreshes installed work, the resulting object is certified again, including an unchanged descendant rebuilt because of impact. A borrowed mirrored object remains borrowed while unchanged; selected changed or impacted borrowed work becomes local when successfully installed.
-
-Rebuilding a loadable object resets its current bookmark and Load state. Rebuilding a Test or Assumption resets its current Test state. Current state for unaffected objects and append-only operational history remain unchanged. Physical reconciliation alone does not erase runtime state before the selected lifecycle determines that the corresponding installed generation is being replaced or removed.
-
-## Boundaries
-
-This contract does not expose:
-
-- signature hash algorithms, byte encodings or salts;
-- bundle identity algorithms;
-- internal planning node names or action ordering;
-- a guarantee that every textual edit changes a signature;
-- a guarantee that signatures are portable between different object kinds or execution engines; or
-- permission to compare or manufacture catalogue signatures outside Weaver.
-
-A signature should be compared only in the context of the same installed logical object and its Weaver-managed physical form.
-
-## Defined behaviour
-
-The Signatures and change-detection contract specifies that Weaver:
-
-1. compares selected installable meaning with installed certification rather than timestamps or source-control state;
-2. detects authored, generated and supported installation-implementation changes;
-3. confirms physical presence and form separately from signature equality;
-4. leaves a matching selected object unchanged and performs no work at a settled fixed point;
-5. selects changed roots and existing selected descendants affected through managed dependencies;
-6. does not widen impact into unselected items;
-7. removes obsolete or disproved claims only within the selected managed boundary;
-8. certifies rebuilt and refreshed work, including impacted descendants;
-9. preserves unaffected current state and history while resetting state owned by rebuilt work; and
-10. treats signature representation and internal installation sequencing as implementation details.
+See [`weaver build`](../cli/build.md), [`weaver install`](../cli/install.md), [Catalogue schema](../catalogue-schema.md), and [Shared selection and identity](shared-selection-and-identity.md).

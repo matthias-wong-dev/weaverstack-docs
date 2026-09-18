@@ -1,101 +1,82 @@
-# State and health contract
+# Health behaviour
 
-Health reports the installed estate as it exists when the operation starts. It combines installed catalogue state, current Load and Test state, dependency freshness and, unless disabled, physical inventory. It does not read project source, execute authored work or change the estate.
+Health reads installed operational state. It does not read project source, execute authored Build, Load or Test work, publish certification, or change the estate.
 
-The report has Load, Tests and Build sections. Each section assesses only its own subjects; the overall status is the worst section status.
+A Health invocation reads catalogue tables, matching current Load statistics, optional mirrored Load state and optional physical inventories at several points during the invocation. The report is not an atomic snapshot across those sources. `generated_at` is when the operation began; rerunning performs new reads and may produce a different result.
 
-## Evidence and scope
+## Selection and evidence
 
-Installed evidence comes from the selected catalogue:
+Repeatable `--item ITEM` selects installed logical items. Naming none selects every physical target bound by catalogue installations. A named item without an installation is a command error. Health has no object, file or physical-target selector; see [Shared selection and identity](shared-selection-and-identity.md).
 
-- item-to-target bindings and certified objects;
-- installed Table, Folder, View, Test, Assumption, dependency and Shortcut declarations;
-- current Load and Test status;
-- borrowed-object records for a mirrored estate.
+Selection bounds reported subjects and inventory reads. Managed ancestry outside the selection is still read when deciding whether a selected Load or validation is behind its sources.
 
-Current runtime evidence is keyed by logical object identity. A current status identifies the workflow that produced it and its available start, completion and finding counts. It is not a complete run history. Health reads Load statistics only for the workflow and logical object behind each current Load status; older statistics remain history but are outside that activity window.
+Health reads:
 
-With inventory enabled, Health also checks each selected physical target against certified physical objects. Warehouse inventory is read through its SQL endpoint. Lakehouse inventory is read from OneLake without starting Spark; consequently, a Lakehouse View is not declared missing merely because storage inventory cannot list it. `--no-inventory`, or `inventories=False` in Python, omits this evidence. A Green Build section from that mode establishes catalogue consistency only, not physical presence.
+- catalogue installations, Registry certification, Table, Folder and Test dictionaries, dependencies, Shortcuts and mirror records;
+- current LoadStatus and TestStatus;
+- only LoadStatistic rows matching the workflow and logical identity in current LoadStatus; and
+- by default, physical inventory for selected targets.
 
-Naming no item assesses every target bound by the catalogue. Naming items assesses the targets to which those logical items are installed. An item without an installation is an error. Selection bounds the reported subjects and inventory reads, but freshness still follows managed ancestors outside the selection.
+Older Log and LoadStatistic rows remain history but are not the current Health activity window. A partial run may leave current objects correlated with different workflows; blocked work can have current status without a LoadStatistic row.
 
-For a borrowed object, current Load state and matching Load statistics come from the source catalogue. Local objects use destination state. The destination catalogue continues to supply installed topology, Tests and Build evidence.
+For borrowed objects, current Load state and matching statistics come from the configured source catalogue. The destination catalogue still supplies topology, validation and Build evidence. If borrowed objects exist but the source catalogue is absent or names another workspace, Health fails rather than using copied state as current.
 
-## Green, Amber and Red
+## Inventory and host boundaries
 
-Severity order is Green, Amber, then Red. A section with no findings is Green. A section's status is its worst finding; the report status is the worst section.
+With inventory enabled, Warehouse objects are read over TDS and Lakehouse storage objects through OneLake. Health does not start Spark or Livy and accepts no Environment option. Lakehouse Views are not reported missing merely because storage inventory cannot enumerate them.
+
+`--no-inventory` skips physical reads. Build health can then report catalogue contradictions but cannot establish that certified objects are physically present. Authentication, catalogue, mirror-source and inventory-read failures are command errors; Health does not turn them into Red findings.
+
+## Status aggregation
+
+The severity order is **Green**, **Amber**, **Red**. A section with no findings is Green. Each section is its worst finding, and the overall report is its worst section.
 
 ### Load
 
-Each installed Table or Folder that holds rows is a Load subject, including borrowed objects. Views are not Load subjects, but their Build-established times participate in freshness for descendants.
+Installed Tables and Folders are Load subjects. Views and generated runtime artefacts are not, although a View's Build-established time can affect descendants.
 
-Load is:
+- **Green:** the current installed generation settled successfully, is not older than `as_of`, and is not behind a managed ancestor.
+- **Amber:** no load has settled since Build; the latest result contains tolerated rejects or another non-failure state; the last clean completion is older than `as_of`; or a managed ancestor has no settled current generation or was established later.
+- **Red:** the current result is failed, errored or blocked.
 
-- **Green** when the current generation has settled successfully, is fresh enough and is not behind a managed ancestor;
-- **Amber** when no load has settled since Build, the last load completed with rejects, the last clean state is older than the freshness cutoff, a managed ancestor has no settled state for its current generation, or an ancestor was established later;
-- **Red** when the current outcome is failed, errored or blocked.
-
-A static object is exempt from age and ancestor-freshness checks after its load-once state is established. Its latest lifecycle touch can still establish freshness for a downstream object.
+After a static object has established its load-once state, its own age and ancestor-freshness checks are exempt. Its latest lifecycle touch can still affect descendant freshness. A static object that has never loaded is Amber.
 
 ### Tests
 
-Each installed Test and Assumption is a Tests subject.
+Installed Tests and Assumptions are Tests subjects.
 
-Tests is:
+- **Green:** the latest installed execution passed and no managed data dependency was established later.
+- **Amber:** the validation has not run since Build, has another non-failure current state, or passed before a managed dependency was established again.
+- **Red:** the latest execution failed, errored or was blocked.
 
-- **Green** when the latest installed validation passed and no managed data dependency was established later;
-- **Amber** when it has not run since Build, has another non-success state that is not a failure, or passed before a dependency was established again;
-- **Red** when the latest validation failed, errored or was blocked.
-
-Elapsed time alone does not make a validation stale. A Test finding can carry discrepancy counts; an Assumption finding can carry its violation count.
+Elapsed time alone does not make a validation Amber. Test findings may carry missing and unexpected counts; Assumption findings may carry a violation count.
 
 ### Build
 
-Build health reports contradictions in installed state. These are Red findings:
+Build health checks installed-state consistency, not unbuilt project source. Red findings include:
 
-- a declared Table or Folder is not certified in the Registry;
-- a validation declaration lacks its installed validation work;
-- an installed dependency cannot be resolved;
-- more than one logical installation claims one physical address; or
-- inventory proves that a certified physical object is missing in its expected local or borrowed form.
+- a declared Table or Folder without matching Registry certification;
+- a validation declaration without its installed executable;
+- an unresolved installed dependency;
+- more than one logical installation claiming one physical address; and
+- when inventory is enabled, a certified object absent from its expected local or borrowed physical form.
 
-Build health does not compare the catalogue with unbuilt project source.
+Build has no Amber classification in the current assessment: contradictions above are Red and no finding is Green.
 
-## Freshness and report time
+## `as_of` and dependency freshness
 
-`as_of` is the oldest acceptable settled Load completion time. It must name an ISO-8601 instant with a time zone and is normalised to UTC. When omitted, it is 24 hours before the operation began.
+`--as-of` is the oldest acceptable settled Load completion time. It accepts an ISO-8601 instant with a time zone, normalises it to UTC and defaults to 24 hours before Health began. A naive or invalid instant is a command error.
 
-The report distinguishes:
+The cutoff applies to Load age only. It does not replace dependency freshness: a recent load can be Amber when an ancestor is unestablished or newer, and a validation can be Amber after a dependency moves regardless of `as_of`.
 
-- the generation time, when Health began;
-- the `as_of` cutoff used for age-based Load freshness;
-- each finding's available runtime start and completion times.
+## Report and exit behaviour
 
-Age is only one freshness rule. A recently loaded object can still be Amber when an ancestor has no settled current state or was established after it. A validation can be Amber when its dependency moved after it passed, regardless of the age cutoff.
+The report contains Load, Tests and Build sections, subject and outcome counts, non-Green findings, selected targets, `generated_at`, `as_of`, current Load workflow/timing summary and matching Load activity where available. A finding includes a condition code and may include logical identity, physical target, runtime outcome, workflow, times and failure count.
 
-## Findings and activity boundaries
+The Python operation returns `HealthReport`; `is_healthy` is true only for Green. The CLI exits `0` only for Green. Amber, Red and command errors exit `1`. Human output conveys status without requiring terminal colour.
 
-A finding names its section, severity, stable condition code and, where available, logical object, physical target, runtime outcome, workflow, times and failure count. Findings describe non-Green conditions; subject and outcome counts cover the whole assessed section.
+`--json` emits the current report mapping with an explicit `format_version`. The source does not promise that field set, ordering or format-version compatibility remains unchanged; consumers must not infer a broader stability guarantee from the current representation.
 
-The current-Load summary can span several workflow identifiers. A partial run updates only the objects it reached, so untouched objects remain correlated with earlier workflows. Recorded activity contains only matching executed Load statistics. Blocked work can therefore contribute current status and a finding without an activity row.
+Health never writes current state or history. It reports partial state left by other operations; rerunning Health only rereads that state and does not repair, retry or roll it back.
 
-Health does not claim to reproduce every log entry, terminal message or historical Load. Use [`_.Log` and `_.LoadStatistic`](../../advanced/row-auditing-and-operational-history.md) for those questions.
-
-## Result and exit semantics
-
-The Python operation returns a `HealthReport`. `is_healthy` is true only for Green. The CLI exits `0` only for Green; Amber, Red and operation errors exit non-zero. Item-resolution, catalogue, authentication and inventory-read failures are command errors rather than fabricated Red findings.
-
-Human output reports the overall status and section findings without depending on terminal colour. `--json` emits one current report with an explicit format version. This contract defines the meanings above, not a fixed set of JSON fields, their order or compatibility across format versions.
-
-## Defined behaviour
-
-The State and health contract specifies that Health:
-
-1. reads installed, current runtime and optional inventory evidence without executing authored work;
-2. scopes subjects to installed item bindings while retaining outside ancestry for freshness;
-3. derives section and overall status by worst severity;
-4. distinguishes pending, rejected and stale Amber states from failed, errored, blocked and inconsistent Red states;
-5. uses a zoned `as_of` instant for Load age while also evaluating dependency freshness;
-6. reads borrowed Load state from its source and local state from its destination;
-7. bounds current activity to statistics that match current Load status; and
-8. returns a report whose behavioural meaning is stable without freezing its machine representation.
+See [`weaver health`](../cli/health.md), [Load](load.md), [Test](test.md), [State and health](../../core-concepts/state-and-health.md), and [Catalogue schema](../catalogue-schema.md).

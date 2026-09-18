@@ -1,85 +1,68 @@
-# Test contract
+# Test behaviour
 
-Test evaluates Weaver Tests and Assumptions against an installed item. It normally runs installed validation definitions from the catalogue; a targeted source-file run compiles and evaluates one uninstalled validation without publishing it.
+Test evaluates Tests and Assumptions. Installed runs use catalogue definitions; file runs compile and execute one source validation without installing it.
 
-## Installed selection
+## Selection
 
-An installed run selects logical items as `Lakehouse/Name` or `Warehouse/Name`:
+Logical items may be positional or use the repeatable legacy `--item` option. Naming none selects every installed item; naming an uninstalled item is an error. See [Shared selection and identity](shared-selection-and-identity.md) for item and validation-name forms.
 
-```bash
-weaver test Warehouse/Operations
-weaver test Lakehouse/Landing --name Parcel.EventKeys
-weaver test
-```
+An installed item-wide run selects every installed Test and Assumption owned by those items. Their data dependencies identify what they inspect; they do not add data objects, validations or other items. Validations run independently in stable logical-identity order rather than dependency order, so one failure or execution error does not stop the rest.
 
-Naming no item selects every item recorded in `_.Installation`. Naming an uninstalled item is an error. Item selection includes installed Tests and Assumptions owned by those items; data dependencies identify what each validation reads but do not add data objects, validations or other items to the run.
+`--name Schema.Object` selects one installed Test or Assumption inside the item boundary. It names the logical validation, not its generated procedure or module. If that name occurs in more than one selected item, restrict the request to one item. A named run executes the validation once and returns its diagnostic rows; an item-wide run requests counts without collecting those rows.
 
-Without `--name`, selected validations run in stable logical-identity order. They are independent: one failed or invalid validation does not stop the others.
+`--file PATH` is mutually exclusive with `--name` and requires exactly one installed item to supply the physical target and dialect. The file must declare a SQL Test or Assumption valid for that target. Python source files are rejected; import the class and call its validation interface instead. A file run does not replace or publish an installed validation.
 
-`--name Schema.Object` selects one installed Test or Assumption inside the item boundary. The identity is the authored validation name, not the name of its installed executable. A targeted installed run returns the diagnostic rows produced by that validation; an item-wide run returns counts but does not collect diagnostic rows.
+## Planning and host requirements
 
-## Source-file selection
+Installed planning reads the catalogue before acquiring target execution capabilities. A declared validation whose generated procedure or module is absent is selected but becomes `invalid` when it cannot run; it is not treated as a pass.
 
-`--file PATH` compiles and runs one source Test or Assumption without installing it:
+Warehouse validation executes over TDS and does not require a Fabric Environment. A non-dry-run Lakehouse validation started from a desktop requires a configured Fabric Environment with Weaver installed; this check occurs after item bindings are read and before dispatch. Inside a Fabric session, Test uses that session. Dry runs require no Environment.
 
-```bash
-weaver test Warehouse/Operations \
-  --file Warehouse/Operations/tests/Parcel.StatusMatches.sql
-```
+A source-file run parses and compiles the file before reporting or dispatch. Warehouse SQL runs as a generated batch without leaving a procedure behind. Lakehouse file mode accepts Spark SQL and runs it through the same comparison path as installed validation; it does not accept Python source.
 
-A file run requires exactly one installed item to supply the target and dialect. The file must be a supported Test or Assumption declaration for that item. `--file` and `--name` are mutually exclusive.
+## Validation semantics
 
-A source-file run does not replace the installed validation, update `_.TestStatus` or append installed-estate validation evidence. It returns diagnostic rows for the invocation itself. The source path is a test selector only; other lifecycle operations continue to use installed definitions.
+A Test compares expected and actual relations:
 
-## Test and Assumption results
+- `missing_count` is rows present on the expected side and absent or different on the actual side;
+- `unexpected_count` is rows present on the actual side and absent or different on the expected side; and
+- the Test passes only when both counts are zero.
 
-A Test compares expected and actual relations. It passes when both discrepancy counts are zero and fails with separate missing and unexpected counts otherwise. A Test may declare a primary key to correlate its two sides.
+An optional primary key correlates diagnostic rows between the two sides; it does not change the pass rule.
 
-An Assumption identifies rows that contradict a condition. It passes when its violation count is zero and fails when the count is non-zero. An Assumption has no expected/actual pair and cannot declare a primary key.
+An Assumption returns rows that violate one condition. It passes when `violation_count` is zero and fails when it is non-zero. It has no expected/actual pair and cannot declare a primary key.
 
-A validation that cannot be evaluated is `invalid`, not passed and not a failed data finding. Its report carries the execution error rather than presenting zero discrepancies or violations.
+A validation that cannot be evaluated is `invalid`, not a failed data finding and not a zero-count pass. The report retains the execution error.
 
-## Dry runs
+## Dry run
 
-`--dry-run` resolves installed validations without executing them. A source-file dry run still reads and compiles the declaration but does not execute it on the target. Every valid selected validation is `planned` and has `executed` set to false.
+`--dry-run` resolves installed validations without dispatching them. File dry-run still reads, parses and compiles the selected file. A resolved node is `planned` with `executed` false; a report containing planned nodes exits successfully.
 
-A report containing only planned validations is successful. Dry runs do not create `_.Log` or `_.TestStatus` records.
+Dry runs do not create Log or TestStatus records and do not collect diagnostics. A planning or compilation error is a command error rather than a fabricated planned node.
 
-## Outcomes and strict mode
+## Outcomes, reports and process status
 
 Each validation is:
 
-- `passed` — it ran and found no discrepancies or violations;
-- `failed` — it ran and found discrepancies or violations;
-- `invalid` — it could not be evaluated;
-- `planned` — a dry run resolved it without execution.
+- `passed` — it ran and found no discrepancy or violation;
+- `failed` — it ran and found discrepancy or violation rows;
+- `invalid` — it could not be evaluated; or
+- `planned` — dry-run resolution completed without execution.
 
-The run status is the worst selected outcome: `invalid` takes precedence over `failed`, which takes precedence over `passed`; a dry run is `planned`. The report aggregates passed, failed and invalid counts plus Test discrepancy and Assumption violation counts.
+The run takes the worst selected outcome: `invalid` outranks `failed`, which outranks `passed`; an all-planned run is `planned`. An empty installed selection is `passed`. Counts aggregate Tests and Assumptions separately.
 
-The Python operation returns failed and invalid reports by default. With `strict=True`, it raises `ValidationError` after the completed report has been assembled; the exception carries that report. The CLI uses strict mode, renders the report and exits non-zero for failed or invalid outcomes. Passing and planned reports exit zero.
+The Python operation returns failed and invalid reports by default. `strict=True` raises `ValidationError` only after all selected validations have run and the completed report has been assembled; the exception carries the report. The CLI uses strict mode, renders that report, and exits `1` for `failed`, `invalid` or command errors. `passed` and `planned` exit `0`.
 
-Strict mode changes how an unsuccessful report reaches the caller. It does not stop remaining validations, discard their outcomes or change validation semantics.
+Diagnostic rows are collected only for `--name` and `--file`. They remain on the local report object and targeted CLI output; they are excluded from the ordinary durable/transported report mapping. No compatibility guarantee is made for the current JSON shape.
 
-## Catalogue recording
+## Current state, history and reruns
 
-An executed installed run appends one `_.Log` record and updates `_.TestStatus` for every selected validation. The current status records whether the declaration was a Test or Assumption, its result, its failure count where one exists and the workflow identifier.
+An executed installed run appends one Log row and updates current TestStatus for every selected validation, then flushes those writes before returning or raising strict failure. TestStatus records the validation kind, result, workflow and available failure count. A failed Test records missing plus unexpected rows; a failed Assumption records violations; an invalid validation records an error without presenting a failure count.
 
-A failed Test records total missing and unexpected rows. A failed Assumption records violations. An invalid validation records an error with no failure count. Diagnostic rows are returned only for a targeted invocation and are not written as catalogue evidence or included in the durable report representation.
+Build sets rebuilt validations to pending. Health reports a never-rerun validation or a previously passing validation whose managed data dependency was established later as Amber. Test has no stale-selection mode: item-wide and named runs execute what was selected regardless of current Green, Amber or Red state. A rerun replaces current TestStatus for reached validations and appends new history; untouched validations retain their earlier current state.
 
-Weaver flushes installed validation records before returning or raising for strict mode. Source-file and dry-run invocations write no installed validation state.
+File and dry-run invocations write no installed TestStatus or Log evidence. Test publishes no definitions or certification.
 
-## Defined behaviour
+Test does not provide a transaction across validations or rollback authored side effects. If validation SQL or Python changes external state before failing, Test does not undo that work; it still records the installed validation outcome when recording succeeds. A catalogue flush failure is an operation failure and may follow completed validation execution.
 
-The Test contract specifies that Test:
-
-1. selects installed Tests and Assumptions inside the logical item boundary;
-2. does not expand selection through inspected-data dependencies;
-3. runs all selected installed validations independently in stable identity order;
-4. distinguishes installed name selection from uninstalled source-file execution;
-5. applies the separate Test discrepancy and Assumption violation semantics;
-6. reports inability to evaluate as `invalid`, not as a passing zero count;
-7. lets strict mode raise only after preserving the completed report;
-8. records every executed installed validation before reporting completion; and
-9. keeps dry-run and source-file outcomes out of installed catalogue state.
-
-See [`weaver test`](../cli/test.md), [Validation objects](../python/validation.md), and [Catalogue](../catalogue-schema.md).
+See [`weaver test`](../cli/test.md), [Test documents](../weaver-documents/test.md), [Assumption documents](../weaver-documents/assumption.md), [Health](health.md), and [Catalogue schema](../catalogue-schema.md).

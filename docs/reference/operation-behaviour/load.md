@@ -1,110 +1,78 @@
-# Load contract
+# Load behaviour
 
-Load executes the installed data work owned by selected Weaver items. It reads installed definitions, bindings, dependencies and current state from the catalogue; it does not read or reinterpret project source.
+Load executes installed Table and Folder work from the catalogue. It does not read project source; unbuilt source changes do not affect a run.
 
-## Item and name selection
+## Selection
 
-A Load may select logical items, installed objects by name, or every installed item:
+Logical items may be positional or use the repeatable legacy `--item` option. Naming none selects every item recorded in catalogue installations; an explicitly named uninstalled item is an error. See [Shared selection and identity](shared-selection-and-identity.md) for item and installed-object forms.
 
-```bash
-weaver load Lakehouse/Landing Warehouse/Operations
-weaver load Lakehouse/Landing --name Tables/Parcel.Status
-weaver load
-```
+Within that item boundary, Load has three selection modes:
 
-Item selection is a hard execution boundary:
+- **Item-wide:** with no `--name` or `--stale`, select every installed loadable owned by the items.
+- **Stale:** `--stale` selects loadables whose Load assessment is not Green. It uses the same current-state, age and managed-ancestor rules as Health. `--as-of` is a zoned ISO-8601 cutoff, defaults to 24 hours before the run started and is valid only with `--stale`. An empty stale selection succeeds.
+- **Named:** repeatable `--name` selects only the named installed loadables inside the item boundary. Area qualification distinguishes Lakehouse Tables and Folders where needed. Names are deduplicated. Named selection adds neither dependencies nor readiness barriers and has no dependency-order edges.
 
-- naming no item selects every item recorded in `_.Installation`;
-- naming an item selects the loadable Tables and Folders that item owns;
-- a dependency does not add an unnamed item to the run;
-- a missing item installation is an error rather than an empty selection.
+`--name` may be combined with `--stale`; the run is the named objects that are also non-Green, still without graph expansion or dependency ordering. `--reload` and `--stale` are mutually exclusive.
 
-`--name` is repeatable and selects exact installed objects inside the item boundary. A Lakehouse name may include its area, such as `Tables/Parcel.Status` or `Files/Parcel.Events`; a bare `Schema.Object` is accepted only where it identifies one object. A Warehouse name is `Schema.Object`.
+## Planning and ordering
 
-Name selection is an operator override. It runs only the named objects, without adding dependencies or dependency ordering between the names.
+Item-wide and stale runs use the installed dependency graph. Selected upstream work precedes selected downstream work, but dependencies never add an unselected item. Stale planning may cross an omitted Green loadable or View to preserve an ordering relationship between selected nodes without executing the omitted node.
 
-## Installed graph and ordering
+Where an installed cross-engine path requires it, planning inserts SQL-endpoint refresh or OneLake-publication readiness barriers between selected work. Named selection deliberately omits those inferred edges and barriers.
 
-An item-wide Load uses the installed dependency graph. Selected upstream load work precedes selected downstream work. Dependencies outside the item boundary may explain an installed relationship but do not widen the run.
+A cycle, unresolved installed dependency, ambiguous physical address, unknown name or unsupported reload selection is rejected during planning. `--reload` accepts Tables only; selecting a Folder rejects the whole request before execution, including in a dry run.
 
-Selection can omit an intermediate loadable, as `--stale` may do. Where two selected objects remain connected through omitted installed work, their ordering relationship is retained. Weaver also includes the required publication or endpoint readiness between selected Lakehouse and Warehouse work where the installed graph requires it.
+## Dry run
 
-## Stale selection
+`--dry-run` reads catalogue state, builds the selected graph and resolves each selected primitive and target. It does not dispatch authored work, refresh an endpoint, wait for publication, open a run record, write Log, LoadStatus or LoadStatistic, reset a bookmark, or change a target.
 
-`--stale` narrows the item boundary to loadable objects whose Load health is not Green. It uses the same assessment as `weaver health`, including missing or non-successful Load state, freshness and managed upstream state. A static object that has loaded remains Green regardless of age; a static object that has never loaded is selected.
+Dry-run nodes are `validated`, `invalid` or `blocked`. The report is `succeeded` only when the plan validates; an empty stale plan also succeeds. Otherwise it is `invalid`. A reload dry run reports reload mode and validates the Table-only restriction without resetting or emptying anything.
 
-`--as-of` sets the freshness cutoff and is valid only with `--stale`. It must carry a time zone and defaults to 24 hours before the operation started. If every object in scope is Green, the empty Load succeeds.
+## Execution
 
-Stale selection preserves ordering among selected work; it does not pull a Green upstream object into the run. `--stale` and `--reload` cannot be combined.
+For a normal item-wide or stale run, ready nodes execute in deterministic topological order. A named run executes its exact nodes without dependency ordering. Table and Folder code applies its installed contract; a Load run does not reparse the source project.
 
-## Dry runs
+Static means load once for the installed generation. An ordinary run that reaches an already-loaded static object records a static skip and does not call its authored source or advance its bookmark. An established static object is Green regardless of age and is therefore excluded by `--stale`. Reload resets the generation state first, so a selected static Table runs again.
 
-`--dry-run` reads the installed estate, selects and orders work, and resolves what each selected object would execute. It does not execute authored work, refresh an endpoint, create a run record, change current Load state or move a bookmark.
+Rows or files that violate the installed key, null or file-key rules are rejects:
 
-A dry-run node is:
+- without `--fault-tolerant`, a rejecting primitive refuses before modifying its target and the node fails;
+- with `--fault-tolerant`, valid rows or files are published, rejects are retained as evidence, and the node is `succeeded_with_rejects`;
+- a declared delete/update stability-threshold breach never modifies the target; fault tolerance changes whether that refusal is raised or returned, not whether the change is applied; and
+- an incremental merge that would violate an existing unique key is fatal regardless of fault tolerance and does not modify the target.
 
-- `validated` when its installed work and prerequisites resolve;
-- `invalid` when its own installed work or target cannot be resolved;
-- `blocked` when an unresolved upstream node prevents validation.
-
-A dry run is `succeeded` when every selected node validates, including when no work is selected, and `invalid` otherwise. A reload dry run still validates that every selected object is a Table and reports reload mode without resetting state.
+The orchestrated CLI exposes no option to waive a declared stability threshold.
 
 ## Reload
 
-`--reload` reconstructs each selected Table from zero. Immediately before that Table executes, Weaver resets its bookmark to the initial boundary and marks its current Load state pending. The installed reload then empties and reconstructs the target.
+`--reload` reconstructs each selected Table from zero. Immediately before a reached Table executes, Weaver writes and flushes pending Load state and the initial bookmark boundary, empties the target, then calls the installed load against that reset state.
 
-Reload follows the selection exactly. It does not add downstream objects, and a selected node that is never reached keeps its prior bookmark and state. Folders are not reloadable; a selection containing one is rejected before execution, including during a dry run.
+Reload does not add descendants. A node never reached retains its previous target, bookmark and status. A failed reached reload is not rolled back: its target may be empty or partially reconstructed, its bookmark remains at the initial boundary and its current state records the failure. A later ordinary load starts from that reset boundary; rerun with `--reload` when full reconstruction is still required.
 
-## Execution failures and fault tolerance
+## Outcomes and failure policy
 
-Without `--fault-tolerant`, the first failed or invalid node stops new scheduling. A dependant of failed or unresolved work is `blocked`; otherwise-ready nodes that were not reached remain `pending`. Weaver records the complete planned report, then raises a Load error with the partial report and available result evidence.
+Executed nodes use `succeeded`, `succeeded_with_rejects`, `failed`, `blocked`, `skipped` and `pending`:
 
-With `--fault-tolerant`, Weaver continues independent branches. A dependant may also run after an upstream execution failure has settled, and reads whatever state that failed execution left. This rule applies only to resolved work that started and produced a failure outcome. An unresolved or invalid upstream node still blocks its descendants.
+- `blocked` means unresolved or unsatisfied upstream work prevented execution;
+- `pending` means fail-fast stopped scheduling before otherwise-ready work began; and
+- `skipped` records policy or host behaviour such as a static skip.
 
-Fault tolerance changes how much selected work is attempted. It does not change a failed node to success and does not make a failed or partially successful run successful.
+Without `--fault-tolerant`, the first failed node stops new scheduling. Its dependants are blocked and other unreached ready nodes remain pending. Weaver records the complete planned report and then raises `LoadError` carrying that report.
 
-## Node and run outcomes
+With `--fault-tolerant`, independent branches continue. A descendant may run after an upstream execution failure has settled and sees whatever state that failure left. An unresolved or invalid upstream still blocks its descendants. Fault tolerance does not turn a failed node or run into success.
 
-An execution node ends as one of:
+The execution report is `succeeded`, `succeeded_with_rejects`, `partially_succeeded` or `failed`. An empty execution succeeds. The CLI exits `0` only for the two successful statuses; failed, partial and invalid dry-run reports exit `1`. Pre-plan catalogue, selection or capability errors have no run report. For an intolerant execution failure, the CLI renders the carried partial report before the error.
 
-- `succeeded` — it completed without rejected rows;
-- `succeeded_with_rejects` — valid work completed and rejected rows were reported;
-- `failed` — installed work failed after execution started;
-- `invalid` — the installed work or target could not be resolved before execution;
-- `blocked` — an unresolved or unsatisfied upstream node prevented execution;
-- `skipped` — policy or host support omitted the work;
-- `pending` — fail-fast execution stopped before otherwise-ready work began.
+## Persistent state and partial effects
 
-The run outcome is:
+Every node in an executed plan, including barriers, blocked and pending nodes, receives one append-only Log row. Each logical loadable receives current LoadStatus; executed primitives also write LoadStatistic. Required catalogue writes are flushed before a completed report is returned or an intolerant failure is raised. A catalogue write failure is an operation failure.
 
-- `succeeded` when no selected node failed, including an empty run;
-- `succeeded_with_rejects` when selected branches completed and at least one reported rejects;
-- `partially_succeeded` when some work succeeded or was skipped and some failed, was invalid or was blocked;
-- `failed` when no requested branch completed successfully;
-- `invalid` when a dry run cannot resolve a valid plan.
+A bookmark advances only when executed work establishes a clean successful boundary. Rejecting, failed, blocked, pending and static-skip outcomes do not advance it. Dry runs write no state.
 
-The normal CLI exits non-zero for failed, partially successful or invalid reports. An intolerant execution raises only after its report has been recorded; a fault-tolerant execution returns the unsuccessful report.
+Load has no operation-wide transaction or rollback. Earlier successful nodes, tolerated valid rows/files, failure evidence and partial target changes remain when later work fails. Rerunning selects from the installed graph and current state again; `--stale` is the state-based catch-up mode.
 
-## Bookmarks and catalogue recording
+## Host qualification
 
-Every node in an executed plan receives a final `_.Log` record, including blocked and pending nodes. A loadable object's latest outcome is also written to `_.LoadStatus`; executed load work writes `_.LoadStatistic`. These records distinguish a load refusal from an execution error and preserve available row counts.
+Warehouse loads execute over TDS. Lakehouse Spark SQL uses Spark. Python-authored Lakehouse loads executed from a desktop require a configured Fabric Environment in which Weaver can be imported; execution inside an existing Fabric session uses that session. Capability, authentication and transport failures are operation or node failures according to whether a report has been opened.
 
-A bookmark advances only when an executed load reports a new successful boundary. Rejected, failed, blocked, pending and static-skip outcomes do not advance it. Reload resets the selected Table's boundary before execution starts, so a failed reload remains visibly reset rather than restoring the old bookmark.
-
-Weaver flushes the required catalogue records before returning a completed report or raising an intolerant Load failure. A catalogue write failure is an operation failure. A dry run writes none of this state.
-
-## Defined behaviour
-
-The Load contract specifies that Load:
-
-1. executes installed definitions rather than unbuilt source changes;
-2. keeps execution inside the selected item and optional name boundary;
-3. orders item-wide and stale selections through the installed dependency graph;
-4. treats named objects as exact selections without graph expansion or ordering;
-5. performs dry-run resolution without execution or catalogue mutation;
-6. keeps reload resets local to selected Tables reached for execution;
-7. permits descendants of settled execution failures under fault tolerance while blocking descendants of unresolved or invalid work;
-8. reports node outcomes separately from the run outcome; and
-9. records every executed plan outcome durably before reporting completion.
-
-See [`weaver load`](../cli/load.md), [Dependencies](shared-selection-and-identity.md), and [Catalogue](../catalogue-schema.md).
+See [`weaver load`](../cli/load.md), [Health](health.md), [Catalogue schema](../catalogue-schema.md), and [Shared selection and identity](shared-selection-and-identity.md).
