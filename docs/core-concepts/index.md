@@ -2,7 +2,7 @@
 
 Core concepts explain the public model needed to design and operate a Weaver estate.
 
-Begin with [How Weaver works](how-weaver-works.md) for the complete model, then follow the sequence behind the work:
+Begin with [How Weaver works](how-weaver-works.md) for the complete model, then read [Design philosophy](design-philosophy.md) for the principles behind it. Follow the sequence behind the work:
 
 ```text
 Weaver documents

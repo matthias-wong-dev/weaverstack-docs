@@ -1,8 +1,6 @@
 # Weaver
 
-Weaver builds and operates Microsoft Fabric data estates from a version-controlled project. A project declares logical Lakehouse and Warehouse items with Python, Spark SQL, T-SQL, metadata and tests. Weaver resolves dependencies, builds the required structures, runs loads and tests, and records operational state in a catalogue.
-
-Project source stays separate from deployment configuration. The same logical item can bind to different physical Fabric items in development and production.
+A production data estate needs more than transformation code: it needs a definition of what should exist and recorded state of what is installed, what ran and what remains to do. Weaver defines and operates that stateful Microsoft Fabric estate from native SQL and Python, keeping logical project source separate from physical bindings so the same project can run from a desktop or inside Fabric and bind to different development and production estates.
 
 ## Choose a route
 
