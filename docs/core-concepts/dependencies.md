@@ -1,41 +1,47 @@
 # Dependencies
 
-A dependency states that one Weaver document reads another. Across the [Weaver operations](build-load-and-test.md), that relationship determines Build impact and the order of item-wide work. It does not widen the items selected for an operation.
+Weaver normally discovers dependencies from authored imports and relation references. These relationships connect the documents that produce data to the documents that read it, without requiring a separate graph to be maintained by hand.
 
-## Weaver discovers or reads dependencies from documents
+A document can declare `Dependencies` when deliberate control is needed. An explicit declaration **replaces** inference; it does not add to the relationships Weaver discovered. An explicit empty list therefore means that the document has no managed dependencies.
 
-Depending on the document form, Weaver can discover dependencies from Python imports and SQL relation references. A document can instead declare its dependencies explicitly in metadata.
+Spark SQL data documents are the exception to inference-first authoring: they still require an explicit `Dependencies` declaration, including an empty declaration when they depend on no managed object. Weaver can extract relation references from Spark SQL, but the current document contract still requires the explicit field.
 
-An explicit dependency list replaces discovery rather than extending it. An explicitly empty list states that the document has no managed dependencies. Spark SQL data documents require an explicit list because a query may read paths or other sources that static SQL relation discovery cannot represent completely.
+## Document dependencies
 
-Weaver determines these relationships without executing authored Python or SQL. Exact import forms, metadata keys and SQL rules belong with each document type in Reference.
+A document dependency says that one Weaver document reads another. Weaver can infer these relationships from supported Python imports and SQL relation references without executing the authored code.
 
-## Logical shortcuts connect items
+Within a logical item, dependencies establish the document graph. Build uses that graph to install producers before consumers and to find downstream documents affected by a changed declaration. Load uses the installed form of the graph to order selected data-producing work.
 
-A short object name resolves within the document's owning logical item. To represent a managed read across logical items, declare a logical Shortcut in the consuming item. The Shortcut identifies both the document presented to the consumer and the document that owns the data.
+Physical relation names can point outside the managed project estate. Weaver preserves such references, but they do not identify a managed producer that Build can select or Load can order.
 
-A physical reference can name a Fabric object outside the logical estate, but Weaver cannot infer a managed project dependency from that physical name.
+## Item dependencies
 
-## Build uses dependencies for order and change impact
+When a relationship crosses logical items, it also creates an item dependency. Item dependencies determine a valid order for a multi-item Build and for item-wide Load work when both items are selected.
 
-Build installs upstream documents before selected documents that depend on them. If an upstream declaration changes, selected downstream documents may also need to be rebuilt even when their own files are unchanged.
+The item graph must be acyclic. A project in which two items depend on each other has no valid Build order and is rejected. Explicit dependencies are not a way to enable a circular item graph.
 
-Selection remains the boundary. If a downstream document belongs to an unselected item, Build leaves that item unchanged. Select every item that should participate in the Build.
+Document and item graphs answer different questions. The document graph identifies the affected and ordered work. The item graph ensures that physical item boundaries are crossed in a valid order.
 
-A dependency cycle has no valid Build order. Project checking and Build reject cycles rather than using file order to break them.
+## Logical Shortcuts carry managed relationships across items
 
-## Load orders selected work
+A logical Shortcut gives a consumer a local logical name for data owned by another item. Dependencies that resolve through it still point to the source document, while the Shortcut remains an installation step between source and consumer:
 
-An item-wide Load uses the dependencies recorded by Build. Within the selected items, upstream load work runs before downstream load work.
+```text
+source document → logical Shortcut → consuming document
+```
 
-A dependency on an unselected item does not add that item to the run. Select both items when both should load.
+That extra step lets Build materialise the Shortcut after its source and before consumers. It also lets Load preserve the managed producer-consumer order across physical engines when both sides are in scope.
 
-A named Load is a narrower operator selection: it runs exactly the named installed documents without adding or ordering their dependencies. The Load contract owns the detailed selection and failure behaviour.
+A physical Shortcut or directly qualified physical relation has no managed project producer. Weaver cannot infer project ordering from that external address.
 
-## Test reads dependencies but does not sequence validations
+## Dependencies do not widen selection
 
-Tests and Assumptions can depend on the data they inspect. Nothing can depend on a Test or Assumption: validations consume data and do not produce data for another document.
+Dependencies order and affect work inside the requested boundary; they do not silently add another logical item to an operation.
 
-Test selects installed validations from the requested items. Their dependencies do not add items to the Test run, and Tests and Assumptions run in stable identity order rather than dependency order among validations.
+For Build, selecting an item can rebuild changed documents and affected descendants in that item, while dependent documents in an unselected item remain unchanged. Select every item whose installed state should change.
 
-Declare relationships in documents and Shortcuts, not through filenames or directory order. The [Dependencies contract](../reference/operation-behaviour/shared-selection-and-identity.md) defines resolution, impact and operation boundaries. The [development cycle](../basics/development-cycle.md) shows where dependency impact enters the edit, Build, Load and Test loop. [Fault tolerance](fault-tolerance.md) explains how each operation proceeds after work fails.
+For an item-wide Load, Weaver orders the selected loadable documents using the installed graph. An upstream object in an unselected item is not added to the run. Deliberately named Load selection is narrower still: it runs the named installed documents without dependency expansion or dependency ordering.
+
+Test uses dependencies to understand what each validation reads and whether a previous result is stale. Dependencies do not turn data producers into additional Test work.
+
+Exact inference forms, declaration syntax and operation-specific selection rules belong in [Reference](../reference/operation-behaviour/shared-selection-and-identity.md). [Build, Load and Test](build-load-and-test.md) explains where each graph enters the lifecycle.

@@ -1,49 +1,41 @@
 # Fault tolerance
 
-Fault tolerance determines how much remaining work Weaver attempts after one piece of work fails. It does not change the result of the failed work, undo work that already completed or make the operation a transaction.
+Fault tolerance controls what Weaver attempts after part of an operation fails. It does not make failed work successful, erase completed work or turn an operation into a transaction.
 
-The boundary differs across [Build, Load and Test](build-load-and-test.md). A failure policy from one operation does not carry into the next.
+The useful distinction is between three kinds of remaining work:
 
-## Build stops before later installation work
+- **blocked work** cannot proceed because required upstream work did not establish usable state;
+- **independent work** does not depend on the failure and may still be able to run;
+- **pending work** was otherwise runnable but was not started after fail-fast execution stopped scheduling new work.
 
-Build has no fault-tolerant execution mode. It records an outcome for every planned installation action. Once Build reaches a failure barrier, remaining work is skipped.
+These distinctions describe the state left by an operation, not just its terminal message.
 
-A failed Build can therefore leave physical changes from work that completed before the barrier. Later catalogue publication does not certify a failed rebuild. Build does not roll those changes back as one transaction. After correcting the declaration or platform condition, another Build reconciles the estate it finds rather than resuming the failed work.
+## Fail-fast and fault-tolerant execution
 
-## Load can continue after a settled failure
+Fail-fast execution stops scheduling otherwise-ready work after the first execution failure. Work downstream of an unsatisfied dependency is blocked; unrelated work that has not started remains pending.
 
-A normal item-wide Load stops scheduling otherwise-ready work after its first execution failure. Dependent work is blocked; independent work that was not reached remains pending.
+A fault-tolerant Load keeps scheduling work after a failure. Independent branches can complete, and settled execution failures do not by themselves prevent later selected work from being attempted. Work that could not be resolved or validated before execution still blocks its descendants. Fault tolerance therefore increases the amount of useful work attempted; it does not remove dependency or validity boundaries.
 
-A fault-tolerant Load keeps scheduling selected work. Independent branches continue. Downstream work can also run after an upstream execution failure, using the state that exists at that point; the failed upstream work is not treated as a successful update.
+The final operation still reports the failure. A run in which some work succeeded and some failed or was blocked leaves partial state rather than being converted into success.
 
-That continuation applies only to work that resolved and then failed during execution. If Weaver cannot resolve or validate selected work before execution, its descendants remain blocked while unrelated branches continue. A dependency cycle is invalid rather than a failure to continue past.
+Fault tolerance also applies within supported Table and Folder loads when incoming rows or files can be rejected while accepted input is published. That is separate from graph continuation: a target-invalidating change or another non-recoverable condition can still fail the individual load. The exact distinction belongs in the Load reference.
 
-The final Load result still contains every outcome. A run with both completed and failed or blocked work is partially successful; fault tolerance does not convert it to success.
+## Policies belong to operations
 
-## Row rejection is a second Load boundary
+Build, Load and Test do not share one universal failure policy.
 
-For Tables and Folders, fault tolerance also controls recoverable incoming-row or incoming-file rejection. When continuation is selected, Weaver excludes rejected input and publishes the accepted input. The load records rejects and does not advance its bookmark because it did not consume a clean source window.
+Build does not offer Load's fault-tolerant execution mode. Installation work completed before a Build failure can remain physically applied, while unsuccessful installation is not certified as a successful generation.
 
-This does not tolerate every invalid change. A change that would leave the target invalid, or one refused by a stability threshold, still fails without modifying the target through that load path. These checks are separate from whether other work continues.
+Test attempts the installed validations in its selection and records each result. A failed validation is a finding about the data; a validation that could not run is a different condition. One validation does not produce data needed by another, so Test does not use Load's dependency continuation policy.
 
-## Test evaluates each validation
+A Workflow adds another boundary. It stops at the first command that fails even when that command used fault-tolerant execution internally. Commands completed earlier in the Workflow remain applied.
 
-An installed Test run attempts every selected Test and Assumption. A failed validation is a finding about its data; a validation that cannot run is recorded separately. Neither outcome stops another selected validation.
+## Partial state and recovery
 
-Test does not expose Load's fault-tolerance choice. Its validations are independent consumers of data, not producers ordered through one another. A source-file Test is a single direct evaluation, so there is no remaining validation set to continue.
+Weaver does not apply operation-wide rollback to Build, Load, Test or Workflow execution. Completed work remains completed, and a failing unit can leave operation-specific partial effects. Recorded outcomes and Health show what was established, failed, blocked or left stale.
 
-## A Session does not replace execution context mid-operation
+Recovery is a new operation against that remaining state. Correct the source or platform condition, inspect the affected estate, then rerun the appropriate Build, Load or Test. A retry does not resume an invisible transaction; it reconciles or executes from the state now present.
 
-If a Session's Fabric execution capability fails, Weaver does not replace it part-way through the operation. The operation fails against the context in which it started. Before a later operation begins in the same Session, Weaver can make a bounded attempt to reacquire the failed capability; recovery does not resume the failed operation.
+This is why failure policy must be considered together with selection. A broad fault-tolerant Load can preserve progress on unrelated branches, while a narrow rerun can target recovery after the cause is fixed.
 
-## A failed operation stops a workflow
-
-A [workflow](build-load-and-test.md#a-workflow-composes-ordinary-operations) stops when a command returns failure or raises a Weaver error. It does not continue to a later command because an earlier command preserved some independent progress.
-
-Fault tolerance remains local to a command inside the workflow. For example, a fault-tolerant Load may finish additional work, but its failed or partially successful result still stops the following workflow commands. Commands that completed before the failure remain applied; the workflow does not roll them back.
-
-## Reports and catalogue state describe partial work
-
-Build reports the outcome of its planned installation actions. Load records each settled piece of work in the catalogue, including failed, blocked and pending outcomes. Installed Test runs record each validation outcome. Load statistics exist only for work that executed, and bookmarks advance only after a clean successful load. Direct source-file Tests do not publish estate evidence. A workflow's shared identifier correlates recorded Load and Test work before and including the command that stops it; later commands have no outcomes to record.
-
-Fault tolerance does not retry failed Build actions, Load work, validations or workflow commands. A later attempt is a new operation against the state left by the previous one. The [Fault-tolerance contract](../reference/operation-behaviour/fault-and-outcome-vocabulary.md) defines the operation-specific barriers; the [Load contract](../reference/operation-behaviour/load.md) defines Load outcomes and recording.
+See [Fault and outcome vocabulary](../reference/operation-behaviour/fault-and-outcome-vocabulary.md) for exact outcomes and operation-specific barriers. The [Build](../reference/operation-behaviour/build.md), [Load](../reference/operation-behaviour/load.md), [Test](../reference/operation-behaviour/test.md) and [Workflow](../reference/operation-behaviour/workflow.md) references define their precise failure behaviour.
