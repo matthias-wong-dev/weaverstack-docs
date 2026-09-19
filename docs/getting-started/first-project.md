@@ -17,11 +17,13 @@ weaver initialise \
   --workspace "Parcel Development" \
   --project-folder ./parcel-ops \
   --catalogue Catalogue \
+  --environment Weaver \
   --warehouse Operations \
-  --no-example
+  --no-example \
+  --non-interactive
 ```
 
-Review the choices and continue when prompted. Weaver creates or reuses the `Catalogue` and `Operations` Warehouses and the default `Weaver` Environment, then writes the project files.
+This fully specified command does not start the setup wizard. Weaver creates or reuses the `Catalogue` and `Operations` Warehouses and the `Weaver` Environment, creates `parcel-ops`, and writes its workspace configuration, workflow, Environment definition and empty Warehouse source directory. It does not publish the Environment.
 
 **Expected result:** the command ends with `Weaver project ready in .../parcel-ops.` and reports each Fabric item as created or already existing. Environment publication is deferred.
 

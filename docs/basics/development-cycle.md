@@ -4,15 +4,43 @@ Use a mirrored development estate to keep the project's logical identities while
 
 ## Phase 1: establish the development baseline
 
-Choose the development workspace configuration. It should bind the project to the development catalogue and targets and name the source catalogue in `mirror`.
+Mirror works between existing physical Fabric items in one workspace. The source catalogue and its recorded source targets must already contain the estate to copy. The destination catalogue Warehouse and every selected destination target must also exist. Mirror empties and reconstructs their contents; it does not create a Warehouse, Lakehouse or other Fabric item. It never empties the source items.
 
-Before changing anything, run Mirror once:
+For one concrete setup, suppose the existing source estate in the `Parcel Operations` workspace uses the catalogue Warehouse `ParcelCatalogue` and target Warehouse `ParcelOperations`:
+
+1. In the Fabric portal, open `Parcel Operations` and verify that both source Warehouses exist and that `ParcelCatalogue` is the catalogue for the installed source estate.
+2. In that same workspace, create two empty Warehouses named `ParcelCatalogueDev` and `ParcelOperationsDev`. Creating these destinations in the portal leaves the project and source estate unchanged.
+3. Add this separate development configuration beside the project:
+
+```yaml title="workspace-development.yml"
+workspace: Parcel Operations
+catalogue: Warehouse/ParcelCatalogueDev
+mirror: Warehouse/ParcelCatalogue
+
+targets:
+  Warehouse/Operations: ParcelOperationsDev
+```
+
+Before mutation, check the portal item list and the configuration together. The intended boundary is:
+
+```text
+source catalogue:      Warehouse/ParcelCatalogue
+destination catalogue: Warehouse/ParcelCatalogueDev
+target:                 Warehouse/Operations
+source physical item:   Warehouse/ParcelOperations
+destination item:       Warehouse/ParcelOperationsDev
+workspace:               Parcel Operations
+```
+
+The source physical item comes from the binding recorded in the source catalogue. It is not supplied by the development configuration. Stop if any name or item type differs, or if a source and destination are not in the same workspace.
+
+Run Mirror once:
 
 ```bash
 weaver mirror --workspace-config workspace-development.yml
 ```
 
-Review the displayed source catalogue, destination catalogue and every destination target. Confirm if that boundary is correct; decline if it is not. Mirror has no dry-run mode, and declining leaves the destinations unchanged.
+Weaver resolves the source bindings, then displays the source catalogue, destination catalogue and each logical-to-destination target mapping before it asks once for confirmation. Compare that settled plan with the source and destination names checked above, then confirm it if correct or decline it if not. Mirror has no dry-run mode, and declining leaves the destinations unchanged.
 
 Mirror empties and reconstructs the displayed destination catalogue and targets from the source estate. Unchanged objects begin as borrowed source data. The destination catalogue records that state, while the project's logical items and Weaver documents remain unchanged.
 
