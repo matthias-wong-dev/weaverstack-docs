@@ -30,7 +30,79 @@ SQL-authored Tables express the same contract with result sets. The first result
 
 ### A Warehouse Table over an ordinary source
 
-This complete T-SQL document reads an ordinary source Table with a source audit datetime. It reads the bookmark for this specific consumer from the Weaver catalogue. `Dependencies: []` keeps the external source Table out of Weaver's managed dependency graph.
+This example keeps the mutable source Table in a separate physical Warehouse named `ParcelSource`. `Warehouse/Operations` is the only managed Warehouse item. Its physical Shortcut presents the external Table locally as `[Source].[Parcel]`; the source Warehouse is not a Build target.
+
+All paths in this section are relative to `examples/parcel-incremental-warehouse`.
+
+#### Configure the managed Warehouse
+
+Create `workspace-config.yml`:
+
+```yaml
+workspace: Parcel Development
+catalogue: Warehouse/ParcelCatalogue
+
+targets:
+  Warehouse/Operations: ParcelOperations
+```
+
+Create the `ParcelCatalogue`, `ParcelOperations`, and `ParcelSource` Warehouses in the **Parcel Development** workspace. Do not add `ParcelSource` to `targets`: Build reconciles selected managed items and may prune undeclared co-located content inside them.
+
+Create `Warehouse/Operations/shortcuts.yml`:
+
+```yaml
+physical:
+  "Warehouse/Operations/Source.Parcel": "Warehouse/ParcelSource/Source.Parcel"
+```
+
+This is the supported Warehouse Shortcut declaration surface. `workspace-config.yml` binds the managed destination; `shortcuts.yml` maps the item-local View to the external physical Table. Warehouse physical Shortcuts are limited to the configured workspace.
+
+#### Provision and seed the external source
+
+The source scripts live outside `Warehouse/Operations`, so Weaver does not parse or install them. In the Fabric portal, open a **SQL query connected to the ParcelSource Warehouse** and run `source/ParcelSource/01-setup.sql`:
+
+```sql
+if schema_id(N'Source') is null
+    exec(N'create schema [Source]');
+
+if object_id(N'[Source].[Parcel]', N'U') is null
+begin
+    create table [Source].[Parcel] (
+        [Parcel ID] varchar(20) not null,
+        [Status] varchar(30) not null,
+        [Depot] varchar(30) not null,
+        [Row update datetime] datetime2(6) not null
+    );
+end;
+```
+
+In the same `ParcelSource` query editor, run `source/ParcelSource/02-seed.sql`:
+
+```sql
+delete from [Source].[Parcel];
+
+insert into [Source].[Parcel] (
+    [Parcel ID],
+    [Status],
+    [Depot],
+    [Row update datetime]
+)
+values
+    ('P-1001', 'In transit', 'Central', sysutcdatetime()),
+    ('P-1002', 'Delivered', 'South', sysutcdatetime());
+```
+
+Verify source access in that query editor before Build:
+
+```sql
+select [Parcel ID], [Status], [Depot], [Row update datetime]
+from [Source].[Parcel]
+order by [Parcel ID];
+```
+
+The query must return `P-1001` and `P-1002`. A missing Warehouse, schema, Table, or permission must be fixed at the external source rather than represented as an empty incremental window.
+
+#### Declare the incremental consumer
 
 Create `Warehouse/Operations/Parcel.CurrentStatus.sql`:
 
@@ -40,13 +112,18 @@ Table ID: Parcel.CurrentStatus
 
 Description: Current state of active parcels.
 
-Lineage: Source.Parcel.
+Lineage: Parcel records supplied through the physical Source.Parcel Shortcut.
 
 Primary key: Parcel ID
 
 Incremental: true
 
 Dependencies: []
+
+Schema:
+  Parcel ID: varchar(20)
+  Status: varchar(30)
+  Depot: varchar(30)
 */
 declare @bookmark_datetime datetime2(6);
 set @bookmark_datetime = coalesce(
@@ -76,14 +153,74 @@ where [Row update datetime] > @bookmark_datetime
   and [Status] = 'Cancelled';
 ```
 
-- The first result set supplies rows that are candidates for insertion or update.
-- The second result set supplies explicit primary keys to delete.
-- Both result sets use the same bookmark owned by `Warehouse/Operations/Parcel/CurrentStatus`.
-- When a source row is updated to `Cancelled`, that source update becomes a target delete. Source change type and target action type differ.
-- A row's absence from the first result set is not a deletion claim; it remains in the target unless its key appears in the second result set.
-- A hard physical deletion from `[Source].[Parcel]` leaves no row for either query. If that deletion must propagate, the source process must retain evidence such as a tombstone, CDC record or audit entry until this consumer reads it.
+The first result set supplies insert and update candidates. The second supplies explicit primary keys to delete. Both use the bookmark owned by `Warehouse/Operations/Parcel.CurrentStatus`.
 
-The checked fixture is `examples/parcel-incremental-warehouse/Warehouse/Operations/Parcel.CurrentStatus.sql`. Check can parse the document locally. Build must query a bound Fabric Warehouse to infer the SQL result shape, and Load executes the installed T-SQL there.
+`Dependencies: []` is required by the current checker here. T-SQL dependency inference does not resolve `[Source].[Parcel]` to a physical Warehouse Shortcut, even though Build installs that item-local View. The override suppresses only the nonexistent managed producer edge; the external source still has no Weaver-managed ordering.
+
+From the **example project root**, validate and install the managed Warehouse, then run its first Load:
+
+```bash
+weaver check
+weaver build --item Warehouse/Operations
+weaver load Warehouse/Operations --dry-run
+weaver load Warehouse/Operations
+```
+
+After Build, verify the installed Shortcut from a **SQL query connected to ParcelOperations**:
+
+```sql
+select [Parcel ID], [Status], [Depot], [Row update datetime]
+from [Source].[Parcel]
+order by [Parcel ID];
+```
+
+Then query `[Parcel].[CurrentStatus]`; it should contain both seeded parcels. In a **SQL query connected to ParcelCatalogue**, record the consumer's first successful boundary:
+
+```sql
+select [Bookmark datetime]
+from [_].[Bookmark]
+where [Item type] = N'Warehouse'
+  and [Item name] = N'Operations'
+  and [Schema name] = N'Parcel'
+  and [Object name] = N'CurrentStatus';
+```
+
+#### Change source rows, then Load without Build
+
+In the **ParcelSource query editor**, run `source/ParcelSource/03-change.sql`:
+
+```sql
+update [Source].[Parcel]
+set [Status] = 'Delivered',
+    [Row update datetime] = sysutcdatetime()
+where [Parcel ID] = 'P-1001';
+
+update [Source].[Parcel]
+set [Status] = 'Cancelled',
+    [Row update datetime] = sysutcdatetime()
+where [Parcel ID] = 'P-1002';
+```
+
+Verify the two source statuses and their UTC update datetimes there. Both update datetimes must be later than the consumer bookmark recorded after the first Load. Then return to the **example project root** and Load the already installed definition:
+
+```bash
+weaver load Warehouse/Operations --dry-run
+weaver load Warehouse/Operations
+```
+
+`P-1001` is an upsert from the first result set. The update of `P-1002` to `Cancelled` becomes a target delete from the second result set: source change type and target action type differ. Absence from the first result set is not a deletion claim. A hard source deletion leaves no row for either query, so propagation would require retained evidence such as a tombstone, audit row, or CDC record.
+
+Query both Warehouses after the Load. `ParcelOperations` should contain `P-1001` as `Delivered` and no active `P-1002`; `ParcelSource` should still contain `P-1002` as `Cancelled`. In `ParcelCatalogue`, the consumer bookmark should be later than the boundary recorded after the first Load.
+
+Without changing the source, run one more Load:
+
+```bash
+weaver load Warehouse/Operations
+```
+
+The target rows remain unchanged. The clean no-op consumes an empty source window and advances the consumer bookmark again.
+
+The complete checked fixture is `examples/parcel-incremental-warehouse`. Local Check validates its authored shape. Build, Shortcut resolution, Load, and the stated row results require a Fabric workspace and remain pending remote execution.
 
 ## Bookmarks separate processing state from source data
 
@@ -101,24 +238,48 @@ Build resets the bookmark of each rebuilt loadable object to the initial boundar
 
 ## Folder history as a change source
 
-The example below implements the general contract with Weaver-managed Folder history. It keeps current parcel status in a Table. A snapshot Folder copies CSV files from an incoming area, and the incremental Table consumes only the Folder changes since that Table's last clean Load.
+This example keeps source files in a separate physical Lakehouse, `ParcelSourceArchive`, outside Weaver's managed targets. A physical Folder Shortcut exposes that source inside the managed `ParcelTracking` Lakehouse. A non-incremental Folder takes complete snapshots through the Shortcut, and the incremental Table consumes only the managed Folder changes since that Table's last clean Load.
 
-### Prerequisites
+All paths in this section are relative to `examples/parcel-incremental`.
 
-- Create or reuse a project containing `Lakehouse/Tracking`.
-- Publish the project's Fabric Environment; both documents run Python in Fabric.
-- Use the physical Tracking Lakehouse as the source host for this example. In the Fabric portal, open that Lakehouse, create `Files/parcel-source/parcel-status`, and upload:
-  - `examples/parcel-incremental/source/parcel-status/P-1001.csv`
-  - `examples/parcel-incremental/source/parcel-status/P-1002.csv`
+### Provision the external Lakehouse
 
-`Files/parcel-source/parcel-status` is source data, not a Folder Weaver manages. Keep it outside the managed destination, `Files/Parcel/StatusFiles`. Build and Load act on the latter through `Parcel.StatusFiles`; neither treats the source directory as that Folder's destination.
+Create the `ParcelCatalogue` Warehouse, `ParcelTracking` Lakehouse, published `ParcelRuntime` Environment, and separate `ParcelSourceArchive` Lakehouse in the **Parcel Development** workspace. Create `workspace-config.yml`:
 
-Attach the physical Tracking Lakehouse to a Fabric notebook as its default Lakehouse, then verify the upload before running Load:
+```yaml
+workspace: Parcel Development
+catalogue: Warehouse/ParcelCatalogue
+environment: ParcelRuntime
+
+targets:
+  Lakehouse/Tracking: ParcelTracking
+```
+
+`ParcelSourceArchive` is deliberately absent from `targets`. Build reconciles `ParcelTracking` and may prune undeclared co-located content there; it must not select the external archive.
+
+In the Fabric portal, open `ParcelSourceArchive`, create `Files/parcel-status`, and upload these checked files:
+
+- `source/parcel-status/P-1001.csv`
+- `source/parcel-status/P-1002.csv`
+
+The complete uploaded files are:
+
+```csv title="P-1001.csv"
+Parcel ID,Status,Depot
+P-1001,In transit,Central
+```
+
+```csv title="P-1002.csv"
+Parcel ID,Status,Depot
+P-1002,Delivered,South
+```
+
+Attach `ParcelSourceArchive` as the default Lakehouse of a **Fabric notebook** and verify the upload there:
 
 ```python
 from pathlib import Path
 
-source_root = Path("/lakehouse/default/Files/parcel-source/parcel-status")
+source_root = Path("/lakehouse/default/Files/parcel-status")
 assert source_root.is_dir(), f"Source directory not found: {source_root}"
 assert sorted(path.name for path in source_root.glob("*.csv")) == [
     "P-1001.csv",
@@ -126,7 +287,24 @@ assert sorted(path.name for path in source_root.glob("*.csv")) == [
 ]
 ```
 
-The `/lakehouse/default` path is only this verification notebook's attached-Lakehouse path. The authored Folder below resolves its installed Lakehouse instead.
+This notebook path verifies the attached external Lakehouse only. The installed Folder code below reads the local Shortcut through Weaver's public `path()` interface.
+
+### Declare the physical Folder Shortcut
+
+Create `Lakehouse/Tracking/shortcuts.py`:
+
+```python
+from weaver import Shortcut
+
+
+Parcel__StatusSource = Shortcut(
+    shortcut_type="folder",
+    target_type="physical",
+    target="Lakehouse/ParcelSourceArchive/Files/parcel-status",
+)
+```
+
+The assignment name creates the local destination `Files/Parcel/StatusSource`. The physical target remains outside Weaver ownership and contributes no managed producer or project dependency edge.
 
 ### Declare the snapshot Folder
 
@@ -145,29 +323,29 @@ File key: "*.csv"
 Incremental: false
 """
 
-from pathlib import Path
 import shutil
 
+from shortcuts import Parcel__StatusSource
 from weaver import Folder
 
 
 class Parcel__StatusFiles(Folder):
     def read(self):
-        source_root = Path(self.lakehouse.files_root()) / "parcel-source" / "parcel-status"
+        source_root = Parcel__StatusSource(self).path()
         if not source_root.is_dir():
             raise FileNotFoundError(
                 f"Parcel status source directory not found: {source_root}"
             )
 
         staging = self.staging_folder()
-        for source in source_root.glob("*.csv"):
+        for source in sorted(source_root.glob("*.csv")):
             shutil.copy2(source, staging.path / source.name)
         return staging
 ```
 
-The source-directory check happens before Weaver issues or populates staging. An unavailable source raises `FileNotFoundError`; an available but intentionally empty source directory remains a valid complete snapshot.
+The deployed `shortcuts` module supplies a Folder reader. Its `path()` method returns the resolved Lakehouse's mounted `pathlib.Path` for ordinary Python file access; `spark_path()` is a separate string interface for Spark and is not passed to `pathlib`.
 
-`Incremental: false` makes each successful Folder Load a complete snapshot of the managed `*.csv` files. A source file that disappears from the source directory is therefore retired from the managed Folder. After publication, Weaver records inserted, updated and deleted managed paths in the Folder's change history; byte-identical files are not updates.
+The source existence check happens before Weaver issues or populates staging. An unavailable source raises `FileNotFoundError`. An existing but intentionally empty source directory passes the check and remains a valid complete snapshot. `Incremental: false` makes each successful Load a complete snapshot, so a source file that disappears is retired from the managed Folder. Weaver records inserted, updated, and deleted managed paths; byte-identical files are not updates.
 
 ### Declare the incremental Table
 
@@ -221,62 +399,80 @@ class Parcel__CurrentStatus(Table):
         return staged, deletes
 ```
 
-The import establishes the managed dependency, so an item-wide Load runs the Folder before the Table.
+The Folder import establishes the managed dependency, so item-wide Load runs `Parcel.StatusFiles` before `Parcel.CurrentStatus`. The physical Shortcut import in the Folder records an external boundary, not a managed producer.
 
-The bookmark belongs to `Parcel.CurrentStatus`, not to the source Folder. `files_since()` returns current managed files whose latest recorded event is strictly after that boundary. `deleted_since()` returns paths whose latest event is a deletion after the boundary; those paths normally no longer exist. The method maps deleted filenames to the Table's declared `Parcel ID` key, making Folder deletions explicit Table delete claims.
+The bookmark belongs to `Parcel.CurrentStatus`, not to the source Folder. `files_since()` returns current managed files whose latest event is strictly after that boundary. `deleted_since()` returns paths whose latest event is a deletion after the boundary; those paths normally no longer exist. The code maps deleted filenames to the Table's declared `Parcel ID` key, making Folder deletions explicit Table delete claims.
 
 ### Establish the first boundary
 
-The two uploaded fixture files contain:
-
-```csv title="P-1001.csv"
-Parcel ID,Status,Depot
-P-1001,In transit,Central
-```
-
-```csv title="P-1002.csv"
-Parcel ID,Status,Depot
-P-1002,Delivered,South
-```
-
-After the notebook verification succeeds, check and install the declarations once, then run the first Load:
+From the **example project root**, check and install the declarations once:
 
 ```bash
 weaver check
 weaver build --item Lakehouse/Tracking
+```
+
+After Build, attach `ParcelTracking` as the default Lakehouse of a **Fabric notebook** and verify the installed Shortcut before Load:
+
+```python
+from pathlib import Path
+
+shortcut_root = Path("/lakehouse/default/Files/Parcel/StatusSource")
+assert shortcut_root.is_dir(), f"Shortcut source not visible: {shortcut_root}"
+assert sorted(path.name for path in shortcut_root.glob("*.csv")) == [
+    "P-1001.csv",
+    "P-1002.csv",
+]
+```
+
+Then, from the **example project root**, run the first Load:
+
+```bash
 weaver load Lakehouse/Tracking --dry-run
 weaver load Lakehouse/Tracking
 ```
 
 The first Folder Load publishes both files and records their insertions. The Table has its initial bookmark, so its first read includes both changes and inserts two rows. A clean Load records a new Table bookmark at the instant immediately before that read began.
 
-Inspect the managed Folder and `Parcel.CurrentStatus` in the Lakehouse. The Table should contain `P-1001` and `P-1002`.
+Inspect the managed Folder and `Parcel.CurrentStatus` in `ParcelTracking`. The Table should contain `P-1001` and `P-1002`.
+
+In a **SQL query connected to ParcelCatalogue**, record the Table's first successful boundary:
+
+```sql
+select [Bookmark datetime]
+from [_].[Bookmark]
+where [Item type] = N'Lakehouse'
+  and [Item name] = N'Tracking'
+  and [Schema name] = N'Tables/Parcel'
+  and [Object name] = N'CurrentStatus';
+```
 
 ### Change source data, then Load without Build
 
-Do not edit either Weaver document. In the same Fabric notebook, replace `P-1001.csv` and delete `P-1002.csv` from the same source directory:
+Do not edit either Weaver document. In a **Fabric notebook with `ParcelSourceArchive` attached as its default Lakehouse**, replace `P-1001.csv` and delete `P-1002.csv`:
 
 ```python
 from pathlib import Path
 
-source_root = Path("/lakehouse/default/Files/parcel-source/parcel-status")
+source_root = Path("/lakehouse/default/Files/parcel-status")
+assert source_root.is_dir(), f"Source directory not found: {source_root}"
 (source_root / "P-1001.csv").write_text(
     "Parcel ID,Status,Depot\nP-1001,Delivered,Central\n",
     encoding="utf-8",
 )
 (source_root / "P-1002.csv").unlink()
 
-assert [path.name for path in source_root.glob("*.csv")] == ["P-1001.csv"]
+assert sorted(path.name for path in source_root.glob("*.csv")) == ["P-1001.csv"]
 ```
 
-Run Load again against the already installed definitions:
+From the **example project root**, run Load against the already installed definitions:
 
 ```bash
 weaver load Lakehouse/Tracking --dry-run
 weaver load Lakehouse/Tracking
 ```
 
-There is deliberately no `weaver build` in this sequence. The Folder publishes one changed file and one deletion. The Table reads both events from its previous clean boundary, updates `P-1001` and deletes `P-1002` by primary key.
+There is deliberately no `weaver build` in this sequence. The Folder publishes one changed file and one deletion. The Table reads both events from its previous clean boundary, updates `P-1001`, and deletes `P-1002` by primary key.
 
 Inspect three results:
 
@@ -284,7 +480,9 @@ Inspect three results:
 - `Parcel.CurrentStatus` contains one `P-1001` row with status `Delivered`; and
 - the latest Load activity reports the Folder changes and the Table's updated and deleted rows.
 
-A later clean run with no source changes reaches the Table's `return None`. That no-op still consumes a complete source window and advances the bookmark.
+Run `weaver load Lakehouse/Tracking` once more without changing the source. The clean run reaches the Table's `return None`: managed files and target rows remain unchanged, while the consumer bookmark advances again.
+
+Local Check validates the complete fixture's authored shape. Physical Shortcut creation, mounted-path access, Load, and the stated file and row results require Fabric and remain pending remote execution.
 
 ## Declaration changes cross the Build boundary
 

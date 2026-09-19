@@ -55,15 +55,17 @@ A source change that requires a different physical shape does not update that sh
 
 ## Know what `Prohibit rebuild` does not do
 
-**Warning:** `Prohibit rebuild` guards destructive replacement during Build only. It does not protect from Wipe, deliberate reload, or re-mirroring a destination containing it.
+**Warning:** `Prohibit rebuild` guards destructive replacement during Build only. It is not consulted as a general data-retention policy by Load, reload, Wipe, or Mirror.
 
 `Prohibit rebuild` is a Build replacement guard, not a general freeze:
 
-- It does not freeze or prevent edits to the source document.
-- It does not prevent first installation when no existing physical object is present.
-- It does not prohibit normal Load reconciliation against an installed Table or Folder.
+- A normal Load can insert, update, or delete data according to the installed Table or Folder contract.
+- `weaver load --reload` empties each reached selected Table before reconstructing it from the initial bookmark boundary.
+- Wipe removes managed contents within its confirmed destructive scope.
+- Re-mirroring empties and reconstructs the selected destination catalogue and targets.
+- The flag does not prevent first installation when no existing physical object is present.
 - It does not put the physical object outside Weaver ownership.
-- It does not protect the external target behind a Shortcut; that target is already outside Weaver ownership.
+- It does not protect an external target behind a Shortcut; that target is already outside Weaver ownership.
 
 A non-destructive metadata or load-logic change may therefore be installed while the physical object remains in place. A change requiring destructive recreation must not replace the existing object. If the desired physical shape must change, preserve or migrate the data deliberately before removing the protection or the existing object.
 

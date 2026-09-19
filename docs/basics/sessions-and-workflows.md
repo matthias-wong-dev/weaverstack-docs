@@ -52,4 +52,12 @@ Weaver parses the entries, resolves one workspace, displays the numbered sequenc
 
 The workflow stops at the first failed command. Later entries do not run, and completed work is not rolled back. Diagnose the failed operation and rerun an appropriate sequence against the state that remains; a workflow is not a transaction.
 
+For unattended execution, the `full` workflow created by [First project](../getting-started/first-project.md#9-run-the-lifecycle-as-a-workflow) can be authorised explicitly with all interactive input disabled:
+
+```bash
+weaver workflow full --yes --non-interactive
+```
+
+`--yes` authorises the displayed workflow and all its entries. `--non-interactive` also prevents prompts, keypress waits and browser sign-in, so the configured unattended credentials must be sufficient. Piping `y` into `weaver workflow full` is not confirmation: when stdin is not a real terminal, Weaver refuses to run unless `--yes` is present.
+
 For unattended policy, authentication and exact confirmation behaviour, see [Workflow operation behaviour](../reference/operation-behaviour/workflow.md) and [Automation and execution contexts](../advanced/automation-and-execution-contexts.md).

@@ -3,13 +3,18 @@ Table ID: Parcel.CurrentStatus
 
 Description: Current state of active parcels.
 
-Lineage: Source.Parcel.
+Lineage: Parcel records supplied through the physical Source.Parcel Shortcut.
 
 Primary key: Parcel ID
 
 Incremental: true
 
 Dependencies: []
+
+Schema:
+  Parcel ID: varchar(20)
+  Status: varchar(30)
+  Depot: varchar(30)
 */
 declare @bookmark_datetime datetime2(6);
 set @bookmark_datetime = coalesce(

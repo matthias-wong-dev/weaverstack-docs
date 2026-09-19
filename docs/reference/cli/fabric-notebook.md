@@ -98,7 +98,7 @@ weaver fabric notebook run [-h] [--lakehouse LAKEHOUSE] [--no-wait] [--timeout T
 
 ## Responsibility and selection
 
-`fabric notebook push` selects a local `.py` or `.ipynb` file and a Fabric workspace. `--name` overrides the filename stem used as the Fabric display name.
+`fabric notebook push` selects a local `.py` or `.ipynb` file and a Fabric workspace. A `.py` input is a Fabric notebook-source export, not an arbitrary Python script. `--name` overrides the filename stem used as the Fabric display name.
 
 `fabric notebook run` selects a deployed notebook by display name. It requires a default Lakehouse and a Fabric Environment. `--lakehouse` supplies the physical Lakehouse name; when omitted, exactly one configured Lakehouse is selected automatically. The Environment comes from `--environment` or workspace configuration and may be qualified as `Workspace/Environment`.
 
@@ -158,7 +158,7 @@ This route manages the Notebook item itself. It does not Build Weaver documents,
 
 - A Fabric workspace containing the default Lakehouse.
 - A published Fabric Environment available to the workspace running the notebook.
-- A local `.py` or `.ipynb` notebook definition.
+- A local Fabric notebook-source `.py` export or an `.ipynb` notebook definition.
 - Credentials that can create or update Notebook items and start notebook jobs.
 
 Bind the workspace, Lakehouse and Environment in a workspace configuration:
@@ -178,10 +178,45 @@ If `ParcelRuntime` does not yet exist or its definition changed, publish it befo
 
 ## Push the notebook definition
 
-Deploy a local Python notebook:
+A Fabric notebook-source `.py` file starts with the `# Fabric notebook source` prologue. `# CELL` and `# MARKDOWN` markers divide cells, while each `# METADATA` section contains JSON represented by `# META` lines. A normal `.py` module without that structure is not a Fabric notebook definition.
+
+This is the complete checked fixture at `examples/parcel-notebook/notebooks/ParcelRefresh.py`:
+
+```python
+# Fabric notebook source
+
+# METADATA ********************
+
+# META {
+# META   "kernel_info": {
+# META     "name": "synapse_pyspark"
+# META   }
+# META }
+
+# MARKDOWN ********************
+
+# # Parcel refresh
+#
+# This cell is deliberately small so the deployed definition can be smoke-tested.
+
+# CELL ********************
+
+print("Parcel refresh notebook started")
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+```
+
+Use a `.py` definition exported by Fabric or copied from Fabric Git when the notebook already exists. Keep `.ipynb` when that is the source format you maintain; `push` accepts it directly and does not require conversion to `.py`.
+
+Deploy the checked Fabric notebook source:
 
 ```bash
-weaver fabric notebook push notebooks/ParcelRefresh.py \
+weaver fabric notebook push examples/parcel-notebook/notebooks/ParcelRefresh.py \
   --name ParcelRefresh \
   --description "Refresh parcel landing data" \
   --workspace-config workspace-development.yml
@@ -189,7 +224,7 @@ weaver fabric notebook push notebooks/ParcelRefresh.py \
 
 The filename stem becomes the Fabric display name when `--name` is omitted. If that name does not exist, Weaver creates the Notebook and applies the optional description. If it exists, Weaver replaces the notebook definition; it does not update that item's existing description.
 
-Push transports only the `.py` or `.ipynb` definition. Local notebook Resources are not included. Put required Python packages in the attached Environment and make other inputs available through Fabric items or services the notebook can access.
+Push transports only the `.py` or `.ipynb` notebook definition. It does not turn an ordinary Python file into a notebook, and local Notebook Resources are not included. If a Weaver project lives in the notebook's built-in Resources, move that project separately with Fabric Git and enable Resources-folder support there. [Portable execution between desktop and Fabric](../../advanced/portable-execution-between-desktop-and-fabric.md#2-move-the-project-both-ways-with-fabric-git) covers that project transport. Put required Python packages in the attached Environment and make other inputs available through Fabric items or services the notebook can access.
 
 The command reports whether it created or updated the item, its Fabric ID and the local source path. Treat a successful push as deployment evidence, not execution evidence.
 

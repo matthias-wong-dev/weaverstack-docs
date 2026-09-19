@@ -106,3 +106,9 @@ weaver fabric environment publish \
 Then rerun the failed Load or Test; publication does not resume it. Warehouse T-SQL work does not require a Fabric Environment, and Spark SQL can use the workspace's default Spark runtime. See [Configure a workspace and Python runtime](workspace-and-python-runtime.md).
 
 For exact command outcomes and catalogue evidence, use [Operation behaviour](../reference/operation-behaviour/index.md) and [Catalogue](../core-concepts/catalogue.md).
+
+## Windows output is garbled or cannot be decoded
+
+Weaver configures its stdout and stderr streams as UTF-8, including when Windows gives the process a legacy console code page. If a current Weaver command still reports an encoding failure, preserve the command, terminal host and `weaver --version`; the CLI should not require a permanent system-wide UTF-8 setting.
+
+Programs that capture Weaver output must decode it as UTF-8. For example, use `encoding="utf-8"` with Python's `subprocess.run` rather than decoding the captured bytes with the Windows locale. If an older Python launcher or wrapper fails before Weaver configures its streams, set `PYTHONUTF8=1` for that process as a compatibility workaround, then rerun the command. This workaround is not an installation prerequisite.

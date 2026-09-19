@@ -79,3 +79,23 @@ weaver fabric environment publish \
   --path Environment/ParcelRuntime.Environment \
   --workspace "Parcel Development"
 ```
+
+## Pre-release source checkout
+
+Use the commands above without `--dev` for a released Weaver installation. `--dev` is only for testing an unreleased source checkout in Fabric: it builds that checkout as a wheel and publishes the wheel with its Fabric runtime dependencies.
+
+Install the checkout in editable mode so the `weaver` executable and imported module both resolve to that source tree, then invoke that executable:
+
+```bash
+git clone https://github.com/matthias-wong-dev/weaverstack.git
+cd weaverstack
+python -m venv .venv
+.venv/bin/python -m pip install -e .
+
+.venv/bin/weaver fabric environment publish \
+  --path ../parcel-ops/Environment/ParcelRuntime.Environment \
+  --workspace "Parcel Development" \
+  --dev
+```
+
+On Windows, use `.venv\Scripts\python.exe` and `.venv\Scripts\weaver.exe`. The package declares the wheel builder needed by `--dev`. The command finds the checkout from the installed `weaver` module, not from an unrelated `pyproject.toml` in the current directory. A released installation should continue to use normal publication rather than `--dev`.

@@ -153,19 +153,31 @@ After changing the source declaration, Build the affected items and use `weaver 
 
 ## Connect external data with a physical Shortcut
 
-Use a physical Shortcut when Fabric data has no owning Weaver document in this project. For example, create `Lakehouse/Reporting/shortcuts.py`:
+Use a physical Shortcut when Fabric data has no owning Weaver document in this project. Keep the source in a separate physical item that is not bound as a managed target. For example, `ParcelSourceArchive` may hold externally owned files while `Lakehouse/Tracking` is bound to the managed `ParcelTracking` Lakehouse.
+
+Create `Lakehouse/Tracking/shortcuts.py`:
 
 ```python
 from weaver import Shortcut
 
-Parcel__Milestone = Shortcut(
-    shortcut_type="table",
+
+Parcel__StatusSource = Shortcut(
+    shortcut_type="folder",
     target_type="physical",
-    target="Lakehouse/Carrier/Tables/Parcel.Milestone",
-    workspace="Carrier Shared",
+    target="Lakehouse/ParcelSourceArchive/Files/parcel-status",
 )
 ```
 
-Build manages the local `Lakehouse/Reporting/Tables/Parcel.Milestone` Shortcut and records its external target. It does not manage or build `Lakehouse/Carrier`, and the declaration adds no producer or edge to the project dependency graph. A consumer can import the local destination, but Weaver cannot derive Build or Load ordering for the external producer.
+Build manages the local `Lakehouse/Tracking/Files/Parcel.StatusSource` Shortcut and records its external target. It does not manage or build `ParcelSourceArchive`, and the declaration adds no producer or edge to the project dependency graph. Do not add the source Lakehouse as another managed target: Build may prune undeclared co-located content inside every selected managed item.
 
-Supported Lakehouse physical Shortcuts can use `workspace` to reach another Fabric workspace, as this example does. A Warehouse physical View Shortcut is currently restricted to the configured workspace: `shortcuts.yml` has no workspace field. Keep the complete target grammar, destination rules and compatibility combinations in the [Shortcut reference](../reference/weaver-documents/shortcut.md).
+Installed Python code imports the generated local destination and uses its public reader interface:
+
+```python
+from shortcuts import Parcel__StatusSource
+
+source_root = Parcel__StatusSource(self).path()
+```
+
+`path()` returns a mounted `pathlib.Path` for ordinary Python file access. `spark_path()` returns a string for Spark readers; do not treat that Spark URI as a `pathlib.Path`.
+
+A physical target without `workspace` uses the configured workspace. Add `workspace="Carrier Shared"` to a Lakehouse Shortcut when the source belongs to that other workspace. A Warehouse physical View Shortcut is restricted to the configured workspace because `shortcuts.yml` has no workspace field. Keep the complete target grammar, destination rules, and compatibility combinations in the [Shortcut reference](../reference/weaver-documents/shortcut.md).
