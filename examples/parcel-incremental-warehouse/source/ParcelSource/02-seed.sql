@@ -7,5 +7,5 @@ insert into [Source].[Parcel] (
     [Row update datetime]
 )
 values
-    ('P-1001', 'In transit', 'Central', sysdatetime()),
-    ('P-1002', 'Delivered', 'South', sysdatetime());
+    ('P-1001', 'In transit', 'Central', sysutcdatetime()),
+    ('P-1002', 'Delivered', 'South', sysutcdatetime());

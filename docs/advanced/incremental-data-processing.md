@@ -69,8 +69,8 @@ if object_id(N'[Source].[Parcel]', N'U') is null
 begin
     create table [Source].[Parcel] (
         [Parcel ID] varchar(20) not null,
-        [Status] varchar(40) not null,
-        [Depot] varchar(40) not null,
+        [Status] varchar(30) not null,
+        [Depot] varchar(30) not null,
         [Row update datetime] datetime2(6) not null
     );
 end;
@@ -88,8 +88,8 @@ insert into [Source].[Parcel] (
     [Row update datetime]
 )
 values
-    ('P-1001', 'In transit', 'Central', sysdatetime()),
-    ('P-1002', 'Delivered', 'South', sysdatetime());
+    ('P-1001', 'In transit', 'Central', sysutcdatetime()),
+    ('P-1002', 'Delivered', 'South', sysutcdatetime());
 ```
 
 Verify source access in that query editor before Build:
@@ -112,13 +112,18 @@ Table ID: Parcel.CurrentStatus
 
 Description: Current state of active parcels.
 
-Lineage: ParcelSource Source.Parcel.
+Lineage: Parcel records supplied through the physical Source.Parcel Shortcut.
 
 Primary key: Parcel ID
 
 Incremental: true
 
 Dependencies: []
+
+Schema:
+  Parcel ID: varchar(20)
+  Status: varchar(30)
+  Depot: varchar(30)
 */
 declare @bookmark_datetime datetime2(6);
 set @bookmark_datetime = coalesce(
@@ -169,7 +174,16 @@ from [Source].[Parcel]
 order by [Parcel ID];
 ```
 
-Then query `[Parcel].[CurrentStatus]`; it should contain both seeded parcels.
+Then query `[Parcel].[CurrentStatus]`; it should contain both seeded parcels. In a **SQL query connected to ParcelCatalogue**, record the consumer's first successful boundary:
+
+```sql
+select [Bookmark datetime]
+from [_].[Bookmark]
+where [Item type] = N'Warehouse'
+  and [Item name] = N'Operations'
+  and [Schema name] = N'Parcel'
+  and [Object name] = N'CurrentStatus';
+```
 
 #### Change source rows, then Load without Build
 
@@ -178,16 +192,16 @@ In the **ParcelSource query editor**, run `source/ParcelSource/03-change.sql`:
 ```sql
 update [Source].[Parcel]
 set [Status] = 'Delivered',
-    [Row update datetime] = sysdatetime()
+    [Row update datetime] = sysutcdatetime()
 where [Parcel ID] = 'P-1001';
 
 update [Source].[Parcel]
 set [Status] = 'Cancelled',
-    [Row update datetime] = sysdatetime()
+    [Row update datetime] = sysutcdatetime()
 where [Parcel ID] = 'P-1002';
 ```
 
-Verify the two source statuses there, then return to the **example project root** and Load the already installed definition:
+Verify the two source statuses and their UTC update datetimes there. Both update datetimes must be later than the consumer bookmark recorded after the first Load. Then return to the **example project root** and Load the already installed definition:
 
 ```bash
 weaver load Warehouse/Operations --dry-run
@@ -195,6 +209,16 @@ weaver load Warehouse/Operations
 ```
 
 `P-1001` is an upsert from the first result set. The update of `P-1002` to `Cancelled` becomes a target delete from the second result set: source change type and target action type differ. Absence from the first result set is not a deletion claim. A hard source deletion leaves no row for either query, so propagation would require retained evidence such as a tombstone, audit row, or CDC record.
+
+Query both Warehouses after the Load. `ParcelOperations` should contain `P-1001` as `Delivered` and no active `P-1002`; `ParcelSource` should still contain `P-1002` as `Cancelled`. In `ParcelCatalogue`, the consumer bookmark should be later than the boundary recorded after the first Load.
+
+Without changing the source, run one more Load:
+
+```bash
+weaver load Warehouse/Operations
+```
+
+The target rows remain unchanged. The clean no-op consumes an empty source window and advances the consumer bookmark again.
 
 The complete checked fixture is `examples/parcel-incremental-warehouse`. Local Check validates its authored shape. Build, Shortcut resolution, Load, and the stated row results require a Fabric workspace and remain pending remote execution.
 
@@ -412,6 +436,17 @@ The first Folder Load publishes both files and records their insertions. The Tab
 
 Inspect the managed Folder and `Parcel.CurrentStatus` in `ParcelTracking`. The Table should contain `P-1001` and `P-1002`.
 
+In a **SQL query connected to ParcelCatalogue**, record the Table's first successful boundary:
+
+```sql
+select [Bookmark datetime]
+from [_].[Bookmark]
+where [Item type] = N'Lakehouse'
+  and [Item name] = N'Tracking'
+  and [Schema name] = N'Tables/Parcel'
+  and [Object name] = N'CurrentStatus';
+```
+
 ### Change source data, then Load without Build
 
 Do not edit either Weaver document. In a **Fabric notebook with `ParcelSourceArchive` attached as its default Lakehouse**, replace `P-1001.csv` and delete `P-1002.csv`:
@@ -445,7 +480,7 @@ Inspect three results:
 - `Parcel.CurrentStatus` contains one `P-1001` row with status `Delivered`; and
 - the latest Load activity reports the Folder changes and the Table's updated and deleted rows.
 
-A later clean run with no source changes reaches the Table's `return None`. That no-op still consumes a complete source window and advances the bookmark.
+Run `weaver load Lakehouse/Tracking` once more without changing the source. The clean run reaches the Table's `return None`: managed files and target rows remain unchanged, while the consumer bookmark advances again.
 
 Local Check validates the complete fixture's authored shape. Physical Shortcut creation, mounted-path access, Load, and the stated file and row results require Fabric and remain pending remote execution.
 

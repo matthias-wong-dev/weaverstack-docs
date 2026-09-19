@@ -25,6 +25,8 @@ weaver initialise \
 
 This fully specified command does not start the setup wizard. Weaver creates or reuses the `Catalogue` and `Operations` Warehouses and the `Weaver` Environment, creates `parcel-ops`, and writes its workspace configuration, workflow, Environment definition and empty Warehouse source directory. It does not publish the Environment.
 
+`Operations` is now a Weaver-managed physical target. Build reconciles selected managed items and may prune undeclared co-located content. Keep manually supplied or irreplaceable source data in a separate physical item and connect it through a physical Shortcut; [Logical and physical items](../core-concepts/logical-and-physical-items.md#choose-one-of-three-ownership-cases) explains the boundary.
+
 **Expected result:** the command ends with `Weaver project ready in .../parcel-ops.` and reports each Fabric item as created or already existing. Environment publication is deferred.
 
 Move into the project:
@@ -197,5 +199,13 @@ weaver workflow full
 Review and confirm the four displayed commands when prompted.
 
 **Expected result:** Build, Load, Test and Health run in order in one Session. The Test passes, Health remains Green and the command ends with `✓ Commands completed: 4`.
+
+For an unattended shell, authorise the workflow explicitly instead of piping a response into stdin:
+
+```bash
+weaver workflow full --yes --non-interactive
+```
+
+Piped input is not a real terminal confirmation. `--non-interactive` also prevents browser sign-in, so unattended credentials must already be configured.
 
 You now have a working Weaver project. Read [How Weaver works](../core-concepts/how-weaver-works.md) for the model behind this lifecycle, or continue with [Build a Warehouse pipeline](../basics/warehouse-pipeline.md). Exact command options and failure behaviour are in [Reference](../reference/index.md).
