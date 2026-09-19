@@ -1,0 +1,6 @@
+workspace: Parcel Development
+catalogue: Warehouse/ParcelCatalogue
+environment: ParcelRuntime
+
+targets:
+  Lakehouse/Tracking: ParcelTracking

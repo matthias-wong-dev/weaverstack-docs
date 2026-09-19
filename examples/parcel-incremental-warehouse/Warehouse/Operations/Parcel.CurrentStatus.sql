@@ -3,7 +3,7 @@ Table ID: Parcel.CurrentStatus
 
 Description: Current state of active parcels.
 
-Lineage: Source.Parcel.
+Lineage: ParcelSource Source.Parcel.
 
 Primary key: Parcel ID
 

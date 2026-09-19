@@ -48,6 +48,8 @@ Source, request, desktop preflight, state-read and bundle-validation errors stop
 
 Build has no operation-wide transaction or rollback. Runtime-state resets, removals, physical changes and catalogue writes completed before a later failure remain. Rerunning Build takes a new source snapshot and replans from the catalogue and physical state that remain; an unchanged settled rerun selects no physical or catalogue work.
 
-Build may remove obsolete Weaver-certified objects and catalogue claims inside selected items. It does not reconcile or remove state outside that boundary.
+Build reconciles each selected physical item as a managed boundary. It may prune Tables, Views, Schemas, and Lakehouse Folders found there when they are not declared by the selected logical item. Keep externally owned data in a separate physical item and reach it through a physical Shortcut; do not select that source item as a Build target.
+
+Build does not reconcile or remove state outside the selected physical-item boundary.
 
 See [`weaver build`](../cli/build.md), [`weaver install`](../cli/install.md), [Catalogue schema](../catalogue-schema.md), and [Shared selection and identity](shared-selection-and-identity.md).

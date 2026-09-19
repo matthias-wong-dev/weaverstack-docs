@@ -12,6 +12,16 @@ The logical identity belongs to the project. The physical item belongs to a Fabr
 
 Item kinds remain aligned: a logical Lakehouse binds to a physical Lakehouse, and a logical Warehouse binds to a physical Warehouse.
 
+## Choose one of three ownership cases
+
+| Case | Where the data lives | Weaver's boundary |
+| --- | --- | --- |
+| Ordinary managed item | In the physical target bound to a logical item | Build reconciles the selected item to project declarations and may prune undeclared co-located content. |
+| Protected managed object | In a managed target, with `Prohibit rebuild: true` on the Table, Folder, or View | Weaver still owns the object; the flag only guards replacement during Build. |
+| External physical source | In a physical item that is not a managed target, reached through a physical Shortcut | Weaver owns the local Shortcut, not the source item or its contents. |
+
+Do not bind or select an external source item as a managed target merely to make it readable. Keep it outside the Build boundary and expose only the required Table, Folder, or schema through a physical Shortcut. See [Protecting data](../advanced/protecting-data.md) for the recoverability decision.
+
 ## Logical identity stays with the source
 
 A logical item identity combines its kind and name. The kind matters: `Lakehouse/Shared` and `Warehouse/Shared` are different logical items.

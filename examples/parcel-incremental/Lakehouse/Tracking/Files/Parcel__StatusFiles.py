@@ -10,21 +10,21 @@ File key: "*.csv"
 Incremental: false
 """
 
-from pathlib import Path
 import shutil
 
+from shortcuts import Parcel__StatusSource
 from weaver import Folder
 
 
 class Parcel__StatusFiles(Folder):
     def read(self):
-        source_root = Path(self.lakehouse.files_root()) / "parcel-source" / "parcel-status"
+        source_root = Parcel__StatusSource(self).path()
         if not source_root.is_dir():
             raise FileNotFoundError(
                 f"Parcel status source directory not found: {source_root}"
             )
 
         staging = self.staging_folder()
-        for source in source_root.glob("*.csv"):
+        for source in sorted(source_root.glob("*.csv")):
             shutil.copy2(source, staging.path / source.name)
         return staging
