@@ -15,6 +15,10 @@ This maintainer-only ledger records the state of the five-section public site. I
 
 Final delivery verification must run again on the integrated head. A phase being complete here does not replace that integrated build and link check.
 
+## Acceptance follow-up
+
+The 19 September documentation corrections are complete on `docs/acceptance-fixes`: ownership boundaries, the two incremental fixtures, Mirror prerequisites, Fabric notebook-source input, Initialise and Workflow interaction, Windows output handling and pre-release Environment publication guidance. The internal [acceptance addendum](acceptance/2026-09-19-addendum.md) preserves corrected classifications and the remaining black-box handover. Live Fabric reruns remain deliberately unclaimed until the independent tester records them against the final pull-request head.
+
 ## Launch-critical coverage
 
 The launch surface includes:
