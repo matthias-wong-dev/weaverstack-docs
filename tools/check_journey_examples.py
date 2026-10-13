@@ -46,7 +46,7 @@ def main():
 
     catalogue_names = {table.qualified for table in CATALOGUE_TABLES}
     readback_pages = [
-        docs / "basics/power-bi/fabric-integration.md",
+        docs / "basics/tests-and-assumptions.md",
         root / "examples/parcel-powerbi-fabric/README.md",
     ]
     required_names = {
@@ -78,7 +78,11 @@ def main():
         docs / "advanced" / f"{name}.md"
         for name in ("run-part-of-an-estate", "concurrency", "performance-and-scale")
     ]
-    assert len(pages) == 13
+    pages += [
+        docs / "basics/tests-and-assumptions.md",
+        docs / "basics/workspace-and-python-runtime.md",
+    ]
+    assert len(pages) == 15
     counts = {"pages": len(pages), "commands": 0, "configs": 0, "python_calls": 0}
     for page in pages:
         for text in blocks(page, "bash"):
@@ -113,37 +117,37 @@ def main():
             "workspace-dev.yml",
         ),
         (
-            "basics/power-bi/environments.md",
+            "basics/workspace-and-python-runtime.md",
             "yaml",
             "parcel-powerbi",
             "workspace-dev.yml",
         ),
         (
-            "basics/power-bi/environments.md",
+            "basics/workspace-and-python-runtime.md",
             "yaml",
             "parcel-powerbi",
             "workspace-prod.yml",
         ),
         (
-            "basics/power-bi/validate.md",
+            "basics/tests-and-assumptions.md",
             "dax",
             "parcel-powerbi-validation",
             "PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax",
         ),
         (
-            "basics/power-bi/validate.md",
+            "basics/tests-and-assumptions.md",
             "tmdl",
             "parcel-powerbi-validation",
             "failure/Parcel.tmdl",
         ),
         (
-            "basics/power-bi/fabric-integration.md",
+            "basics/power-bi/deploy-pbip.md",
             "yaml",
             "parcel-powerbi-fabric",
             "workspace-dev.yml",
         ),
         (
-            "basics/power-bi/fabric-integration.md",
+            "basics/power-bi/deploy-pbip.md",
             "tmdl",
             "parcel-powerbi-fabric",
             "PowerBI/Parcel/Parcel.tmdl",
@@ -189,11 +193,16 @@ def main():
             trial = temp / name
             shutil.copytree(root / "examples/parcel-powerbi", trial)
             guide_path = docs / (
-                "basics/power-bi/modelling-rule.md"
+                "basics/power-bi/deploy-pbip.md"
                 if name == "rule"
                 else "advanced/power-bi/shared-policy.md"
             )
             snippets = blocks(guide_path, "tmdl")
+            if name == "rule":
+                snippets = [
+                    text for text in snippets if "Weaver.AutoHideForeignKeys" in text
+                ]
+                assert len(snippets) == 1
             if name == "policy":
                 (trial / "PowerBI/policy.tmdl").write_text(snippets[0])
             (trial / "PowerBI/Parcel/Parcel.tmdl").write_text(snippets[-1])

@@ -29,6 +29,17 @@ Use `Weaver document` for authored Tables, Folders, Views, Tests, Assumptions, S
 
 ## Reader model and motivation
 
+Assign each subject to the page that owns the reader’s job before changing the
+menu. Native model deployment belongs beside Lakehouse/Warehouse authoring; DAX
+validation belongs in Add Tests and Assumptions; model/Report environment targets
+belong in workspace configuration. Do not flatten format-specific examples into
+unrelated top-level tasks or mistake navigation nesting for substantive integration.
+
+Introduce normal TMDL first. Explain overlays and Weaver annotations as the
+semantic-model counterpart to the engineering declarations around SQL and Python.
+Show a small built-in such as AutoHideForeignKeys in the ordinary authoring task;
+introduce custom handlers there and put their implementation in Advanced.
+
 Weaver is Fabric-first. Present authoring tasks in the order Lakehouse, Warehouse,
 semantic model, Report. Use Fabric before Power BI when naming the platforms.
 Standalone Power BI deployment is a supported setup detail, not a separate

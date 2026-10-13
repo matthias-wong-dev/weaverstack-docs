@@ -40,7 +40,7 @@ A physical Shortcut or directly qualified physical relation has no managed proje
 
 A model’s managed source declarations connect its Tables to Lakehouse or Warehouse data. The graph reaches from source loads to the model refresh, so the model need not have a separate schedule guessing when the source has finished.
 
-Use `Weaver.Source` to declare the logical source Table. Build installs that lineage; estate-wide Load places selected source work before the model refresh. DAX validations can compare the result with source SQL, and Health uses the same edges to detect stale models or validations. See [Connect a semantic model to source data](../basics/power-bi/fabric-integration.md).
+Use `Weaver.Source` to declare the logical source Table. Build installs that lineage; estate-wide Load places selected source work before the model refresh. DAX validations can compare the result with source SQL, and Health uses the same edges to detect stale models or validations. See [Connect a semantic model to source data](../basics/power-bi/deploy-pbip.md#use-a-managed-source).
 
 A linked Report depends on its resolved model for deployment. It has no independent data Load. An external source without a managed declaration is outside the installed dependency graph.
 

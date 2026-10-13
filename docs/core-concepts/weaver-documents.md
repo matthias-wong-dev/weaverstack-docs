@@ -1,6 +1,6 @@
 # Weaver documents
 
-Source-data Weaver documents declare Tables, Folders and related work. Read those documents as four parts:
+Weaver adds engineering declarations to the formats you author. For Lakehouse and Warehouse work, a document declares a Table, Folder or related work through four parts:
 
 ```text
 path + kind + metadata + authored body
@@ -14,10 +14,6 @@ path + kind + metadata + authored body
 For example, in `Warehouse/Operations/Parcel.Status.sql`, the path assigns the document to `Warehouse/Operations`, `Table ID` makes it a Table named `Parcel.Status`, the remainder of the comment carries its metadata, and the query is the body Build installs as data work.
 
 Weaver checks that placement, filename, kind and declared identity agree. Exact paths, metadata fields, defaults and body requirements are in [Weaver documents reference](../reference/weaver-documents/overview.md).
-
-## Native Power BI definitions
-
-PBIP projects, `.SemanticModel` directories, `.Report` directories and named TMDL definitions use native files under `PowerBI/<project>`. They do not require a SQL/Python metadata header. Optional policy, overlays and annotations add conventions without making source generation a prerequisite. DAX validations have their own metadata and model-owned directories. See [Power BI layout](../reference/power-bi/project-layout.md).
 
 ## Documents that hold or present data
 
@@ -33,15 +29,38 @@ A Folder declares files managed beneath a Lakehouse item's `Files` area. Its bod
 
 A View declares a query-defined relation. Build installs its query as a definition; View creation is not a separate Load step.
 
+## Native models, overlays and annotations
+
+Semantic models use standard TMDL. Reports use their native definitions. Weaver can build those definitions as they are; a PBIP entrypoint opens the project in Desktop.
+
+For Tables and Folders, SQL/Python metadata declares the engineering around the authored code. For semantic models, **TMDL overlays and Weaver annotations play the corresponding authoring role**: add conventions, refinements and managed source relationships to the native model.
+
+An overlay is a partial TMDL file beside a native model. For `Parcel.SemanticModel`, the same-name `Parcel.tmdl` can refine a measure’s format or add an annotation without maintaining a second copy of the model. A shared `PowerBI/policy.tmdl` applies common declarations across models; a model’s local overlay takes precedence.
+
+An annotation requests a modelling rule through normal TMDL syntax:
+
+```tmdl
+model Model
+    annotation 'Weaver.AutoHideForeignKeys' = true
+```
+
+That rule hides relationship many-side keys in the deployed model. The authored relationship and native source files remain in place. Other built-ins can identify a managed Table as a model source or apply column visibility conventions.
+
+You can also define a custom annotation as a Python handler and declare it in TMDL. For example, `Parcel.DisplayFolder` can apply a project-specific display-folder convention. Built-in names use the reserved `Weaver` namespace; project handlers use their own namespace. They are executable project code, so Check and Build must only read trusted projects.
+
+Build merges the native definition, shared policy and local overlay, then applies the annotations to the completed model.
+
+[Deploy semantic models and Reports](../basics/power-bi/deploy-pbip.md) shows the native-first workflow and a simple annotation. [Custom annotations](../advanced/power-bi/custom-annotations.md) implements a handler. [TMDL](../reference/power-bi/tmdl.md) and [Annotations](../reference/power-bi/annotations.md) own the exact syntax and precedence.
+
 ## Documents that validate data
 
 ### Test
 
-A Test compares expected and actual rows.
+A Test compares expected and actual rows using the item’s SQL, Python or DAX validation form.
 
 ### Assumption
 
-An Assumption returns rows that contradict a stated condition. It passes when that result is empty.
+An Assumption returns rows that contradict a stated condition. It passes when that result is empty. Model-owned DAX validations belong to the same Test/Assumption model; they live beneath the model’s validation directories.
 
 Build installs validations for later catalogue-mode Test. Source/file mode can read authored validations directly and run them against deployed objects without persistent catalogue records.
 

@@ -71,7 +71,7 @@ def main():
     for page in (home, features):
         assert [h for h in page.headings if h in expected] == expected
         assert not any("catalogue" in h.lower() for h in page.headings)
-    assert home.headings[0] == "Data engineering for Microsoft Fabric."
+    assert home.headings[0] == "Making Fabric easier to use"
     assert home.links[0].endswith("/getting-started/first-project/")
     assert (
         "Weaver works with native Fabric Lakehouse and Warehouse items, as well as Power BI projects."
@@ -100,6 +100,46 @@ def main():
         "basics/power-bi/deploy-pbip.md",
     ], authoring
     assert not any(isinstance(entry, dict) and "Power BI" in entry for entry in basics)
+    entries = [next(iter(entry.values())) for entry in basics[1:]]
+    assert entries[4] == "basics/tests-and-assumptions.md"
+    assert not any(
+        path in entries
+        for path in (
+            "basics/power-bi/validate.md",
+            "basics/power-bi/modelling-rule.md",
+            "basics/power-bi/environments.md",
+            "basics/power-bi/fabric-integration.md",
+        )
+    )
+    validation = (root / "docs/basics/tests-and-assumptions.md").read_text()
+    assert all(
+        term in validation
+        for term in (
+            "Semantic-model validations",
+            "EVALUATE FILTER",
+            "Compare DAX with source SQL",
+            "weaver test SemanticModel/Parcel",
+        )
+    )
+    authoring = (root / "docs/basics/power-bi/deploy-pbip.md").read_text()
+    assert authoring.index("## Native files first") < authoring.index(
+        "## Add an overlay and a Weaver annotation"
+    )
+    assert all(
+        term in authoring
+        for term in (
+            "Weaver.AutoHideForeignKeys",
+            "Use your own convention",
+            "custom-annotations.md",
+            "Weaver.Source",
+        )
+    )
+    core = (root / "docs/core-concepts/weaver-documents.md").read_text()
+    assert (
+        "TMDL overlays and Weaver annotations play the corresponding authoring role"
+        in core
+    )
+    assert "Parcel.DisplayFolder" in core
     advanced = next(group["Advanced"] for group in nav if "Advanced" in group)
     assert "Semantic models" in advanced[-1]
     assert "Power BI modelling" not in (root / "mkdocs.yml").read_text()
@@ -121,7 +161,9 @@ def main():
             "basics/recover-failed-work",
             "basics/run-and-inspect-estate",
             "core-concepts/state-and-health",
-            "basics/power-bi/fabric-integration",
+            "basics/power-bi/deploy-pbip",
+            "basics/tests-and-assumptions",
+            "basics/workspace-and-python-runtime",
         )
     ]
     for path in targets:

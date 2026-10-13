@@ -117,4 +117,4 @@ weaver load --workspace-config workspace-config.yml
 
 Naming no item selects the installed estate, including registered semantic-model refresh roots. Selected source work precedes its selected model refresh through managed dependencies. For deliberate targeting, `weaver load SemanticModel/Parcel` refreshes only that model; it does not add unselected source items. Reports use model data and have no separate Load.
 
-See [Connect a semantic model to source data](../../basics/power-bi/fabric-integration.md).
+See [Connect a semantic model to source data](../../basics/power-bi/deploy-pbip.md#use-a-managed-source).

@@ -50,6 +50,6 @@ weaver health
 
 Green means the assessed Load, Tests and Build subjects have no current finding. Amber identifies work that is pending, stale or otherwise needs attention without a current failure. Red identifies a recorded failure or inconsistent installed state. Act on the finding rather than the overall colour alone.
 
-For a complete source-and-model example, follow [Connect a semantic model to source data](power-bi/fabric-integration.md).
+For a complete source-and-model example, follow [Connect a semantic model to source data](power-bi/deploy-pbip.md#use-a-managed-source).
 
 Use [Troubleshooting](troubleshooting.md) when the final report is not Green. If an item-wide run is broader than the intended work, [run part of an estate](../advanced/run-part-of-an-estate.md). To cap simultaneous scheduled work for one invocation, [control concurrency](../advanced/concurrency.md). Both are optional controls, not prerequisites for normal operation. See [Operation behaviour](../reference/operation-behaviour/index.md) and the [CLI reference](../reference/cli.md) for selection, freshness, inventory controls, named execution and machine-readable output.

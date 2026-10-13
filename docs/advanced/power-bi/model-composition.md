@@ -77,5 +77,5 @@ Delete only the two fixture-created Reports and output models for cleanup, Repor
 ## Related tasks
 
 - [Look up exact composition and policy precedence](../../reference/power-bi/tmdl.md).
-- [Add validations to an output](../../basics/power-bi/validate.md).
+- [Add validations to an output](../../basics/tests-and-assumptions.md#semantic-model-validations).
 - [Author a standalone TMDL model](model-from-tmdl.md).

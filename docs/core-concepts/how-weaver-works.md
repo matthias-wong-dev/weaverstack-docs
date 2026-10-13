@@ -4,7 +4,7 @@ A Weaver project holds the definitions for a Fabric estate: Lakehouses, Warehous
 
 ## Keep the source in a project
 
-Python and SQL define data work under `Lakehouse/` and `Warehouse/`. Native model and Report definitions live under `PowerBI/`. Tests and Assumptions live beside the items they check.
+Python and SQL define data work under `Lakehouse/` and `Warehouse/`. Native model and Report definitions live under `PowerBI/`. Models use standard TMDL; optional overlays and Weaver annotations add refinements and modelling rules. These play the same authoring role as the engineering declarations around SQL and Python. Tests and Assumptions live beside the items they check.
 
 The project declares logical identities, not development or production item names. Change workspace configuration to select another destination without maintaining another copy of the source.
 

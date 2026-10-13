@@ -71,7 +71,7 @@ same logical project + production config → production physical estate
 same logical project + development config → development physical estate
 ```
 
-A configuration's `targets` mapping tells Build where to install. Catalogue-backed Load and Test read the installed binding, so an edited mapping takes effect there only after Build publishes it. Catalogue-free model refresh and file-mode validation instead use configuration. [Power BI environment switching](../basics/power-bi/environments.md) shows target names and linked Report bindings.
+A configuration's `targets` mapping tells Build where to install. Catalogue-backed Load and Test read the installed binding, so an edited mapping takes effect there only after Build publishes it. Catalogue-free model refresh and file-mode validation instead use configuration. [Power BI environment switching](../basics/workspace-and-python-runtime.md#model-and-report-targets) shows target names and linked Report bindings.
 
 A build also refuses to install two logical items into one occupied physical target. The exact configuration keys, discovery order and command-line precedence are in [Workspace configuration reference](../reference/configuration-files/workspace-config.md).
 

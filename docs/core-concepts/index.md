@@ -1,6 +1,6 @@
 # Core concepts
 
-Core concepts explain what you author, where it deploys, what runs and what gets recorded. Standalone Power BI and catalogue-backed Fabric work share operations but not every prerequisite or state record.
+Core concepts explain what you author, where it deploys, what runs and what gets recorded. Native SQL, Python and TMDL definitions share the project’s Build, Load, Test and Health flow.
 
 Begin with [How Weaver works](how-weaver-works.md) for the complete model, then read [Design philosophy](design-philosophy.md) for the principles behind it. Follow the sequence behind the work:
 
@@ -18,7 +18,7 @@ Dependencies and fault tolerance
 
 - [Projects and estates](projects-and-estates.md) separates version-controlled source, installed Fabric definitions and operational catalogue state.
 - [Logical and physical items](logical-and-physical-items.md) explains how stable project identities bind to environment-specific Fabric targets.
-- [Weaver documents](weaver-documents.md) explains how paths, document types and metadata declare the estate.
+- [Weaver documents](weaver-documents.md) explains SQL/Python declarations and the corresponding role of TMDL overlays and annotations for models.
 
 ## Follow authored work into operation
 

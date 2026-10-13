@@ -102,7 +102,7 @@ Run the loop item-wide by default. Use `--name` only for deliberate targeting, d
 
 ## Include semantic models and Reports
 
-Keep their native definitions under `PowerBI/` in the same project. Use the same workspace configuration, with [development and production target mappings](power-bi/environments.md) for the model and Report.
+Keep their native definitions under `PowerBI/` in the same project. Use the same workspace configuration, with [development and production target mappings](workspace-and-python-runtime.md#model-and-report-targets) for the model and Report.
 
 Build source-data changes first, then deploy a changed model or Report in a separate call:
 
@@ -113,6 +113,6 @@ weaver test --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml
 ```
 
-This example assumes `PowerBI/Parcel` is present and its targets are configured. Build deploys the model before its linked Report. The estate-wide commands then cover source data, model refreshes and their validations. A source change can make the model stale even when its definition has not changed. See [Connect a semantic model to source data](power-bi/fabric-integration.md).
+This example assumes `PowerBI/Parcel` is present and its targets are configured. Build deploys the model before its linked Report. The estate-wide commands then cover source data, model refreshes and their validations. A source change can make the model stale even when its definition has not changed. See [Connect a semantic model to source data](power-bi/deploy-pbip.md#use-a-managed-source).
 
 Re-mirror only when the intended result is a fresh source baseline. It replaces local materialisations inside the displayed destination boundary; it is a reset, not an iteration step.

@@ -1,15 +1,15 @@
+---
+search:
+  exclude: true
+---
+
 # Semantic models and Reports
 
-Native semantic models and Reports belong in the same project as their Lakehouse and Warehouse sources. Build deploys the definitions, Load refreshes models, Test evaluates DAX validations, and Health includes their recorded state in the managed estate report.
+Native models and Reports fit the ordinary authoring and operating flow in [Basics](../index.md).
 
-The ordinary authoring flow is in [Basics](../index.md), alongside Lakehouse and Warehouse tasks:
+- [Author and deploy](deploy-pbip.md): native TMDL, optional overlays/annotations and managed source declarations.
+- [Add Tests and Assumptions](../tests-and-assumptions.md#semantic-model-validations): DAX validation alongside SQL and Python forms.
+- [Configure the workspace](../workspace-and-python-runtime.md#model-and-report-targets): development and production mappings.
+- [Develop](../development-cycle.md), [run and inspect](../run-and-inspect-estate.md), and [recover](../recover-failed-work.md) with the estate’s shared operations.
 
-- [Deploy semantic models and Reports with PBIP](deploy-pbip.md).
-- [Connect a semantic model to source data](fabric-integration.md).
-- [Choose environment targets](environments.md).
-- [Validate a semantic model](validate.md).
-- [Hide relationship foreign keys](modelling-rule.md).
-
-For shared standards and model variants, use the [Semantic models tasks in Advanced](../../advanced/index.md#semantic-models). Exact native layout, TMDL, annotations and DAX rules belong in [Reference](../../reference/power-bi/index.md).
-
-Model and Report deployment can also run without a catalogue in an existing Power BI service workspace. The deployment task supplies that smaller setup; licence, model-mode and permission requirements are in the [compatibility reference](../../reference/power-bi/requirements-and-compatibility.md).
+[Advanced Semantic models](../../advanced/index.md#semantic-models) covers shared policy, custom handlers and composition. [Reference](../../reference/power-bi/index.md) specifies the native formats and interfaces.

@@ -101,7 +101,7 @@ weaver test SemanticModel/Parcel --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml
 ```
 
-These commands assume the Parcel model and Report are in the project and configured. Reports have no separate Load or Test; inspect the Report’s binding and rendering after recovering its model. See [Deploy models and Reports](power-bi/deploy-pbip.md) and [Connect a model to source data](power-bi/fabric-integration.md).
+These commands assume the Parcel model and Report are in the project and configured. Reports have no separate Load or Test; inspect the Report’s binding and rendering after recovering its model. See [Deploy models and Reports](power-bi/deploy-pbip.md) and [Connect a model to source data](power-bi/deploy-pbip.md#use-a-managed-source).
 
 ## Refresh a mirrored baseline
 

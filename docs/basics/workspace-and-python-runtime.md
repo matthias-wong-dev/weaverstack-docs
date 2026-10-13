@@ -1,6 +1,6 @@
 # Configure a workspace and Python runtime
 
-Workspace configuration chooses destinations. A Fabric Environment supplies packages to hosted work. Standalone Power BI does not require that Environment or a catalogue; use [Power BI environment switching](power-bi/environments.md) for model/Report targets.
+Workspace configuration maps the project’s Lakehouses, Warehouses, semantic models and Reports to their physical destinations. Select another configuration to change environments without editing the definitions. A Fabric Environment supplies packages to hosted Spark/Python work; it is separate from those destination mappings.
 
 ## Bind the project to Fabric
 
@@ -62,9 +62,57 @@ weaver test --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml
 ```
 
-Use the same file for one lifecycle. Switching files changes the workspace, catalogue, optional mirror source, runtime and physical targets; it does not rename `Lakehouse/Landing` or `Warehouse/Operations`.
+Use the same file for one lifecycle. Switching files changes the workspace, catalogue, optional mirror source, runtime and physical targets; it does not change the project’s logical identities. Model and Report targets use the same mapping mechanism as Lakehouse and Warehouse targets.
 
 The `mirror` setting names a source catalogue. Loading the configuration does not run Mirror. The [Development cycle](development-cycle.md) shows how to inspect and apply that operation deliberately.
+
+## Model and Report targets
+
+The same configuration switch applies to a native model and its linked Report. Keep their logical names in the source; choose the workspace and physical names through the selected file. This small example isolates that mapping with the model built in the [native authoring task](power-bi/deploy-pbip.md).
+
+Start from the [parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi) and the [deployment prerequisites](power-bi/deploy-pbip.md). For this exercise, use two existing disposable workspaces. Do not use a real production workspace for this exercise.
+
+### 1. Map the two destinations
+
+`workspace-dev.yml`:
+
+```yaml
+workspace: Parcel BI Development
+targets:
+  SemanticModel/Parcel: Parcel_Dev
+  Report/Parcel: Parcel_Report_Dev
+```
+
+`workspace-prod.yml`:
+
+```yaml
+workspace: Parcel BI Production
+targets:
+  SemanticModel/Parcel: Parcel
+  Report/Parcel: Parcel_Report
+```
+
+Edit the workspace names to your own. Model and Report target names are separate mappings. This example has inline data. For source-backed models, configure source mapping and an existing service connection as in [Connect a semantic model to source data](power-bi/deploy-pbip.md#use-a-managed-source).
+
+### 2. Deploy and refresh each pair
+
+```bash
+weaver check .
+weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver build . --item PowerBI/Parcel --workspace-config workspace-prod.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-prod.yml
+```
+
+In the first workspace, `Parcel_Report_Dev` must bind to `Parcel_Dev`. In the second, `Parcel_Report` must bind to `Parcel`, not the development model. Both cards should show 2. Inspect each actual binding and refresh outcome; two successful command exits do not establish that the Reports query the right model.
+
+The source retains its logical association. Destination-specific model identities belong in the deployed Report payload. Weaver compilation and deployment do not write the transformed model back into the native project.
+
+For a model reading a managed Lakehouse or Warehouse, source-expression mapping and existing service connections are additional controls. Destination naming alone does not switch its data source.
+
+### Cleanup
+
+Delete only the two fixture-created Report/model pairs, Reports first. Do not delete either workspace or an item that existed before the exercise.
 
 ## Add a Fabric Environment for Python work
 

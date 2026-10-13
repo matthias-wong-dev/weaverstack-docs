@@ -53,7 +53,7 @@ Inspect `Parcel_Summary_Dev` through a supported native model-definition tool. I
 
 A table without an authored partition can obtain its columns and partition from managed-source metadata. This is a different route with additional prerequisites: a compatible catalogue, built/loaded supported Lakehouse or Warehouse source, resolved endpoints/metadata, and permissions and connections for the model's chosen mode.
 
-Begin with the [Fabric integration fixture](../../basics/power-bi/fabric-integration.md) in its own directory. Build and Load its Warehouse first. Then create `PowerBI/Parcel/ParcelSummary.tmdl`:
+Begin with the [Fabric integration fixture](../../basics/power-bi/deploy-pbip.md#use-a-managed-source) in its own directory. Build and Load its Warehouse first. Then create `PowerBI/Parcel/ParcelSummary.tmdl`:
 
 ```tmdl
 model Model

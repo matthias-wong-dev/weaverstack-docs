@@ -70,6 +70,10 @@ extra_css:
 
 not_in_nav: |
   /basics/power-bi/index.md
+  /basics/power-bi/validate.md
+  /basics/power-bi/modelling-rule.md
+  /basics/power-bi/environments.md
+  /basics/power-bi/fabric-integration.md
 
 nav:
   - Home: index.md
@@ -97,10 +101,6 @@ nav:
       - Build a Lakehouse pipeline with Spark SQL: basics/lakehouse-spark-sql.md
       - Build a Warehouse pipeline: basics/warehouse-pipeline.md
       - Deploy semantic models and Reports with PBIP: basics/power-bi/deploy-pbip.md
-      - Connect a semantic model to source data: basics/power-bi/fabric-integration.md
-      - Choose model and Report environment targets: basics/power-bi/environments.md
-      - Validate a semantic model: basics/power-bi/validate.md
-      - Hide relationship foreign keys: basics/power-bi/modelling-rule.md
       - Add Tests and Assumptions: basics/tests-and-assumptions.md
       - Connect data with Shortcuts: basics/shortcuts.md
       - Configure a workspace and Python runtime: basics/workspace-and-python-runtime.md
@@ -131,13 +131,6 @@ nav:
           - Author a model from TMDL: advanced/power-bi/model-from-tmdl.md
   - Reference:
       - reference/index.md
-      - Semantic models and Reports:
-          - reference/power-bi/index.md
-          - Project layout: reference/power-bi/project-layout.md
-          - TMDL merging and composition: reference/power-bi/tmdl.md
-          - Annotations: reference/power-bi/annotations.md
-          - DAX validations: reference/power-bi/validations.md
-          - Requirements and compatibility: reference/power-bi/requirements-and-compatibility.md
       - Weaver documents:
           - Overview: reference/weaver-documents/overview.md
           - Common metadata: reference/weaver-documents/common-metadata.md
@@ -149,6 +142,13 @@ nav:
           - Shortcut: reference/weaver-documents/shortcut.md
           - Schema metadata: reference/weaver-documents/schema-metadata.md
           - Warehouse programmable: reference/weaver-documents/warehouse-programmable.md
+      - Semantic models and Reports:
+          - reference/power-bi/index.md
+          - Project layout: reference/power-bi/project-layout.md
+          - TMDL merging and composition: reference/power-bi/tmdl.md
+          - Annotations: reference/power-bi/annotations.md
+          - DAX validations: reference/power-bi/validations.md
+          - Requirements and compatibility: reference/power-bi/requirements-and-compatibility.md
       - Python API:
           - Overview: reference/python/index.md
           - Operations: reference/python/operations.md

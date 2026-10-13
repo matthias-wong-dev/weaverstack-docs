@@ -31,13 +31,19 @@ Behaviour target: `74b4d15ee65ed2740593af1f4d459771b801b132`; documentation base
 | A7 | Build, rendered links, examples, browser and independent reader review | Local acceptance complete; reviewer DR-01 corrected/rechecked; live deployment/query/render/licensing not run; see `independent-acceptance.md` |
 | A8 | Draft PRs, private paired previews and release handoff | Both draft PRs and private proxy mappings verified; final heads/private addresses supplied in handoff; no merge or public publication |
 
-No substantive legacy page was removed. The original paths remain owners; new task pages link to reference rather than copying exhaustive contracts. The final handoff owns integrated results, screenshot locations, precise outstanding live cases and recommended publication order.
+No substantive legacy content was removed. Original routes remain reachable; retired model-specific tutorial routes now point to the shared authoring, validation and configuration owners. Exact contracts stay reference-owned. The final handoff owns integrated results, screenshot locations, precise outstanding live cases and recommended publication order.
 
 ## Fabric-first editorial feedback
 
 The feedback revision restores Fabric primacy and Lakehouse → Warehouse → semantic model → Report discovery. Basics no longer contains a separate Power BI navigation bucket; Advanced uses Semantic models. Models are integrated into core concepts, development, recovery and the shared Build/Load/Test/Health CLI pages. Public benchmark copy is rounded and short; exact measurements are retained in `scale-measurements.md`.
 
 The parent reviewed the revised copy and screenshots and ran focused reader-flow checks. The earlier independent reviews apply to the earlier iteration, not this new prose. Revision evidence is in `acceptance/docs-refresh-2026-10/fabric-first-feedback.md`; live/release/publication gates remain held.
+
+## Page-ownership correction
+
+The accepted product tagline is restored verbatim: Making Fabric easier to use. Core Weaver documents explains TMDL overlays and Weaver annotations as the semantic-model counterpart to SQL/Python engineering declarations. Native model deployment introduces ordinary TMDL before optional annotations and custom handlers. Add Tests and Assumptions owns the full DAX and DAX-to-SQL examples; workspace configuration owns model/Report environment switching. Four former top-level model-specific task leaves are compatibility pointers, not duplicated tutorial owners, and are excluded from search. Incoming narrative/product links target the new owners.
+
+The private structural assessment is `docs-flow-correction.md` in the task scratch folder. Verification for this revision is recorded in `acceptance/docs-refresh-2026-10/page-ownership-feedback.md`.
 
 ## Acceptance follow-up
 
