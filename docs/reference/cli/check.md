@@ -30,7 +30,7 @@ weaver check [-h] [--json] [--non-interactive] [PROJECT_FOLDER]
 
 Parse and validate a Weaver project without contacting Fabric. The positional folder defaults to the current directory.
 
-Check discovers the recognised Weaver project trees, validates declarations and dependency structure, and does not execute authored Python. Unrelated files inside item directories are ignored by project discovery.
+Check discovers the recognised Weaver project trees, validates declarations and dependency structure, and does not import data/validation classes. Custom Power BI annotation files are trusted Python loaded during parsing, including Check; handlers run during Build compilation. Unrelated files inside item directories are ignored by project discovery.
 
 ## Execution
 

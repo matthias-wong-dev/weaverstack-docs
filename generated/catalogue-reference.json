@@ -1,0 +1,2398 @@
+{
+  "schema_version": 1,
+  "tables": [
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Bookmark datetime",
+          "notes": "The UTC instant immediately before the most recent clean load began, or 1900-01-01 00:00:00.000000 for an object that has not had one.",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "The UTC instant immediately before each loadable object's latest clean load began. Rebuild and reload reset it to the sentinel; Views have no row.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name"
+      ],
+      "name": "_.Bookmark",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Column name",
+          "notes": "The column.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description",
+          "notes": "What this column is.",
+          "required": false,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description reference",
+          "notes": "The $Schema.Object this description was copied from, if any.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Is identity",
+          "notes": "Whether this is Weaver's managed surrogate column.",
+          "required": false,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the object's source file, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Authored column descriptions and Weaver-managed surrogate columns. It does not inventory every physical column.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name",
+        "Column name"
+      ],
+      "name": "_.ColumnDictionary",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Referencing schema name",
+          "notes": "The schema of the object declaring the dependency.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Referencing object name",
+          "notes": "The name of the object declaring the dependency.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Dependency reference",
+          "notes": "The dependency exactly as the owning document wrote it.",
+          "required": true,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Referenced item type",
+          "notes": "The referenced item's type, when the edge resolved.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Referenced item name",
+          "notes": "The referenced item's name, when the edge resolved.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Referenced schema name",
+          "notes": "The referenced schema, when the edge resolved.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Referenced object name",
+          "notes": "The referenced object, when the edge resolved.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the owning object's source file, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Resolved dependency edges and their authored references, scoped to the referencing item. Semantic source edges retain the consuming table.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Referencing schema name",
+        "Referencing object name",
+        "Dependency reference"
+      ],
+      "name": "_.Dependency",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description",
+          "notes": "What this folder is.",
+          "required": false,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description reference",
+          "notes": "The $Schema.Object this description was copied from, if any.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Lineage",
+          "notes": "Where this object's data comes from.",
+          "required": false,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Lineage reference",
+          "notes": "The $Schema.Object the lineage was copied from, if any.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "File key",
+          "notes": "The glob patterns Weaver manages, in declared order.",
+          "required": false,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Is incremental",
+          "notes": "Whether load accumulates rows rather than replacing them.",
+          "required": false,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Is static",
+          "notes": "Whether the object is loaded once rather than refreshed.",
+          "required": false,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Prohibit rebuild",
+          "notes": "Whether build may drop and recreate this object.",
+          "required": false,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the object's source file, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Managed folders under their Weaver document identity. The file key limits which files reconciliation may delete.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name"
+      ],
+      "name": "_.FolderDictionary",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Foreign schema name",
+          "notes": "The schema of the object declaring the relationship.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Foreign object name",
+          "notes": "The name of the object declaring the relationship.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Foreign column set",
+          "notes": "The foreign columns, comma-separated in declared order.",
+          "required": true,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Primary item type",
+          "notes": "The primary item's type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Primary item name",
+          "notes": "The primary item's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Primary schema name",
+          "notes": "The primary schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Primary object name",
+          "notes": "The primary object.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Primary column set",
+          "notes": "The primary columns, paired in order with the foreign ones.",
+          "required": true,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the object's source file, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Declared relationships, not database constraints. Each row is an unnamed edge; the primary side carries item identity because it may cross items.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Foreign schema name",
+        "Foreign object name",
+        "Foreign column set",
+        "Primary item type",
+        "Primary item name",
+        "Primary schema name",
+        "Primary object name",
+        "Primary column set"
+      ],
+      "name": "_.ForeignKeyDictionary",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Target name",
+          "notes": "The physical item currently bound to this installation.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Weaver version",
+          "notes": "The Weaver version that last reconciled this installation.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Workspace ID",
+          "notes": "The resolved Fabric workspace ID.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item ID",
+          "notes": "The resolved Fabric item ID.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the Item declaration, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "The physical target, Weaver version and source signature of each logical item installation.",
+      "key": [
+        "Item type",
+        "Item name"
+      ],
+      "name": "_.Installation",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Key type",
+          "notes": "Primary key or Unique.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "primary_key": "Primary key",
+            "unique": "Unique"
+          }
+        },
+        {
+          "name": "Column set",
+          "notes": "The key's columns, comma-separated in declared order.",
+          "required": true,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the object's source file, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Declared primary and alternate keys. They identify rows logically but are not built or enforced.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name",
+        "Key type",
+        "Column set"
+      ],
+      "name": "_.KeyDictionary",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Load statistic SK",
+          "notes": "An immutable surrogate generated by the writer. Fabric Warehouse tables have no identity columns, and sessions may append concurrently.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Workflow ID",
+          "notes": "Correlates every row one workflow produced.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Started datetime",
+          "notes": "When the load started.",
+          "required": false,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Completed datetime",
+          "notes": "When the load settled.",
+          "required": false,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Duration milliseconds",
+          "notes": "How long the load took, in milliseconds.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Rows read",
+          "notes": "What the source produced.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Rows inserted",
+          "notes": "Rows the target gained.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Rows updated",
+          "notes": "Rows the target changed.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Rows deleted",
+          "notes": "Rows the target lost.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Rows rejected",
+          "notes": "Incoming rows the load refused, kept in the reject table.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Is reload",
+          "notes": "Whether the load re-read a window it had already read. False until reload is available.",
+          "required": false,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Is static skip",
+          "notes": "Whether a Static object was skipped because a clean load had already run for this incarnation.",
+          "required": false,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Append-only counts for each load. Rebuilds do not remove this history.",
+      "key": [
+        "Load statistic SK"
+      ],
+      "name": "_.LoadStatistic",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Workflow ID",
+          "notes": "The workflow whose load produced this state, so the row can be read alongside the evidence in _.Log.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Result",
+          "notes": "How the work ended.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "blocked": "Blocked",
+            "error": "Error",
+            "failed": "Failed",
+            "pending": "Pending",
+            "rejected": "Rejected",
+            "skipped": "Skipped",
+            "succeeded": "Succeeded"
+          }
+        },
+        {
+          "name": "Started datetime",
+          "notes": "When the work started.",
+          "required": false,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Completed datetime",
+          "notes": "When the work settled.",
+          "required": false,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Duration milliseconds",
+          "notes": "How long the work took, in milliseconds.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Current load state for each managed table, folder and View. Rebuilt tables and folders are Pending until loaded; built Views are Succeeded.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name"
+      ],
+      "name": "_.LoadStatus",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Log SK",
+          "notes": "An immutable surrogate generated by the writer. Fabric Warehouse tables have no identity columns, and sessions may append concurrently.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Workflow ID",
+          "notes": "Correlates every row one workflow produced. A composed run shares one value across its operations.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Task type",
+          "notes": "The kind of work that settled.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Target type",
+          "notes": "The physical target's type.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Target name",
+          "notes": "The physical target's name.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Result",
+          "notes": "How the work ended. A load may also be Rejected, meaning it completed with rejected rows.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "blocked": "Blocked",
+            "error": "Error",
+            "failed": "Failed",
+            "pending": "Pending",
+            "rejected": "Rejected",
+            "skipped": "Skipped",
+            "succeeded": "Succeeded"
+          }
+        },
+        {
+          "name": "Started datetime",
+          "notes": "When the work started.",
+          "required": false,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Completed datetime",
+          "notes": "When the work settled.",
+          "required": false,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Duration milliseconds",
+          "notes": "How long the work took, in milliseconds.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Message",
+          "notes": "Human-readable task summary.",
+          "required": false,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Details",
+          "notes": "Structured task-specific detail, as JSON.",
+          "required": false,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "One appended row per settled unit of Weaver work. This is operational history, not installed state.",
+      "key": [
+        "Log SK"
+      ],
+      "name": "_.Log",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Source workspace name",
+          "notes": "The workspace the data is read from.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Source target name",
+          "notes": "The physical item the data is read from.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Source schema name",
+          "notes": "The schema the data is read from.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Source object name",
+          "notes": "The object the data is read from.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Physical type",
+          "notes": "What stands at the local address: a Warehouse View or a Lakehouse Table or Folder shortcut.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "file": "File",
+            "folder": "Folder",
+            "report": "Report",
+            "schema": "Schema",
+            "semantic_model": "Semantic model",
+            "source_artifact": "Source artifact",
+            "stored_procedure": "Stored procedure",
+            "table": "Table",
+            "view": "View"
+          }
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Source and local physical type for installed objects whose data comes from another target. Removed when the object is built locally.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name"
+      ],
+      "name": "_.Mirror",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object type",
+          "notes": "The installed physical type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "file": "File",
+            "folder": "Folder",
+            "report": "Report",
+            "schema": "Schema",
+            "semantic_model": "Semantic model",
+            "source_artifact": "Source artifact",
+            "stored_procedure": "Stored procedure",
+            "table": "Table",
+            "view": "View"
+          }
+        },
+        {
+          "name": "Object role",
+          "notes": "The object's role.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "assumption": "Assumption",
+            "data": "Data",
+            "load": "Load",
+            "programmable": "Programmable",
+            "shortcut": "Shortcut",
+            "source": "Source",
+            "test": "Test"
+          }
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the object's source file, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Build datetime",
+          "notes": "When this row was published, shared by every row one completed build wrote.",
+          "required": false,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Objects certified as installed. Registry is written last, after each object and its dependencies succeed.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name"
+      ],
+      "name": "_.Registry",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description",
+          "notes": "What this schema is.",
+          "required": false,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description reference",
+          "notes": "The $Schema.Object this description was copied from, if any.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the schema declaration, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "The declared schemas an installation uses, and what they are for.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name"
+      ],
+      "name": "_.SchemaDictionary",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description",
+          "notes": "The native semantic description.",
+          "required": false,
+          "type": "varchar(max)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the effective semantic model, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Deployed semantic models and their descriptions.",
+      "key": [
+        "Item type",
+        "Item name"
+      ],
+      "name": "_.SemanticModel",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Table name",
+          "notes": "The owning semantic table.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Column name",
+          "notes": "The native column name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description",
+          "notes": "The native semantic description.",
+          "required": false,
+          "type": "varchar(max)",
+          "vocabulary": null
+        },
+        {
+          "name": "Data type",
+          "notes": "The native semantic data type.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Column type",
+          "notes": "The native column kind.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Source column",
+          "notes": "The source column name.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Expression",
+          "notes": "The calculated column expression.",
+          "required": false,
+          "type": "varchar(max)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the effective semantic model, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Semantic columns, including engine-inferred calculated columns.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Table name",
+        "Column name"
+      ],
+      "name": "_.SemanticModelColumn",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Table name",
+          "notes": "The measure's home table.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Measure name",
+          "notes": "The native measure name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description",
+          "notes": "The native semantic description.",
+          "required": false,
+          "type": "varchar(max)",
+          "vocabulary": null
+        },
+        {
+          "name": "Expression",
+          "notes": "The DAX expression.",
+          "required": false,
+          "type": "varchar(max)",
+          "vocabulary": null
+        },
+        {
+          "name": "Format string",
+          "notes": "The authored format string.",
+          "required": false,
+          "type": "varchar(max)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the effective semantic model, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Semantic measures and their native expressions.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Table name",
+        "Measure name"
+      ],
+      "name": "_.SemanticModelMeasure",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Relationship name",
+          "notes": "The native relationship name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "From table",
+          "notes": "The source table.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "From column",
+          "notes": "The source column.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "To table",
+          "notes": "The destination table.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "To column",
+          "notes": "The destination column.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "From cardinality",
+          "notes": "The source cardinality.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "To cardinality",
+          "notes": "The destination cardinality.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Cross filtering behavior",
+          "notes": "The native cross-filter direction.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Is active",
+          "notes": "Whether the relationship is active.",
+          "required": false,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the effective semantic model, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Semantic relationships and their table/column endpoints.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Relationship name"
+      ],
+      "name": "_.SemanticModelRelationship",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Table name",
+          "notes": "The native table name, matching Dependency's referencing object name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Table ordinal",
+          "notes": "One-based effective TMDL declaration order.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Description",
+          "notes": "The native semantic description.",
+          "required": false,
+          "type": "varchar(max)",
+          "vocabulary": null
+        },
+        {
+          "name": "Source mode",
+          "notes": "The storage mode of the partition reading the managed source.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Source access",
+          "notes": "How that partition reads the source: sql or lakehouse.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the effective semantic model, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Semantic tables and how each reads its managed source.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Table name"
+      ],
+      "name": "_.SemanticModelTable",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Definition",
+          "notes": "Versioned JSON: the DAX query and, for a Test, its logical Expected source and Expected SQL.",
+          "required": true,
+          "type": "varchar(max)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the validation's source file, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "How each semantic model Test and Assumption runs. TestDictionary describes the validation; this row is its installed definition.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name"
+      ],
+      "name": "_.SemanticModelTest",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Shortcut ID",
+          "notes": "The shortcut as its author declared it: 'Sales.Customer' for a table or folder, 'Reference' for a schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The schema this item presents the shortcut in.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object this item presents. Null for a schema shortcut, which presents a namespace rather than an object.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Shortcut type",
+          "notes": "What the shortcut is.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "folder": "Folder",
+            "schema": "Schema",
+            "table": "Table",
+            "view": "View"
+          }
+        },
+        {
+          "name": "Target type",
+          "notes": "Whether the target is a logical item or a physical item.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "logical": "Logical",
+            "physical": "Physical"
+          }
+        },
+        {
+          "name": "Target item type",
+          "notes": "The target's item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Target item name",
+          "notes": "The target's item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Target schema name",
+          "notes": "The schema or path the target sits in.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Target object name",
+          "notes": "The target object. Null for a schema or path. Together, the four target columns preserve a logical producer's identity.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Target workspace name",
+          "notes": "The workspace the target is in. Null for a logical target, which is bound, and for a physical one in this workspace.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the shortcut declaration, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Declared cross-item, cross-engine and cross-workspace edges. Logical targets remain logical; Installation records their physical binding.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Shortcut ID"
+      ],
+      "name": "_.Shortcut",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object type",
+          "notes": "Table or View.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description",
+          "notes": "What this object is.",
+          "required": false,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description reference",
+          "notes": "The $Schema.Object this description was copied from, if any.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Lineage",
+          "notes": "Where this object's data comes from.",
+          "required": false,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Lineage reference",
+          "notes": "The $Schema.Object the lineage was copied from, if any.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Primary key",
+          "notes": "The primary key's columns, in declared order.",
+          "required": false,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Not null columns",
+          "notes": "Columns declared not null, beyond the primary key.",
+          "required": false,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Identity column",
+          "notes": "Weaver's managed surrogate column, when one is declared.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Comparison columns",
+          "notes": "Columns an author named to drive an upsert. Null where none were named, which is every eligible non-key column.",
+          "required": false,
+          "type": "varchar(max)",
+          "vocabulary": null
+        },
+        {
+          "name": "Is incremental",
+          "notes": "Whether load accumulates rows rather than replacing them.",
+          "required": false,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Is static",
+          "notes": "Whether the object is loaded once rather than refreshed.",
+          "required": false,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Prohibit rebuild",
+          "notes": "Whether build may drop and recreate this object.",
+          "required": false,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the object's source file, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Declared tables and views. This describes authored documents, not their physical objects.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name"
+      ],
+      "name": "_.TableDictionary",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Test type",
+          "notes": "Test compares an expected relation with an actual one; Assumption returns the rows that contradict it.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "assumption": "Assumption",
+            "test": "Test"
+          }
+        },
+        {
+          "name": "Description",
+          "notes": "What this validation is.",
+          "required": false,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description reference",
+          "notes": "The $Schema.Object this description was copied from, if any.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Primary key",
+          "notes": "A Test's correlation key, comma-separated in declared order. Null when undeclared and for every Assumption.",
+          "required": false,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the validation's source file, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "Declared Tests and Assumptions, not the procedures or modules they compile to. Both share one logical namespace within an item.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name"
+      ],
+      "name": "_.TestDictionary",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Test type",
+          "notes": "Test or Assumption.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "assumption": "Assumption",
+            "test": "Test"
+          }
+        },
+        {
+          "name": "Workflow ID",
+          "notes": "The workflow whose run produced this state, so the row can be read alongside the evidence in _.Log.",
+          "required": false,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Result",
+          "notes": "How the work ended.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "blocked": "Blocked",
+            "error": "Error",
+            "failed": "Failed",
+            "pending": "Pending",
+            "skipped": "Skipped",
+            "succeeded": "Succeeded"
+          }
+        },
+        {
+          "name": "Started datetime",
+          "notes": "When the work started.",
+          "required": false,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Completed datetime",
+          "notes": "When the work settled.",
+          "required": false,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Duration milliseconds",
+          "notes": "How long the work took, in milliseconds.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Failure count",
+          "notes": "Discrepancy rows for a Test or contradicting rows for an Assumption. Set only when evaluated.",
+          "required": false,
+          "type": "bigint",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "The current result of each Test and Assumption. Rebuilding a validation sets it to Pending, and running it replaces Pending with the result.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name"
+      ],
+      "name": "_.TestStatus",
+      "source": "src/weaver/catalogue/tables.py"
+    }
+  ]
+}

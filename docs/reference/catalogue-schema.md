@@ -26,13 +26,128 @@ Every table also has these required `datetime2(6)` audit columns:
 - `Row update datetime` — when Weaver last updated the row; and
 - `Row delete datetime` — the soft-delete audit field; a live row uses Weaver's maximum-date sentinel rather than null.
 
-## Projected catalogue tables
+## What to inspect
 
-Build reconciles these tables from authored project state. Every projected row has a required `Signature` (`varchar(128)`) used to detect changes.
+| Question | Tables |
+| --- | --- |
+| Which logical items are installed, and where? | `_.Installation`, including frozen `Workspace ID` and `Item ID` for Power BI registrations |
+| What is certified and what source contributed it? | `_.Registry`; `Object type` includes Semantic model, Report and Source artifact; `Object role` includes Source |
+| What did authored data and validation declare? | Schema/Table/Folder/Column/Key/ForeignKey/Test dictionaries, `_.Dependency` and `_.Shortcut` |
+| What did model readback record? | `_.SemanticModel`, `_.SemanticModelTable`, `_.SemanticModelColumn`, `_.SemanticModelMeasure`, `_.SemanticModelRelationship` |
+| Which DAX validation definition was installed? | `_.SemanticModelTest`, separate from `_.TestDictionary` and current `_.TestStatus` |
+| What has loaded or passed, and where is progress? | `_.Bookmark`, `_.LoadStatus`, `_.TestStatus` |
+| What happened over time? | Append-oriented `_.Log` and `_.LoadStatistic`; not the same thing as current state |
+| What is borrowed in a Mirror? | Optional `_.Mirror`, created on the first borrowed-state write; no built-in SQL document declares it |
+
+Semantic metadata is projected from deployed readback, not a claim to discover all unmanaged workspace models. Report registrations live in Installation/Registry; there is no separate Report dictionary table. A catalogue-free deployment/refresh or file-mode Test adds no rows here. Signatures are equality tokens for reconciliation, not a public cross-version hash algorithm.
+
+`_.Mirror` records local object identity and physical source/form. It is removed when an object becomes local. Protected mirror materialisation retains data/bookmarks under its specific Build rules; ordinary replacement and Wipe have different boundaries.
+
+The generated inventory includes every physical column, including audit columns, as declared by the pinned implementation. Keys are shown in stored order. Vocabulary spellings are recorded in the checked-in manifest; they do not imply relational constraints or a versioned migration policy.
+
+<!-- BEGIN GENERATED CATALOGUE REFERENCE -->
+
+## Physical table declarations
+
+### `_.Bookmark`
+
+**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Bookmark datetime` | `datetime2(6)` | required | The UTC instant immediately before the most recent clean load began, or 1900-01-01 00:00:00.000000 for an object that has not had one. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.ColumnDictionary`
+
+**Key:** `Item type`, `Item name`, `Schema name`, `Object name`, `Column name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Column name` | `varchar(128)` | required | The column. |
+| `Description` | `varchar(4000)` | nullable | What this column is. |
+| `Description reference` | `varchar(128)` | nullable | The $Schema.Object this description was copied from, if any. |
+| `Is identity` | `bit` | nullable | Whether this is Weaver's managed surrogate column. |
+| `Signature` | `varchar(128)` | required | Content hash of the object's source file, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.Dependency`
+
+**Key:** `Item type`, `Item name`, `Referencing schema name`, `Referencing object name`, `Dependency reference`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Referencing schema name` | `varchar(128)` | required | The schema of the object declaring the dependency. |
+| `Referencing object name` | `varchar(128)` | required | The name of the object declaring the dependency. |
+| `Dependency reference` | `varchar(1000)` | required | The dependency exactly as the owning document wrote it. |
+| `Referenced item type` | `varchar(128)` | nullable | The referenced item's type, when the edge resolved. |
+| `Referenced item name` | `varchar(128)` | nullable | The referenced item's name, when the edge resolved. |
+| `Referenced schema name` | `varchar(128)` | nullable | The referenced schema, when the edge resolved. |
+| `Referenced object name` | `varchar(128)` | nullable | The referenced object, when the edge resolved. |
+| `Signature` | `varchar(128)` | required | Content hash of the owning object's source file, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.FolderDictionary`
+
+**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Description` | `varchar(4000)` | nullable | What this folder is. |
+| `Description reference` | `varchar(128)` | nullable | The $Schema.Object this description was copied from, if any. |
+| `Lineage` | `varchar(4000)` | nullable | Where this object's data comes from. |
+| `Lineage reference` | `varchar(128)` | nullable | The $Schema.Object the lineage was copied from, if any. |
+| `File key` | `varchar(1000)` | nullable | The glob patterns Weaver manages, in declared order. |
+| `Is incremental` | `bit` | nullable | Whether load accumulates rows rather than replacing them. |
+| `Is static` | `bit` | nullable | Whether the object is loaded once rather than refreshed. |
+| `Prohibit rebuild` | `bit` | nullable | Whether build may drop and recreate this object. |
+| `Signature` | `varchar(128)` | required | Content hash of the object's source file, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.ForeignKeyDictionary`
+
+**Key:** `Item type`, `Item name`, `Foreign schema name`, `Foreign object name`, `Foreign column set`, `Primary item type`, `Primary item name`, `Primary schema name`, `Primary object name`, `Primary column set`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Foreign schema name` | `varchar(128)` | required | The schema of the object declaring the relationship. |
+| `Foreign object name` | `varchar(128)` | required | The name of the object declaring the relationship. |
+| `Foreign column set` | `varchar(1000)` | required | The foreign columns, comma-separated in declared order. |
+| `Primary item type` | `varchar(128)` | required | The primary item's type. |
+| `Primary item name` | `varchar(128)` | required | The primary item's name. |
+| `Primary schema name` | `varchar(128)` | required | The primary schema. |
+| `Primary object name` | `varchar(128)` | required | The primary object. |
+| `Primary column set` | `varchar(1000)` | required | The primary columns, paired in order with the foreign ones. |
+| `Signature` | `varchar(128)` | required | Content hash of the object's source file, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 
 ### `_.Installation`
-
-One row per logical item installation, mapping it to its physical target.
 
 **Key:** `Item type`, `Item name`
 
@@ -40,327 +155,352 @@ One row per logical item installation, mapping it to its physical target.
 | --- | --- | --- | --- |
 | `Item type` | `varchar(128)` | required | Logical Weaver item type. |
 | `Item name` | `varchar(128)` | required | Logical Weaver item name. |
-| `Target name` | `varchar(128)` | required | Physical Fabric item currently bound to the installation. |
-| `Weaver version` | `varchar(128)` | required | Weaver version that last reconciled the installation. |
-| `Signature` | `varchar(128)` | required | Content hash of the Item declaration. |
-
-### `_.Registry`
-
-Objects certified as installed. Build writes Registry after the object and its dependencies succeed.
-
-**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Object schema. |
-| `Object name` | `varchar(128)` | required | Object name. |
-| `Object type` | `varchar(128)` | required | `Folder`, `Table`, `View`, `File`, `Stored procedure`, or `Schema`. |
-| `Object role` | `varchar(128)` | required | `Data`, `Load`, `Test`, `Assumption`, `Shortcut`, or `Programmable`. |
-| `Signature` | `varchar(128)` | required | Content hash of the object's source file. |
-| `Build datetime` | `datetime2(6)` | nullable | Publication time shared by all Registry rows written by one completed build. |
-
-### `_.SchemaDictionary`
-
-Declared schemas and their descriptions.
-
-**Key:** `Item type`, `Item name`, `Schema name`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Declared schema. |
-| `Description` | `varchar(4000)` | nullable | Authored schema description. |
-| `Description reference` | `varchar(128)` | nullable | `$Schema.Object` from which the description was copied. |
-| `Signature` | `varchar(128)` | required | Content hash of the schema declaration. |
-
-### `_.TableDictionary`
-
-Declared Tables and Views. These rows describe authored documents, not a physical inventory.
-
-**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Object schema. |
-| `Object name` | `varchar(128)` | required | Object name. |
-| `Object type` | `varchar(128)` | required | Authored object type: Table or View. |
-| `Description` | `varchar(4000)` | nullable | Authored object description. |
-| `Description reference` | `varchar(128)` | nullable | `$Schema.Object` supplying the description. |
-| `Lineage` | `varchar(4000)` | nullable | Authored statement of where the data comes from. |
-| `Lineage reference` | `varchar(128)` | nullable | `$Schema.Object` supplying the lineage. |
-| `Primary key` | `varchar(1000)` | nullable | Primary-key columns in declared order. |
-| `Not null columns` | `varchar(1000)` | nullable | Declared non-null columns beyond the primary key. |
-| `Identity column` | `varchar(128)` | nullable | Weaver-managed surrogate column, when declared. |
-| `Comparison columns` | `varchar(1000)` | nullable | Columns whose change drives an upsert. |
-| `Is incremental` | `bit` | nullable | Whether Load accumulates rows rather than replacing them. |
-| `Is static` | `bit` | nullable | Whether the object loads once rather than being refreshed. |
-| `Prohibit rebuild` | `bit` | nullable | Whether Build may drop and recreate the object. |
-| `Signature` | `varchar(128)` | required | Content hash of the object's source file. |
-
-### `_.FolderDictionary`
-
-Managed Folders and the file patterns their reconciliation owns.
-
-**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Folder schema. |
-| `Object name` | `varchar(128)` | required | Folder object name. |
-| `Description` | `varchar(4000)` | nullable | Authored folder description. |
-| `Description reference` | `varchar(128)` | nullable | `$Schema.Object` supplying the description. |
-| `Lineage` | `varchar(4000)` | nullable | Authored data origin. |
-| `Lineage reference` | `varchar(128)` | nullable | `$Schema.Object` supplying the lineage. |
-| `File key` | `varchar(1000)` | nullable | Managed glob patterns in declared order. |
-| `Is incremental` | `bit` | nullable | Whether Load accumulates files or rows. |
-| `Is static` | `bit` | nullable | Whether the Folder loads once. |
-| `Prohibit rebuild` | `bit` | nullable | Whether Build may drop and recreate it. |
-| `Signature` | `varchar(128)` | required | Content hash of the source file. |
-
-### `_.ColumnDictionary`
-
-Authored column descriptions and Weaver-managed surrogate columns. It is not an inventory of every physical column.
-
-**Key:** `Item type`, `Item name`, `Schema name`, `Object name`, `Column name`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Object schema. |
-| `Object name` | `varchar(128)` | required | Object name. |
-| `Column name` | `varchar(128)` | required | Authored or managed column. |
-| `Description` | `varchar(4000)` | nullable | Authored column description. |
-| `Description reference` | `varchar(128)` | nullable | `$Schema.Object` supplying the description. |
-| `Is identity` | `bit` | nullable | Whether this is Weaver's managed surrogate column. |
-| `Signature` | `varchar(128)` | required | Content hash of the object's source file. |
+| `Target name` | `varchar(128)` | required | The physical item currently bound to this installation. |
+| `Weaver version` | `varchar(128)` | required | The Weaver version that last reconciled this installation. |
+| `Workspace ID` | `varchar(128)` | nullable | The resolved Fabric workspace ID. |
+| `Item ID` | `varchar(128)` | nullable | The resolved Fabric item ID. |
+| `Signature` | `varchar(128)` | required | Content hash of the Item declaration, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 
 ### `_.KeyDictionary`
-
-Declared logical primary and alternate keys. Weaver does not build or enforce them as database constraints.
 
 **Key:** `Item type`, `Item name`, `Schema name`, `Object name`, `Key type`, `Column set`
 
 | Column | Type | Null | Meaning |
 | --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Object schema. |
-| `Object name` | `varchar(128)` | required | Object name. |
-| `Key type` | `varchar(128)` | required | `Primary key` or `Unique`. |
-| `Column set` | `varchar(1000)` | required | Key columns, comma-separated in declared order. |
-| `Signature` | `varchar(128)` | required | Content hash of the object's source file. |
-
-### `_.ForeignKeyDictionary`
-
-Declared relationships, not database constraints. A row is an unnamed edge, and the primary side includes logical item identity for cross-item relationships.
-
-**Key:** `Item type`, `Item name`, `Foreign schema name`, `Foreign object name`, `Foreign column set`, `Primary item type`, `Primary item name`, `Primary schema name`, `Primary object name`, `Primary column set`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Referencing logical item type. |
-| `Item name` | `varchar(128)` | required | Referencing logical item name. |
-| `Foreign schema name` | `varchar(128)` | required | Schema declaring the relationship. |
-| `Foreign object name` | `varchar(128)` | required | Object declaring the relationship. |
-| `Foreign column set` | `varchar(1000)` | required | Foreign columns in declared order. |
-| `Primary item type` | `varchar(128)` | required | Referenced logical item type. |
-| `Primary item name` | `varchar(128)` | required | Referenced logical item name. |
-| `Primary schema name` | `varchar(128)` | required | Referenced schema. |
-| `Primary object name` | `varchar(128)` | required | Referenced object. |
-| `Primary column set` | `varchar(1000)` | required | Primary columns paired in order with foreign columns. |
-| `Signature` | `varchar(128)` | required | Content hash of the declaring object's source file. |
-
-### `_.TestDictionary`
-
-Declared Tests and Assumptions, rather than the procedures or modules they compile to.
-
-**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Validation schema. |
-| `Object name` | `varchar(128)` | required | Validation name. |
-| `Test type` | `varchar(128)` | required | `Test` or `Assumption`. |
-| `Description` | `varchar(4000)` | nullable | Authored validation description. |
-| `Description reference` | `varchar(128)` | nullable | `$Schema.Object` supplying the description. |
-| `Primary key` | `varchar(1000)` | nullable | Test correlation key in declared order; null when undeclared and for Assumptions. |
-| `Signature` | `varchar(128)` | required | Content hash of the validation source. |
-
-### `_.Dependency`
-
-Resolved dependency edges and their authored references, scoped to the referencing item. Cross-item and cross-engine edges are represented as Shortcuts.
-
-**Key:** `Item type`, `Item name`, `Referencing schema name`, `Referencing object name`, `Dependency reference`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Referencing logical item type. |
-| `Item name` | `varchar(128)` | required | Referencing logical item name. |
-| `Referencing schema name` | `varchar(128)` | required | Schema declaring the dependency. |
-| `Referencing object name` | `varchar(128)` | required | Object declaring the dependency. |
-| `Dependency reference` | `varchar(1000)` | required | Reference exactly as the document wrote it. |
-| `Referenced item type` | `varchar(128)` | nullable | Resolved referenced item type. |
-| `Referenced item name` | `varchar(128)` | nullable | Resolved referenced item name. |
-| `Referenced schema name` | `varchar(128)` | nullable | Resolved referenced schema. |
-| `Referenced object name` | `varchar(128)` | nullable | Resolved referenced object. |
-| `Signature` | `varchar(128)` | required | Content hash of the owning object's source file. |
-
-### `_.Shortcut`
-
-Declared cross-item, cross-engine, and cross-workspace edges. Logical targets remain logical; `_.Installation` supplies their physical binding.
-
-**Key:** `Item type`, `Item name`, `Shortcut ID`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Destination logical item type. |
-| `Item name` | `varchar(128)` | required | Destination logical item name. |
-| `Shortcut ID` | `varchar(128)` | required | Authored shortcut identity, such as `Logistics.Parcel` or a schema name. |
-| `Schema name` | `varchar(128)` | required | Schema in which this item presents the shortcut. |
-| `Object name` | `varchar(128)` | nullable | Presented object; null for a schema shortcut. |
-| `Shortcut type` | `varchar(128)` | required | `Table`, `Schema`, `Folder`, or `View`. |
-| `Target type` | `varchar(128)` | required | `Logical` or `Physical`. |
-| `Target item type` | `varchar(128)` | required | Target item type. |
-| `Target item name` | `varchar(128)` | required | Target item name. |
-| `Target schema name` | `varchar(128)` | required | Target schema or path. |
-| `Target object name` | `varchar(128)` | nullable | Target object; null for a schema or path. |
-| `Target workspace name` | `varchar(128)` | nullable | Explicit target workspace; null for logical targets and local physical targets. |
-| `Signature` | `varchar(128)` | required | Content hash of the shortcut declaration. |
-
-## Runtime tables
-
-Runtime operations maintain these tables. `_.Log` and `_.LoadStatistic` are append-only history. `_.Bookmark`, `_.LoadStatus`, and `_.TestStatus` represent current object state and are invalidated when the owning incarnation is rebuilt.
-
-### `_.Log`
-
-One row per settled unit of Weaver work.
-
-**Key:** `Log SK`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Log SK` | `varchar(128)` | required | Immutable writer-generated surrogate. |
-| `Workflow ID` | `varchar(128)` | required | Correlates rows produced by one workflow. |
-| `Task type` | `varchar(128)` | required | Kind of work that settled. |
-| `Target type` | `varchar(128)` | nullable | Physical target type. |
-| `Target name` | `varchar(128)` | nullable | Physical target name. |
-| `Schema name` | `varchar(128)` | nullable | Object schema. |
-| `Object name` | `varchar(128)` | nullable | Object name. |
-| `Result` | `varchar(128)` | required | `Pending`, `Skipped`, `Succeeded`, `Failed`, `Error`, `Blocked`, or `Rejected`. |
-| `Started datetime` | `datetime2(6)` | nullable | Work start. |
-| `Completed datetime` | `datetime2(6)` | nullable | Work settlement. |
-| `Duration milliseconds` | `bigint` | nullable | Elapsed milliseconds. |
-| `Message` | `varchar(4000)` | nullable | Human-readable task summary. |
-| `Details` | `varchar(4000)` | nullable | Task-specific structured detail serialized as JSON. |
-
-### `_.Bookmark`
-
-UTC instant immediately before each loadable object's latest clean load began. Views have no bookmark row.
-
-**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Object schema. |
-| `Object name` | `varchar(128)` | required | Object name. |
-| `Bookmark datetime` | `datetime2(6)` | required | UTC cursor instant, or `1900-01-01 00:00:00.000000` before a clean load. |
-
-### `_.LoadStatus`
-
-Current load state for each managed Table, Folder, and View.
-
-**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
-
-| Column | Type | Null | Meaning |
-| --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Object schema. |
-| `Object name` | `varchar(128)` | required | Object name. |
-| `Workflow ID` | `varchar(128)` | nullable | Workflow that produced this state; joins operationally to `_.Log`. |
-| `Result` | `varchar(128)` | required | `Pending`, `Skipped`, `Succeeded`, `Failed`, `Error`, `Blocked`, or `Rejected`. |
-| `Started datetime` | `datetime2(6)` | nullable | Load start. |
-| `Completed datetime` | `datetime2(6)` | nullable | Load settlement. |
-| `Duration milliseconds` | `bigint` | nullable | Elapsed milliseconds. |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Key type` | `varchar(128)` | required | Primary key or Unique. |
+| `Column set` | `varchar(1000)` | required | The key's columns, comma-separated in declared order. |
+| `Signature` | `varchar(128)` | required | Content hash of the object's source file, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 
 ### `_.LoadStatistic`
-
-Append-only counts for each load. Rebuild does not delete this history.
 
 **Key:** `Load statistic SK`
 
 | Column | Type | Null | Meaning |
 | --- | --- | --- | --- |
-| `Load statistic SK` | `varchar(128)` | required | Immutable writer-generated surrogate. |
-| `Workflow ID` | `varchar(128)` | required | Correlates rows produced by one workflow. |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Object schema. |
-| `Object name` | `varchar(128)` | required | Object name. |
-| `Started datetime` | `datetime2(6)` | nullable | Load start. |
-| `Completed datetime` | `datetime2(6)` | nullable | Load settlement. |
-| `Duration milliseconds` | `bigint` | nullable | Elapsed milliseconds. |
-| `Rows read` | `bigint` | nullable | Rows produced by the source. |
-| `Rows inserted` | `bigint` | nullable | Rows added to the target. |
-| `Rows updated` | `bigint` | nullable | Target rows changed. |
-| `Rows deleted` | `bigint` | nullable | Target rows removed. |
-| `Rows rejected` | `bigint` | nullable | Incoming rows refused and retained in the reject table. |
-| `Is reload` | `bit` | nullable | Whether the load reread an already-read window. |
-| `Is static skip` | `bit` | nullable | Whether a Static object was skipped after a clean load for this incarnation. |
+| `Load statistic SK` | `varchar(128)` | required | An immutable surrogate generated by the writer. Fabric Warehouse tables have no identity columns, and sessions may append concurrently. |
+| `Workflow ID` | `varchar(128)` | required | Correlates every row one workflow produced. |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Started datetime` | `datetime2(6)` | nullable | When the load started. |
+| `Completed datetime` | `datetime2(6)` | nullable | When the load settled. |
+| `Duration milliseconds` | `bigint` | nullable | How long the load took, in milliseconds. |
+| `Rows read` | `bigint` | nullable | What the source produced. |
+| `Rows inserted` | `bigint` | nullable | Rows the target gained. |
+| `Rows updated` | `bigint` | nullable | Rows the target changed. |
+| `Rows deleted` | `bigint` | nullable | Rows the target lost. |
+| `Rows rejected` | `bigint` | nullable | Incoming rows the load refused, kept in the reject table. |
+| `Is reload` | `bit` | nullable | Whether the load re-read a window it had already read. False until reload is available. |
+| `Is static skip` | `bit` | nullable | Whether a Static object was skipped because a clean load had already run for this incarnation. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 
-### `_.TestStatus`
-
-Current result of each Test and Assumption.
+### `_.LoadStatus`
 
 **Key:** `Item type`, `Item name`, `Schema name`, `Object name`
 
 | Column | Type | Null | Meaning |
 | --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Logical item type. |
-| `Item name` | `varchar(128)` | required | Logical item name. |
-| `Schema name` | `varchar(128)` | required | Validation schema. |
-| `Object name` | `varchar(128)` | required | Validation name. |
-| `Test type` | `varchar(128)` | nullable | `Test` or `Assumption`. |
-| `Workflow ID` | `varchar(128)` | nullable | Workflow that produced this state; joins operationally to `_.Log`. |
-| `Result` | `varchar(128)` | required | `Pending`, `Skipped`, `Succeeded`, `Failed`, `Error`, or `Blocked`. |
-| `Started datetime` | `datetime2(6)` | nullable | Validation start. |
-| `Completed datetime` | `datetime2(6)` | nullable | Validation settlement. |
-| `Duration milliseconds` | `bigint` | nullable | Elapsed milliseconds. |
-| `Failure count` | `bigint` | nullable | Test discrepancies or contradicting Assumption rows; set only when evaluated. |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Workflow ID` | `varchar(128)` | nullable | The workflow whose load produced this state, so the row can be read alongside the evidence in _.Log. |
+| `Result` | `varchar(128)` | required | How the work ended. |
+| `Started datetime` | `datetime2(6)` | nullable | When the work started. |
+| `Completed datetime` | `datetime2(6)` | nullable | When the work settled. |
+| `Duration milliseconds` | `bigint` | nullable | How long the work took, in milliseconds. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 
-## Borrowed-state table
+### `_.Log`
+
+**Key:** `Log SK`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Log SK` | `varchar(128)` | required | An immutable surrogate generated by the writer. Fabric Warehouse tables have no identity columns, and sessions may append concurrently. |
+| `Workflow ID` | `varchar(128)` | required | Correlates every row one workflow produced. A composed run shares one value across its operations. |
+| `Task type` | `varchar(128)` | required | The kind of work that settled. |
+| `Target type` | `varchar(128)` | nullable | The physical target's type. |
+| `Target name` | `varchar(128)` | nullable | The physical target's name. |
+| `Schema name` | `varchar(128)` | nullable | The object's schema. |
+| `Object name` | `varchar(128)` | nullable | The object's name. |
+| `Result` | `varchar(128)` | required | How the work ended. A load may also be Rejected, meaning it completed with rejected rows. |
+| `Started datetime` | `datetime2(6)` | nullable | When the work started. |
+| `Completed datetime` | `datetime2(6)` | nullable | When the work settled. |
+| `Duration milliseconds` | `bigint` | nullable | How long the work took, in milliseconds. |
+| `Message` | `varchar(4000)` | nullable | Human-readable task summary. |
+| `Details` | `varchar(4000)` | nullable | Structured task-specific detail, as JSON. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 
 ### `_.Mirror`
 
-`_.Mirror` records installed objects whose data comes from another target. It is created on the first borrowed-state write rather than by the built-in catalogue documents, so it may be absent in a catalogue that has never held mirrored state. It is still protected and part of the current readable catalogue surface when present.
+**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Source workspace name` | `varchar(128)` | required | The workspace the data is read from. |
+| `Source target name` | `varchar(128)` | required | The physical item the data is read from. |
+| `Source schema name` | `varchar(128)` | required | The schema the data is read from. |
+| `Source object name` | `varchar(128)` | required | The object the data is read from. |
+| `Physical type` | `varchar(128)` | required | What stands at the local address: a Warehouse View or a Lakehouse Table or Folder shortcut. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.Registry`
 
 **Key:** `Item type`, `Item name`, `Schema name`, `Object name`
 
 | Column | Type | Null | Meaning |
 | --- | --- | --- | --- |
-| `Item type` | `varchar(128)` | required | Local logical item type. |
-| `Item name` | `varchar(128)` | required | Local logical item name. |
-| `Schema name` | `varchar(128)` | required | Local object schema. |
-| `Object name` | `varchar(128)` | required | Local object name. |
-| `Source workspace name` | `varchar(128)` | required | Workspace from which data is read. |
-| `Source target name` | `varchar(128)` | required | Physical source item. |
-| `Source schema name` | `varchar(128)` | required | Source schema. |
-| `Source object name` | `varchar(128)` | required | Source object. |
-| `Physical type` | `varchar(128)` | required | Local physical form written by Mirror: `View` for a Warehouse; `Table`, `Folder`, or `View` for a Lakehouse. |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Object type` | `varchar(128)` | required | The installed physical type. |
+| `Object role` | `varchar(128)` | required | The object's role. |
+| `Signature` | `varchar(128)` | required | Content hash of the object's source file, so a change can be detected. |
+| `Build datetime` | `datetime2(6)` | nullable | When this row was published, shared by every row one completed build wrote. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 
-Weaver removes a Mirror row when that object is built locally.
+### `_.SchemaDictionary`
+
+**Key:** `Item type`, `Item name`, `Schema name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The schema. |
+| `Description` | `varchar(4000)` | nullable | What this schema is. |
+| `Description reference` | `varchar(128)` | nullable | The $Schema.Object this description was copied from, if any. |
+| `Signature` | `varchar(128)` | required | Content hash of the schema declaration, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.SemanticModel`
+
+**Key:** `Item type`, `Item name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Description` | `varchar(max)` | nullable | The native semantic description. |
+| `Signature` | `varchar(128)` | required | Content hash of the effective semantic model, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.SemanticModelColumn`
+
+**Key:** `Item type`, `Item name`, `Table name`, `Column name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Table name` | `varchar(128)` | required | The owning semantic table. |
+| `Column name` | `varchar(128)` | required | The native column name. |
+| `Description` | `varchar(max)` | nullable | The native semantic description. |
+| `Data type` | `varchar(128)` | nullable | The native semantic data type. |
+| `Column type` | `varchar(128)` | nullable | The native column kind. |
+| `Source column` | `varchar(128)` | nullable | The source column name. |
+| `Expression` | `varchar(max)` | nullable | The calculated column expression. |
+| `Signature` | `varchar(128)` | required | Content hash of the effective semantic model, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.SemanticModelMeasure`
+
+**Key:** `Item type`, `Item name`, `Table name`, `Measure name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Table name` | `varchar(128)` | required | The measure's home table. |
+| `Measure name` | `varchar(128)` | required | The native measure name. |
+| `Description` | `varchar(max)` | nullable | The native semantic description. |
+| `Expression` | `varchar(max)` | nullable | The DAX expression. |
+| `Format string` | `varchar(max)` | nullable | The authored format string. |
+| `Signature` | `varchar(128)` | required | Content hash of the effective semantic model, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.SemanticModelRelationship`
+
+**Key:** `Item type`, `Item name`, `Relationship name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Relationship name` | `varchar(128)` | required | The native relationship name. |
+| `From table` | `varchar(128)` | nullable | The source table. |
+| `From column` | `varchar(128)` | nullable | The source column. |
+| `To table` | `varchar(128)` | nullable | The destination table. |
+| `To column` | `varchar(128)` | nullable | The destination column. |
+| `From cardinality` | `varchar(128)` | nullable | The source cardinality. |
+| `To cardinality` | `varchar(128)` | nullable | The destination cardinality. |
+| `Cross filtering behavior` | `varchar(128)` | nullable | The native cross-filter direction. |
+| `Is active` | `bit` | nullable | Whether the relationship is active. |
+| `Signature` | `varchar(128)` | required | Content hash of the effective semantic model, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.SemanticModelTable`
+
+**Key:** `Item type`, `Item name`, `Table name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Table name` | `varchar(128)` | required | The native table name, matching Dependency's referencing object name. |
+| `Table ordinal` | `bigint` | nullable | One-based effective TMDL declaration order. |
+| `Description` | `varchar(max)` | nullable | The native semantic description. |
+| `Source mode` | `varchar(128)` | nullable | The storage mode of the partition reading the managed source. |
+| `Source access` | `varchar(128)` | nullable | How that partition reads the source: sql or lakehouse. |
+| `Signature` | `varchar(128)` | required | Content hash of the effective semantic model, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.SemanticModelTest`
+
+**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Definition` | `varchar(max)` | required | Versioned JSON: the DAX query and, for a Test, its logical Expected source and Expected SQL. |
+| `Signature` | `varchar(128)` | required | Content hash of the validation's source file, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.Shortcut`
+
+**Key:** `Item type`, `Item name`, `Shortcut ID`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Shortcut ID` | `varchar(128)` | required | The shortcut as its author declared it: 'Sales.Customer' for a table or folder, 'Reference' for a schema. |
+| `Schema name` | `varchar(128)` | required | The schema this item presents the shortcut in. |
+| `Object name` | `varchar(128)` | nullable | The object this item presents. Null for a schema shortcut, which presents a namespace rather than an object. |
+| `Shortcut type` | `varchar(128)` | required | What the shortcut is. |
+| `Target type` | `varchar(128)` | required | Whether the target is a logical item or a physical item. |
+| `Target item type` | `varchar(128)` | required | The target's item type. |
+| `Target item name` | `varchar(128)` | required | The target's item name. |
+| `Target schema name` | `varchar(128)` | required | The schema or path the target sits in. |
+| `Target object name` | `varchar(128)` | nullable | The target object. Null for a schema or path. Together, the four target columns preserve a logical producer's identity. |
+| `Target workspace name` | `varchar(128)` | nullable | The workspace the target is in. Null for a logical target, which is bound, and for a physical one in this workspace. |
+| `Signature` | `varchar(128)` | required | Content hash of the shortcut declaration, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.TableDictionary`
+
+**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Object type` | `varchar(128)` | required | Table or View. |
+| `Description` | `varchar(4000)` | nullable | What this object is. |
+| `Description reference` | `varchar(128)` | nullable | The $Schema.Object this description was copied from, if any. |
+| `Lineage` | `varchar(4000)` | nullable | Where this object's data comes from. |
+| `Lineage reference` | `varchar(128)` | nullable | The $Schema.Object the lineage was copied from, if any. |
+| `Primary key` | `varchar(1000)` | nullable | The primary key's columns, in declared order. |
+| `Not null columns` | `varchar(1000)` | nullable | Columns declared not null, beyond the primary key. |
+| `Identity column` | `varchar(128)` | nullable | Weaver's managed surrogate column, when one is declared. |
+| `Comparison columns` | `varchar(max)` | nullable | Columns an author named to drive an upsert. Null where none were named, which is every eligible non-key column. |
+| `Is incremental` | `bit` | nullable | Whether load accumulates rows rather than replacing them. |
+| `Is static` | `bit` | nullable | Whether the object is loaded once rather than refreshed. |
+| `Prohibit rebuild` | `bit` | nullable | Whether build may drop and recreate this object. |
+| `Signature` | `varchar(128)` | required | Content hash of the object's source file, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.TestDictionary`
+
+**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Test type` | `varchar(128)` | required | Test compares an expected relation with an actual one; Assumption returns the rows that contradict it. |
+| `Description` | `varchar(4000)` | nullable | What this validation is. |
+| `Description reference` | `varchar(128)` | nullable | The $Schema.Object this description was copied from, if any. |
+| `Primary key` | `varchar(1000)` | nullable | A Test's correlation key, comma-separated in declared order. Null when undeclared and for every Assumption. |
+| `Signature` | `varchar(128)` | required | Content hash of the validation's source file, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.TestStatus`
+
+**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Test type` | `varchar(128)` | nullable | Test or Assumption. |
+| `Workflow ID` | `varchar(128)` | nullable | The workflow whose run produced this state, so the row can be read alongside the evidence in _.Log. |
+| `Result` | `varchar(128)` | required | How the work ended. |
+| `Started datetime` | `datetime2(6)` | nullable | When the work started. |
+| `Completed datetime` | `datetime2(6)` | nullable | When the work settled. |
+| `Duration milliseconds` | `bigint` | nullable | How long the work took, in milliseconds. |
+| `Failure count` | `bigint` | nullable | Discrepancy rows for a Test or contradicting rows for an Assumption. Set only when evaluated. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+<!-- END GENERATED CATALOGUE REFERENCE -->
 
 ## Ownership and relationships
 

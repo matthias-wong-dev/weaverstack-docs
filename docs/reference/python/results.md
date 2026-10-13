@@ -22,6 +22,8 @@ The constructors below describe the returned shape and are useful in tests. Norm
 - `weaver.LoadRunReport` — class
 - `weaver.MirrorPlan` — class
 - `weaver.MirrorResult` — class
+- `weaver.UnbindPlan` — class
+- `weaver.UnbindResult` — class
 - `weaver.ValidationNodeReport` — class
 - `weaver.ValidationRunReport` — class
 - `weaver.WipeItemResult` — class
@@ -66,6 +68,7 @@ InitialiseReport(
     dry_run: bool = False,
     environment_publication: str = "deferred",
     environment_definition: str = "written",
+    builds: tuple[str, ...] = ("build",),
 )
 ```
 
@@ -88,12 +91,15 @@ BuildResult(
     errors: tuple[BuildFailure, ...] = (),
     selection: Any = None,
     installation_report: Any = None,
+    report_path: str | None = None,
+    dry_run: bool = False,
+    preview: BuildPreview | None = None,
 )
 ```
 
-Returned by `build()`. `installation` distinguishes an installed build from a bundle-only build. `bundle_path` is populated for a retained bundle and otherwise `None`. `succeeded` is true only when `status == "succeeded"`.
+Returned by `build()`. `installation` distinguishes installed execution from preview/bundle-only preparation. `dry_run` identifies preview and `preview.to_mapping()` contains the canonical read-only plan. `report_path` retains a direct Build installation report outside the temporary bundle. `bundle_path` is populated for a retained bundle and otherwise `None`. `succeeded` is true only when `status == "succeeded"`.
 
-Each value in `errors` exposes `action_id`, `error_type`, `message`, `artefact`, and `source_path`. `selection` and `installation_report` retain detailed in-memory evidence but are omitted by `to_mapping()`; the mapping contains source, selected items, bundle identity, installation mode, bundle path, status, and mapped errors.
+Each value in `errors` exposes `action_id`, `error_type`, `message`, `artefact`, and `source_path`. `selection` and `installation_report` retain detailed in-memory evidence but are omitted by `to_mapping()`; the mapping contains source, items, bundle identity, installation mode, path, status and errors. It adds action counts/report path when an installation report exists and `dry_run`/`preview` for a read-only preview.
 
 See [`weaver build`](../cli/build.md) and [Build bundles and controlled installation](../../advanced/build-bundles-and-controlled-installation.md).
 
@@ -143,10 +149,13 @@ WipePlan(
     catalogue: str | None,
     catalogue_action: str,
     unbound: tuple[str, ...] = (),
+    installed: Mapping[str, tuple[str, ...]] = {},
+    preserve_data_source: bool = False,
+    left: tuple[WipeTarget, ...] = (),
 )
 ```
 
-Returned by `plan_wipe()`. `targets` is already in execution order; when the catalogue is removed, it is last. `empties_the_catalogue` states whether the catalogue is among those targets. `is_catalogue(target)` checks one target. `describe()` renders the settled action, and `to_mapping()` returns its machine form.
+Returned by `plan_wipe()`. `targets` is in settled presentation order, not a serial execution promise; when the catalogue is removed, it is last. `preserve_data_source` freezes the semantic source-shell choice, and `left` lists discovered Reports not wiped. `empties_the_catalogue` states whether the catalogue is among those targets. `is_catalogue(target)` checks one target. `describe()` renders the settled action, and `to_mapping()` returns its machine form.
 
 ### `WipeReport`
 
@@ -193,6 +202,34 @@ Returned by `wipe()`. `items` is the item-level result; `reports` is the lower-l
 
 See [`weaver wipe`](../cli/wipe.md) and [Recovery](../../basics/recover-failed-work.md) before using the destructive operation.
 
+## Unbind
+
+### `UnbindPlan`
+
+```python
+UnbindPlan(
+    workspace: Workspace,
+    catalogue: str,
+    targets: tuple[WipeTarget, ...],
+    installed: Mapping[str, tuple[str, ...]] = {},
+    present: frozenset[str] = frozenset(),
+)
+```
+
+`installed` lists logical claims by physical target; `present` identifies targets that still exist. `still_in_fabric` returns their typed names. `describe()` shows what is forgotten and the preserved catalogue; `to_mapping()` returns workspace, catalogue and target entries with `target`, `items`, `in_fabric`.
+
+### `UnbindResult`
+
+```python
+UnbindResult(
+    plan: UnbindPlan,
+    logical_items: tuple[str, ...] = (),
+    dry_run: bool = False,
+)
+```
+
+Returned by `unbind`. `logical_items` are removed catalogue claims, not deleted physical items. `to_mapping()` adds `unbound` and `dry_run` to the plan mapping. A dry run changes nothing. See [Unbind behaviour](../operation-behaviour/unbind.md).
+
 ## Load
 
 ### `LoadResult`
@@ -208,6 +245,7 @@ LoadResult(
     error_message: str | None = None,
     bookmark_datetime: datetime | None = None,
     is_static_skip: bool = False,
+    is_refusal: bool = False,
 )
 ```
 
@@ -250,13 +288,13 @@ LoadNodeReport(
     status: str,
     executed: bool = False,
     messages: tuple[LoadMessage, ...] = (),
-    result: LoadResult | None = None,
+    result: LoadResult | SemanticRefreshResult | None = None,
     started_at: str | None = None,
     finished_at: str | None = None,
 )
 ```
 
-One planned or executed node. `executed` is true only when work touched the target. `succeeded` is true for `succeeded` and dry-run `validated` statuses; a `succeeded_with_rejects` node is not cleanly successful. `result` carries row counts when a load primitive returned them. `to_mapping()` and `from_mapping(payload)` round-trip the report shape.
+One planned or executed node. `executed` is true only when work touched the target. `succeeded` is true for `succeeded` and dry-run `validated` statuses; a `succeeded_with_rejects` node is not cleanly successful. `result` carries primitive row counts or semantic refresh evidence; model refresh has no invented row counts. `to_mapping()` and `from_mapping(payload)` round-trip the report shape.
 
 ### `LoadRunReport`
 
@@ -267,6 +305,7 @@ LoadRunReport(
     dry_run: bool,
     fault_tolerant: bool,
     reload: bool = False,
+    ignore_stability_threshold: bool = False,
     nodes: tuple[LoadNodeReport, ...] = (),
     edges: tuple[tuple[str, str], ...] = (),
     order: tuple[str, ...] = (),
@@ -303,7 +342,7 @@ ValidationNodeReport(
 )
 ```
 
-One Test or Assumption outcome. `result` carries Test discrepancy counts or an Assumption violation count. `diagnostics` contains rows only when the caller requested one validation by name or file; it is excluded from comparison, representation, and `to_mapping()`. `succeeded` is true for `passed` and dry-run `planned` statuses. `from_mapping(payload)` reconstructs the count-bearing result but not diagnostic rows.
+One Test or Assumption outcome. `result` carries Test discrepancy counts or an Assumption violation count. `diagnostics` contains rows only when the caller used name/file selection; it is excluded from comparison, representation, and `to_mapping()`. `succeeded` is true for `passed` and dry-run `planned` statuses. `from_mapping(payload)` reconstructs the count-bearing result but not diagnostic rows.
 
 ### `ValidationRunReport`
 

@@ -5,13 +5,13 @@
 ## Synopsis
 
 ```text
-weaver test [-h] [--item ITEM] [--name Schema.Object | --file PATH] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]
+weaver test [-h] [--item ITEM] [--name PATTERN] [--file PATH] [--source SOURCE] [--concurrency N] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]
 ```
 
 ## Positional arguments
 
 `ITEM`
-: Weaver items to validate, as Lakehouse/Name or Warehouse/Name. Naming none validates every installed item.
+: Weaver items to validate, as Lakehouse/Name, Warehouse/Name or SemanticModel/Name. PowerBI or PowerBI/<project> names the semantic models of the project folder. Naming none validates every item.
 
 ## Options
 
@@ -21,11 +21,17 @@ weaver test [-h] [--item ITEM] [--name Schema.Object | --file PATH] [--dry-run] 
 `--item ITEM`
 : Legacy spelling for a positional Weaver item.
 
-`--name Schema.Object`
-: Run one installed validation and return diagnostic rows.
+`--name PATTERN`
+: Run only validations whose whole Schema.Object matches this regular expression, with their diagnostic rows. Repeat to select more.
 
 `--file PATH`
-: Compile and run a source file without installing it.
+: Run validations from source in file mode: a file, a directory or a glob. A file outside the project folder runs against the one item named. Repeat to select more.
+
+`--source SOURCE`
+: Project folder, or an abfss location inside a Fabric session. Defaults to the current directory or Notebook Resources.
+
+`--concurrency N`
+: Limit total simultaneous execution for this invocation; retain resource limits.
 
 `--dry-run`
 : Show the test plan without running it.
@@ -52,48 +58,26 @@ weaver test [-h] [--item ITEM] [--name Schema.Object | --file PATH] [--dry-run] 
 
 ## Responsibility and selection
 
-Run installed Tests and Assumptions for selected logical items. Positional items use `Lakehouse/Name` or `Warehouse/Name`; naming none selects every installed item. The repeatable `--item` spelling is retained for existing invocations, and its values follow positional values in the request.
+Test evaluates Tests/Assumptions and returns a report. Positional/legacy items define scope. With a catalogue and no files it uses installed definitions. `--file` selects source/file mode even with a catalogue; without a catalogue Test reads project validations. Source/file mode records no installed TestStatus/Log. Reports cannot Test; validate their model.
 
-`--name Schema.Object` runs one installed validation. `--file PATH` compiles and runs one source validation without installing it and requires exactly one item. The two selectors are mutually exclusive. Targeted runs collect diagnostic rows; item-wide runs report validation results and counts without diagnostic rows.
+Repeat `--name` for whole-name case-insensitive regex filtering; every pattern must match. Repeat `--file` for source files, project directories or quoted glob patterns. The selectors can be combined. Project-declared files keep their owners; an external single file requires exactly one named item. `--source` supplies project context (default current directory/Notebook Resources); it alone does not force file mode when a catalogue exists. PowerBI/project selectors expand semantic models.
 
-## Execution
+Supported source forms include Warehouse SQL, Lakehouse Python/Spark SQL and model-owned DAX. DAX reconciliation still requires its Expected Warehouse/Lakehouse and query permissions. Name/file-targeted runs collect diagnostics; item-wide runs normally report counts. `--dry-run` parses/resolves without evaluating queries or recording state.
 
-An installed run reads bindings and validations from the catalogue. Validations are independent, so one finding does not block the remaining selected validations. A source-file run publishes no validation evidence to the installed estate.
+## Execution and outcomes
 
-`--dry-run` returns the test plan without executing validations.
+Validations are independent: findings and node evaluation errors do not prevent later selected validations. Installed runs use configured resource limits. Source/file mode is serial by default; explicit `--concurrency N` uses scheduled execution with a total cap alongside resource ceilings. It does not Load data dependencies or refresh a model first.
 
-## Interaction
-
-Test does not offer an edit-and-retry loop. Interactive credential selection may use browser sign-in; `--non-interactive` prevents browser sign-in and other prompts.
-
-## Output and exit behaviour
-
-Human output lists each validation with its status, kind and logical identity. Failed Tests include missing and unexpected counts; failed Assumptions include violation counts. Targeted runs print collected diagnostic rows. The summary reports passed, failed and validations that could not run.
-
-`--json` emits the current report as one document. Targeted JSON includes collected diagnostic rows. Its fields are not presented here as a compatibility contract.
-
-The command exits `0` when all selected validations pass and `1` when a validation fails, cannot run, or the request fails. Argument errors exit through `argparse`.
+No edit-and-retry loop is offered. Non-interactive mode disables prompts/browser sign-in. Human output/JSON distinguish `passed`, `failed`, `invalid`, `planned`, with missing/unexpected Test counts, Assumption violations and available diagnostic rows. Python returns completed reports including findings; `weaver.test` has no strict-mode argument. CLI exits `0` for passed/planned, `1` for failed/invalid or command error, `2` for parser usage errors.
 
 ## Examples
 
-Run all installed validations:
-
 ```bash
-weaver test --workspace-config workspace-config.yml
+weaver test Warehouse/Operations --name 'Parcel[.]StatusMatches' --workspace-config workspace-dev.yml
+weaver test Warehouse/Operations --file Warehouse/Operations/tests --source . --concurrency 2 --workspace-config workspace-dev.yml
+weaver test SemanticModel/Parcel --source . --workspace-config workspace-dev.yml
 ```
 
-Run one installed validation and return its diagnostic rows:
+The last command uses file mode only when that configuration has no catalogue; with a catalogue it selects installed validations. Add `--file PowerBI/Parcel/assumptions/Parcel` to explicitly choose source mode.
 
-```bash
-weaver test Warehouse/Operations \
-  --name Parcel.StatusMatches \
-  --workspace-config workspace-config.yml
-```
-
-Compile and run one source validation:
-
-```bash
-weaver test Warehouse/Operations \
-  --file Warehouse/Operations/tests/Parcel.StatusMatches.sql \
-  --workspace-config workspace-config.yml
-```
+See [Test behaviour](../operation-behaviour/test.md), [DAX validations](../power-bi/validations.md) and [machine output](../machine-readable-output.md).

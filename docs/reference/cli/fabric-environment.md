@@ -5,7 +5,7 @@
 ## Synopsis
 
 ```text
-weaver fabric environment publish [-h] [--path DIRECTORY] [--dev] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [ENVIRONMENT]
+weaver fabric environment publish [-h] [--path DIRECTORY] [--dev] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [ENVIRONMENT]
 ```
 
 ## Positional arguments
@@ -23,6 +23,9 @@ weaver fabric environment publish [-h] [--path DIRECTORY] [--dev] [--non-interac
 
 `--dev`
 : Supply Weaver as a wheel built from this checkout.
+
+`--json`
+: Emit the result as JSON.
 
 `--non-interactive`
 : Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.

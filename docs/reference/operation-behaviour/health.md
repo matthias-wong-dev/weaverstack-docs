@@ -23,7 +23,7 @@ For borrowed objects, current Load state and matching statistics come from the c
 
 ## Inventory and host boundaries
 
-With inventory enabled, Warehouse objects are read over TDS and Lakehouse storage objects through OneLake. Health does not start Spark or Livy and accepts no Environment option. Lakehouse Views are not reported missing merely because storage inventory cannot enumerate them.
+With inventory enabled, Warehouse objects are read over TDS and Lakehouse storage objects through OneLake. Health does not start Spark or Livy and accepts no Environment option. Lakehouse Views are not reported missing merely because storage inventory cannot enumerate them. SemanticModel/Report targets request no Warehouse/OneLake physical inventory; Health uses recorded catalogue evidence for them. It requires a catalogue and does not report a catalogue-free refresh as persisted health.
 
 `--no-inventory` skips physical reads. Build health can then report catalogue contradictions but cannot establish that certified objects are physically present. Authentication, catalogue, mirror-source and inventory-read failures are command errors; Health does not turn them into Red findings.
 
@@ -33,7 +33,7 @@ The severity order is **Green**, **Amber**, **Red**. A section with no findings 
 
 ### Load
 
-Installed Tables and Folders are Load subjects. Views and generated runtime artefacts are not, although a View's Build-established time can affect descendants.
+Installed Tables, Folders and registered semantic-model refresh roots are Load subjects. Views and generated runtime artefacts are not, although a View's Build-established time can affect descendants.
 
 - **Green:** the current installed generation settled successfully, is not older than `as_of`, and is not behind a managed ancestor.
 - **Amber:** no load has settled since Build; the latest result contains tolerated rejects or another non-failure state; the last clean completion is older than `as_of`; or a managed ancestor has no settled current generation or was established later.
@@ -56,7 +56,7 @@ Elapsed time alone does not make a validation Amber. Test findings may carry mis
 Build health checks installed-state consistency, not unbuilt project source. Red findings include:
 
 - a declared Table or Folder without matching Registry certification;
-- a validation declaration without its installed executable;
+- a validation declaration without its installed executable/semantic validation definition;
 - an unresolved installed dependency;
 - more than one logical installation claiming one physical address; and
 - when inventory is enabled, a certified object absent from its expected local or borrowed physical form.

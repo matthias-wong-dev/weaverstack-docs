@@ -25,6 +25,8 @@ The Session closes on leaving the block. Each operation leaves a supplied Sessio
 
 The [Sessions and workflows guide](../../basics/sessions-and-workflows.md) covers interactive command composition. The [`weaver session` reference](../cli/session.md) documents the terminal prompt.
 
+A catalogue-free Power BI Session needs no Spark Environment. Spark-backed Build execution checks the active or published Weaver runtime before dispatch; a source-only Check or read-only preview does not establish runtime compatibility. See [runtime qualification](../operation-behaviour/session-runtime.md#fabric-environment-qualification).
+
 ## Lakehouse locations
 
 `Lakehouse` represents a resolved Lakehouse destination for authored code. It provides table and folder paths and qualifies object names against its Spark destination.

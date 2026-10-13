@@ -1,6 +1,6 @@
 # Python authored objects
 
-These classes are the public Python surface for Lakehouse object modules and authored shortcut declarations. Import them from `weaver`; modules below the top-level package are implementation details.
+These classes are the public Python surface for Lakehouse object modules and authored shortcut declarations. Import them from `weaver`; the separately documented [semantic extension modules](semantic-models.md) are additional supported imports, not a blanket public surface for all internal modules.
 
 Python object classes are not the YAML metadata, SQL document, or CLI forms of the same concepts. See [Weaver documents](../../core-concepts/weaver-documents.md) for the document model, [Lakehouse pipeline](../../basics/lakehouse-python.md) for an end-to-end authoring path, and [Shortcuts](../../basics/shortcuts.md) for shortcut target forms.
 

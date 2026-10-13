@@ -5,8 +5,8 @@
 ## Synopsis
 
 ```text
-weaver initialise [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]
-weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]
+weaver initialise [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--semantic-model NAME] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]
+weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--semantic-model NAME] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]
 ```
 
 ## Options
@@ -32,8 +32,11 @@ weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalo
 `--warehouse WAREHOUSE`
 : Warehouse for SQL tables and views.
 
+`--semantic-model NAME`
+: Add PowerBI/NAME/NAME.tmdl, or name the example's Power BI project. Build creates the SemanticModel.
+
 `--example`
-: Add Sales example source files.
+: Add the Sales example: source files and a Power BI project that reads them.
 
 `--no-example`
 : Do not add example source files.
@@ -59,7 +62,7 @@ weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalo
 
 Create or reuse a project folder, catalogue Warehouse, Fabric Environment, and optional Lakehouse and Warehouse. `initialize` is an accepted alias.
 
-Without explicit values, terminal use starts a wizard. Unattended use requires `--workspace` and `--project-folder`; omitted catalogue and Environment names default to `Catalogue` and `Weaver`. Lakehouse and Warehouse are optional.
+Without explicit values, terminal use starts a wizard. Unattended use requires `--workspace` and `--project-folder`; omitted catalogue and Environment names default to `Catalogue` and `Weaver`. Lakehouse, Warehouse and the `--semantic-model` scaffold are optional. A semantic-model request still provisions the catalogue and Environment; use manual minimal configuration for catalogue-free Power BI deployment.
 
 ## Execution
 

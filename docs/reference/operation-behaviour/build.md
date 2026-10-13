@@ -1,55 +1,57 @@
 # Build behaviour
 
-Build turns one snapshot of project source into a deployment bundle and, unless `--bundle-only` is set, installs that bundle.
+Build takes a snapshot of project source, resolves destination bindings and prepares a canonical deployment plan. Normal execution installs it; `--dry-run` only presents it; `--bundle-only` retains executable input without installing.
 
 ## Inputs and selection
 
-`SOURCE` is a project directory. It defaults to the current directory on a desktop and to the process working tree exposed as Notebook Resources inside a Fabric session. An `abfss` source is accepted only inside a Fabric session.
+`SOURCE` defaults to the current directory on a desktop and Notebook Resources inside a Fabric session. An `abfss` source is accepted inside Fabric. The complete source is copied to a temporary snapshot before parsing; later source edits cannot change that invocation. The snapshot is removed after success or failure.
 
-Repeatable `--item ITEM[=TARGET]` selects logical items and may supply or override each physical binding. Naming no item selects every target in workspace configuration; an empty selection is an error. See [Shared selection and identity](shared-selection-and-identity.md) for the accepted forms and item boundary.
+Repeatable `--item ITEM[=TARGET]` selects logical items and may override physical bindings. Naming none selects configured targets; an empty selection fails. Type selectors and `PowerBI/<project>` expand against project/configuration according to [Shared selection](shared-selection-and-identity.md). Parsing checks the complete project, but selected items are the reconciliation boundary; dependencies do not add an unselected item.
 
-Build copies the complete source directory to a temporary snapshot before parsing. Later edits to, removal of, or additions under the original directory do not change that Build. The snapshot is removed after success or failure.
+Lakehouse/Warehouse sources and Power BI definitions require separate Build calls. Build sources first when a model needs their installed metadata; a Workflow may sequence both calls. Reports have Build definitions, not Load/Test nodes.
 
-## Validation, preflight and planning
+## Source-item reconciliation
 
-Before installation, Build:
+Before installation Build validates source identities, metadata, dependency cycles, selection and bindings, resolves required targets, then reads catalogue/physical state and plans changes. Desktop preflight uses the Fabric inventory before starting Spark. Source items require a catalogue. Their targets must already exist; ordinary Build can create missing selected Power BI items, not an arbitrary source estate.
 
-1. parses and validates the complete project snapshot, including identities, dependencies and cycles;
-2. validates the selected items and bindings;
-3. on a desktop, verifies the workspace, catalogue, Environment when named, and all selected physical targets in one Fabric inventory read before opening Spark; this REST preflight is skipped inside a Fabric session;
-4. reads the installed catalogue and selected physical inventories; and
-5. compares source, installed certification and physical state to prepare a bundle.
+Planning classifies new/changed source, affected selected descendants, protected work and managed declarations removed from source. Producers precede consumers and removal respects dependency boundaries. Cross-item impact reaches a consumer only when both items are selected. Signatures are equality tokens, not a public digest algorithm. Physical presence/form also matters; matching source does not certify a missing object or adopt an uncertified object solely by name.
 
-Source validation reads the whole project, but selected items are the reconciliation boundary. Dependencies do not add an unselected item. Within the boundary, planning classifies new and changed work, selected existing descendants affected by a change, protected work, and installed work removed from source. Producers precede consumers; removal uses the reverse dependency boundary. Cross-item impact reaches a consumer only when both items are selected.
+Build owns reconciliation inside each selected physical source item, including pruning undeclared Tables, Views, Schemas and Lakehouse Folders. Keep externally owned or irreplaceable data in a separate physical item reached through a physical Shortcut. Unselected items are outside its reconciliation boundary.
 
-Installed signatures are equality tokens, not public content digests. Build also checks physical presence and form: a matching signature does not make a missing or differently typed object unchanged. Uncertified physical objects are not adopted merely because their names match. `Prohibit rebuild` retains an existing protected data object when replacement would otherwise be required; it does not prevent first installation.
+`Prohibit rebuild` retains existing protected data against ordinary replacement; it does not prevent first installation, deliberate Wipe or reload. In a mirrored development destination, edited protected borrowed objects can materialise locally: Warehouse CTAS retains source rows, Lakehouse Folders copy files and Delta Tables use shallow clone after shortcut removal/path release. Source data remains unchanged; retained bookmarks remain, changed Load definitions become Pending and failed materialisation blocks certification. Shallow clones initially depend on source data files/retention, not a deep backup. Unprotected mirror replacement retains reset behaviour.
 
-## Bundle-only mode
+## Power BI deployment modes
 
-Every Build prepares a self-contained deployment bundle before installation. The bundle contains the frozen plan and payloads, not project source.
+Native models and Reports can deploy without a catalogue. Configured/explicit targets resolve physical destinations; ordinary Build can create selected missing items. Selected semantic models deploy and verify readback even if their source signatures are unchanged. Catalogue-free selections redeploy/verify and record no Weaver fixed point.
 
-`--bundle-only` writes the bundle and stops before installation. It still validates source and reads the destination catalogue and inventories because the plan is destination-state-specific. `--bundle-path` is valid only with `--bundle-only` and must name a new or empty directory; without it, Weaver creates a temporary-directory path and returns that path. Build has no `--dry-run` mode: bundle-only mode writes a bundle but changes no installed objects or catalogue state.
+With a catalogue, verified model/readback metadata and item registrations are published. Required model properties, removals and invalid-measure checks gate certification. A selected model completes deployment/readback before its linked Reports. Catalogue-backed unchanged Report-only Build can skip work; a linked Report-only update requires a suitable certified installed model. Without a catalogue include its linked model in the same selection. Unrelated authored `byConnection` is not reverse mapped.
 
-`weaver install` accepts a local bundle directory or `.weaver.zip` archive. It validates the plan and payload checksums before any action, then executes that frozen plan without reopening source or replanning against destination state. Bundle representation and identity are current formats, not compatibility guarantees; see [Build bundle format](../build-bundle-format.md).
+`--data-source` / Python `data_sources` overrides supported shared-expression mappings. `--bind-data-sources` asks to bind supported sources to existing connections after deployment. Neither creates credentials. Authored files are not rewritten. See the authoritative [mode matrix and binding rules](../power-bi/requirements-and-compatibility.md).
 
-## Installation barriers and certification
+## Read-only preview
 
-Installation executes plan sequences in order. Actions in a batch run serially. If an action fails, the remaining actions already in that batch still receive their actual results; later batches in that sequence and every later sequence are `skipped`. Every planned action therefore ends as `succeeded`, `failed` or `skipped`.
+```bash
+weaver build . --item PowerBI/Parcel --dry-run --workspace-config workspace-dev.yml
+```
 
-Runtime-state reconciliation occurs before physical rebuild work. A selected loadable being rebuilt is set to pending and its bookmark is reset to the initial boundary; a selected Test or Assumption is set to pending. Removed declarations lose their current-state rows. Operational history in Log and LoadStatistic is retained, and unchanged or unselected objects keep their current state. A failed later action does not restore an earlier reset.
+Preview uses the same canonical plan construction and reads destination state. It reports selected objects, action classifications, destructive consequences, certification/runtime/validation changes and uncertainty. It performs no target mutation, missing-item provisioning, catalogue publication, endpoint refresh or retained bundle write. It does not prove execution-runtime compatibility, service rights to mutate or later target state. Suitable existing targets are required; a missing selected Power BI target is not created by preview.
 
-Physical work and runtime artefacts precede catalogue publication. Dictionaries and item bindings are published before Registry certification, and Registry is a final barrier. Physical work can therefore exist without matching certification if a later publication action fails; Build health reports that inconsistency. A Lakehouse SQL-endpoint refresh that the current host cannot perform is recorded as `skipped` and does not by itself fail installation.
+`--dry-run` and `--bundle-only` are mutually exclusive. `--bundle-path` requires bundle-only mode. Neither preview nor bundle-only mode uses ordinary missing-target provisioning.
 
-A report status is `succeeded` when no action failed, including a plan containing supported host skips, and `failed` otherwise. Installation writes `install-report.yml` beside the bundle plan; a direct Build also returns that report, although its internal temporary bundle is removed.
+## Retained bundle and installation
 
-## Failures, partial state and reruns
+`--bundle-only` freezes destination-specific targets, payloads and action dependencies and retains a bundle. It still validates source and reads current catalogue/inventories. `--bundle-path` must be absent or an empty directory; otherwise the returned path is a durable temporary-directory bundle. Install validates local directory/`.weaver.zip` input before dispatch. It does not reopen source, retarget or replan. Generate a new bundle if destination/source/bindings changed. See [Build bundle format](../build-bundle-format.md).
 
-Source, request, desktop preflight, state-read and bundle-validation errors stop before installation and produce no installation report. During installation, failures are captured in the report; the CLI renders the result and exits `1`. A successful or bundle-only Build exits `0`.
+Installation schedules ready actions using success dependencies, settlement ordering, resource limits and physical exclusions. Presentation sequences/batches are not global serial barriers. `--concurrency N` / Python `concurrency=N` adds a total invocation cap without changing resource ceilings or dependency rules. Independent work may continue after a known failure; dependent certification is blocked. Uncertain mutation outcomes are failures, not permission to replay blindly.
 
-Build has no operation-wide transaction or rollback. Runtime-state resets, removals, physical changes and catalogue writes completed before a later failure remain. Rerunning Build takes a new source snapshot and replans from the catalogue and physical state that remain; an unchanged settled rerun selects no physical or catalogue work.
+Spark-backed execution also requires a compatible Weaver Build runtime before dispatch. Desktop execution probes the published Environment for exact client version, plan format, Delta writer and executor capabilities; notebook execution checks the active runtime. This requirement is independent of whether authored Python `read()` runs. Warehouse-only and standalone Power BI Build do not acquire Spark merely for this check. See [Session runtime qualification](session-runtime.md#fabric-environment-qualification).
 
-Build reconciles each selected physical item as a managed boundary. It may prune Tables, Views, Schemas, and Lakehouse Folders found there when they are not declared by the selected logical item. Keep externally owned data in a separate physical item and reach it through a physical Shortcut; do not select that source item as a Build target.
+## State, outcomes and reruns
 
-Build does not reconcile or remove state outside the selected physical-item boundary.
+Before physical replacement, applicable certification/current-state rows are withdrawn or reset. Ordinary replaced loadables reset their bookmark/current Load state; rebuilt validations become Pending. Removed declarations lose current state. Unchanged/unselected source objects keep state; Log and LoadStatistic history remain. Protected mirror materialisation has the retained-bookmark exception above. Resets completed before a later failure are not restored.
 
-See [`weaver build`](../cli/build.md), [`weaver install`](../cli/install.md), [Catalogue schema](../catalogue-schema.md), and [Shared selection and identity](shared-selection-and-identity.md).
+Physical/runtime work precedes successful publication. Item/dictionary publication and final certification depend on required work/readback. Partial physical objects may therefore exist without certification. A direct Build retains its installation report outside the temporary bundle and reports its path and action counts. Reported actions are `succeeded`, `failed` or `skipped`; skipped/blocked prerequisites do not certify dependent work.
+
+Pre-plan source/request/state/capability errors raise without an installation result. Captured installation failures return a failed Build result; CLI exits `1`. A succeeded preview, bundle-only or installation result exits `0`. Build has no operation-wide rollback. Source-item fixed points can plan no work after a settled unchanged rerun; do not apply that rule to selected semantic models, catalogue-free deployment or every Report case. Rerunning normal Build snapshots source and replans against the state remaining after failure.
+
+See [`weaver build`](../cli/build.md), [`weaver install`](../cli/install.md), [Catalogue schema](../catalogue-schema.md) and [outcome vocabulary](fault-and-outcome-vocabulary.md).

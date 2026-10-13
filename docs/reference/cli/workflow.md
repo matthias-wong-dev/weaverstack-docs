@@ -56,7 +56,7 @@ All entries must resolve to one workspace. The outer workspace options provide a
 
 Weaver reads and parses every entry, resolves the shared workspace and displays the complete sequence before execution. The commands then run in file order in one Session and share one workflow identifier. Reusable resources required by the sequence are prepared before the first command.
 
-Execution stops at the first command that returns a failure status or raises a Weaver error. Later entries do not run. `--timings` reports Session timings after success or failure.
+Test/Health non-zero handler findings are collected and execution continues, with final exit `1`. Other non-zero handler statuses or raised Weaver errors stop immediately; later entries do not run. `--timings` reports Session timings after success or failure.
 
 ## Interaction
 
@@ -64,9 +64,11 @@ Without `--yes`, Weaver asks once before running the displayed sequence. Confirm
 
 `--non-interactive` propagates to every entry and prevents input, keypress waits and browser sign-in. It does not authorise the sequence: unattended execution requires both `--non-interactive` and `--yes`.
 
+Test/Health non-zero findings continue to later entries, then cause final exit `1`. Other non-zero results or raised Weaver errors stop immediately. Findings do not mean deployment validation or rollback. Use separate source and Power BI Build entries for a mixed project.
+
 ## Output and exit behaviour
 
-Before execution, output names the workflow file and numbers every command. During execution, each entry is introduced with its position in the sequence. Success reports the number of completed commands; failure identifies the entry where execution stopped.
+Before execution, output names the workflow file and numbers every command. During execution, each entry is introduced with its position in the sequence. A completed sequence reports its command count and any finding-producing entries; an execution failure identifies the stopped entry.
 
 The command exits `0` when all entries succeed or an operator declines the confirmation. It exits `1` when confirmation is required but unavailable, or when an entry fails. File, YAML, parser and conflicting-workspace errors are command errors.
 

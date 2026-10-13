@@ -74,15 +74,13 @@ ValidationError(
     message: str,
     *,
     result: object | None = None,
-    report: Any | None = None,
 )
 ```
 
-Raised when a Test or Assumption cannot be evaluated, or when strict validation rejects a completed run.
+Raised when a validation cannot be evaluated by its direct validation interface or a comparison cannot be formed. The public `weaver.test` operation returns completed findings/invalid reports rather than providing a strict-mode parameter.
 
 - `result` carries a failed-to-run validation result when one is available.
-- `report` carries the completed validation report when strict mode rejects its outcome.
 
-The two attributes default to `None`. `ValidationError` does not accept the `executor` keyword exposed by the other constructors on this page.
+`result` defaults to `None`. `ValidationError` does not accept the `executor` keyword exposed by the other constructors on this page.
 
 A validation that executes and finds discrepancies or violations is represented as a failed validation outcome. An evaluation failure is distinct and must not be interpreted as a passing result. See [Add Tests and Assumptions](../../basics/tests-and-assumptions.md).

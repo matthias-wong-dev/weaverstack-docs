@@ -14,7 +14,7 @@ weaver health [-h] [--item ITEM] [--as-of DATETIME] [--no-inventory] [--json] [-
 : show this help message and exit
 
 `--item ITEM`
-: Weaver item to report on, as Lakehouse/Name or Warehouse/Name. Repeat to select more than one. Naming none reports on the whole installed estate.
+: Weaver item to report on, as Lakehouse/Name, Warehouse/Name or SemanticModel/Name. Repeat to select more than one. Naming none reports on the whole installed estate.
 
 `--as-of DATETIME`
 : ISO-8601 instant with a zone. A load settled before it reads as stale. Defaults to 24 hours ago.
@@ -41,7 +41,7 @@ weaver health [-h] [--item ITEM] [--as-of DATETIME] [--no-inventory] [--json] [-
 
 ## Responsibility and selection
 
-Report load, test and build health for the installed estate. Repeat `--item` with `Lakehouse/Name` or `Warehouse/Name` to restrict the report; naming none selects the whole installed estate.
+Report load, test and build health for the installed estate. Repeat `--item` with exact logical Lakehouse, Warehouse, SemanticModel or Report item names to restrict the report; naming none selects the whole installed estate.
 
 `--as-of` sets the load freshness threshold and must be an ISO-8601 instant with a time zone. It defaults to 24 hours before the report. `--no-inventory` skips checking certified objects against physical inventory.
 

@@ -14,6 +14,21 @@
           "required": false
         },
         {
+          "help": "Substitute a shared M source expression with a Warehouse or Lakehouse.",
+          "invocation": "--data-source EXPRESSION=KIND/NAME",
+          "required": false
+        },
+        {
+          "help": "After deploying a semantic model, bind each of its SQL data sources to the connection that reaches it.",
+          "invocation": "--bind-data-sources",
+          "required": false
+        },
+        {
+          "help": "Inspect the Build plan without changing target state.",
+          "invocation": "--dry-run",
+          "required": false
+        },
+        {
           "help": "Create a deployment bundle without installing it.",
           "invocation": "--bundle-only",
           "required": false
@@ -21,6 +36,11 @@
         {
           "help": "Directory to write a bundle created with --bundle-only.",
           "invocation": "--bundle-path PATH",
+          "required": false
+        },
+        {
+          "help": "Limit total simultaneous execution for this invocation; retain resource limits.",
+          "invocation": "--concurrency N",
           "required": false
         },
         {
@@ -61,7 +81,7 @@
           "required": false
         }
       ],
-      "synopsis": "weaver build [-h] [--item ITEM[=TARGET]] [--bundle-only] [--bundle-path PATH] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [SOURCE]"
+      "synopsis": "weaver build [-h] [--item ITEM[=TARGET]] [--data-source EXPRESSION=KIND/NAME] [--bind-data-sources] [--dry-run] [--bundle-only] [--bundle-path PATH] [--concurrency N] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [SOURCE]"
     },
     {
       "command": "check",
@@ -110,13 +130,18 @@
           "required": true
         },
         {
+          "help": "Check this semantic model's authentication, definition and DAX access only.",
+          "invocation": "--semantic-model NAME",
+          "required": false
+        },
+        {
           "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
           "invocation": "--non-interactive",
           "required": false
         }
       ],
       "positionals": [],
-      "synopsis": "weaver doctor [-h] [--json] --workspace WORKSPACE [--non-interactive]"
+      "synopsis": "weaver doctor [-h] [--json] --workspace WORKSPACE [--semantic-model NAME] [--non-interactive]"
     },
     {
       "command": "fabric capacity",
@@ -180,6 +205,11 @@
           "required": false
         },
         {
+          "help": "Emit the result as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
           "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
           "invocation": "--non-interactive",
           "required": false
@@ -202,7 +232,7 @@
           "required": false
         }
       ],
-      "synopsis": "weaver fabric environment publish [-h] [--path DIRECTORY] [--dev] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [ENVIRONMENT]"
+      "synopsis": "weaver fabric environment publish [-h] [--path DIRECTORY] [--dev] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [ENVIRONMENT]"
     },
     {
       "command": "fabric notebook push",
@@ -334,7 +364,7 @@
           "required": false
         },
         {
-          "help": "Weaver item to report on, as Lakehouse/Name or Warehouse/Name. Repeat to select more than one. Naming none reports on the whole installed estate.",
+          "help": "Weaver item to report on, as Lakehouse/Name, Warehouse/Name or SemanticModel/Name. Repeat to select more than one. Naming none reports on the whole installed estate.",
           "invocation": "--item ITEM",
           "required": false
         },
@@ -416,7 +446,12 @@
           "required": false
         },
         {
-          "help": "Add Sales example source files.",
+          "help": "Add PowerBI/NAME/NAME.tmdl, or name the example's Power BI project. Build creates the SemanticModel.",
+          "invocation": "--semantic-model NAME",
+          "required": false
+        },
+        {
+          "help": "Add the Sales example: source files and a Power BI project that reads them.",
           "invocation": "--example",
           "required": false
         },
@@ -452,7 +487,7 @@
         }
       ],
       "positionals": [],
-      "synopsis": "weaver initialise [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]"
+      "synopsis": "weaver initialise [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--semantic-model NAME] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]"
     },
     {
       "command": "initialize",
@@ -493,7 +528,12 @@
           "required": false
         },
         {
-          "help": "Add Sales example source files.",
+          "help": "Add PowerBI/NAME/NAME.tmdl, or name the example's Power BI project. Build creates the SemanticModel.",
+          "invocation": "--semantic-model NAME",
+          "required": false
+        },
+        {
+          "help": "Add the Sales example: source files and a Power BI project that reads them.",
           "invocation": "--example",
           "required": false
         },
@@ -529,7 +569,7 @@
         }
       ],
       "positionals": [],
-      "synopsis": "weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]"
+      "synopsis": "weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--semantic-model NAME] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]"
     },
     {
       "command": "install",
@@ -548,16 +588,6 @@
           "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
           "invocation": "--non-interactive",
           "required": false
-        },
-        {
-          "help": "Fabric Workspace name.",
-          "invocation": "--workspace WORKSPACE",
-          "required": false
-        },
-        {
-          "help": "Workspace configuration file.",
-          "invocation": "--workspace-config WORKSPACE_CONFIG",
-          "required": false
         }
       ],
       "positionals": [
@@ -567,7 +597,7 @@
           "required": true
         }
       ],
-      "synopsis": "weaver install [-h] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] BUNDLE"
+      "synopsis": "weaver install [-h] [--json] [--non-interactive] BUNDLE"
     },
     {
       "command": "load",
@@ -583,8 +613,28 @@
           "required": false
         },
         {
-          "help": "Load one installed object, as Tables/Schema.Object or Files/Schema.Object in a Lakehouse and Schema.Object in a Warehouse. A bare Schema.Object is accepted where it names one object. Repeat to select more than one.",
+          "help": "Select installed objects whose whole name matches this regular expression: Tables/Schema.Object or Files/Schema.Object in a Lakehouse, Schema.Object in a Warehouse. A bare Schema.Object is accepted where it names one object. Repeat to select more.",
           "invocation": "--name NAME",
+          "required": false
+        },
+        {
+          "help": "Project folder, or an abfss location inside a Fabric session. Defaults to the current directory or Notebook Resources.",
+          "invocation": "--source SOURCE",
+          "required": false
+        },
+        {
+          "help": "Limit total simultaneous execution for this invocation; retain resource limits.",
+          "invocation": "--concurrency N",
+          "required": false
+        },
+        {
+          "help": "Include recursive upstream loads within the selected items.",
+          "invocation": "--ancestors",
+          "required": false
+        },
+        {
+          "help": "Include recursive downstream loads within the selected items.",
+          "invocation": "--descendants",
           "required": false
         },
         {
@@ -598,7 +648,12 @@
           "required": false
         },
         {
-          "help": "Load only the objects whose load health is not green.",
+          "help": "Waive the declared delete and update limits for this load. Row checks, fault tolerance and selection are unchanged.",
+          "invocation": "--ignore-stability-threshold",
+          "required": false
+        },
+        {
+          "help": "Select the objects whose load health is not green.",
           "invocation": "--stale",
           "required": false
         },
@@ -645,12 +700,12 @@
       ],
       "positionals": [
         {
-          "help": "Weaver items to load, as Lakehouse/Name or Warehouse/Name. Naming none loads every installed item.",
+          "help": "Weaver items to load, as Lakehouse/Name, Warehouse/Name or SemanticModel/Name. PowerBI or PowerBI/<project> names the semantic models of the project folder. Naming none loads every installed item.",
           "invocation": "ITEM",
           "required": true
         }
       ],
-      "synopsis": "weaver load [-h] [--item ITEM] [--name NAME] [--fault-tolerant] [--reload] [--stale] [--as-of DATETIME] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]"
+      "synopsis": "weaver load [-h] [--item ITEM] [--name NAME] [--source SOURCE] [--concurrency N] [--ancestors] [--descendants] [--fault-tolerant] [--reload] [--ignore-stability-threshold] [--stale] [--as-of DATETIME] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]"
     },
     {
       "command": "mirror",
@@ -765,13 +820,23 @@
           "required": false
         },
         {
-          "help": "Run one installed validation and return diagnostic rows.",
-          "invocation": "--name Schema.Object",
+          "help": "Run only validations whose whole Schema.Object matches this regular expression, with their diagnostic rows. Repeat to select more.",
+          "invocation": "--name PATTERN",
           "required": false
         },
         {
-          "help": "Compile and run a source file without installing it.",
+          "help": "Run validations from source in file mode: a file, a directory or a glob. A file outside the project folder runs against the one item named. Repeat to select more.",
           "invocation": "--file PATH",
+          "required": false
+        },
+        {
+          "help": "Project folder, or an abfss location inside a Fabric session. Defaults to the current directory or Notebook Resources.",
+          "invocation": "--source SOURCE",
+          "required": false
+        },
+        {
+          "help": "Limit total simultaneous execution for this invocation; retain resource limits.",
+          "invocation": "--concurrency N",
           "required": false
         },
         {
@@ -812,12 +877,65 @@
       ],
       "positionals": [
         {
-          "help": "Weaver items to validate, as Lakehouse/Name or Warehouse/Name. Naming none validates every installed item.",
+          "help": "Weaver items to validate, as Lakehouse/Name, Warehouse/Name or SemanticModel/Name. PowerBI or PowerBI/<project> names the semantic models of the project folder. Naming none validates every item.",
           "invocation": "ITEM",
           "required": true
         }
       ],
-      "synopsis": "weaver test [-h] [--item ITEM] [--name Schema.Object | --file PATH] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]"
+      "synopsis": "weaver test [-h] [--item ITEM] [--name PATTERN] [--file PATH] [--source SOURCE] [--concurrency N] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]"
+    },
+    {
+      "command": "unbind",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "Where the Weaver catalogue lives, for example Warehouse/Weaver.",
+          "invocation": "--catalogue CATALOGUE",
+          "required": false
+        },
+        {
+          "help": "Show what this would unbind.",
+          "invocation": "--dry-run",
+          "required": false
+        },
+        {
+          "help": "Unbind items that still exist without asking.",
+          "invocation": "--yes",
+          "required": false
+        },
+        {
+          "help": "Emit the result as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        }
+      ],
+      "positionals": [
+        {
+          "help": "Physical items to unbind: Lakehouse/Name, Warehouse/Name, SemanticModel/Name or Report/Name.",
+          "invocation": "TARGET",
+          "required": true
+        }
+      ],
+      "synopsis": "weaver unbind [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--catalogue CATALOGUE] [--dry-run] [--yes] [--json] [--non-interactive] TARGET [TARGET ...]"
     },
     {
       "command": "wipe",
@@ -853,6 +971,11 @@
           "required": false
         },
         {
+          "help": "Retain one Automatic SQL / Direct Lake source in a hidden columnless table.",
+          "invocation": "--preserve-data-source",
+          "required": false
+        },
+        {
           "help": "Show the estate this would empty.",
           "invocation": "--dry-run",
           "required": false
@@ -875,12 +998,12 @@
       ],
       "positionals": [
         {
-          "help": "Physical items to empty, as Lakehouse/Name or Warehouse/Name. Naming none empties the estate the catalogue records.",
+          "help": "Physical items to empty: Lakehouse/Name, Warehouse/Name or SemanticModel/Name. Naming none empties the estate the catalogue records.",
           "invocation": "TARGET",
           "required": true
         }
       ],
-      "synopsis": "weaver wipe [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--unbind] [--dry-run] [--yes] [--json] [--non-interactive] [TARGET ...]"
+      "synopsis": "weaver wipe [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--unbind] [--preserve-data-source] [--dry-run] [--yes] [--json] [--non-interactive] [TARGET ...]"
     },
     {
       "command": "workflow",
@@ -941,7 +1064,7 @@
       "synopsis": "weaver workflow [-h] [--file PATH] [--timings] [--yes] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] name"
     }
   ],
-  "leaf_count": 17,
+  "leaf_count": 18,
   "ownership": {
     "build": "docs/reference/cli/build.md",
     "check": "docs/reference/cli/check.md",
@@ -958,9 +1081,10 @@
     "mirror": "docs/reference/cli/mirror.md",
     "session": "docs/reference/cli/session.md",
     "test": "docs/reference/cli/test.md",
+    "unbind": "docs/reference/cli/unbind.md",
     "wipe": "docs/reference/cli/wipe.md",
     "workflow": "docs/reference/cli/workflow.md"
   },
-  "page_count": 15,
+  "page_count": 16,
   "schema_version": 1
 }

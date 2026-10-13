@@ -5,7 +5,7 @@
 ## Synopsis
 
 ```text
-weaver install [-h] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] BUNDLE
+weaver install [-h] [--json] [--non-interactive] BUNDLE
 ```
 
 ## Positional arguments
@@ -24,46 +24,21 @@ weaver install [-h] [--json] [--non-interactive] [--workspace WORKSPACE] [--work
 `--non-interactive`
 : Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.
 
-`--workspace WORKSPACE`
-: Fabric Workspace name.
-
-`--workspace-config WORKSPACE_CONFIG`
-: Workspace configuration file.
-
 <!-- END GENERATED CLI -->
 
 ## Responsibility and selection
 
-Install a deployment bundle created by `weaver build --bundle-only`. `BUNDLE` is a bundle directory or `.weaver.zip` archive.
+Install a complete local directory or `.weaver.zip` bundle prepared by Build. The format-5 manifest freezes workspace, targets, catalogue, Environment and any Spark attachment. Install accepts no workspace/configuration, catalogue, Environment, item or target override. It does not reopen source or replan against later destination state.
 
-Install accepts a Fabric workspace directly or through workspace configuration. The bundle already contains the planned deployment, so this command accepts neither a catalogue nor an Environment override.
+## Execution and outcomes
 
-## Execution
+The local handoff is validated, including graph, frozen execution context, driver contracts, bundle identity and payload hashes, before actions run. Ready actions execute under their dependency/resource/exclusion rules; presentation sequences are not serial barriers. Earlier and independent effects can remain after a later failure; no operation-wide rollback is provided.
 
-The command opens the selected workspace, validates and reads the frozen bundle, and executes its installation actions. It does not reopen project source or recalculate build selection.
-
-## Interaction
-
-Install does not ask for deployment choices. Interactive credential selection may use browser sign-in; `--non-interactive` prevents browser sign-in and other prompts.
-
-## Output and exit behaviour
-
-Human output reports succeeded, failed, and skipped action counts followed by the bundle identifier.
-
-`--json` emits the current installation report as one JSON document. Its fields and bundle format are not presented here as compatibility contracts.
-
-The command exits `0` when the installation report succeeds and `1` when it reports failure or raises a command error. Argument errors exit through `argparse`.
-
-## Examples
+There is no deployment-choice prompt. `--non-interactive` prevents input/browser sign-in without changing the frozen scope. Human output reports action counts and bundle identity; `--json` returns the installation report. CLI exit is `0` when required completion succeeds, `1` for installation/validation failures and `2` for parser usage errors.
 
 ```bash
-weaver install ./dist/parcel-bundle \
-  --workspace-config workspace-config.yml
+weaver install ./dist/parcel-bundle
+weaver install ./dist/parcel-bundle.weaver.zip --non-interactive --json
 ```
 
-```bash
-weaver install ./dist/parcel-bundle.weaver.zip \
-  --workspace "Parcel Production" \
-  --non-interactive \
-  --json
-```
+See [Build bundle format](../build-bundle-format.md) for paths/integrity and [Build behaviour](../operation-behaviour/build.md) for plan/state semantics.

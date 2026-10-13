@@ -84,7 +84,7 @@ If the outer invocation resolves a Workspace, entries that omit workspace argume
 
 When neither the outer invocation nor an entry supplies workspace arguments, normal workspace discovery may supply `workspace-config.yml` from the current working directory. A sequence containing only commands that require no workspace can remain without one.
 
-The shared Workspace restriction includes more than the workspace display name: catalogue, Environment, Mirror source, execution settings and targets are part of the resolved configuration. Use one selected workspace configuration for the sequence rather than mixing per-entry estate definitions.
+The shared Workspace restriction includes more than the workspace display name: catalogue, Environment, Mirror source, execution settings, targets and data-source mappings are part of the resolved configuration. Use one selected workspace configuration for the sequence rather than mixing per-entry estate definitions.
 
 ## Validation boundary
 
@@ -96,5 +96,20 @@ Before asking for confirmation, Weaver:
 4. resolves the one shared Workspace configuration.
 
 This validates local syntax and configuration. It does not prove that remote Fabric items exist or that every operation will succeed.
+
+A mixed project can use one configuration and two Build steps:
+
+```yaml
+workflows:
+  deploy:
+    - check .
+    - build . --item Warehouse/Operations
+    - build . --item PowerBI/Parcel
+    - load Warehouse/Operations
+    - load SemanticModel/Parcel
+    - test SemanticModel/Parcel
+```
+
+The model and configured source targets must be declared in the selected workspace configuration. A Workflow does not make a single mixed source/PowerBI Build valid. Test/Health findings continue to later entries but make the final Workflow exit non-zero; raised execution errors stop immediately.
 
 See [Workflow behaviour](../operation-behaviour/workflow.md) for execution order, confirmation, stop-on-failure and non-rollback behaviour. [Shared selection and identity](../operation-behaviour/shared-selection-and-identity.md) and the individual operation pages define command selection.

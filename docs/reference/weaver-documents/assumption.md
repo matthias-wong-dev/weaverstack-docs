@@ -10,7 +10,7 @@ An Assumption returns rows that contradict a statement about the estate. It pass
 | Lakehouse | `Lakehouse/<Item>/assumptions/` | `Schema.Object.sql` | Spark SQL |
 | Warehouse | `Warehouse/<Item>/assumptions/` | `Schema.Object.sql` | T-SQL |
 
-The file must sit directly under `assumptions/`. `Assumption ID: Schema.Object`, filename and Python class name must agree exactly, including case. Each identity component is one logical name: no forward slash, backslash, dot, colon or surrounding whitespace. Tests and Assumptions share one validation namespace. In a Warehouse that namespace also collides with Tables and Views of the same identity; a Lakehouse validation has no `Tables/` area.
+For the Lakehouse/Warehouse forms above, the file must sit directly under `assumptions/`. Semantic-model Assumptions instead use `PowerBI/<project>/assumptions/<Model>/<Schema.Object>.dax`; see [DAX validations](../power-bi/validations.md) for that supported form. `Assumption ID: Schema.Object`, filename and Python class name must agree exactly, including case. Each identity component is one logical name: no forward slash, backslash, dot, colon or surrounding whitespace. Tests and Assumptions share one validation namespace. In a Warehouse that namespace also collides with Tables and Views of the same identity; a Lakehouse validation has no `Tables/` area.
 
 ## Metadata
 
@@ -84,6 +84,6 @@ Path: `Warehouse/Quality/assumptions/Parcel.HasDestination.sql`.
 - **Check** parses metadata, identity, class/method structure, SQL program shape, dependencies and cycles without running the Assumption.
 - **Build** installs the declaration and its runnable form. Lakehouse Python is deployed as a module; Lakehouse Spark SQL is compiled to a module; Warehouse T-SQL is compiled to a stored procedure. Build does not evaluate it. A rebuilt Assumption receives current status `Pending`.
 - **Load** does not run Assumptions.
-- **Test** runs the installed definition after its data dependencies. Zero rows records `Succeeded`; returned rows record `Failed`; execution failures record `Error`; unavailable dependencies can record `Blocked`. The violation count is retained, while diagnostic rows are not persisted.
+- **Test** runs the selected installed definition without automatically running its data dependencies. Zero rows records `Succeeded`; returned rows record `Failed`; execution failures record `Error`; unavailable dependencies can record `Blocked`. The violation count is retained, while diagnostic rows are not persisted.
 
 `_.TestDictionary` records the logical item, `Schema.Object`, type `Assumption`, resolved description and its reference, a null primary key and source signature. `_.Registry` records the compiled module or procedure with role `Assumption`, not a physical object at the logical Assumption ID. `_.Dependency` records resolved edges. `_.TestStatus` records the logical identity, test type, workflow, result, timing and current violation count as `Failure count`; `_.Log` keeps execution history.

@@ -28,9 +28,11 @@ A logical item is exactly:
 ```text
 Lakehouse/ItemName
 Warehouse/ItemName
+SemanticModel/ItemName
+Report/ItemName
 ```
 
-`Lakehouse` and `Warehouse` are the only item kinds and use that spelling. The kind is part of identity, so `Lakehouse/Shared` and `Warehouse/Shared` are different items.
+`Lakehouse`, `Warehouse`, `SemanticModel` and `Report` are the item kinds and use that spelling. The kind is part of identity, so `Lakehouse/Shared` and `Warehouse/Shared` are different items.
 
 An item component is a non-empty, exact-case logical name with no surrounding whitespace and no `/`, `\\`, `.` or `:`. Internal spaces are permitted. Parsers do not infer a missing kind or trim logical components.
 
@@ -78,6 +80,8 @@ A whole physical item is written:
 ```text
 Lakehouse/PhysicalName
 Warehouse/PhysicalName
+SemanticModel/PhysicalName
+Report/PhysicalName
 ```
 
 A Fabric item name is trimmed and must not be empty, consist only of dots, or contain `/`, `\\`, `:`, `*`, `?`, `"`, `<`, `>` or `|`.
@@ -105,11 +109,12 @@ The catalogue is a separate physical Warehouse binding. It never becomes an impl
 | Operation | Item or target grammar | Omitted selection | Narrower selector |
 | --- | --- | --- | --- |
 | Check | positional project directory | current directory | none |
-| Build | repeatable `--item ITEM[=TARGET]` | every configured target, in logical identity order | none |
+| Build | repeatable `--item ITEM[=TARGET]`, item type or `PowerBI[/project]` | every configured target | no object selector |
 | Load | positional `ITEM ...`; repeatable `--item ITEM` is the legacy equivalent | every item installed in the catalogue, in logical identity order | repeatable `--name NAME` |
-| Test | positional `ITEM ...`; repeatable `--item ITEM` is the legacy equivalent | every item installed in the catalogue, in logical identity order | one of `--name Schema.Object` or `--file PATH` |
+| Test | positional `ITEM ...`, `PowerBI[/project]`; legacy `--item` | installed items, or project validations in catalogue-free file mode | repeated regex `--name`, repeated `--file` paths/directories/globs |
 | Health | repeatable `--item ITEM` | the complete installed estate | none |
-| Wipe | positional physical `TARGET ...` | the physical estate recorded by the catalogue | none |
+| Wipe | positional physical Lakehouse/Warehouse/SemanticModel targets | eligible recorded estate, with configuration guard | no Report wipe |
+| Unbind | explicit physical `TARGET ...`, including Report | error | claim removal only |
 | Mirror | repeatable `--item ITEM[=TARGET]` | every configured target, in logical identity order | `--no-item` selects the catalogue only |
 | Install | positional build-bundle path | — | selection is fixed by the bundle |
 | Workflow | positional workflow name | — | each entry keeps its command's grammar |
@@ -129,38 +134,30 @@ The left side of each binding must identify an item in project source. Without `
 
 Naming no item selects every key in the configuration's `targets` mapping. An empty mapping does not mean every project item; Build then requires explicit items with explicit or configured destinations.
 
-Build has no object-name selector. It reads the whole project for validation and dependency resolution, but selected logical items remain its installation boundary. Selecting the same logical item twice is rejected rather than deduplicated. Two ordinary selected items of the same kind cannot use one physical target.
+Build has no object-name selector. It reads the whole project for validation and dependency resolution, but selected logical items remain its installation boundary. Repeated identical selections deduplicate; conflicting exact bindings for the same item fail. An exact binding overrides an overlapping type/project selector. Two ordinary selected items of the same kind cannot use one physical target.
+
+Build also accepts exact type selectors `Lakehouse`, `Warehouse`, `SemanticModel`, `Report` and `PowerBI`/`PowerBI/<project>`. Type selectors expand known source/configured items; Power BI groups expand their native model/Report definitions. Unknown/empty groups fail. These are not wildcard or regex item selectors. Source items and Power BI items cannot be built in one mixed call. Build destinations still require explicit/configured bindings for each expanded item.
 
 ## Load selection
 
-Load combines positional items followed by legacy `--item` values. Items use logical `Lakehouse/Name` or `Warehouse/Name` syntax. Repeated items are deduplicated in first-requested order. `ITEM=TARGET` is rejected because Load reads the installed physical binding from the catalogue.
+Positional and legacy `--item` values combine and deduplicate in requested order. Use exact `Lakehouse/Name`, `Warehouse/Name` or `SemanticModel/Name`; `PowerBI`/`PowerBI/<project>` selects models discovered at `--source` (default current directory/Notebook Resources). Reports cannot Load. `ITEM=TARGET` is refused. Installed runs use recorded targets; catalogue-free refresh uses configuration or model names and requires explicit models/project selectors.
+
+Repeat `--name` for case-insensitive whole-name regular expressions. Patterns match `Schema.Object` in Warehouses, `Tables/Schema.Object` or `Files/Schema.Object` in Lakehouses and installed model refresh names. A bare Lakehouse match is refused if both areas match in one item. The same matching name in several selected items is a set of matches, not automatically an ambiguity. Every pattern must match and invalid regex fails. Regex is neither glob nor substring syntax; use `[.]` for a literal dot.
 
 ```bash
-weaver load Lakehouse/Landing Warehouse/Operations
-weaver load Lakehouse/Landing --name Tables/Parcel.Status
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --descendants --dry-run
+weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Status' --dry-run
 ```
 
-`--name` is repeatable. Inside the selected items, it accepts:
-
-```text
-Tables/Schema.Object   # Lakehouse Table
-Files/Schema.Object    # Lakehouse Folder
-Schema.Object           # Warehouse object, or one unambiguous Lakehouse object
-```
-
-Lookup is case-insensitive. A bare Lakehouse `Schema.Object` is rejected when both `Tables/...` and `Files/...` match. A selector matching the same installed node more than once is deduplicated in first-resolved order. A name matching the same identity in more than one selected item is ambiguous; select one item.
-
-Named Load selection runs exactly the resolved installed objects. It does not add their dependencies or dependency-order edges. Item-wide and stale selection use the installed graph, but traversal never adds an unselected item.
+Without expansion, named matches are an unordered operator override without inferred barriers. `--ancestors` and `--descendants` each traverse from the original selected seeds within requested installed items; their union has dependency ordering and required endpoint/publication barriers. It does not recursively add ancestors of newly reached descendants. No flag builds changed source or adds an unnamed item. Catalogue-free refresh rejects installed-graph name/stale/reload/recursive selection. See [Load behaviour](load.md).
 
 ## Test selection
 
-Test combines and deduplicates positional and legacy `--item` values in the same way as Load. It rejects `ITEM=TARGET` and reads targets from the catalogue.
+Test combines/deduplicates positional and legacy items and rejects Build binding syntax. `PowerBI[/project]` expands only semantic models from `--source`; Reports cannot Test. Catalogue mode runs installed definitions against recorded targets. Without a catalogue, or when `--file` is supplied, source/file mode runs project validations against configured targets or logical names.
 
-Without a narrower selector, Test selects all installed Tests and Assumptions owned by the selected items. Data dependencies do not select additional validations, objects or items.
+Repeated `--name` patterns match the complete logical `Schema.Object`, ignoring case; each must match. Validation names have no Lakehouse area prefix. Data dependencies do not add data work or more validations.
 
-`--name Schema.Object` selects one installed Test or Assumption inside the item boundary. Lookup is case-insensitive. The selector is ambiguous if the same `Schema.Object` exists in more than one selected item, so select one item. Validation names never use Lakehouse `Tables/` or `Files/` prefixes.
-
-`--file PATH` selects one source Test or Assumption without installing it. It requires exactly one installed item to supply the target and dialect. `--file` and `--name` are mutually exclusive. The path is a source-file selector, not a document identity or physical target.
+Repeated `--file` values select files, project directories or quoted glob patterns. Declared files keep their owning items, which must be inside an explicit item scope. An external single file requires exactly one named item; an external directory is refused. Files can be filtered by names; the options are not mutually exclusive. An unmatched file glob, no-validation directory or unmatched regex fails, not an empty pass. Source/file runs do not install or record definitions. See [Test behaviour](test.md) and [DAX validations](../power-bi/validations.md).
 
 ## Health selection
 
@@ -204,6 +201,6 @@ A selected logical item grants authority over work owned by that item. A managed
 - carry Build impact to a selected descendant; or
 - supply ancestry used by Health.
 
-It does not select an unselected item. To operate on both sides of a cross-item relationship, select both items. Named Load intentionally omits graph expansion and ordering, while Test dependencies describe inspected data rather than a producer chain.
+It does not select an unselected item. To operate on both sides of a cross-item relationship, select both items. Unexpanded named Load intentionally omits graph expansion and ordering, while Test dependencies describe inspected data rather than a producer chain.
 
 See [Workspace configuration](../configuration-files/workspace-config.md) for physical binding precedence and the individual [operation behaviour](index.md) pages for state and failure boundaries.

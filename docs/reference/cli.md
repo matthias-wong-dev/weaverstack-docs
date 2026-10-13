@@ -20,7 +20,8 @@ Run `weaver <command> --help` for the exact options in the installed version. Th
 | [`load [ITEM ...]`](cli/load.md) | Run installed loadable objects for the selected logical items. |
 | [`test [ITEM ...]`](cli/test.md) | Run installed Tests and Assumptions for the selected logical items. |
 | [`health`](cli/health.md) | Report load, test and build health for installed items. |
-| [`wipe [TARGET ...]`](cli/wipe.md) | Empty physical Lakehouses or Warehouses; with no targets, use the estate recorded by the catalogue. |
+| [`wipe [TARGET ...]`](cli/wipe.md) | Empty physical source items/reset semantic definitions, with the settled catalogue disposition. |
+| [`unbind TARGET ...`](cli/unbind.md) | Remove catalogue claims without changing physical items. |
 | [`mirror`](cli/mirror.md) | Fork another catalogue's installed estate into the current workspace's catalogue. |
 | [`fabric environment publish`](cli/fabric-environment.md) | Publish Weaver into a Fabric Environment. |
 | [`fabric notebook push`](cli/fabric-notebook.md) | Create or update a Fabric notebook definition. |
@@ -52,11 +53,9 @@ targets:
   Lakehouse/Landing: Landing_Dev
   Warehouse/Operations:
     name: Operations_Dev
-    execution:
-      parallel_workers: 4
 ```
 
-`workspace` is the only required key. `targets` may be absent. Build reads target bindings from this configuration; load, test and health read installed bindings from the catalogue.
+`workspace` is the only required key. `targets` may be absent. Build reads configured/explicit bindings. Catalogue-backed Load/Test/Health read installed bindings; catalogue-free refresh and source/file Test use configured targets or logical names. See [workspace configuration](configuration-files/workspace-config.md) for `execution.build`, `execution.run` and source mappings.
 
 ## Item and target selection
 
@@ -75,7 +74,7 @@ weaver build ./parcel-ops \
 
 `ITEM=TARGET` supplies or overrides the physical binding. The two sides must have the same kind. Naming no `--item` builds every configured item.
 
-Load and test select logical items positionally. Naming none selects every installed item:
+Load and test select logical items positionally. In catalogue mode naming none selects installed items (Reports excluded). Catalogue-free Load requires explicit semantic models/project selectors; catalogue-free Test reads project validations:
 
 ```bash
 weaver load Lakehouse/Landing Warehouse/Operations
@@ -120,25 +119,24 @@ weaver build \
   --bundle-only \
   --bundle-path ./dist/parcel-bundle
 
-weaver install ./dist/parcel-bundle \
-  --workspace-config workspace-config.yml
+weaver install ./dist/parcel-bundle
 ```
 
-Installation executes the bundle without reopening project source or replanning it.
+Installation executes the bundle in its frozen workspace/targets/runtime without reopening source or replanning. `build --dry-run` presents read-only changes without retaining a bundle; suitable existing targets are required. Build/Load/Test accept `--concurrency N` as a total invocation cap in addition to configured resource limits. Type/PowerBI project selectors are defined in [Shared selection](operation-behaviour/shared-selection-and-identity.md).
 
 ## Load, test and health selection
 
-`load --name` selects installed loadable objects and skips dependency ordering. In a Lakehouse, qualify ambiguous names as `Tables/Schema.Object` or `Files/Schema.Object`; a Warehouse uses `Schema.Object`.
+`load --name` is repeatable whole-name case-insensitive regex selection. Without `--ancestors`/`--descendants` expansion it skips dependency ordering. Both recursive directions start from original seeds and stay within requested items. In a Lakehouse, qualify ambiguous names as `Tables/Schema.Object` or `Files/Schema.Object`; a Warehouse uses `Schema.Object`.
 
 `load --stale` selects objects whose load health is not Green. `--as-of` changes its freshness cutoff and is valid only with `--stale`. `--reload` reconstructs each selected table and cannot be combined with `--stale`. `--dry-run` reports the plan without running it.
 
-`test --name Schema.Object` runs one installed validation and returns diagnostic rows. `test --file PATH` compiles and runs one source SQL validation without installing it. The options are mutually exclusive. An item-wide test reports counts rather than diagnostic rows.
+Test accepts repeated regex `--name` and repeated `--file` paths/directories/globs, which may be combined. Files force source mode without installation/recording; no catalogue also selects source mode. `--source` supplies project context. Targeted runs collect diagnostics. See [Test selection](operation-behaviour/test.md).
 
 `health --as-of DATETIME` changes the freshness instant; it must include a time zone. `--no-inventory` skips the physical inventory check for certified objects. Health exits `0` for Green and `1` for Amber or Red.
 
 ## Destructive commands
 
-`wipe --dry-run` displays the settled plan and changes nothing. With named targets, wipe empties exactly those physical items. With none, it discovers the installed estate from the catalogue and empties the catalogue last. `--unbind` instead preserves the catalogue and removes its claims for the named targets; it requires both a catalogue and at least one target.
+`wipe --dry-run` displays the settled plan. Named source targets plus a resolved catalogue normally empty both the targets and that catalogue; `--unbind` keeps the catalogue but still empties targets. Semantic-only named Wipe retains the catalogue, resets model definitions and removes claims. Reports cannot Wipe. Standalone `unbind` removes only claims, leaving all physical items unchanged. Unscoped Wipe uses recorded installations only when configuration still binds those same targets. See [Wipe behaviour](operation-behaviour/wipe.md).
 
 `mirror` also empties destination items. Inspect its plan and require `--yes` for unattended execution. The source catalogue is read before Weaver changes the destination, and the settled plan names the destination items it will empty.
 
@@ -190,7 +188,7 @@ Report-bearing commands decide success from the report's semantics. For example,
 
 Interactive cancellation before execution is not universally a failure. A Workflow declined at its available confirmation, and setup cancelled before it changes state, complete without claiming that work ran. Destructive commands define their own cancellation status in Reference; callers should distinguish “nothing ran” from “the requested operation succeeded”.
 
-A Workflow stops at the first entry whose handler returns non-success or raises a Weaver error. Earlier effects remain and later entries do not run. An interactive Session instead returns to its prompt after a failed command; the process eventually exits successfully through `exit`, `quit` or end-of-file rather than using an earlier command failure as its final status.
+Test/Health non-success findings continue through a Workflow and cause final exit `1`; other non-success statuses or raised Weaver errors stop it immediately. Earlier effects remain. An interactive Session instead returns to its prompt after a failed command; the process eventually exits successfully through `exit`, `quit` or end-of-file rather than using an earlier command failure as its final status.
 
 ## Interruption
 
@@ -211,7 +209,7 @@ Across commands, Weaver:
 5. keeps human results on stdout and errors or progress on stderr;
 6. emits one stdout JSON document after successful parsing when a command's JSON mode applies;
 7. derives success or failure from the command or report semantics rather than from rendering completion;
-8. stops a Workflow at its first unsuccessful entry while keeping an interactive Session alive after command failures; and
+8. continues Workflow Test/Health findings but stops execution failures, while keeping an interactive Session alive after command failures; and
 9. handles prompt and Session interruption as described without promising rollback or a universal standalone signal status.
 
 See [Workflow behaviour](operation-behaviour/workflow.md), [Session and runtime behaviour](operation-behaviour/session-runtime.md), and [Health behaviour](operation-behaviour/health.md) for operation-specific boundaries.
