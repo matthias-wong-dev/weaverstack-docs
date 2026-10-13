@@ -64,7 +64,9 @@ weaver test SemanticModel/Parcel --name 'Parcel[.]DeliveryReconciles' --workspac
 weaver health --item Warehouse/Operations --item SemanticModel/Parcel --workspace-config workspace-dev.yml
 ```
 
-Inspect `SemanticModelSource` and `Dependency` in the catalogue for the Delivery source, plus the installed validation and TestStatus. Here the installed Test records its result. Health describes managed/registered objects, not every arbitrary workspace item.
+Inspect Delivery's metadata row under logical `SemanticModel/Parcel` in `_.SemanticModelTable`, and its `_.Dependency` row whose authored `Dependency reference` is `Warehouse/Operations/Parcel.Delivery`. Source mode/access belongs in the table metadata; source identity belongs in Dependency. A null `Source access` is valid for this retained authored partition and does not mean its mapping failed.
+
+Inspect the installed validation in `_.SemanticModelTest` and its result in `_.TestStatus`. Here the installed Test records its result. Health describes managed/registered objects, not every arbitrary workspace item.
 
 ## 5. Show and correct a discrepancy
 

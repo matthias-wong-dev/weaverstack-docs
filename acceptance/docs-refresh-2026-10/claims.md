@@ -35,5 +35,5 @@ Product owners remain plan section 5's canonical routes. All existing targeted p
 
 - Matching public package release/version.
 - Authorised disposable live acceptance including report rendering and DAX query rights.
-- Independent reader acceptance is in its approved final review batch. Strict build, paired links, search and phone/tablet/desktop light/dark browser checks pass; final reviewer corrections still apply.
+- Independent reader acceptance completed; DR-01 was verified, corrected and rechecked. Strict build, paired links, search and phone/tablet/desktop light/dark browser checks pass; see `independent-acceptance.md`. Live service acceptance remains unrun.
 - Merged upstream changes require a deliberate baseline audit, not silent incorporation.

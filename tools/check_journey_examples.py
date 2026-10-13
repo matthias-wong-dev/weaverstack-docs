@@ -42,6 +42,36 @@ def main():
     socket.create_connection = refuse_network
     root = Path(__file__).resolve().parents[1]
     docs = root / "docs"
+    from weaver.catalogue.tables import CATALOGUE_TABLES
+
+    catalogue_names = {table.qualified for table in CATALOGUE_TABLES}
+    readback_pages = [
+        docs / "basics/power-bi/fabric-integration.md",
+        root / "examples/parcel-powerbi-fabric/README.md",
+    ]
+    required_names = {
+        "_.SemanticModelTable",
+        "_.Dependency",
+        "_.SemanticModelTest",
+        "_.TestStatus",
+    }
+    for readback_page in readback_pages:
+        text = readback_page.read_text()
+        assert "SemanticModelSource" not in text, readback_page
+        named = set(re.findall(r"`(_\.[A-Za-z]+)`", text))
+        assert required_names <= named <= catalogue_names, (readback_page, named)
+    assert (
+        re.search(
+            r"Inspect Delivery's metadata row.*?mapping failed\.",
+            readback_pages[0].read_text(),
+            re.DOTALL,
+        ).group()
+        == re.search(
+            r"Inspect Delivery's metadata row.*?mapping failed\.",
+            readback_pages[1].read_text(),
+            re.DOTALL,
+        ).group()
+    )
     pages = sorted((docs / "basics/power-bi").glob("*.md"))
     pages += sorted((docs / "advanced/power-bi").glob("*.md"))
     pages += [

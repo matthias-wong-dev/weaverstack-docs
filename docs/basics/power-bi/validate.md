@@ -34,7 +34,7 @@ The filename, metadata ID and `assumptions` directory agree. The model name in t
 weaver test SemanticModel/Parcel --name 'Parcel[.]PositiveDeliveryCount' --source . --workspace-config workspace-dev.yml
 ```
 
-Expect a `passed` validation node with zero violations and CLI exit 0. `--source .` reads the edited validation file; no Build is needed merely to change that query. Without a catalogue this uses source/file mode. With a configured catalogue, add `--file` when you deliberately want that mode rather than installed validation recording.
+Expect a `passed` validation node with zero violations and CLI exit 0. `--source .` reads the edited validation file; no Build is needed merely to change that query. Without a catalogue this uses source/file mode. With a configured catalogue, add `--file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'` when you deliberately want that mode rather than installed validation recording. `--file` takes a path; it is not a bare flag.
 
 ## 3. Produce a finding
 

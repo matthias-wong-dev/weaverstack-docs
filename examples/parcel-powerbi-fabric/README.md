@@ -30,7 +30,9 @@ weaver health --item Warehouse/Operations --item SemanticModel/Parcel --workspac
 
 Do not combine the source and Power BI Build selections in one call. After source Load, `Parcel.Delivery` has three rows with Delivered values 1, 1, 0. After model refresh, the Report card displays 2. Verify the deployed shared expression uses the selected Warehouse SQL endpoint, the authored partition navigation survives, and the Report binds to the configured model.
 
-Inspect the catalogue's SemanticModelSource and Dependency records for `Warehouse/Operations/Parcel.Delivery`, plus the installed model validation and its TestStatus result. Health describes the recorded managed estate, not every arbitrary workspace item. Expect the DAX/SQL Test to pass and the installed result to be recorded. Inspect refresh and validation results, not only Build's exit status.
+Inspect Delivery's metadata row under logical `SemanticModel/Parcel` in `_.SemanticModelTable`, and its `_.Dependency` row whose authored `Dependency reference` is `Warehouse/Operations/Parcel.Delivery`. Source mode/access belongs in the table metadata; source identity belongs in Dependency. A null `Source access` is valid for this retained authored partition and does not mean its mapping failed.
+
+Inspect the installed model validation in `_.SemanticModelTest` and its result in `_.TestStatus`. Health describes the recorded managed estate, not every arbitrary workspace item. Expect the DAX/SQL Test to pass and the installed result to be recorded. Inspect refresh and validation results, not only Build's exit status.
 
 ## Compare independent calculations
 

@@ -115,9 +115,9 @@ The following digests cover the complete fixture file maps after successful veri
 | parcel-powerbi-standards | 21 | `02c88d78912010813c68805e0c332955507e4787b35a68179395323466e4e786` |
 | parcel-powerbi-variants | 36 | `03c40a9c4c93a1f176ac429dcc17993b45017d39ebb7fab2b16dba63ec02370e` |
 | parcel-load-selection | 15 | `6172d3f16b19b0d079de37831e82cd08906a44f3179402418bbd9318209f6d42` |
-| parcel-powerbi-fabric | 23 | `943ad606a1765cd5bc563f239f5f244442617bdcd9f25058bbdcae11af1ef66c` |
+| parcel-powerbi-fabric | 23 | `94e42e00c3bdd4eb412e04238c049564d69d0a5fbb6c8e74b09ef441aaaaebc8` |
 
-131 fixture files plus the checker and this report: 133 assigned files. Exact fixture inventory follows.
+131 fixture files plus the checker and this report: 133 assigned files. The Fabric README was corrected during independent review to name the actual `_.SemanticModelTable`/`_.Dependency` readback; its snapshot above is the corrected file map. Fixture commands, configurations and native definitions did not change. Exact fixture inventory follows.
 
 ### examples/parcel-powerbi
 

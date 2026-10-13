@@ -27,9 +27,9 @@ Behaviour target: `74b4d15ee65ed2740593af1f4d459771b801b132`; documentation base
 | A3 | D01–D06, separate Power BI/Fabric entry routes and ordinary concepts/tasks | Implemented; existing URLs retained |
 | A4 | D07–D13, selective Load/concurrency/performance and optional native modelling | Implemented; exact syntax remains reference-owned |
 | A5 | Product homepage, Features plus four item pages, seven-row historical scale story | Coordinated in the product repository |
-| A6 | Navigation, contextual links, generated ownership and version notice | Integrated; final paired-site checks required |
-| A7 | Build, rendered links, examples, browser and independent reader review | Local checks progressing; live deployment/query/render/licensing not run |
-| A8 | Draft PRs, private paired previews and release handoff | Delivery follows verification; no merge or public publication |
+| A6 | Navigation, contextual links, generated ownership and version notice | Integrated; final strict build and paired-site checks pass |
+| A7 | Build, rendered links, examples, browser and independent reader review | Local acceptance complete; reviewer DR-01 corrected/rechecked; live deployment/query/render/licensing not run; see `independent-acceptance.md` |
+| A8 | Draft PRs, private paired previews and release handoff | Both draft PRs and private proxy mappings verified; final heads/private addresses supplied in handoff; no merge or public publication |
 
 No substantive legacy page was removed. The original paths remain owners; new task pages link to reference rather than copying exhaustive contracts. The final handoff owns integrated results, screenshot locations, precise outstanding live cases and recommended publication order.
 

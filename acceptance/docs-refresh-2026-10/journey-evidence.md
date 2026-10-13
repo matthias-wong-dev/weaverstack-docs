@@ -50,7 +50,7 @@ Final product runtime/test/configuration trees still match the source pin. Produ
 - Inspected selected phone/desktop screenshots for entry routes, benchmark, code, long configuration and navigation. These are viewport states, not full-page stitched captures.
 - Corrected intrinsic Reports-card overflow with `min-width: 0`, inherited dark GitHub CTA text, light-mode Python name/builtin token contrast, and dark-block filename-label contrast.
 - Focused final CSS contrast recheck: 774 token observations across four representative code pages in both themes, minimum 9.72:1; product GitHub CTA 18.36:1. Final corrected screenshots inspected.
-- Screenshot evidence stays outside the repository in the private review workspace. Independent reader review is the approved final batch, still a separate gate until its findings are integrated.
+- Screenshot evidence stays outside the repository in the private review workspace. Independent reader review completed; its verified catalogue-readback defect was corrected in the guide/README and rechecked. See `independent-acceptance.md` for the disposition and unavailable live gates.
 
 ## Corrected failures and unavailable gates
 
