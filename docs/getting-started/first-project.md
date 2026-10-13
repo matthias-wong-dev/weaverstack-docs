@@ -1,6 +1,6 @@
-# First project
+# First Fabric project
 
-This tutorial creates one Warehouse Table and one Test, then runs the complete Weaver lifecycle:
+This tutorial creates one Warehouse Table and one Test in a Fabric workspace, then runs their lifecycle. For native model/Report deployment instead, use [the Power BI route](../basics/power-bi/deploy-pbip.md).
 
 ```text
 initialise → check → build → load → test → health → workflow full

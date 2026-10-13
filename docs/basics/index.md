@@ -1,30 +1,30 @@
 # Basics
 
-Use these tasks after [First project](../getting-started/first-project.md). They cover the normal path from project source to an installed, loaded and tested estate.
+Choose the task you need. Power BI deployment does not require finishing a Warehouse tutorial first.
 
-## Build a pipeline
+## Power BI
 
-Choose the engine and authoring form for the work:
+- [Deploy an existing PBIP](power-bi/deploy-pbip.md): one native model and linked Report.
+- [Development and production](power-bi/environments.md): one source, different target names/workspaces.
+- [Validate a semantic model](power-bi/validate.md): one DAX Assumption from source.
+- [Apply a modelling rule](power-bi/modelling-rule.md): hide foreign keys with a native annotation.
+- [Connect a model to a Fabric estate](power-bi/fabric-integration.md): optional managed lineage, refresh and SQL reconciliation.
 
-- [Build a Warehouse pipeline](warehouse-pipeline.md) — create a T-SQL Table and dependent View.
-- [Build a Lakehouse pipeline with Python](lakehouse-python.md) — load files with Python and an inferred dependency.
-- [Build a Lakehouse pipeline with Spark SQL](lakehouse-spark-sql.md) — create a Spark SQL Table.
+## Build pipelines
 
-Then add the behaviour the pipeline needs:
+- [Warehouse SQL](warehouse-pipeline.md): a Table and dependent View.
+- [Lakehouse Python](lakehouse-python.md): files and a Table with an inferred dependency.
+- [Lakehouse Spark SQL](lakehouse-spark-sql.md): a Table with explicit dependencies.
+- [Tests and Assumptions](tests-and-assumptions.md): expected/actual comparisons and violating rows.
+- [Shortcuts](shortcuts.md): connect managed or external data without confusing ownership.
 
-- [Add Tests and Assumptions](tests-and-assumptions.md) — install and run validations.
-- [Connect data with Shortcuts](shortcuts.md) — connect managed project data or an external Fabric location.
+## Run your project
 
-## Set up repeated work
+- [Workspace and Python runtime](workspace-and-python-runtime.md): choose bindings and publish a runtime only for work that needs it.
+- [Sessions and workflows](sessions-and-workflows.md): reuse context and coordinate ordinary commands.
+- [Development cycle](development-cycle.md): small change → inspect → Build → catch up → Test.
+- [Run and inspect](run-and-inspect-estate.md): ordinary operations and recorded state.
+- [Troubleshooting](troubleshooting.md): a detected condition and the next action.
+- [Recover failed work](recover-failed-work.md): rerun, reconstruct or deliberately retire work.
 
-- [Configure a workspace and Python runtime](workspace-and-python-runtime.md) — bind logical items to Fabric, switch between development and production, and publish the runtime needed by Python work.
-- [Work in Sessions and workflows](sessions-and-workflows.md) — reuse one execution context, then save an accepted command sequence.
-- [The development cycle](development-cycle.md) — establish a mirrored development baseline and iterate with Check, Build, stale Load, Test and Health.
-
-## Operate and recover
-
-- [Run and inspect an estate](run-and-inspect-estate.md) — inspect state, run installed work and verify the result.
-- [Troubleshooting](troubleshooting.md) — start from a Check, Build, Load, Test, Health or runtime symptom.
-- [Recover failed work](recover-failed-work.md) — choose a rerun, reconstruction, validation, mirror refresh or deliberate Wipe.
-
-For the mental model behind these tasks, start with [How Weaver works](../core-concepts/how-weaver-works.md). Use [Advanced](../advanced/index.md) for deeper mechanisms and [Reference](../reference/index.md) for exact syntax and operation behaviour.
+Use [Advanced](../advanced/index.md) for optional controls and modelling mechanisms, and [Reference](../reference/index.md) for the complete interface.

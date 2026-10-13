@@ -12,6 +12,12 @@ check source
 
 This is a controlled handoff, not a general promotion or retargeting mechanism.
 
+## Inspect without retaining a bundle
+
+After an initial deployment, `weaver build . --dry-run` returns a read-only preview of selection, targets, physical actions, destructive consequences and runtime-state changes. It reads existing targets, creates no item and retains no executable bundle. Runtime compatibility and effects requiring actual SQL execution are not proved by a preview.
+
+Use `--bundle-only` instead when the result should be a frozen deployable artifact. The two modes cannot be combined. Neither is the ordinary missing-Power-BI-target provisioning path; ordinary Build can create selected model/Report targets.
+
 ## Check source before planning
 
 Run Check against the reviewed project revision first. Check parses the Weaver documents locally and catches declaration errors without contacting Fabric. It does not prove that the destination exists, that credentials can reach it or that the planned installation will succeed.

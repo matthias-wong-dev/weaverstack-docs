@@ -53,6 +53,12 @@ When planning finds an existing protected object that would otherwise be rebuilt
 
 A source change that requires a different physical shape does not update that shape in place. The old object remains. Review the plan and resulting physical shape rather than assuming the edited declaration has been materialised. [Build behaviour](../reference/operation-behaviour/build.md) owns the exact planning, certification and installation semantics; [Common metadata](../reference/weaver-documents/common-metadata.md) owns the accepted field and default.
 
+## A protected borrowed object can become local without resetting its contents
+
+For selected changed/impacted protected Tables and Folders in a Mirror, Build uses a preserving materialisation path rather than dropping the borrowed data and starting empty. Warehouse Tables use native CTAS after removing the destination wrapper View. Lakehouse Tables use a Delta shallow clone after removing the shortcut; Folders use native recursive copy. The retained bookmark is not reset for that materialisation. Ordinary unprotected reconstruction has a different boundary.
+
+Inspect the Build preview: removing the destination pointer is still a destructive destination change. The source is retained, but a failed copy/clone can leave incomplete destination state; there is no whole-operation rollback. A Delta shallow clone still depends on retained source files, so this is not independent backup storage. A Folder copy is not a guaranteed atomic snapshot while its source changes. Preserve/migrate data deliberately when that stronger guarantee is required.
+
 ## Know what `Prohibit rebuild` does not do
 
 **Warning:** `Prohibit rebuild` guards destructive replacement during Build only. It is not consulted as a general data-retention policy by Load, reload, Wipe, or Mirror.

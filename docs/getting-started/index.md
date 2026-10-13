@@ -1,16 +1,13 @@
 # Getting started
 
-Follow this path to create and run a Warehouse-only Weaver project:
+[Install Weaver](installation.md), then choose one first result.
 
-```text
-install → initialise → check → build → load → test → health → workflow full
-```
+## Deploy a Power BI project
 
-You will author one Table and one Test, install them in Microsoft Fabric, load two rows, validate those rows and read the estate's health.
+[Deploy an existing PBIP](../basics/power-bi/deploy-pbip.md) takes a native model and linked Report to a named workspace. It does not initialise a catalogue or require Fabric data-engineering setup. After deployment, use another configuration to choose development and production targets.
 
-1. [Install Weaver](installation.md) and confirm that it can reach your Fabric workspace.
-2. [Build your first project](first-project.md) through the complete lifecycle.
+## Build a small Fabric project
 
-The tutorial contains every command and source file it requires. It uses T-SQL only, so you do not need to publish a Fabric Environment before running it.
+[First Fabric project](first-project.md) supplies a complete Warehouse Table and Test. Check the source, Build its definitions, Load two rows, Test them and inspect Health. The Initialise step names the resources it creates or reuses; Warehouse-only execution does not publish a Python Environment.
 
-Afterwards, read [How Weaver works](../core-concepts/how-weaver-works.md) for the model behind the commands, or continue with [Build a Warehouse pipeline](../basics/warehouse-pipeline.md) for a larger SQL example.
+You can stop after either result. [Basics](../basics/index.md) has normal tasks nearby; [Core concepts](../core-concepts/index.md) explains the boundaries when you need them.

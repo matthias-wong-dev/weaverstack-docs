@@ -1,6 +1,6 @@
 # Build, Load and Test
 
-Build, Load and Test move an estate through different states. Health reads the state they leave.
+Build deploys definitions, Load performs data work or model refresh, and Test evaluates validations. Catalogue-backed operations record state for Health; standalone Power BI operations return their result without creating that catalogue.
 
 ```text
 project source
@@ -20,7 +20,7 @@ The separation is operationally important: source is not installed state, instal
 
 Build is the operation that reads Weaver documents. It combines the selected source with workspace configuration, determines the required installation work and applies it to the bound Fabric items.
 
-A successful Build records the resulting installed generation in the catalogue. Different document kinds contribute different things:
+A catalogue-backed Build records the resulting installed generation. Power BI Build deploys native models and linked Reports, verifying their definitions/bindings; a DAX measure probe during deployment is not a substitute for an authored validation. Different source document kinds contribute different things:
 
 - Tables and Folders contribute stored targets and loadable work;
 - Views contribute query-defined relations installed during Build;
@@ -32,11 +32,11 @@ Editing source does not update an installed definition. Build is the point at wh
 
 ## Load runs installed data work
 
-Load reads the catalogue to find the installed items, bindings and data work in its selection. It runs loadable Tables and Folders in dependency order where applicable, changes their data and records current state and history.
+Catalogue-backed Load reads installed items and bindings. It also refreshes registered semantic models in the supported graph. Without a catalogue, Load refreshes explicitly named deployed models using configuration, with no installed-graph name/stale/reload/recursive selection. It runs loadable Tables and Folders in dependency order where applicable, changes their data and records current state and history.
 
 Load does not reopen project source. If a Table document changed after the last Build, Load still runs the previously installed work until another Build succeeds.
 
-Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata do not have their own Load step. They may still supply structure or data used by loadable work.
+Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata do not have their own Load step. They may still supply structure or data used by loadable work. Reports have definitions, not a Load or Test target; refresh and validate their model.
 
 ## Test runs installed validations
 
@@ -45,7 +45,7 @@ Test reads the catalogue and executes the installed Tests and Assumptions in its
 - A Test compares expected and actual rows.
 - An Assumption counts rows that contradict its condition.
 
-Test records each validation's current outcome. It reads estate data but does not install definitions or materialise business data. An edited validation takes effect only after Build installs it.
+Test records each validation's current outcome. It reads estate data but does not install definitions or materialise business data. In catalogue mode, an edited validation takes effect after Build installs it. File mode selects authored validations using `--file` (or runs without a catalogue) and records nothing. `--source` chooses the project folder; it does not by itself force file mode when a catalogue is configured.
 
 ## Health reads state
 
@@ -55,7 +55,7 @@ Health is not another materialising stage. It runs no authored load or validatio
 
 ## Each operation has its own boundary
 
-Build selects project items and resolves their configured physical targets. Load and Test select from the installed estate and use the bindings recorded by Build. Dependencies can determine affected work and execution order, but selection remains an operation-specific boundary.
+Build selects project items and resolves their configured physical targets. Load and Test select from the installed estate and use the bindings recorded by Build. Catalogue-free operations use their documented configuration/source rules instead. Dependencies can determine affected work and execution order, but selection remains an operation-specific boundary. Build source items first, then Power BI items in a separate call; one workflow can contain both steps.
 
 ## Sessions and workflows { #a-workflow-composes-ordinary-operations }
 

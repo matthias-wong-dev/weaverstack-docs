@@ -27,7 +27,7 @@ Within the selected items, the useful classifications are:
 
 An uncertified physical name is not promoted to an unchanged Weaver object. A certified Table that is missing, or is now a View, is not unchanged either. Build withdraws the disproved claim and reconciles the selected desired state.
 
-A settled second Build can therefore select no work at all: no physical changes, catalogue publication or unrelated recertification are needed.
+For source items, a settled second Build can select no work: no physical changes, catalogue publication or unrelated recertification. Do not extend that fixed-point claim to selected semantic models: they compile/deploy even when unchanged. An unchanged catalogue-backed Report-only Build can skip work; catalogue-free model/Report selections redeploy and verify.
 
 ## Why descendants appear
 
@@ -77,7 +77,7 @@ This transition follows the same item boundary. Building a producer does not mat
 
 ## Rebuild starts a new current state
 
-Rebuilding a loadable Table or Folder resets its bookmark and current Load state for the new installed generation. Rebuilding a Test or Assumption resets its current Test state. An impacted descendant that is rebuilt is recertified and receives the same applicable reset even though its own source was unchanged.
+Ordinary reconstruction of a loadable Table or Folder resets its bookmark and current Load state. Preserving materialisation of a protected borrowed Table/Folder retains its contents/bookmark instead; inspect the mode-specific preview. Rebuilding a Test or Assumption resets its current Test state. An impacted descendant that is rebuilt is recertified and receives the same applicable reset even though its own source was unchanged.
 
 Objects Build leaves unchanged keep their current state. `_.Log` and `_.LoadStatistic` are operational history and are not erased by an ordinary rebuild. A protected existing data object declared with `Prohibit rebuild` is retained instead of being dropped and rebuilt; that protection does not turn a genuinely new declaration into an existing object.
 

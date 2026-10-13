@@ -1,6 +1,6 @@
 # Run and inspect an estate
 
-After Build installs an estate, use Health to choose the work, run Load and Test, then use Health again to verify the resulting state.
+For a catalogue-backed estate, use Health to inspect state, run Load and Test, then inspect again. Standalone Power BI deployment/refresh uses service results and source/file-mode Test instead; use [the Power BI tasks](power-bi/index.md) without adding a catalogue just for this page.
 
 Run these commands from the directory containing the intended `workspace-config.yml`.
 
@@ -40,7 +40,7 @@ A Load can leave partial state when work fails. Completed work is not rolled bac
 weaver test
 ```
 
-Test runs the installed Tests and Assumptions. A failed validation found data discrepancies or violations; a validation that could not run is an execution problem. Edited validation source takes effect only after Build installs it.
+Test runs the installed Tests and Assumptions. A failed validation found data discrepancies or violations; a validation that could not run is an execution problem. In catalogue mode, edited validation source takes effect after Build installs it. Source/file mode reads authored validations and records no catalogue status/history.
 
 ## 4. Inspect the resulting state
 
@@ -50,4 +50,4 @@ weaver health
 
 Green means the assessed Load, Tests and Build subjects have no current finding. Amber identifies work that is pending, stale or otherwise needs attention without a current failure. Red identifies a recorded failure or inconsistent installed state. Act on the finding rather than the overall colour alone.
 
-Use [Troubleshooting](troubleshooting.md) when the final report is not Green. See [Operation behaviour](../reference/operation-behaviour/index.md) and the [CLI reference](../reference/cli.md) for selection, freshness, inventory controls, named execution and machine-readable output.
+Use [Troubleshooting](troubleshooting.md) when the final report is not Green. If an item-wide run is broader than the intended work, [run part of an estate](../advanced/run-part-of-an-estate.md). To cap simultaneous scheduled work for one invocation, [control concurrency](../advanced/concurrency.md). Both are optional controls, not prerequisites for normal operation. See [Operation behaviour](../reference/operation-behaviour/index.md) and the [CLI reference](../reference/cli.md) for selection, freshness, inventory controls, named execution and machine-readable output.

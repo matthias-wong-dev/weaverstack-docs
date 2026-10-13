@@ -5,9 +5,9 @@ This guide creates two Spark SQL Tables in one Lakehouse: a seeded event Table a
 ## Prerequisites
 
 - [Install Weaver](../getting-started/installation.md) and confirm `weaver --version` works.
-- Use a Fabric workspace where you can create or modify a catalogue Warehouse and a Lakehouse.
+- Use a Fabric workspace where you can create or modify a catalogue Warehouse, Lakehouse and Fabric Environment.
 
-Spark SQL runs in Fabric Spark but does not import Weaver-authored Python, so this pipeline does not require a published Fabric Environment.
+The authored transformation is Spark SQL, but desktop Build and generated Load work execute through Weaver's Fabric runtime. Publish a matching Environment before the remote steps. Native SQL is not a promise that the surrounding Weaver execution needs no Weaver package.
 
 ## 1. Initialise the project
 
@@ -108,7 +108,13 @@ Weaver prints `Project valid.` The check confirms document placement, metadata, 
 
 ## 5. Build and load the item
 
-Install both Tables, run the item-wide load and read the resulting state:
+Publish the generated Environment first, using the documented snapshot's editable source checkout and `--dev` (omit it for a matched published release):
+
+```bash
+weaver fabric environment publish --path Environment/Weaver.Environment --dev
+```
+
+[Workspace and Python runtime](workspace-and-python-runtime.md) explains publication and version matching. Then install both Tables, run the item-wide load and read the resulting state:
 
 ```bash
 weaver build

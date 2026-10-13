@@ -40,7 +40,7 @@ workflows:
     - health
 ```
 
-A workflow is an ordered list of ordinary Weaver commands. It is not a shell or a second execution language. Each entry retains its normal selection, effects and failure behaviour. Exact YAML grammar and allowed command forms are in [Workflow configuration](../reference/configuration-files/workflow.md).
+For a project that also has native Power BI definitions, use a source-item Build and a separate Power BI Build in the sequence. A workflow is an ordered list of ordinary Weaver commands. It is not a shell or a second execution language. Each entry retains its normal selection, effects and failure behaviour. Exact YAML grammar and allowed command forms are in [Workflow configuration](../reference/configuration-files/workflow.md).
 
 Run the sequence:
 
@@ -50,7 +50,7 @@ weaver workflow verify --timings
 
 Weaver parses the entries, resolves one workspace, displays the numbered sequence and asks once for confirmation. The entries then run in file order through one Session. Load and Test outcomes from the sequence share a workflow identifier for catalogue correlation.
 
-The workflow stops at the first failed command. Later entries do not run, and completed work is not rolled back. Diagnose the failed operation and rerun an appropriate sequence against the state that remains; a workflow is not a transaction.
+An execution error stops later entries. Test/Health findings are collected while later commands continue; the completed workflow then exits unsuccessfully. Completed work is not rolled back. Diagnose the failed operation and rerun an appropriate sequence against the state that remains; a workflow is not a transaction.
 
 For unattended execution, the `full` workflow created by [First project](../getting-started/first-project.md#9-run-the-lifecycle-as-a-workflow) can be authorised explicitly with all interactive input disabled:
 

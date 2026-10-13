@@ -36,13 +36,17 @@ That extra step lets Build materialise the Shortcut after its source and before 
 
 A physical Shortcut or directly qualified physical relation has no managed project producer. Weaver cannot infer project ordering from that external address.
 
+## Models and Reports can join the managed graph
+
+With a catalogue, supported model source bindings can record table-level source edges; refresh ordering follows those registered dependencies. A linked Report depends on its resolved model for deployment, not for an independent data-load step. An unmanaged external source may remain unknown to this graph. Without a catalogue, model refresh uses named deployed models rather than installed-graph selection.
+
 ## Dependencies do not widen selection
 
 Dependencies order and affect work inside the requested boundary; they do not silently add another logical item to an operation.
 
 For Build, selecting an item can rebuild changed documents and affected descendants in that item, while dependent documents in an unselected item remain unchanged. Select every item whose installed state should change.
 
-For an item-wide Load, Weaver orders the selected loadable documents using the installed graph. An upstream object in an unselected item is not added to the run. Deliberately named Load selection is narrower still: it runs the named installed documents without dependency expansion or dependency ordering.
+For an item-wide Load, Weaver orders the selected loadable documents using the installed graph. An upstream object in an unselected item is not added to the run. Plain named Load is an operator override without expansion or dependency ordering. `--ancestors` and `--descendants` deliberately expand original seeds, independently, within requested items and order that selected graph. Their union does not recursively add the siblings of newly reached descendants. See [Run part of an estate](../advanced/run-part-of-an-estate.md).
 
 Test uses dependencies to understand what each validation reads and whether a previous result is stale. Dependencies do not turn data producers into additional Test work.
 

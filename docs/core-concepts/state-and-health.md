@@ -4,11 +4,13 @@ Build, Load and Test leave different kinds of evidence in the Weaver catalogue. 
 
 Health does not read unbuilt project source, execute data work or run validations. It is a view of installed and operational state, optionally checked against the physical objects in Fabric.
 
+A missing catalogue does not provide catalogue-driven Health. Standalone model deployment, refresh and file-mode Test return operation reports; inspect their service result separately. Registered lineage/status covers the managed or registered estate, not automatically discovered unmanaged items. Reports contribute deployment/binding claims but have no independent Load/Test step.
+
 ## Three views of the estate
 
 A Health report separates three concerns:
 
-- **Load** — whether each installed Table or Folder has settled for its installed generation and remains fresh enough to use.
+- **Load** — whether recorded Tables, Folders and registered semantic-model refreshes have settled and remain fresh enough to use.
 - **Tests** — whether each installed Test and Assumption has run against the data it now depends on.
 - **Build** — whether the catalogue's installed claims are internally consistent and, when inventory is read, agree with the physical estate.
 

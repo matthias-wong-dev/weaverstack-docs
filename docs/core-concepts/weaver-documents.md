@@ -1,6 +1,6 @@
 # Weaver documents
 
-Weaver documents are the files you author to declare a logical estate. Read each document as four parts:
+Source-data Weaver documents declare Tables, Folders and related work. Read those documents as four parts:
 
 ```text
 path + kind + metadata + authored body
@@ -14,6 +14,10 @@ path + kind + metadata + authored body
 For example, in `Warehouse/Operations/Parcel.Status.sql`, the path assigns the document to `Warehouse/Operations`, `Table ID` makes it a Table named `Parcel.Status`, the remainder of the comment carries its metadata, and the query is the body Build installs as data work.
 
 Weaver checks that placement, filename, kind and declared identity agree. Exact paths, metadata fields, defaults and body requirements are in [Weaver documents reference](../reference/weaver-documents/overview.md).
+
+## Native Power BI definitions
+
+PBIP projects, `.SemanticModel` directories, `.Report` directories and named TMDL definitions use native files under `PowerBI/<project>`. They do not require a SQL/Python metadata header. Optional policy, overlays and annotations add conventions without making source generation a prerequisite. DAX validations have their own metadata and model-owned directories. See [Power BI layout](../reference/power-bi/project-layout.md).
 
 ## Documents that hold or present data
 
@@ -39,7 +43,7 @@ A Test compares expected and actual rows.
 
 An Assumption returns rows that contradict a stated condition. It passes when that result is empty.
 
-Build installs Tests and Assumptions. Test executes them later against estate data.
+Build installs validations for later catalogue-mode Test. Source/file mode can read authored validations directly and run them against deployed objects without persistent catalogue records.
 
 ## Documents that connect or describe the estate
 

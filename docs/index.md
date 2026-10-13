@@ -1,21 +1,21 @@
 # Weaver
 
-A production data estate needs more than transformation code: it needs a definition of what should exist and recorded state of what is installed, what changed, what succeeded or failed, where incremental work resumes and what remains to do. Weaver defines and operates that stateful Microsoft Fabric estate from native SQL and Python, keeping logical project source separate from physical bindings so the same project can run from a desktop or inside Fabric and bind to different development and production estates.
+Keep ordinary Python, SQL and native Power BI projects. Weaver handles the engineering around deploying definitions, running data work and checking its result.
 
-## Choose a route
+## Start with your work
 
-**New to Weaver**
+**An existing Power BI project**
 
-[Install Weaver](getting-started/installation.md), then [create and run a first project](getting-started/first-project.md). The first-project path validates source and runs Build, Load, Test and Health against a Warehouse-only estate.
+[Deploy a native model and linked Report](basics/power-bi/deploy-pbip.md), then use [development and production targets](basics/power-bi/environments.md). A catalogue Warehouse, Lakehouse and Spark runtime are not prerequisites for this route. The Power BI service licence, access and permissions still matter.
 
-**Building a pipeline**
+**A small Fabric pipeline**
 
-Start with the [Lakehouse pipeline](basics/lakehouse-python.md) or [Warehouse pipeline](basics/warehouse-pipeline.md), then add [incremental processing](advanced/incremental-data-processing.md), [Shortcuts](basics/shortcuts.md) or [validation](basics/tests-and-assumptions.md) as the project requires.
+[Build your first Fabric project](getting-started/first-project.md): one Warehouse Table, one Test, and the Build → Load → Test result. Or choose [Lakehouse Python](basics/lakehouse-python.md) or [Warehouse SQL](basics/warehouse-pipeline.md) for an authoring task.
 
-**Operating an estate**
+[Installation](getting-started/installation.md) identifies the supported snapshot and each route's prerequisites.
 
-Use [Run and inspect an estate](basics/run-and-inspect-estate.md) for the routine inspect–preview–run–verify cycle. Continue to [Troubleshooting](basics/troubleshooting.md), [Recover failed work](basics/recover-failed-work.md) or [Automation and execution contexts](advanced/automation-and-execution-contexts.md) for the relevant operating boundary.
+## Run, inspect or look something up
 
-**Understanding or integrating Weaver**
+[Run and inspect an estate](basics/run-and-inspect-estate.md) covers normal operation. [Recovery](basics/recover-failed-work.md) helps choose a new run against partial state. [How Weaver works](core-concepts/how-weaver-works.md) explains the model; [Design philosophy](core-concepts/design-philosophy.md) explains the engineering choices.
 
-Read [How Weaver works](core-concepts/how-weaver-works.md) for the public model and [Design philosophy](core-concepts/design-philosophy.md) for the principles behind it. Use [Reference](reference/index.md) for exact interfaces and operation behaviour.
+Use [Reference](reference/index.md) for exact commands, APIs, configuration and operation boundaries. Optional controls in [Advanced](advanced/index.md) are available when a problem needs them, not prerequisites for a first result.

@@ -1,8 +1,8 @@
 # The development cycle
 
-Use a mirrored development estate to keep the project's logical identities while working against development catalogues and physical targets. Establish the baseline once, then iterate without re-mirroring it on every change.
+For an established project, make a small source change, inspect its Build preview, install it, catch up data and validate the result. A Mirror is an optional way to establish development data, not a prerequisite for this loop. Power BI target switching has its [own task](power-bi/environments.md).
 
-## Phase 1: establish the development baseline
+## Optional: establish a mirrored development baseline
 
 Mirror works between existing physical Fabric items in one workspace. The source catalogue and its recorded source targets must already contain the estate to copy. The destination catalogue Warehouse and every selected destination target must also exist. Mirror empties and reconstructs their contents; it does not create a Warehouse, Lakehouse or other Fabric item. It never empties the source items.
 
@@ -54,7 +54,7 @@ See [Mirrors](../core-concepts/mirrors.md) for borrowed and local data. Exact Mi
 
 ## Phase 2: edit and iterate
 
-Use this loop after the baseline exists:
+Use this loop after an initial successful source-item Build, with or without Mirror:
 
 ```text
 edit
@@ -66,7 +66,16 @@ edit
   → repeat
 ```
 
-Run it against the same development configuration:
+After editing and checking, inspect the Build scope first:
+
+```bash
+weaver check .
+weaver build . --item Warehouse/Operations --dry-run --workspace-config workspace-development.yml
+```
+
+The preview reads existing targets and shows selected work and destructive consequences without installing or changing catalogue/runtime state. It is not a retained executable bundle, and cannot provision missing selected Power BI targets. Use ordinary Build for a first deployment.
+
+Run the inspected source-item loop against the same development configuration:
 
 ```bash
 weaver check
@@ -89,6 +98,6 @@ Check validates project source locally. Build compares that source with the mirr
 
 Build resets changed loadable work to a non-Green state. `load --stale` selects the installed loadable objects that now need work while leaving Green objects alone. Test runs the installed validations, and Health shows the resulting Load, Tests and Build state.
 
-Run the loop item-wide by default. Use `--name` only for deliberate targeting, diagnosis or Table reconstruction; named Load does not add dependencies. The [Load operation behaviour](../reference/operation-behaviour/load.md) defines that narrower boundary.
+Run the loop item-wide by default. Use `--name` only for deliberate targeting, diagnosis or Table reconstruction; plain named Load does not add or order dependencies. [Run part of an estate](../advanced/run-part-of-an-estate.md) teaches deliberate ancestor/descendant expansion with a preview.
 
 Re-mirror only when the intended result is a fresh source baseline. It replaces local materialisations inside the displayed destination boundary; it is a reset, not an iteration step.

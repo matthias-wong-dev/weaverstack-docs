@@ -118,10 +118,10 @@ Publish the generated Environment before running Python work in Fabric:
 
 ```bash
 weaver fabric environment publish \
-  --path Environment/Weaver.Environment
+  --path Environment/Weaver.Environment --dev
 ```
 
-The command should report the `Weaver` Environment as published. Build can install the documents without publication, but Load needs the published Environment because both modules import `weaver` in Fabric.
+The command should report the `Weaver` Environment as published. For this private snapshot, use its editable source checkout so `--dev` can build the matching wheel; omit `--dev` for a matched published release. Spark-backed Build also checks its hosted runtime before mutation. Load needs Weaver in Fabric because the installed modules import it. See [Workspace and Python runtime](workspace-and-python-runtime.md).
 
 ## 6. Reuse one Session for remote work
 

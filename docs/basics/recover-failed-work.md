@@ -48,28 +48,38 @@ weaver load \
 
 This uses the definitions last installed by Build. Build first if the correction changed project source. Green upstream work is not added merely because a selected descendant reads it.
 
+## Include related work deliberately
+
+After correcting the cause, preview a seed and its downstream work:
+
+```bash
+weaver load Warehouse/Operations --name 'Parcel[.]Status' --descendants --dry-run --workspace-config workspace-development.yml
+```
+
+Remove only `--dry-run` if the selection is correct. This is a whole-name regex, not an exact-name shortcut. Expansion stays inside named items, and a descendant's omitted sibling prerequisite is not automatically refreshed. [Run part of an estate](../advanced/run-part-of-an-estate.md) gives the deterministic example and both directions. This command does not request reconstruction.
+
 ## Reconstruct a Table
 
 Use reload only when the intended result is to empty and rebuild a specific installed Table from its initial bookmark:
 
 ```bash
 weaver load Warehouse/Operations \
-  --name Parcel.Status \
+  --name 'Parcel[.]Status' \
   --reload \
   --dry-run \
   --workspace-config workspace-development.yml
 
 weaver load Warehouse/Operations \
-  --name Parcel.Status \
+  --name 'Parcel[.]Status' \
   --reload \
   --workspace-config workspace-development.yml
 ```
 
-Reload follows the exact named selection. It does not add dependencies or downstream work, and Folders cannot be reloaded. If execution fails after the reset or emptying step, the previous Table contents are not restored automatically.
+Plain named Reload follows its matching selection without expansion. Ancestors/descendants can deliberately enlarge the reached set and therefore enlarge the destructive scope. Folders cannot be reloaded; stale and reload cannot be combined. If execution fails after the reset or emptying step, the previous Table contents are not restored automatically.
 
 ## Rerun validation
 
-Correct the data, runtime or validation condition, Build any edited validation source, then rerun installed validations:
+Correct the data, runtime or validation condition. Build edits before catalogue-mode Test; source/file-mode Test can use the edited validation without recording installed history. For the installed route:
 
 ```bash
 weaver test --workspace-config workspace-development.yml
@@ -105,6 +115,10 @@ weaver wipe Warehouse/ParcelOperationsDev \
 If the displayed plan is the desired empty state, rerun without `--dry-run` and confirm it. Wipe target arguments are physical Fabric items, not logical Weaver item identities. Naming no target selects the physical estate recorded by the catalogue, so preview that form before authorising it.
 
 Exact Wipe catalogue handling, unbinding and authorisation rules are in [Wipe operation behaviour](../reference/operation-behaviour/wipe.md).
+
+## Remove a claim without emptying the item
+
+Unbind removes the catalogue's ownership claims for the resolved physical items; it does not delete those physical items or contents. It is not Wipe, rollback or a way to repair rows by hand. Review the exact scope and confirmation in the [Unbind reference](../reference/operation-behaviour/unbind.md).
 
 ## Verify the result
 

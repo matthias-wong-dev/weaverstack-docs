@@ -1,6 +1,6 @@
 # Core concepts
 
-Core concepts explain the public model needed to design and operate a Weaver estate.
+Core concepts explain what you author, where it deploys, what runs and what gets recorded. Standalone Power BI and catalogue-backed Fabric work share operations but not every prerequisite or state record.
 
 Begin with [How Weaver works](how-weaver-works.md) for the complete model, then read [Design philosophy](design-philosophy.md) for the principles behind it. Follow the sequence behind the work:
 

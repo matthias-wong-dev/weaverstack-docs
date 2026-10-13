@@ -1,6 +1,6 @@
 # Add Tests and Assumptions
 
-A Test compares expected rows with actual rows. An Assumption returns rows that violate a condition. Build installs both kinds of validation, Test executes them and Health reads their current recorded outcomes.
+A Test compares expected rows with actual rows. An Assumption returns rows that violate a condition. Catalogue-mode Build installs both kinds of validation; Test executes them and records outcomes for Health. Source/file mode can read authored validations and run them against deployed objects without installation/history.
 
 > **Design background:** [Principles of Data Engineering distinguishes tests from monitored assumptions](https://principlesofdataengineering.org/docs/quality-reliability/tests-and-assumptions/): tests compare independently calculated results, while Assumptions surface monitored violating records for attention rather than automatically invalidating the whole pipeline. Weaver still records an Assumption that returns rows as a failed validation under the Test operation semantics described below.
 
@@ -157,7 +157,7 @@ Install the edited Test, then target it deliberately so the report includes diag
 weaver check
 weaver build
 weaver test Warehouse/Operations \
-  --name Parcel.StatusMatches
+  --name 'Parcel[.]StatusMatches'
 ```
 
 The Test should fail for `P-1002` with one missing row (`In transit`) and one unexpected row (`Delivered`). The command exits non-zero, and Health records the Test section as Red until a later installed run passes.
@@ -171,4 +171,12 @@ weaver test Warehouse/Operations
 weaver health --item Warehouse/Operations
 ```
 
-The item returns to Green. Editing the source without Build would leave Test running the previously installed definition. Exact validation and diagnostic behaviour is in the [Test operation reference](../reference/operation-behaviour/test.md).
+The item returns to Green. Editing the source without Build would leave Test running the previously installed definition. To test edited source directly against the deployed Warehouse:
+
+```bash
+weaver test Warehouse/Operations --source . --file 'Warehouse/Operations/tests/Parcel.StatusMatches.sql'
+```
+
+`--file` selects file mode even with a catalogue configured. `--source` identifies the project; it does not force file mode on its own. Repeat `--file` for files/directories/glob patterns and `--name` for case-insensitive whole-validation regex seeds. Each supplied name pattern must match. File mode records no `TestStatus` or installed history. Python uses `names=` and `files=` and returns a report for findings; inspect `succeeded`, `status` and node diagnostics rather than using a retired `strict=` argument.
+
+For a model-only check, [validate a semantic model](power-bi/validate.md). Exact reports and exit behaviour are in the [Test operation reference](../reference/operation-behaviour/test.md).
