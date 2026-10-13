@@ -1,5 +1,5 @@
 site_name: Weaver documentation
-site_description: Technical documentation for building and operating Microsoft Fabric data estates with Weaver
+site_description: Deploy native Power BI projects and build, run and inspect Microsoft Fabric data estates with Weaver
 site_url: https://docs.weaverstack.dev
 repo_name: GitHub
 repo_url: https://github.com/matthias-wong-dev/weaverstack
@@ -90,6 +90,13 @@ nav:
       - Fault tolerance: core-concepts/fault-tolerance.md
   - Basics:
       - basics/index.md
+      - Power BI:
+          - basics/power-bi/index.md
+          - Deploy an existing PBIP: basics/power-bi/deploy-pbip.md
+          - Choose environment targets: basics/power-bi/environments.md
+          - Validate a semantic model: basics/power-bi/validate.md
+          - Hide relationship foreign keys: basics/power-bi/modelling-rule.md
+          - Connect a model to Fabric: basics/power-bi/fabric-integration.md
       - Build a Warehouse pipeline: basics/warehouse-pipeline.md
       - Build a Lakehouse pipeline with Python: basics/lakehouse-python.md
       - Build a Lakehouse pipeline with Spark SQL: basics/lakehouse-spark-sql.md
@@ -103,6 +110,14 @@ nav:
       - Recover failed work: basics/recover-failed-work.md
   - Advanced:
       - advanced/index.md
+      - Run part of an estate: advanced/run-part-of-an-estate.md
+      - Control concurrency: advanced/concurrency.md
+      - Investigate performance and scale: advanced/performance-and-scale.md
+      - Power BI modelling:
+          - Share native modelling standards: advanced/power-bi/shared-policy.md
+          - Add a custom model annotation: advanced/power-bi/custom-annotations.md
+          - Compose model variants: advanced/power-bi/model-composition.md
+          - Author a model from TMDL: advanced/power-bi/model-from-tmdl.md
       - How incremental Build selection works: advanced/incremental-build-selection.md
       - Incremental data processing: advanced/incremental-data-processing.md
       - Portable execution between desktop and Fabric: advanced/portable-execution-between-desktop-and-fabric.md
@@ -115,6 +130,13 @@ nav:
       - Automation and execution contexts: advanced/automation-and-execution-contexts.md
   - Reference:
       - reference/index.md
+      - Power BI:
+          - reference/power-bi/index.md
+          - Project layout: reference/power-bi/project-layout.md
+          - TMDL merging and composition: reference/power-bi/tmdl.md
+          - Annotations: reference/power-bi/annotations.md
+          - DAX validations: reference/power-bi/validations.md
+          - Requirements and compatibility: reference/power-bi/requirements-and-compatibility.md
       - Weaver documents:
           - Overview: reference/weaver-documents/overview.md
           - Common metadata: reference/weaver-documents/common-metadata.md
@@ -134,6 +156,7 @@ nav:
           - Validation objects: reference/python/validation.md
           - Results and reports: reference/python/results.md
           - Exceptions: reference/python/errors.md
+          - Semantic-model extensions: reference/python/semantic-models.md
       - CLI:
           - Overview: reference/cli.md
           - Initialise: reference/cli/initialise.md
@@ -148,6 +171,7 @@ nav:
           - Workflow: reference/cli/workflow.md
           - Wipe: reference/cli/wipe.md
           - Mirror: reference/cli/mirror.md
+          - Unbind: reference/cli/unbind.md
           - Fabric Environment: reference/cli/fabric-environment.md
           - Fabric Notebook: reference/cli/fabric-notebook.md
           - Fabric capacity: reference/cli/fabric-capacity.md
@@ -164,6 +188,7 @@ nav:
           - Test: reference/operation-behaviour/test.md
           - Health: reference/operation-behaviour/health.md
           - Mirror: reference/operation-behaviour/mirror.md
+          - Unbind: reference/operation-behaviour/unbind.md
           - Wipe: reference/operation-behaviour/wipe.md
           - Workflow: reference/operation-behaviour/workflow.md
           - Session and runtime: reference/operation-behaviour/session-runtime.md

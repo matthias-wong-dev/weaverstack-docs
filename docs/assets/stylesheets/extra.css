@@ -427,6 +427,18 @@ input {
   color: var(--weaver-syntax-keyword);
 }
 
+.md-typeset .highlight .filename {
+  color: var(--weaver-code-text);
+}
+
+.md-typeset .highlight :is(.nn, .nc, .nf, .fm, .nd, .ne) {
+  color: var(--weaver-syntax-operator);
+}
+
+.md-typeset .highlight :is(.nb, .bp) {
+  color: var(--weaver-syntax-keyword);
+}
+
 .md-typeset .highlight :is(.m, .mb, .mf, .mh, .mi, .mo, .il) {
   color: var(--weaver-syntax-number);
 }
@@ -450,12 +462,15 @@ input {
   background: #0b1624;
 }
 
-.md-clipboard {
+.md-clipboard,
+.md-code__button {
   color: #b9c7da;
 }
 
 .md-clipboard:hover,
-.md-clipboard:focus {
+.md-clipboard:focus,
+.md-code__button:hover,
+.md-code__button:focus {
   color: #ffffff;
 }
 

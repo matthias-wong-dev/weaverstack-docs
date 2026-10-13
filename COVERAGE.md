@@ -15,6 +15,24 @@ This maintainer-only ledger records the state of the five-section public site. I
 
 Final delivery verification must run again on the integrated head. A phase being complete here does not replace that integrated build and link check.
 
+## Pinned-main refresh
+
+Behaviour target: `74b4d15ee65ed2740593af1f4d459771b801b132`; documentation base: `f35c943ed0ca423b92ab53aa571c43ae2817b74e`. Publication is held for a matching package and explicit approval; these previews must not be mistaken for PyPI `0.9.0` documentation.
+
+| Work package | Integrated scope | State |
+| --- | --- | --- |
+| A0 | Baseline, exclusions and claim/mode ownership | Recorded in `acceptance/docs-refresh-2026-10/baseline.md` and `claims.md` |
+| A1 | Nine reference owners, existing reference audit, four generators | Integrated; see `reference-evidence.md` for source/test evidence and unchanged owners |
+| A2 | Six complete small fixtures and explicit offline/live boundaries | Integrated; parent reran fixture checker successfully; see `fixture-evidence.md` |
+| A3 | D01–D06, separate Power BI/Fabric entry routes and ordinary concepts/tasks | Implemented; existing URLs retained |
+| A4 | D07–D13, selective Load/concurrency/performance and optional native modelling | Implemented; exact syntax remains reference-owned |
+| A5 | Product homepage, Features plus four item pages, seven-row historical scale story | Coordinated in the product repository |
+| A6 | Navigation, contextual links, generated ownership and version notice | Integrated; final paired-site checks required |
+| A7 | Build, rendered links, examples, browser and independent reader review | Local checks progressing; live deployment/query/render/licensing not run |
+| A8 | Draft PRs, private paired previews and release handoff | Delivery follows verification; no merge or public publication |
+
+No substantive legacy page was removed. The original paths remain owners; new task pages link to reference rather than copying exhaustive contracts. The final handoff owns integrated results, screenshot locations, precise outstanding live cases and recommended publication order.
+
 ## Acceptance follow-up
 
 The 19 September documentation corrections are complete on `docs/acceptance-fixes`: ownership boundaries, the two incremental fixtures, Mirror prerequisites, Fabric notebook-source input, Initialise and Workflow interaction, Windows output handling and pre-release Environment publication guidance. The internal [acceptance addendum](acceptance/2026-09-19-addendum.md) preserves corrected classifications and the remaining black-box handover. Live Fabric reruns remain deliberately unclaimed until the independent tester records them against the final pull-request head.
@@ -48,7 +66,7 @@ The following cross-page rules are launch-critical and reconciled:
 - Folder `Incremental` defaults to `true`, while Table `Incremental` defaults to `false`;
 - Sessions reuse execution context without changing operation semantics; Workflows run ordinary commands in order and do not add rollback;
 - `load --stale` is the normal post-Build catch-up path, while `--name` is deliberate narrow selection and does not add dependencies;
-- a published Fabric Environment is required for remote Python Load or Test work, not for Warehouse T-SQL, Spark SQL, Check or Build merely because Python documents exist;
+- local Check needs no hosted runtime; Warehouse-only SQL work has no Spark runtime requirement; Spark-backed Build admits the matching Weaver/runtime even though it does not call authored `read()`, and generated Lakehouse Load/Test needs a compatible runtime;
 - Build, Load, Test, Mirror, Wipe and Workflow retain their own failure and partial-state boundaries; and
 - current status, bookmarks and Health findings are distinct from append-oriented Log and LoadStatistic history.
 
@@ -69,7 +87,7 @@ The site does not claim:
 - stability for internal Python modules;
 - a universal authentication prerequisite beyond the implemented credential chain;
 - that every Fabric workspace exposes every Doctor probe;
-- that a Fabric Environment is required for Warehouse-only or Spark-SQL-only work;
+- that a Fabric Environment is required for Warehouse-only work, or that Spark-SQL-only work bypasses Spark-backed runtime admission;
 - that workflow files are a general orchestration language or transaction boundary;
 - universal CLI, Python and notebook parity beyond the interfaces named on the portability page;
 - that Mirror copies between workspaces; or

@@ -58,6 +58,22 @@ uv run --project "$WEAVER_CHECKOUT" python tools/generate_python_reference.py \
   --check --weaver-checkout "$WEAVER_CHECKOUT"
 ```
 
+Generated semantic-extension and catalogue inventories have explicit owners as well. Run these with the same checkout:
+
+```bash
+uv run python tools/test_generate_semantic_reference.py
+uv run python tools/test_generate_catalogue_reference.py
+uv run --project "$WEAVER_CHECKOUT" python tools/generate_semantic_reference.py --write --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/generate_semantic_reference.py --check --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/generate_catalogue_reference.py --write --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/generate_catalogue_reference.py --check --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/check_reference_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/check_docs_refresh_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/check_journey_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
+```
+
+The fixture checker uses the pinned source's small offline test helpers and explicit network-blocked boundaries. It does not deploy, query DAX/SQL or prove licence eligibility. Optional `--check-pbir-schemas` uses `jsonschema` and public Microsoft schemas, not a Fabric tenant.
+
 Inspect the manifest and every changed owning page. A clean generator check proves that generated facts match the selected checkout, not that surrounding explanations are correct.
 
 ## Validate the change
