@@ -1,6 +1,6 @@
 # Installation
 
-Install Weaver first, then check the prerequisites for the route you need. Power BI deployment and Fabric data engineering have different service requirements.
+Install Weaver, configure Fabric access, then use the first project to build and operate a small estate. Lakehouse and Warehouse work, semantic models and Reports use the same project with permissions appropriate to each item.
 
 ## Install the documented snapshot
 
@@ -25,24 +25,11 @@ weaver check .
 
 Check parses declarations and native project files. It does not deploy, run DAX, execute SQL or establish workspace permissions.
 
-## Route 1: native Power BI
-
-For a model and linked Report:
-
-- use an existing Power BI service workspace, not free Desktop alone;
-- have the appropriate Power BI licence and workspace rights for the operation; creation needs Contributor or greater access and the API's required delegated scopes;
-- provide native PBIP/TMDL model and Report definitions in the supported layout;
-- have refresh and query access for steps that need them. DAX query access has its own service and tenant requirements.
-
-The standalone route does not need a catalogue Warehouse, Lakehouse, Spark session or Fabric Environment. An Import/calculated-data sample avoids an external gateway/credential setup; another model's sources may need their own credentials. Direct Lake still has its platform prerequisites.
-
-Use [Deploy an existing PBIP](../basics/power-bi/deploy-pbip.md) for the first result. [Requirements and compatibility](../reference/power-bi/requirements-and-compatibility.md) owns supported modes, bindings and permission boundaries. Microsoft documents [model creation rights](https://learn.microsoft.com/en-us/rest/api/fabric/semanticmodel/items/create-semantic-model) and [licences/workspace types](https://learn.microsoft.com/en-us/fabric/enterprise/licenses); a licence list is not evidence that your particular service call has succeeded.
-
-## Route 2: a small Fabric pipeline
+## Configure Fabric access
 
 For the first Warehouse tutorial, use a Fabric workspace on suitable running capacity and permission to create or reuse the named catalogue and target Warehouse. Its Initialise step also creates or reuses a Fabric Environment, but the Warehouse-only work does not publish or execute that runtime.
 
-Python Lakehouse work needs Spark and Weaver available in the relevant runtime. Warehouse T-SQL and Spark-SQL-only work have different runtime needs; do not publish an Environment merely because every tutorial mentions Fabric.
+Python Lakehouse work needs Spark and Weaver available in the relevant runtime. Warehouse T-SQL does not need Spark. Spark-backed Build requires a compatible Weaver runtime; the Lakehouse task supplies its publication steps.
 
 Doctor can check the relevant existing workspace:
 
@@ -50,7 +37,20 @@ Doctor can check the relevant existing workspace:
 weaver doctor --workspace "Parcel Development"
 ```
 
-Its general probes can acquire Spark when that probe applies. Do not make a generic Doctor run a compulsory Power BI installation step. An existing model can use Doctor's semantic-model route; see its [CLI reference](../reference/cli/doctor.md).
+Doctor’s general probes can acquire Spark. For a model-specific readiness check, use its semantic-model route as described in the [CLI reference](../reference/cli/doctor.md).
+
+## Model and Report access
+
+When adding a semantic model and its linked Report to the project:
+
+- use a service workspace that supports the model’s mode;
+- have the appropriate Power BI licence and workspace rights for the operation; creation needs Contributor or greater access and the API's required delegated scopes;
+- provide native PBIP/TMDL model and Report definitions in the supported layout;
+- have refresh and query access for steps that need them. DAX query access has its own service and tenant requirements.
+
+An Import model with inline data can run in an existing Power BI workspace without a Weaver catalogue. The deployment example uses that small setup to demonstrate native files. A model reading managed Lakehouse or Warehouse data uses the project’s source mappings and existing service connections; Direct Lake retains its capacity requirements.
+
+Use [Deploy semantic models and Reports with PBIP](../basics/power-bi/deploy-pbip.md) to add their definitions to the project. [Requirements and compatibility](../reference/power-bi/requirements-and-compatibility.md) owns supported modes, bindings and permission boundaries. Microsoft documents [model creation rights](https://learn.microsoft.com/en-us/rest/api/fabric/semanticmodel/items/create-semantic-model) and [licences/workspace types](https://learn.microsoft.com/en-us/fabric/enterprise/licenses).
 
 ## When the preview needs a hosted runtime
 
@@ -68,4 +68,4 @@ Keep that checkout at the documented revision, return to the tutorial project di
 
 The desktop CLI uses supported configured credentials, an existing Azure CLI sign-in or interactive browser sign-in. Do not assume every call requires the same credential path. Unattended `--non-interactive` commands must already have usable non-browser credentials. The Python library accepts caller-supplied credentials through its supported Session/API; its defaults are not the CLI's credential policy.
 
-Continue with [your first Fabric project](first-project.md) or [your first Power BI project](../basics/power-bi/deploy-pbip.md). [Automation](../advanced/automation-and-execution-contexts.md) owns unattended execution details.
+Continue with [your first Fabric project](first-project.md). [Basics](../basics/index.md) adds Lakehouse and Warehouse work, semantic models and Reports. [Automation](../advanced/automation-and-execution-contexts.md) owns unattended execution details.

@@ -1,6 +1,6 @@
 # The development cycle
 
-For an established project, make a small source change, inspect its Build preview, install it, catch up data and validate the result. A Mirror is an optional way to establish development data, not a prerequisite for this loop. Power BI target switching has its [own task](power-bi/environments.md).
+Make a small source change, inspect its Build preview, install it, catch up data and validate the result. Lakehouse and Warehouse changes, semantic-model refreshes and DAX validations use the same project and operating state. Mirror can supply existing data for development.
 
 ## Optional: establish a mirrored development baseline
 
@@ -52,7 +52,7 @@ weaver health --workspace-config workspace-development.yml
 
 See [Mirrors](../core-concepts/mirrors.md) for borrowed and local data. Exact Mirror selection, authorisation and failure boundaries are in [Mirror operation behaviour](../reference/operation-behaviour/mirror.md).
 
-## Phase 2: edit and iterate
+## Edit and iterate
 
 Use this loop after an initial successful source-item Build, with or without Mirror:
 
@@ -99,5 +99,20 @@ Check validates project source locally. Build compares that source with the mirr
 Build resets changed loadable work to a non-Green state. `load --stale` selects the installed loadable objects that now need work while leaving Green objects alone. Test runs the installed validations, and Health shows the resulting Load, Tests and Build state.
 
 Run the loop item-wide by default. Use `--name` only for deliberate targeting, diagnosis or Table reconstruction; plain named Load does not add or order dependencies. [Run part of an estate](../advanced/run-part-of-an-estate.md) teaches deliberate ancestor/descendant expansion with a preview.
+
+## Include semantic models and Reports
+
+Keep their native definitions under `PowerBI/` in the same project. Use the same workspace configuration, with [development and production target mappings](power-bi/environments.md) for the model and Report.
+
+Build source-data changes first, then deploy a changed model or Report in a separate call:
+
+```bash
+weaver build . --item PowerBI/Parcel --workspace-config workspace-development.yml
+weaver load --stale --workspace-config workspace-development.yml
+weaver test --workspace-config workspace-development.yml
+weaver health --workspace-config workspace-development.yml
+```
+
+This example assumes `PowerBI/Parcel` is present and its targets are configured. Build deploys the model before its linked Report. The estate-wide commands then cover source data, model refreshes and their validations. A source change can make the model stale even when its definition has not changed. See [Connect a semantic model to source data](power-bi/fabric-integration.md).
 
 Re-mirror only when the intended result is a fresh source baseline. It replaces local materialisations inside the displayed destination boundary; it is a reset, not an iteration step.

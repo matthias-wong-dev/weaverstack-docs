@@ -1,5 +1,7 @@
 # `weaver build`
 
+Deploy Lakehouse and Warehouse definitions, then native semantic models and Reports, from the same project and workspace configuration. Build changes definitions; use Load to run data work or refresh a model.
+
 <!-- BEGIN GENERATED CLI -->
 
 ## Synopsis
@@ -89,3 +91,14 @@ weaver build . --item Warehouse/Operations --bundle-only --bundle-path ./dist/pa
 ```
 
 Use [Build behaviour](../operation-behaviour/build.md) for reconciliation/protection/failure rules, [shared selection](../operation-behaviour/shared-selection-and-identity.md) for grammar and [Power BI requirements](../power-bi/requirements-and-compatibility.md) for modes/bindings.
+
+## Build source items, then models and Reports
+
+For a project containing `Warehouse/Operations` and `PowerBI/Parcel`, with both configured:
+
+```bash
+weaver build . --item Warehouse/Operations --workspace-config workspace-config.yml
+weaver build . --item PowerBI/Parcel --workspace-config workspace-config.yml
+```
+
+The first call installs source definitions. The second can read their metadata, deploys the model before its linked Report, and registers them in the same catalogue. Source-data and Power BI definitions use separate Build calls; a workflow can sequence both. See [Connect a semantic model to source data](../../basics/power-bi/fabric-integration.md).

@@ -23,7 +23,7 @@ Models use Fabric native-definition APIs for deployment and readback, and Power 
 | Refresh | Explicit model/project selector; no persisted Weaver state | Installed ordering, results, LoadStatus/Log and stale selection |
 | Policy/custom annotations/composition | Available subject to any source-dependent feature used | Available with managed metadata where required |
 | DAX Assumptions | Source/file mode and DAX query rights | Source mode or installed recording |
-| DAX versus SQL | File mode still requires supported Warehouse/Lakehouse source and rights | Installed or configured source reconciliation |
+| DAX versus SQL | File mode still requires supported Lakehouse/Warehouse source and rights | Installed or configured source reconciliation |
 | Managed-source table generation | Not an external-source-free feature; requires resolved metadata/catalogue prerequisites | Build sources first, then generate model from managed metadata |
 | Lineage/status/history/Health | No missing-catalogue substitute | Recorded evidence for managed/registered objects, not automatic discovery of the whole workspace |
 | Installed regex/stale/ancestor/descendant selection | Not offered for catalogue-free refresh | Exact [Load selection](../operation-behaviour/load.md) within requested items |
@@ -46,7 +46,7 @@ Selected models deploy even when source signatures are unchanged. Catalogue-back
 
 ## Source mapping and connections
 
-`data_sources` maps shared M expression names to typed `Warehouse/Name` or `Lakehouse/Name`. Repeatable `--data-source Expression=Warehouse/Name` (Python `data_sources=`) overrides configuration for that expression. Logical item targets resolve through selected Build bindings or configured `targets`; otherwise the typed name addresses the physical item. Expressions named by logical Warehouse/Lakehouse identity can use those mappings without an explicit override. Explicit mappings that reach no selected shared expression fail.
+`data_sources` maps shared M expression names to typed `Warehouse/Name` or `Lakehouse/Name`. Repeatable `--data-source Expression=Warehouse/Name` (Python `data_sources=`) overrides configuration for that expression. Logical item targets resolve through selected Build bindings or configured `targets`; otherwise the typed name addresses the physical item. Expressions named by logical Lakehouse/Warehouse identity can use those mappings without an explicit override. Explicit mappings that reach no selected shared expression fail.
 
 Supported SQL expressions are rebound to the source endpoint/database while retaining supported native options and query/navigation logic. Native Lakehouse connectors use workspace/item IDs where supported. This is opt-in typed shared-expression mapping, not arbitrary global replacement of M, every connector or an external database.
 

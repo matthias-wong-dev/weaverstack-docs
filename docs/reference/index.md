@@ -5,7 +5,7 @@ Use Reference to look up current public interfaces, exact representations and op
 | Area | Use it to look up |
 | --- | --- |
 | [Weaver documents](weaver-documents/overview.md) | Authored locations, forms and metadata. |
-| [Power BI](power-bi/index.md) | Native project layout, TMDL policy/composition, annotations, DAX validations and compatibility modes. |
+| [Semantic models and Reports](power-bi/index.md) | Native project layout, TMDL policy/composition, annotations, DAX validations and compatibility modes. |
 | [Python API](python/index.md) | Public exports, call shapes and result types. |
 | [CLI](cli.md) | Commands, options and shared CLI behaviour. |
 | [Configuration files](configuration-files/index.md) | Workspace, workflow and Fabric Environment definitions. |

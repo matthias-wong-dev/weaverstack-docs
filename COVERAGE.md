@@ -24,14 +24,20 @@ Behaviour target: `74b4d15ee65ed2740593af1f4d459771b801b132`; documentation base
 | A0 | Baseline, exclusions and claim/mode ownership | Recorded in `acceptance/docs-refresh-2026-10/baseline.md` and `claims.md` |
 | A1 | Nine reference owners, existing reference audit, four generators | Integrated; see `reference-evidence.md` for source/test evidence and unchanged owners |
 | A2 | Six complete small fixtures and explicit offline/live boundaries | Integrated; parent reran fixture checker successfully; see `fixture-evidence.md` |
-| A3 | D01–D06, separate Power BI/Fabric entry routes and ordinary concepts/tasks | Implemented; existing URLs retained |
+| A3 | D01–D06, Fabric-first authoring with semantic models/Reports integrated beside Lakehouse/Warehouse work | Feedback revision implemented; original URLs retained, shared lifecycle explained |
 | A4 | D07–D13, selective Load/concurrency/performance and optional native modelling | Implemented; exact syntax remains reference-owned |
-| A5 | Product homepage, Features plus four item pages, seven-row historical scale story | Coordinated in the product repository |
+| A5 | Fabric-first homepage/Features, ordered item pages, rounded scale results and native Power BI dbt comparison | Feedback revision coordinated in the product repository; exact timings retained in maintainer evidence |
 | A6 | Navigation, contextual links, generated ownership and version notice | Integrated; final strict build and paired-site checks pass |
 | A7 | Build, rendered links, examples, browser and independent reader review | Local acceptance complete; reviewer DR-01 corrected/rechecked; live deployment/query/render/licensing not run; see `independent-acceptance.md` |
 | A8 | Draft PRs, private paired previews and release handoff | Both draft PRs and private proxy mappings verified; final heads/private addresses supplied in handoff; no merge or public publication |
 
 No substantive legacy page was removed. The original paths remain owners; new task pages link to reference rather than copying exhaustive contracts. The final handoff owns integrated results, screenshot locations, precise outstanding live cases and recommended publication order.
+
+## Fabric-first editorial feedback
+
+The feedback revision restores Fabric primacy and Lakehouse → Warehouse → semantic model → Report discovery. Basics no longer contains a separate Power BI navigation bucket; Advanced uses Semantic models. Models are integrated into core concepts, development, recovery and the shared Build/Load/Test/Health CLI pages. Public benchmark copy is rounded and short; exact measurements are retained in `scale-measurements.md`.
+
+The parent reviewed the revised copy and screenshots and ran focused reader-flow checks. The earlier independent reviews apply to the earlier iteration, not this new prose. Revision evidence is in `acceptance/docs-refresh-2026-10/fabric-first-feedback.md`; live/release/publication gates remain held.
 
 ## Acceptance follow-up
 
@@ -46,7 +52,8 @@ The launch surface includes:
 - the Design philosophy principles behind authoring, installation, operation and environment binding;
 - a source-backed, reproducible route for moving one project between desktop and Fabric and running installed artefacts in Fabric;
 - a complete Warehouse-only first project;
-- normal Warehouse, Lakehouse Python and Lakehouse Spark SQL task paths;
+- normal Lakehouse Python/Spark SQL and Warehouse task paths, followed by native semantic-model and Report deployment;
+- shared source/model dependency ordering, SQL/Python/DAX validation and whole-estate Health;
 - the logical/physical Shortcut ownership boundary and its effect on project dependencies;
 - general Python and SQL incremental Table staging/delete contracts, with consumer-owned bookmark state;
 - recoverability-based guidance for external physical data and `Prohibit rebuild`;

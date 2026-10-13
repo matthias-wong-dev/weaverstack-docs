@@ -1,5 +1,7 @@
 # `weaver test`
 
+Run Lakehouse Python/Spark SQL, Warehouse SQL and semantic-model DAX validations through one Test operation. Installed results share the catalogue and appear together in Health.
+
 <!-- BEGIN GENERATED CLI -->
 
 ## Synopsis
@@ -62,7 +64,7 @@ Test evaluates Tests/Assumptions and returns a report. Positional/legacy items d
 
 Repeat `--name` for whole-name case-insensitive regex filtering; every pattern must match. Repeat `--file` for source files, project directories or quoted glob patterns. The selectors can be combined. Project-declared files keep their owners; an external single file requires exactly one named item. `--source` supplies project context (default current directory/Notebook Resources); it alone does not force file mode when a catalogue exists. PowerBI/project selectors expand semantic models.
 
-Supported source forms include Warehouse SQL, Lakehouse Python/Spark SQL and model-owned DAX. DAX reconciliation still requires its Expected Warehouse/Lakehouse and query permissions. Name/file-targeted runs collect diagnostics; item-wide runs normally report counts. `--dry-run` parses/resolves without evaluating queries or recording state.
+Supported source forms include Warehouse SQL, Lakehouse Python/Spark SQL and model-owned DAX. DAX reconciliation still requires its Expected Lakehouse/Warehouse and query permissions. Name/file-targeted runs collect diagnostics; item-wide runs normally report counts. `--dry-run` parses/resolves without evaluating queries or recording state.
 
 ## Execution and outcomes
 
@@ -81,3 +83,13 @@ weaver test SemanticModel/Parcel --source . --workspace-config workspace-dev.yml
 The last command uses file mode only when that configuration has no catalogue; with a catalogue it selects installed validations. Add `--file PowerBI/Parcel/assumptions/Parcel` to explicitly choose source mode.
 
 See [Test behaviour](../operation-behaviour/test.md), [DAX validations](../power-bi/validations.md) and [machine output](../machine-readable-output.md).
+
+## Validate source data and semantic models together
+
+With the source and model validations installed:
+
+```bash
+weaver test --workspace-config workspace-config.yml
+```
+
+The same report contains Lakehouse/Warehouse validations and model-owned DAX validations. A DAX Test can compare a measure with SQL calculated independently over its managed source. To inspect one model, select `SemanticModel/Parcel`; Reports have no separate Test. See [Validate a semantic model](../../basics/power-bi/validate.md) and [Compare DAX with source SQL](../../basics/power-bi/fabric-integration.md#4-compare-dax-with-sql).

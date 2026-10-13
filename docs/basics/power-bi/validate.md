@@ -1,12 +1,12 @@
 # Validate a semantic model
 
-Add a DAX Assumption that returns violating rows. An empty result passes; a returned row is a finding, not a query error.
+Put a DAX Assumption beside the model it checks. It returns rows that violate a condition; an empty result passes. The same Test operation checks Lakehouse and Warehouse data, so model validation fits the estate’s normal operating flow.
 
 ## Before you start
 
 Use the independent [validation project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi-validation). Work from its directory, edit `workspace-dev.yml` to your disposable workspace, and use the [ordinary deployment prerequisites](deploy-pbip.md).
 
-You also need model Read and Build permissions for DAX queries and an identity allowed by the tenant's Execute Queries setting. Do not change tenant settings simply to run the example. This catalogue-free route records no installed Test history.
+You also need model Read and Build permissions for DAX queries and an identity allowed by the tenant's Execute Queries setting. Do not change tenant settings simply to run the example. The supplied example uses source validation. For installed model validation and shared Health state, use the [managed-source task](fabric-integration.md).
 
 ## 1. Deploy and refresh
 

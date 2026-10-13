@@ -29,7 +29,8 @@ If a page starts doing several jobs, keep the task in Basics and link to the own
 
 ## Write and connect the page
 
-- Use public terms such as project, Weaver document, logical item, physical Fabric item, catalogue, Build, Load and Test.
+- Use public terms such as project, Weaver document, logical item, physical Fabric item, catalogue, Build, Load, Test and Health.
+- Present Fabric first, with Lakehouse, Warehouse, semantic model and Report tasks in that order. Explain the practical benefit where it changes the work; keep exhaustive exceptions in Reference.
 - Keep implementation classes, planner structures and module ownership out of user-facing explanations unless an identifier is part of the interface.
 - Distinguish current machine formats from compatibility guarantees.
 - Use relative links for pages in this site.
@@ -71,6 +72,14 @@ uv run --project "$WEAVER_CHECKOUT" python tools/check_reference_examples.py --w
 uv run --project "$WEAVER_CHECKOUT" python tools/check_docs_refresh_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
 uv run --project "$WEAVER_CHECKOUT" python tools/check_journey_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
 ```
+
+For coordinated product/documentation revisions, also check the reader flow:
+
+```bash
+uv run --project "$WEAVER_CHECKOUT" python tools/check_fabric_first_story.py --product-site "$PRODUCT_SITE" --weaver-checkout "$WEAVER_CHECKOUT"
+```
+
+`PRODUCT_SITE` is the static product source or build directory. This checks Fabric-first discovery, rounded scale copy, the native Power BI comparison and shared CLI examples. It is an editorial/parser guard, not live acceptance.
 
 The fixture checker uses the pinned source's small offline test helpers and explicit network-blocked boundaries. It does not deploy, query DAX/SQL or prove licence eligibility. Optional `--check-pbir-schemas` uses `jsonschema` and public Microsoft schemas, not a Fabric tenant.
 

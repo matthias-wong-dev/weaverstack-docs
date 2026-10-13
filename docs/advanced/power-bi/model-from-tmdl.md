@@ -51,7 +51,7 @@ Inspect `Parcel_Summary_Dev` through a supported native model-definition tool. I
 
 ## 3. Generate from a managed source only when needed
 
-A table without an authored partition can obtain its columns and partition from managed-source metadata. This is a different route with additional prerequisites: a compatible catalogue, built/loaded supported Warehouse or Lakehouse source, resolved endpoints/metadata, and permissions and connections for the model's chosen mode.
+A table without an authored partition can obtain its columns and partition from managed-source metadata. This is a different route with additional prerequisites: a compatible catalogue, built/loaded supported Lakehouse or Warehouse source, resolved endpoints/metadata, and permissions and connections for the model's chosen mode.
 
 Begin with the [Fabric integration fixture](../../basics/power-bi/fabric-integration.md) in its own directory. Build and Load its Warehouse first. Then create `PowerBI/Parcel/ParcelSummary.tmdl`:
 
@@ -79,7 +79,7 @@ With `defaultMode: import`, generation supplies an M navigation partition. Other
 
 A table **with** an authored partition retains that partition and its authored column types. Adding `Weaver.Source` to it is lineage/refinement, not permission to overwrite its query or generate all columns. Use the ordinary integration task for that case.
 
-These workflows deploy native definitions. They do not provide the separately requested compiled-TMDL export, nor promise lossless Desktop round-tripping after service normalization.
+Build deploys the native definition while leaving the authored TMDL in the project unchanged.
 
 ## Related tasks
 

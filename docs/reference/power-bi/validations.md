@@ -1,6 +1,6 @@
 # DAX Tests and Assumptions
 
-A semantic-model Assumption returns violating DAX rows. A semantic-model Test compares DAX actual rows with SQL expected rows from a supported Warehouse or Lakehouse. Both are model-owned validation documents, separate from the deployed model definition.
+A semantic-model Assumption returns violating DAX rows. A semantic-model Test compares DAX actual rows with SQL expected rows from a supported Lakehouse or Warehouse. Both are model-owned validation documents, separate from the deployed model definition.
 
 ## Location and body
 

@@ -1,30 +1,24 @@
 # Basics
 
-Choose the task you need. Power BI deployment does not require finishing a Warehouse tutorial first.
+Add Lakehouses, Warehouses, semantic models and Reports to one project. Start with the item you need, then use the same Build, Load, Test and Health flow across the estate.
 
-## Power BI
+## Author the items
 
-- [Deploy an existing PBIP](power-bi/deploy-pbip.md): one native model and linked Report.
-- [Development and production](power-bi/environments.md): one source, different target names/workspaces.
-- [Validate a semantic model](power-bi/validate.md): one DAX Assumption from source.
-- [Apply a modelling rule](power-bi/modelling-rule.md): hide foreign keys with a native annotation.
-- [Connect a model to a Fabric estate](power-bi/fabric-integration.md): optional managed lineage, refresh and SQL reconciliation.
+- [Build a Lakehouse pipeline with Python](lakehouse-python.md) — load files and Delta Tables with dependencies expressed through imports.
+- [Build a Lakehouse pipeline with Spark SQL](lakehouse-spark-sql.md) — use explicit dependencies and Table or View definitions.
+- [Build a Warehouse pipeline](warehouse-pipeline.md) — build Tables and Views from T-SQL.
+- [Deploy semantic models and Reports with PBIP](power-bi/deploy-pbip.md) — add native model and Report definitions to the project.
+- [Connect a semantic model to source data](power-bi/fabric-integration.md) — order its refresh after a managed source and compare DAX with SQL.
+- [Choose model and Report environment targets](power-bi/environments.md) — deploy the same source with another workspace configuration.
+- [Validate a semantic model](power-bi/validate.md) — add a DAX Assumption.
+- [Hide relationship foreign keys](power-bi/modelling-rule.md) — apply a native modelling convention.
+- [Add Tests and Assumptions](tests-and-assumptions.md) — check the data beside the definitions.
+- [Connect data with Shortcuts](shortcuts.md) — read managed or externally owned data.
 
-## Build pipelines
+## Develop and operate
 
-- [Warehouse SQL](warehouse-pipeline.md): a Table and dependent View.
-- [Lakehouse Python](lakehouse-python.md): files and a Table with an inferred dependency.
-- [Lakehouse Spark SQL](lakehouse-spark-sql.md): a Table with explicit dependencies.
-- [Tests and Assumptions](tests-and-assumptions.md): expected/actual comparisons and violating rows.
-- [Shortcuts](shortcuts.md): connect managed or external data without confusing ownership.
+- [The development cycle](development-cycle.md) — edit, preview Build, load changed work, validate and inspect Health.
+- [Run and inspect the estate](run-and-inspect-estate.md) — operate Lakehouse and Warehouse work alongside model refreshes and validations.
+- [Recover failed work](recover-failed-work.md) — choose a rerun, rebuild, remirror or reconstruction from the state left behind.
 
-## Run your project
-
-- [Workspace and Python runtime](workspace-and-python-runtime.md): choose bindings and publish a runtime only for work that needs it.
-- [Sessions and workflows](sessions-and-workflows.md): reuse context and coordinate ordinary commands.
-- [Development cycle](development-cycle.md): small change → inspect → Build → catch up → Test.
-- [Run and inspect](run-and-inspect-estate.md): ordinary operations and recorded state.
-- [Troubleshooting](troubleshooting.md): a detected condition and the next action.
-- [Recover failed work](recover-failed-work.md): rerun, reconstruct or deliberately retire work.
-
-Use [Advanced](../advanced/index.md) for optional controls and modelling mechanisms, and [Reference](../reference/index.md) for the complete interface.
+For selective runs, concurrency controls and shared model conventions, continue to [Advanced](../advanced/index.md). Exact syntax and behaviour belong in [Reference](../reference/index.md).

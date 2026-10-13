@@ -75,7 +75,7 @@ data_sources:
   ParcelSource: Warehouse/Operations
 ```
 
-Keys are exact shared M expression names, non-empty with no surrounding whitespace. Values are typed Warehouse/Lakehouse item names; unsupported types, malformed identities and duplicate explicit mappings fail. Logical items resolve through selected Build bindings or configured targets; otherwise the typed name addresses a physical source. Explicit `--data-source ParcelSource=Warehouse/Other` overrides configuration. An explicit mapping that reaches no selected model expression fails. This is supported typed source substitution, not arbitrary M replacement or credential creation. See [Power BI source mapping](../power-bi/requirements-and-compatibility.md#source-mapping-and-connections).
+Keys are exact shared M expression names, non-empty with no surrounding whitespace. Values are typed Lakehouse/Warehouse item names; unsupported types, malformed identities and duplicate explicit mappings fail. Logical items resolve through selected Build bindings or configured targets; otherwise the typed name addresses a physical source. Explicit `--data-source ParcelSource=Warehouse/Other` overrides configuration. An explicit mapping that reaches no selected model expression fails. This is supported typed source substitution, not arbitrary M replacement or credential creation. See [Power BI source mapping](../power-bi/requirements-and-compatibility.md#source-mapping-and-connections).
 
 ### `targets`
 

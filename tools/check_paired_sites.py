@@ -72,7 +72,8 @@ def main():
         (args.product_site / "assets/data/scale-benchmark.json").read_text()
     )
     source = (
-        Path(__file__).resolve().parents[1] / "docs/advanced/performance-and-scale.md"
+        Path(__file__).resolve().parents[1]
+        / "acceptance/docs-refresh-2026-10/scale-measurements.md"
     )
     text = source.read_text()
     for operation in data["operations"]:

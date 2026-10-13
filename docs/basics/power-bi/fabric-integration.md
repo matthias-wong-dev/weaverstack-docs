@@ -1,6 +1,6 @@
-# Connect a model to a Fabric estate
+# Connect a semantic model to source data
 
-Keep the authored Import model and add a managed Warehouse source, lineage and a DAX-to-SQL comparison. Fabric integration is optional; it is not a prerequisite for the ordinary Power BI route.
+Connect a native model to a managed Warehouse Table. The source and model share a dependency graph: Load can refresh them in order, Test can compare their numbers, and one Health report covers the estate.
 
 ## Before you start
 
@@ -18,9 +18,9 @@ If you do not yet have a catalogue, the [first Fabric project](../../getting-sta
 workspace: Parcel Fabric Development
 catalogue: Warehouse/Parcel_Catalogue_Dev
 targets:
+  Warehouse/Operations: Parcel_Operations_Dev
   SemanticModel/Parcel: Parcel_Dev
   Report/Parcel: Parcel_Report_Dev
-  Warehouse/Operations: Parcel_Operations_Dev
 data_sources:
   Warehouse/Operations: Warehouse/Parcel_Operations_Dev
 ```
@@ -46,14 +46,14 @@ weaver load Warehouse/Operations --workspace-config workspace-dev.yml
 
 The source table contains three rows with Delivered values 1, 1, 0. Confirm it is loaded before deploying/refreshing the model.
 
-## 3. Deploy Power BI separately
+## 3. Deploy the model and Report
 
 ```bash
 weaver build . --item PowerBI/Parcel --bind-data-sources --workspace-config workspace-dev.yml
 weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 ```
 
-Do not combine source and Power BI selections in one Build call. `--bind-data-sources` requests supported binding to an existing matching connection; it does not administer gateways or create credentials. Inspect the model's resolved shared expression and retained partition navigation, its refresh outcome and the Report's actual model binding. The Report card should show 2.
+Source-data definitions and model/Report definitions use separate Build calls against the same project and configuration. `--bind-data-sources` requests supported binding to an existing matching connection; it does not administer gateways or create credentials. Inspect the model's resolved shared expression and retained partition navigation, its refresh outcome and the Report's actual model binding. The Report card should show 2.
 
 ## 4. Compare DAX with SQL
 
@@ -61,14 +61,26 @@ The supplied model-owned Test evaluates Delivery Count and compares it with the 
 
 ```bash
 weaver test SemanticModel/Parcel --name 'Parcel[.]DeliveryReconciles' --workspace-config workspace-dev.yml
-weaver health --item Warehouse/Operations --item SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver health --workspace-config workspace-dev.yml
 ```
 
 Inspect Delivery's metadata row under logical `SemanticModel/Parcel` in `_.SemanticModelTable`, and its `_.Dependency` row whose authored `Dependency reference` is `Warehouse/Operations/Parcel.Delivery`. Source mode/access belongs in the table metadata; source identity belongs in Dependency. A null `Source access` is valid for this retained authored partition and does not mean its mapping failed.
 
-Inspect the installed validation in `_.SemanticModelTest` and its result in `_.TestStatus`. Here the installed Test records its result. Health describes managed/registered objects, not every arbitrary workspace item.
+The Test result and the model’s refresh state appear beside Warehouse state in the same catalogue. Inspect the installed validation in `_.SemanticModelTest` and its result in `_.TestStatus`. With no item selector, Health covers the managed estate.
 
-## 5. Show and correct a discrepancy
+## 5. Run the estate together
+
+Once both items are installed, use the ordinary estate-wide commands:
+
+```bash
+weaver load --workspace-config workspace-dev.yml
+weaver test --workspace-config workspace-dev.yml
+weaver health --workspace-config workspace-dev.yml
+```
+
+Load selects the installed source and model, placing source work before the model refresh. Test runs the installed Warehouse and model validations. Health shows whether their data and validation results are current. The source-only project’s operating flow now covers the model too.
+
+## 6. Show and correct a discrepancy
 
 The fixture's failing overlay makes the model measure one greater than the source calculation:
 

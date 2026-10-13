@@ -1,5 +1,7 @@
 # `weaver load`
 
+Run installed Lakehouse and Warehouse data work and refresh semantic models in the same operation. The shared dependency graph places selected source loads before their model refreshes.
+
 <!-- BEGIN GENERATED CLI -->
 
 ## Synopsis
@@ -104,3 +106,15 @@ weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 ```
 
 These commands assume the relevant definitions/targets already exist. See [Load behaviour](../operation-behaviour/load.md) for exact selection/failure state and [shared selection](../operation-behaviour/shared-selection-and-identity.md).
+
+## Refresh a model with its source work
+
+With both source items and their model installed:
+
+```bash
+weaver load --workspace-config workspace-config.yml
+```
+
+Naming no item selects the installed estate, including registered semantic-model refresh roots. Selected source work precedes its selected model refresh through managed dependencies. For deliberate targeting, `weaver load SemanticModel/Parcel` refreshes only that model; it does not add unselected source items. Reports use model data and have no separate Load.
+
+See [Connect a semantic model to source data](../../basics/power-bi/fabric-integration.md).

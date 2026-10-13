@@ -2,7 +2,7 @@
 
 Recovery is a new operation against the state that remains. Correct the cause, choose the smallest operation that expresses the intended result, and verify the estate afterward. Build, Load, Test and workflows do not roll back completed work when a later step fails.
 
-Start with Health against the same workspace configuration used by the failed command:
+Start with one Health report for the managed estate, using the failed command’s workspace configuration. It combines source-data state with registered model refreshes and validations:
 
 ```bash
 weaver health --workspace-config workspace-development.yml
@@ -87,6 +87,21 @@ weaver health --workspace-config workspace-development.yml
 ```
 
 Test has no rollback step. A failed validation remains the current finding until a later run records another outcome.
+
+## Recover a model or Report
+
+A semantic-model refresh is Load work. Fix its source, connection or refresh condition, then rerun Load. A DAX finding is validation work: correct the model, data or query, then rerun Test. Their installed results appear in the same Health report as Lakehouse and Warehouse work.
+
+A definition or binding change needs Build instead. Select the model and linked Report through their project, after any source-data Build:
+
+```bash
+weaver build . --item PowerBI/Parcel --workspace-config workspace-development.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-development.yml
+weaver test SemanticModel/Parcel --workspace-config workspace-development.yml
+weaver health --workspace-config workspace-development.yml
+```
+
+These commands assume the Parcel model and Report are in the project and configured. Reports have no separate Load or Test; inspect the Report’s binding and rendering after recovering its model. See [Deploy models and Reports](power-bi/deploy-pbip.md) and [Connect a model to source data](power-bi/fabric-integration.md).
 
 ## Refresh a mirrored baseline
 

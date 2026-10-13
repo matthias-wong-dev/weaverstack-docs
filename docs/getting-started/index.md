@@ -1,13 +1,9 @@
 # Getting started
 
-[Install Weaver](installation.md), then choose one first result.
+Create a small Fabric project and take it through Check, Build, Load, Test and Health. The first example uses one Warehouse Table and one Test so you can see the whole lifecycle before adding other items.
 
-## Deploy a Power BI project
+1. [Install Weaver](installation.md) and configure access to Fabric.
+2. [Build your first Fabric project](first-project.md).
+3. Use [Basics](../basics/index.md) to add Lakehouse work, more Warehouse SQL, semantic models and Reports.
 
-[Deploy an existing PBIP](../basics/power-bi/deploy-pbip.md) takes a native model and linked Report to a named workspace. It does not initialise a catalogue or require Fabric data-engineering setup. After deployment, use another configuration to choose development and production targets.
-
-## Build a small Fabric project
-
-[First Fabric project](first-project.md) supplies a complete Warehouse Table and Test. Check the source, Build its definitions, Load two rows, Test them and inspect Health. The Initialise step names the resources it creates or reuses; Warehouse-only execution does not publish a Python Environment.
-
-You can stop after either result. [Basics](../basics/index.md) has normal tasks nearby; [Core concepts](../core-concepts/index.md) explains the boundaries when you need them.
+If you are bringing an existing native model and Report into a project, use [Deploy semantic models and Reports with PBIP](../basics/power-bi/deploy-pbip.md). Its small inline-data example can also run in an existing Power BI service workspace without a catalogue.

@@ -55,7 +55,7 @@ weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 
 Inspect the deployed native definition. It should contain Display/Current, `discourageImplicitMeasures`, the two intended formats and the hidden many-side Delivery[DepotId]. Original partitions and the relationship remain. The Report's Delivery Count should display `2 deliveries`.
 
-Authored native files still contain the declarations, not the transformed definition. Use the service's Get Definition API or a supported native inspection tool to inspect deployment; no public compiled-TMDL export is supplied by this workflow.
+Authored native files still contain the declarations, not the transformed definition. Inspect the deployed definition through the service’s Get Definition API or a native model-definition tool.
 
 Delete only the fixture-created Report/model for cleanup, Reports first.
 

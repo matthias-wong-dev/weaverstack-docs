@@ -1,21 +1,21 @@
-# Weaver
+# Weaver documentation
 
-Keep ordinary Python, SQL and native Power BI projects. Weaver handles the engineering around deploying definitions, running data work and checking its result.
+Weaver builds and operates Microsoft Fabric estates: Lakehouses, Warehouses, semantic models and Reports. Keep Python, SQL and native Power BI definitions in one project. Build deploys them, Load moves data and refreshes models, Test checks results, and Health reports the managed estate’s state together.
 
-## Start with your work
+## Build your first project
 
-**An existing Power BI project**
+[Install Weaver](getting-started/installation.md), then [create a small Fabric project](getting-started/first-project.md). Take one Table and Test through the complete lifecycle before adding more items.
 
-[Deploy a native model and linked Report](basics/power-bi/deploy-pbip.md), then use [development and production targets](basics/power-bi/environments.md). A catalogue Warehouse, Lakehouse and Spark runtime are not prerequisites for this route. The Power BI service licence, access and permissions still matter.
+## Add work to the project
 
-**A small Fabric pipeline**
+- [Build a Lakehouse pipeline with Python](basics/lakehouse-python.md) or [Spark SQL](basics/lakehouse-spark-sql.md).
+- [Build a Warehouse pipeline with T-SQL](basics/warehouse-pipeline.md).
+- [Deploy semantic models and Reports with PBIP](basics/power-bi/deploy-pbip.md), then [connect the model to managed source data](basics/power-bi/fabric-integration.md).
 
-[Build your first Fabric project](getting-started/first-project.md): one Warehouse Table, one Test, and the Build → Load → Test result. Or choose [Lakehouse Python](basics/lakehouse-python.md) or [Warehouse SQL](basics/warehouse-pipeline.md) for an authoring task.
+[Basics](basics/index.md) covers everyday authoring, development and operations. [Core concepts](core-concepts/index.md) explains the project, dependencies, catalogue and state behind them.
 
-[Installation](getting-started/installation.md) identifies the supported snapshot and each route's prerequisites.
+## Operate the estate
 
-## Run, inspect or look something up
+[Run and inspect the estate](basics/run-and-inspect-estate.md) with the same configuration across its items. A source load and a model refresh belong to the same dependency graph; one Health report shows whether their data and validations are current.
 
-[Run and inspect an estate](basics/run-and-inspect-estate.md) covers normal operation. [Recovery](basics/recover-failed-work.md) helps choose a new run against partial state. [How Weaver works](core-concepts/how-weaver-works.md) explains the model; [Design philosophy](core-concepts/design-philosophy.md) explains the engineering choices.
-
-Use [Reference](reference/index.md) for exact commands, APIs, configuration and operation boundaries. Optional controls in [Advanced](advanced/index.md) are available when a problem needs them, not prerequisites for a first result.
+[Advanced](advanced/index.md) covers selective runs, concurrency, incremental loading, recovery and shared semantic-model conventions. [Reference](reference/index.md) owns exact syntax, commands, APIs and operation behaviour.

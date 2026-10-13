@@ -179,4 +179,10 @@ weaver test Warehouse/Operations --source . --file 'Warehouse/Operations/tests/P
 
 `--file` selects file mode even with a catalogue configured. `--source` identifies the project; it does not force file mode on its own. Repeat `--file` for files/directories/glob patterns and `--name` for case-insensitive whole-validation regex seeds. Each supplied name pattern must match. File mode records no `TestStatus` or installed history. Python uses `names=` and `files=` and returns a report for findings; inspect `succeeded`, `status` and node diagnostics rather than using a retired `strict=` argument.
 
-For a model-only check, [validate a semantic model](power-bi/validate.md). Exact reports and exit behaviour are in the [Test operation reference](../reference/operation-behaviour/test.md).
+## Add model validations to the same flow
+
+Semantic-model DAX Tests and Assumptions use the same pass/finding rules and Test operation. Keep them under the model’s `tests/<Model>` or `assumptions/<Model>` directory. An installed estate-wide Test runs them alongside Lakehouse and Warehouse validations; Health reads their results from the shared catalogue.
+
+[Validate a semantic model](power-bi/validate.md) supplies a small DAX Assumption. [Connect a semantic model to source data](power-bi/fabric-integration.md) compares a DAX measure with SQL calculated independently over its Warehouse source. That comparison can catch a modelling error even when the source-data Tests pass.
+
+Exact metadata, reports and exit behaviour belong in the [Test operation reference](../reference/operation-behaviour/test.md).

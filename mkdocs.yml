@@ -1,5 +1,5 @@
 site_name: Weaver documentation
-site_description: Deploy native Power BI projects and build, run and inspect Microsoft Fabric data estates with Weaver
+site_description: Build and operate Microsoft Fabric estates with Weaver — Lakehouses, Warehouses, semantic models and Reports in one project
 site_url: https://docs.weaverstack.dev
 repo_name: GitHub
 repo_url: https://github.com/matthias-wong-dev/weaverstack
@@ -68,6 +68,9 @@ markdown_extensions:
 extra_css:
   - assets/stylesheets/extra.css
 
+not_in_nav: |
+  /basics/power-bi/index.md
+
 nav:
   - Home: index.md
   - Getting started:
@@ -90,16 +93,14 @@ nav:
       - Fault tolerance: core-concepts/fault-tolerance.md
   - Basics:
       - basics/index.md
-      - Power BI:
-          - basics/power-bi/index.md
-          - Deploy an existing PBIP: basics/power-bi/deploy-pbip.md
-          - Choose environment targets: basics/power-bi/environments.md
-          - Validate a semantic model: basics/power-bi/validate.md
-          - Hide relationship foreign keys: basics/power-bi/modelling-rule.md
-          - Connect a model to Fabric: basics/power-bi/fabric-integration.md
-      - Build a Warehouse pipeline: basics/warehouse-pipeline.md
       - Build a Lakehouse pipeline with Python: basics/lakehouse-python.md
       - Build a Lakehouse pipeline with Spark SQL: basics/lakehouse-spark-sql.md
+      - Build a Warehouse pipeline: basics/warehouse-pipeline.md
+      - Deploy semantic models and Reports with PBIP: basics/power-bi/deploy-pbip.md
+      - Connect a semantic model to source data: basics/power-bi/fabric-integration.md
+      - Choose model and Report environment targets: basics/power-bi/environments.md
+      - Validate a semantic model: basics/power-bi/validate.md
+      - Hide relationship foreign keys: basics/power-bi/modelling-rule.md
       - Add Tests and Assumptions: basics/tests-and-assumptions.md
       - Connect data with Shortcuts: basics/shortcuts.md
       - Configure a workspace and Python runtime: basics/workspace-and-python-runtime.md
@@ -113,11 +114,6 @@ nav:
       - Run part of an estate: advanced/run-part-of-an-estate.md
       - Control concurrency: advanced/concurrency.md
       - Investigate performance and scale: advanced/performance-and-scale.md
-      - Power BI modelling:
-          - Share native modelling standards: advanced/power-bi/shared-policy.md
-          - Add a custom model annotation: advanced/power-bi/custom-annotations.md
-          - Compose model variants: advanced/power-bi/model-composition.md
-          - Author a model from TMDL: advanced/power-bi/model-from-tmdl.md
       - How incremental Build selection works: advanced/incremental-build-selection.md
       - Incremental data processing: advanced/incremental-data-processing.md
       - Portable execution between desktop and Fabric: advanced/portable-execution-between-desktop-and-fabric.md
@@ -128,9 +124,14 @@ nav:
       - Mirror and materialisation strategies: advanced/mirror-and-materialisation-strategies.md
       - Build bundles and controlled installation: advanced/build-bundles-and-controlled-installation.md
       - Automation and execution contexts: advanced/automation-and-execution-contexts.md
+      - Semantic models:
+          - Share native modelling standards: advanced/power-bi/shared-policy.md
+          - Add a custom model annotation: advanced/power-bi/custom-annotations.md
+          - Compose model variants: advanced/power-bi/model-composition.md
+          - Author a model from TMDL: advanced/power-bi/model-from-tmdl.md
   - Reference:
       - reference/index.md
-      - Power BI:
+      - Semantic models and Reports:
           - reference/power-bi/index.md
           - Project layout: reference/power-bi/project-layout.md
           - TMDL merging and composition: reference/power-bi/tmdl.md

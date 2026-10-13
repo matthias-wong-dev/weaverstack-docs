@@ -27,6 +27,29 @@ Do not use “current versions of Weaver” unless a real version distinction ma
 
 Use `Weaver document` for authored Tables, Folders, Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata. Do not introduce `resource` or `artefact` as a user-facing umbrella term.
 
+## Reader model and motivation
+
+Weaver is Fabric-first. Present authoring tasks in the order Lakehouse, Warehouse,
+semantic model, Report. Use Fabric before Power BI when naming the platforms.
+Standalone Power BI deployment is a supported setup detail, not a separate
+first-class product or the first numbered route.
+
+Integrate semantic models and Reports into the ordinary project, Build, Load,
+Test, Health, development and recovery flow. Basics presents their native PBIP
+task alongside the Lakehouse and Warehouse tasks; Advanced calls the modelling
+section **Semantic models**, not Power BI modelling. Native Power BI filenames,
+selectors and format details retain their exact technical names in Reference.
+
+Explain the reason for each capability in the task that benefits from it: one
+configuration switches environments, one dependency graph orders source loads
+and model refreshes, one Health report covers the managed estate. Let that
+practical consequence carry the motivation. Do not add promotional adjectives,
+repeated slogans or a paragraph about why the reader should be impressed.
+
+Keep setup differences and consequential limits beside the relevant action.
+Keep exhaustive exceptions and compatibility detail in Reference. Do not make
+the opening of every task defend against hypothetical misunderstandings.
+
 ## Page types
 
 ### Getting started

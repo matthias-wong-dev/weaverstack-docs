@@ -1,6 +1,6 @@
 # First Fabric project
 
-This tutorial creates one Warehouse Table and one Test in a Fabric workspace, then runs their lifecycle. For native model/Report deployment instead, use [the Power BI route](../basics/power-bi/deploy-pbip.md).
+This tutorial creates one Warehouse Table and one Test in a Fabric workspace, then runs their lifecycle. A small example makes each operation visible; the same project can grow to include Lakehouses, semantic models and Reports.
 
 ```text
 initialise → check → build → load → test → health → workflow full
@@ -208,4 +208,4 @@ weaver workflow full --yes --non-interactive
 
 Piped input is not a real terminal confirmation. `--non-interactive` also prevents browser sign-in, so unattended credentials must already be configured.
 
-You now have a working Weaver project. Read [How Weaver works](../core-concepts/how-weaver-works.md) for the model behind this lifecycle, or continue with [Build a Warehouse pipeline](../basics/warehouse-pipeline.md). Exact command options and failure behaviour are in [Reference](../reference/index.md).
+You now have a working Weaver project. Read [How Weaver works](../core-concepts/how-weaver-works.md) for the lifecycle, then add [Lakehouse Python](../basics/lakehouse-python.md), [Warehouse SQL](../basics/warehouse-pipeline.md), or [semantic models and Reports](../basics/power-bi/deploy-pbip.md). A model can [use your managed source data](../basics/power-bi/fabric-integration.md) and share its operating state in the catalogue. Exact commands and behaviour belong in [Reference](../reference/index.md).

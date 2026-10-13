@@ -18,7 +18,7 @@ Installed planning reads the catalogue before acquiring target execution capabil
 
 Warehouse validation executes over TDS and does not require a Fabric Environment. A non-dry-run Lakehouse validation started from a desktop requires a configured Fabric Environment with Weaver installed; this check occurs after item bindings are read and before dispatch. Inside a Fabric session, Test uses that session. Dry runs require no Environment.
 
-A source/file run parses the project/selected files before dispatch. Warehouse SQL runs as a generated batch without leaving a procedure behind; Lakehouse source mode also supports Python validation classes. Semantic DAX Assumptions query the model; DAX Tests also read their supported Expected Warehouse/Lakehouse. Those sources and permissions remain required in file mode. See [DAX validations](../power-bi/validations.md).
+A source/file run parses the project/selected files before dispatch. Warehouse SQL runs as a generated batch without leaving a procedure behind; Lakehouse source mode also supports Python validation classes. Semantic DAX Assumptions query the model; DAX Tests also read their supported Expected Lakehouse/Warehouse. Those sources and permissions remain required in file mode. See [DAX validations](../power-bi/validations.md).
 
 ## Validation semantics
 

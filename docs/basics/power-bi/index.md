@@ -1,19 +1,15 @@
-# Power BI
+# Semantic models and Reports
 
-Start with a native PBIP/TMDL model and its Report. Standalone deployment, model refresh, DAX Assumptions, shared standards and composition do not generally require a Weaver catalogue.
+Native semantic models and Reports belong in the same project as their Lakehouse and Warehouse sources. Build deploys the definitions, Load refreshes models, Test evaluates DAX validations, and Health includes their recorded state in the managed estate report.
 
-The Power BI service still needs an appropriate licence, workspace access and permissions. "Power BI alone" does not mean free Desktop alone, no tenant or that Direct Lake loses its platform requirements.
+The ordinary authoring flow is in [Basics](../index.md), alongside Lakehouse and Warehouse tasks:
 
-## Deploy the project you have
+- [Deploy semantic models and Reports with PBIP](deploy-pbip.md).
+- [Connect a semantic model to source data](fabric-integration.md).
+- [Choose environment targets](environments.md).
+- [Validate a semantic model](validate.md).
+- [Hide relationship foreign keys](modelling-rule.md).
 
-[Deploy an existing PBIP](deploy-pbip.md) uses a small complete Import/calculated-data example with no external source credentials. Then [choose development and production targets](environments.md) through configuration without editing authored model/Report files.
+For shared standards and model variants, use the [Semantic models tasks in Advanced](../../advanced/index.md#semantic-models). Exact native layout, TMDL, annotations and DAX rules belong in [Reference](../../reference/power-bi/index.md).
 
-## Add one useful check or convention
-
-[Validate a semantic model](validate.md) adds a DAX Assumption that reports violating rows. [Apply a modelling rule](modelling-rule.md) uses one native annotation to hide many-side relationship keys.
-
-## Connect to Fabric when needed
-
-[Connect a model to a Fabric estate](fabric-integration.md) adds managed-source lineage, installed refresh ordering and persisted results. DAX-to-SQL comparison still needs its supported Warehouse/Lakehouse source and access even when it runs in file mode.
-
-Optional [shared policy](../../advanced/power-bi/shared-policy.md), [custom annotations](../../advanced/power-bi/custom-annotations.md) and [model variants](../../advanced/power-bi/model-composition.md) have separate task pages. [Power BI reference](../../reference/power-bi/index.md) owns complete layout, merge, annotation, validation and compatibility rules.
+Model and Report deployment can also run without a catalogue in an existing Power BI service workspace. The deployment task supplies that smaller setup; licence, model-mode and permission requirements are in the [compatibility reference](../../reference/power-bi/requirements-and-compatibility.md).

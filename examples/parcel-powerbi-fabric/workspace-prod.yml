@@ -1,8 +1,8 @@
 workspace: Parcel Fabric Production
 catalogue: Warehouse/Parcel_Catalogue
 targets:
+  Warehouse/Operations: Parcel_Operations
   SemanticModel/Parcel: Parcel
   Report/Parcel: Parcel_Report
-  Warehouse/Operations: Parcel_Operations
 data_sources:
   Warehouse/Operations: Warehouse/Parcel_Operations

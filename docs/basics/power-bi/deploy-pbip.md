@@ -1,14 +1,16 @@
-# Deploy an existing PBIP
+# Deploy semantic models and Reports with PBIP
 
-Deploy a native semantic model and its linked Report, then refresh the model and open the Report. Keep authoring in Power BI Desktop and TMDL; Weaver supplies the deployment configuration.
+Add a native semantic model and its linked Report to a Weaver project. Keep authoring in Power BI Desktop and TMDL; use Build to deploy their definitions and Load to refresh the model.
 
 ## Before you start
 
-[Install the documented snapshot](../../getting-started/installation.md). Use an existing Power BI service workspace and an identity with model/Report create or update rights, refresh rights and permission to view the Report. The service licence and model mode must support those operations. Free Desktop alone is not a deployment environment.
+[Install the documented snapshot](../../getting-started/installation.md). Use an existing Power BI service workspace and an identity with model/Report create or update rights, refresh rights and permission to view the Report. The service licence and model mode must support those operations.
 
-This route needs no Weaver catalogue, Lakehouse, Spark session or Fabric Environment. The example uses inline Import data, so it also needs no external source connection. Your own project's partitions may have separate credential requirements.
+The example uses inline Import data to isolate deployment from source loading. It can run with just an existing service workspace. For a model reading managed data, follow [Connect a semantic model to source data](fabric-integration.md) after this task.
 
 Download or clone the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi) and work from `examples/parcel-powerbi`. `PowerBI/Parcel/Parcel.pbip` opens the native project. Its model has three parcel rows, two depots, a relationship and a Delivery Count measure. Its Report has a Delivery Count card.
+
+If you are adding this model to an existing Fabric project, copy the example’s `PowerBI/` directory into that project. Add the model and Report under your existing configuration’s `targets`; retain its workspace and catalogue settings. The same commands then register the items in the shared catalogue.
 
 ## 1. Choose the destination
 
@@ -49,7 +51,7 @@ weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 
 Open the service workspace. Find `Parcel_Dev` and `Parcel_Report_Dev`, confirm the Report is connected to that model, and open its card. After refresh, **Delivery Count is 2**. Inspect the refresh result if the card cannot query its data. A successful Build does not establish refresh access or Report rendering.
 
-Reports have definitions, not a data Load. Refresh their semantic model. There is no catalogue status/history on this route.
+Reports use their semantic model’s data, so refresh the model rather than loading the Report. In a catalogue-backed project, [Health](../../reference/cli/health.md) includes the registered model’s refresh state with the rest of the estate. The small catalogue-free example has only the command’s refresh report.
 
 ## Cleanup
 
