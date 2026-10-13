@@ -1,0 +1,9 @@
+model Model
+	annotation 'Weaver.BaseSemanticModels' = ParcelBase
+
+table InternalCosts
+	annotation 'Weaver.Exclude' = true
+
+table Delivery
+	measure 'Delivery Count'
+		formatString: #,##0

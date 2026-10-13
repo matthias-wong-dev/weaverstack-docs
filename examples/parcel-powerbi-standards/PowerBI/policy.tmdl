@@ -1,0 +1,17 @@
+model Model
+	discourageImplicitMeasures
+
+table Delivery
+	measure 'Delivery Count'
+		formatString: #,##0
+	measure InternalCost
+		formatString: #,##0.00
+
+table Display
+	calculationGroup
+		precedence: 10
+		calculationItem Current = SELECTEDMEASURE()
+	column Calculation
+		dataType: string
+		sourceColumn: Name
+		summarizeBy: none

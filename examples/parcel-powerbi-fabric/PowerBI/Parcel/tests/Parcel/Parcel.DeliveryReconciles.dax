@@ -1,0 +1,8 @@
+/*
+Test ID: Parcel.DeliveryReconciles
+Description: Model deliveries agree with the managed Warehouse table.
+Expected source: Warehouse/Operations
+Expected SQL: |
+  SELECT SUM(Delivered) AS DeliveryCount FROM [Parcel].[Delivery]
+*/
+EVALUATE ROW("DeliveryCount", [Delivery Count])

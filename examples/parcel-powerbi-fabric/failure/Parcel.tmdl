@@ -1,0 +1,3 @@
+table Delivery
+	annotation 'Weaver.Source' = Warehouse/Operations/Parcel.Delivery
+	measure 'Delivery Count' = SUM(Delivery[Delivered]) + 1

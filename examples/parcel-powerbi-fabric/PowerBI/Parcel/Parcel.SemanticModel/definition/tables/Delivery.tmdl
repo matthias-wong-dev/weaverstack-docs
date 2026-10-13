@@ -1,0 +1,26 @@
+/// Three parcel events, including two delivered parcels.
+table Delivery
+	measure 'Delivery Count' = SUM(Delivery[Delivered])
+		formatString: 0
+	measure InternalCost = 7
+		formatString: 0.00
+	column ParcelId
+		dataType: int64
+		sourceColumn: ParcelId
+		summarizeBy: none
+	column DepotId
+		dataType: int64
+		sourceColumn: DepotId
+		summarizeBy: none
+	column Delivered
+		dataType: int64
+		sourceColumn: Delivered
+		summarizeBy: sum
+	partition Delivery = m
+		mode: import
+		source =
+			let
+			    Source = #"Warehouse/Operations",
+			    Data = Source{[Schema="Parcel", Item="Delivery"]}[Data]
+			in
+			    Data

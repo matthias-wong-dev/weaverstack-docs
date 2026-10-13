@@ -1,0 +1,1 @@
+expression 'Warehouse/Operations' = Sql.Database("replace-with-warehouse-sql-endpoint", "Parcel_Operations_Dev")

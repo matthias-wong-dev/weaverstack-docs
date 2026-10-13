@@ -1,0 +1,10 @@
+table InternalCosts
+	measure Cost = SUM(InternalCosts[Amount])
+		formatString: 0.00
+	column Amount
+		dataType: int64
+		sourceColumn: Amount
+		summarizeBy: sum
+	partition InternalCosts = m
+		mode: import
+		source = #table(type table [Amount = Int64.Type], {{7}})

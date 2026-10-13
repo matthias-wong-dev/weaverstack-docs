@@ -1,0 +1,2 @@
+table Delivery
+	annotation 'Weaver.Source' = Warehouse/Operations/Parcel.Delivery

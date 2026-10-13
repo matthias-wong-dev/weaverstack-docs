@@ -1,0 +1,28 @@
+{
+  "source_revision": "74b4d15ee65ed2740593af1f4d459771b801b132",
+  "models": [
+    "ParcelOperations",
+    "ParcelExecutive"
+  ],
+  "reports": {
+    "ParcelOperations": "ParcelOperations",
+    "ParcelExecutive": "ParcelExecutive"
+  },
+  "delivery_count": 2,
+  "live_service": "not run; requires separately authorised disposable workspace",
+  "base_model": "ParcelBase",
+  "selected_models": [
+    "ParcelOperations",
+    "ParcelExecutive"
+  ],
+  "exclusions": {
+    "ParcelExecutive": [
+      "InternalCosts"
+    ]
+  },
+  "additions": {
+    "ParcelOperations": [
+      "Delivery[Delivery Rate]"
+    ]
+  }
+}
