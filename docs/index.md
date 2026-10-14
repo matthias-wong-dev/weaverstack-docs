@@ -1,3 +1,10 @@
+---
+meta_title: Microsoft Fabric data engineering | Weaver docs
+description: Build and operate Microsoft Fabric Lakehouses and Warehouses with Weaver using native Python and SQL, dependencies, run state and incremental processing.
+social_title: Weaver documentation for Microsoft Fabric data engineering
+image_alt: Weaver documentation for Microsoft Fabric data engineering.
+---
+
 # Weaver
 
 A production data estate needs more than transformation code: it needs a definition of what should exist and recorded state of what is installed, what changed, what succeeded or failed, where incremental work resumes and what remains to do. Weaver defines and operates that stateful Microsoft Fabric estate from native SQL and Python, keeping logical project source separate from physical bindings so the same project can run from a desktop or inside Fabric and bind to different development and production estates.
