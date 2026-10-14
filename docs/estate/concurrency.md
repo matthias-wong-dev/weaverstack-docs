@@ -1,0 +1,83 @@
+# Control concurrency
+
+You can leave concurrency unset. Use a limit when this particular run should use less simultaneous work, then tune resource limits only when measurements justify it.
+
+## Limit one run
+
+Continue with the installed workload from [selective runs](selective-runs.md), or use your own established project and its configuration. For the selection snapshot, optionally cap this Load at two scheduled nodes:
+
+```bash
+weaver load Warehouse/Operations --concurrency 2 --workspace-config workspace-dev.yml
+```
+
+Build and Test accept the same positive-integer option:
+
+```bash
+weaver build . --item Warehouse/Operations --concurrency 2 --workspace-config workspace-dev.yml
+weaver test Warehouse/Operations --concurrency 2 --workspace-config workspace-dev.yml
+```
+
+The cap applies across the invocation, not separately to each item. With two Warehouses and a total cap of two, there are still at most two simultaneous scheduled nodes, not four. Dependencies and resource ceilings can keep actual concurrency lower.
+
+The option does not change workspace configuration, retarget a bundle or rewrite its plan. Omission keeps the configured/default behaviour. It does not set Spark capacity, executor count or cluster size, and does not limit every nested HTTP request.
+
+## Use the same cap in Python
+
+```python
+import weaver
+
+result = weaver.build(
+    '.',
+    items='Warehouse/Operations',
+    concurrency=2,
+    workspace_config='workspace-dev.yml',
+)
+if not result.succeeded:
+    raise RuntimeError(result.errors)
+```
+
+In a Fabric notebook, pass the supported project source location and let Weaver discover the notebook context, or reuse an established Session:
+
+```python
+import weaver
+
+report = weaver.load('Warehouse/Operations', concurrency=2)
+if not report.succeeded:
+    raise RuntimeError('Inspect the failed nodes in the Load report')
+```
+
+Workspace selection and runtime prerequisites still apply. The invocation cap does not provision compute or make otherwise unavailable work runnable.
+
+Source/file-mode Tests are serial by default at the documented revision. Explicit concurrency lets them use the run scheduler, subject to their resource limits. A cap limits scheduled work, not the number of DAX queries a single validation contains.
+
+## Tune persistent resource limits only when needed
+
+Build limits and run limits are separate. This is a **reference illustration of the defaults**, not configuration every project must paste:
+
+```yaml
+execution:
+  build:
+    warehouse_concurrency: 2
+    spark_concurrency: 4
+    onelake_concurrency: 8
+    shortcut_concurrency: 2
+  run:
+    spark_concurrency: 4
+    warehouse_concurrency: 4
+```
+
+Warehouse limits apply per Warehouse. Spark run lanes can use separate Spark sessions within one Spark application; they are not a newly provisioned cluster for each table. Build's other ceilings govern storage and shortcut work. An invocation cap remains the overall ceiling on top of those limits.
+
+There is no `execution.test`, target-level `parallel_workers` setting or `--spark-concurrency` CLI flag. Use [workspace configuration](../reference/configuration-files/workspace-config.md) for accepted keys and precedence.
+
+## Measure before increasing a limit
+
+Use enough independent work for the cap to matter. The small Load-selection fixture is sufficient to check a local scheduler cap; a single dependency chain will not become parallel merely because the number increases.
+
+Compare a fixed workload, record waits, outcomes and resource usage, and change one setting at a time. More concurrency can increase contention or throttling. The historical F64 benchmark used 24 Spark lanes and 12 per Warehouse; these are not defaults, small-capacity recommendations or hard maxima.
+
+## Related tasks
+
+- [Investigate performance and scale](performance.md).
+- [Run part of an estate](selective-runs.md).
+- [Look up Build, Load and Test options](../reference/cli.md).
