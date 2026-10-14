@@ -8,6 +8,8 @@ Use existing disposable development and production-labelled workspaces, with the
 
 `PowerBI/Parcel/Parcel.pbip` opens the native project. Its model contains three parcel rows, two depots and a many-to-one relationship. The Report has a visible Delivery Count card. Refresh should show **2**.
 
+This is the complete direct-entry snapshot for [native Report deployment](../../docs/reports/deploy.md) and [development/production binding](../../docs/reports/environments.md): the local model, Report and both configurations are included. A continuing reader keeps this project and any model overlay already added; the environment task changes only the selected configuration. No modelling tutorial is required to deploy the Report. Build is the Report checkpoint; the model refresh below is a separate viewing check. To compare authored bytes across both destinations, record the hash baseline in the next section **before the first Build**.
+
 ## Check and deploy
 
 Run from this example directory, not its parent:
