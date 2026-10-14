@@ -2,6 +2,10 @@
 
 **Weaver source target:** `74b4d15ee65ed2740593af1f4d459771b801b132`. Use a Weaver build containing these interfaces. The older PyPI `0.9.0` package is not the acceptance target.
 
+## Journey checkpoint
+
+[Compose two model variants](../../docs/semantic-models/composition.md) deliberately changes the single Parcel output into a local ParcelBase foundation and two audience outputs. This complete snapshot supports direct entry; it is not a silent rename of the native model checkpoint. Delivery/Depot remain the foundation, while each output has its own Report and validation. Only the two outputs deploy; the base remains source.
+
 ## Before you run
 
 Use two existing disposable Power BI workspaces and edit the two configuration files to their names. You need model/Report creation or update rights, refresh and view permissions, the appropriate service licence, and DAX query Read/Build access. This fixture does not require a catalogue, Fabric Environment or external source credentials.

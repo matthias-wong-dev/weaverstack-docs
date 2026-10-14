@@ -2,6 +2,10 @@
 
 **Weaver source target:** `74b4d15ee65ed2740593af1f4d459771b801b132`. Use a Weaver build containing these interfaces. The older PyPI `0.9.0` package is not the acceptance target.
 
+## Journey checkpoint
+
+[Connect a managed Fabric source](../../docs/semantic-models/managed-sources.md) explicitly changes Delivery from inline Import to Warehouse-backed Import and adds Operations, its source mapping and catalogue. Parcel, Delivery, Depot and the relationship keep their logical names. This snapshot has no optional foreign-key convention; merge one into the source overlay if retaining it. [DAX/SQL validation](../../docs/semantic-models/validation.md#compare-dax-with-source-sql) continues its already loaded source and refreshed model without another setup.
+
 ## Resources and rights
 
 Run from this directory. Use an existing disposable Fabric workspace on capacity that supports a Warehouse, a compatible Weaver catalogue Warehouse, and an empty Operations Warehouse named by `workspace-dev.yml`. Edit both configuration files to your own disposable workspace/catalogue names. Do not use a real production workspace for the production-labelled configuration.

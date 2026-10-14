@@ -2,6 +2,10 @@
 
 **Weaver source target:** `74b4d15ee65ed2740593af1f4d459771b801b132`. Use a Weaver build containing these interfaces. The older PyPI `0.9.0` package is not the acceptance target.
 
+## Journey checkpoint
+
+This complete direct-entry snapshot finishes [shared modelling standards](../../docs/semantic-models/shared-policy.md) and [custom annotations](../../docs/semantic-models/custom-annotations.md). It preserves the native Parcel model’s Delivery, Depot, partitions and relationship. Continuing readers add policy first, then the handler and its measure annotation; they keep their existing project and configuration. The shared foreign-key policy variation is shown on the policy page; this snapshot retains that rule locally.
+
 ## Before you run
 
 Use existing disposable development and production-labelled workspaces, with the names in `workspace-dev.yml` and `workspace-prod.yml`, or edit those two files to your own disposable names. The production-labelled file is not permission to use a production workspace. You need the appropriate Power BI service licence, item creation/update rights, model refresh rights and permission to view the Report. Sign in through Weaver's supported authentication route. No catalogue, Lakehouse, Spark session, Fabric Environment or external data credentials are needed for these inline Import partitions.

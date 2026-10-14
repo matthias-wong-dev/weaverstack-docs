@@ -2,6 +2,10 @@
 
 **Weaver source target:** `74b4d15ee65ed2740593af1f4d459771b801b132`. Use a Weaver build containing these interfaces. The older PyPI `0.9.0` package is not the acceptance target.
 
+## Journey checkpoint
+
+This is the direct-entry snapshot for [Validate a semantic model](../../docs/semantic-models/validation.md). Continuing readers add only its DAX file to the already deployed native Parcel model; keep the existing foreign-key overlay and workspace configuration. The snapshot itself has no initial overlay. Warehouse-backed reconciliation continues the separate [managed-source checkpoint](../../docs/semantic-models/managed-sources.md), not this inline model.
+
 ## Before you run
 
 Use existing disposable development and production-labelled workspaces, with the names in `workspace-dev.yml` and `workspace-prod.yml`, or edit those two files to your own disposable names. The production-labelled file is not permission to use a production workspace. You need the appropriate Power BI service licence, item creation/update rights, model refresh rights and permission to view the Report. Sign in through Weaver's supported authentication route. No catalogue, Lakehouse, Spark session, Fabric Environment or external data credentials are needed for these inline Import partitions.
@@ -34,10 +38,20 @@ The validation node should be `passed`, with zero violations. Source mode does n
 
 ## Deliberately fail, then correct
 
-Copy the supplied complete failing overlay into the model's optional overlay path:
+Save any existing overlay before changing the measure. Use an unused backup filename and keep the same shell through restoration:
 
 ```bash
-cp failure/Parcel.tmdl PowerBI/Parcel/Parcel.tmdl
+test ! -e Parcel.tmdl.saved || exit 1
+had_overlay=false
+if test -f PowerBI/Parcel/Parcel.tmdl; then
+  had_overlay=true
+  cp PowerBI/Parcel/Parcel.tmdl Parcel.tmdl.saved
+fi
+```
+
+Set Delivery Count to `-1` in `PowerBI/Parcel/Parcel.tmdl`, using `failure/Parcel.tmdl` as the declaration. Retain all other overlay declarations. Edit an existing Delivery/measure declaration rather than adding a duplicate. With the native rule-only overlay, add the failure's Delivery section below the existing rule; with this snapshot's absent overlay, create the complete failure file.
+
+```bash
 weaver check .
 weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
 weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
@@ -46,10 +60,14 @@ weaver test SemanticModel/Parcel --name 'Parcel[.]PositiveDeliveryCount' --sourc
 
 The overlay sets Delivery Count to -1. Expect a `failed` node with one violating row, `DeliveryCount = -1`, not an execution error. The CLI exits 1 for a failed finding or an invalid validation, and 0 for a passing run. Inspect the node outcome to distinguish a violated Assumption from a query that could not run. The Python API returns the validation report rather than turning a finding into a strict-mode exception.
 
-Remove only the overlay you just copied and redeploy:
+Restore the original overlay even if a command failed. A deliberately failed Test exits 1; do not chain restoration behind `&&` or automatic exit-on-error:
 
 ```bash
-rm PowerBI/Parcel/Parcel.tmdl
+if test "$had_overlay" = true; then
+  mv Parcel.tmdl.saved PowerBI/Parcel/Parcel.tmdl
+else
+  rm PowerBI/Parcel/Parcel.tmdl
+fi
 weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
 weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 weaver test SemanticModel/Parcel --name 'Parcel[.]PositiveDeliveryCount' --source . --workspace-config workspace-dev.yml
