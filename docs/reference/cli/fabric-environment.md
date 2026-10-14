@@ -61,7 +61,7 @@ The command has no destructive confirmation and does not accept `--yes`. `--non-
 
 ## Output and exit behaviour
 
-Progress is written to stderr. Stdout always contains one JSON result document, including the selected Environment, publication mode, action, status and timings. There is no separate `--json` option. Treat the document as command output, not as a versioned schema guarantee.
+Without `--json`, the command prints a human-readable publication summary. With `--json`, stdout contains one JSON result document, including the selected Environment, publication mode, action, status and timings. Treat it as command output, not as a versioned schema guarantee.
 
 The command exits `0` when publication succeeds or no update is needed. Invalid source selection, a missing existing Environment, wheel-build failure, authentication failure, publication failure or timeout produces a non-zero status.
 

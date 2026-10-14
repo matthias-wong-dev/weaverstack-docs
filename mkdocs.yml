@@ -68,6 +68,7 @@ extra_css:
   - assets/stylesheets/extra.css
 
 not_in_nav: |
+  /getting-started/first-project.md
   /advanced/automation-and-execution-contexts.md
   /advanced/build-bundles-and-controlled-installation.md
   /advanced/concurrency.md
@@ -123,7 +124,7 @@ nav:
   - Getting started:
       - getting-started/index.md
       - Installation: getting-started/installation.md
-      - Your first Fabric project: getting-started/first-project.md
+      - Your first Fabric project: warehouse/first-project.md
   - Lakehouse:
       - lakehouse/index.md
       - A first Lakehouse pipeline (Python): lakehouse/python.md

@@ -10,7 +10,19 @@ Use existing disposable development and production-labelled workspaces, with the
 
 This is the complete direct-entry snapshot for [native Report deployment](../../docs/reports/deploy.md) and [development/production binding](../../docs/reports/environments.md): the local model, Report and both configurations are included. A continuing reader keeps this project and any model overlay already added; the environment task changes only the selected configuration. No modelling tutorial is required to deploy the Report. Build is the Report checkpoint; the model refresh below is a separate viewing check. To compare authored bytes across both destinations, record the hash baseline in the next section **before the first Build**.
 
-## Check and deploy
+## Deploy only the model
+
+For the native-model tutorial, select just the model:
+
+```bash
+weaver check .
+weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
+```
+
+The Report stays local. Continue below when you want to deploy the linked pair.
+
+## Check and deploy the model and Report
 
 Run from this example directory, not its parent:
 

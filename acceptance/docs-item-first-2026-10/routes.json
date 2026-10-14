@@ -29,7 +29,8 @@
     "core-concepts/index.md": "estate/index.md",
     "basics/tests-and-assumptions.md": "warehouse/tests.md",
     "basics/workspace-and-python-runtime.md": "estate/environments.md",
-    "basics/sessions-and-workflows.md": "estate/automation-and-deployment.md"
+    "basics/sessions-and-workflows.md": "estate/automation-and-deployment.md",
+    "getting-started/first-project.md": "warehouse/first-project.md"
   },
   "splits": {
     "basics/tests-and-assumptions.md": [

@@ -2,7 +2,7 @@
 
 Reuse one Session while you develop a command sequence, then record the accepted sequence as a workflow. When installation needs a reviewed handoff, plan a destination-specific bundle instead of asking the installer to reopen and reinterpret source.
 
-Continue with your working project and configuration. The examples below use the [managed-source Parcel checkpoint](../semantic-models/managed-sources.md) and its `workspace-dev.yml`: Operations Delivery, the Parcel model and its linked Report. Direct entrants use that complete snapshot; do not combine it with the independent Landing or StatusEvent examples by renaming documents.
+Continue with your working project and configuration. The examples below use the [managed-source Parcel project](../semantic-models/managed-sources.md) and its `workspace-dev.yml`: Operations Delivery, the Parcel model and its linked Report. Use that complete project when following these commands; the workflow refers to its Delivery source and model.
 
 ## Open one Session
 

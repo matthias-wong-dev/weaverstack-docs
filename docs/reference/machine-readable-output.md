@@ -4,7 +4,7 @@ This page records the CLI machine-output shapes. Each command owns its result sh
 
 ## Stream and process behaviour
 
-Commands with `--json` write the result document to stdout and do not prompt. Their Session enters machine-output mode, suppressing its ordinary reports and progress; representation tests require stderr to remain empty for normal JSON Load, Test, and Health output. Parser help and parser usage errors happen before command JSON handling and retain `argparse`'s text streams. `fabric environment publish` is the exception to the flag rule: it has no `--json` option, always writes its successful result as JSON to stdout, and can write progress to stderr.
+Commands with `--json` write the result document to stdout and do not prompt. Their Session enters machine-output mode, suppressing its ordinary reports and progress; representation tests require stderr to remain empty for normal JSON Load, Test, and Health output. Parser help and parser usage errors happen before command JSON handling and retain `argparse`'s text streams. `fabric environment publish` follows the same output choice: human-readable output by default, JSON with `--json`.
 
 A handled Weaver error under `--json` has this current shape:
 
@@ -39,6 +39,7 @@ Successful command outcomes normally exit `0`. A report that does not satisfy th
 | `unbind --dry-run` | `workspace`, `catalogue`, `targets` | `0` for a settled plan, `1` for refusal/error. |
 | `unbind` | `workspace`, `catalogue`, `targets`, `unbound`, `dry_run` | `0` for a completed plan/deletion, `1` for refusal/error. |
 | `mirror` | `workspace`, `source_catalogue`, `destination_catalogue`, `wiped`, `copied`, `uncopied`, `items`, `mirrored`, `status` | `0` after the operation returns; refusal or a handled operation error returns `1`. |
+| `fabric environment publish` | `workspace_id`, `workspace_name`, `environment_id`, `environment_name`, `weaver_requirement`, `mode`, `action`, `published`, `publish_status`, `timings` and mode-specific publication details | `0` for successful publication or an already matching definition; errors return non-zero. |
 | `fabric notebook push` | `workspace`, `notebook`, `notebook_id`, `source`, `action` | `0` after create or update; handled errors return `1`. |
 | `fabric notebook run` | `workspace`, `notebook`, `notebook_id`, `job_url`, `status`, `exit_value` | Waited runs return `0` when completed or deduped. `--no-wait` returns `0` for the accepted job. A handled failure returns `1`. |
 
@@ -107,7 +108,7 @@ Notebook push `action` is currently `created` or `updated`. Notebook run preserv
 
 ## Environment publication JSON
 
-`weaver fabric environment publish` has no `--json` option because JSON is its only successful result rendering. Its current fields are:
+`weaver fabric environment publish --json` emits the following fields. Without the flag, it prints a human-readable publication summary:
 
 ```text
 workspace_name, workspace_id,
@@ -118,7 +119,7 @@ removed_wheels, action, published, publish_status, timings
 
 `source_path`, `weaver_requirement`, and `wheel_filename` are nullable. `removed_wheels` is an array. `mode` is `released` or `dev`; `action` is `created`, `updated`, or `unchanged`; `published` records whether this invocation asked Fabric to publish. `timings` is a mapping of measured phase names to seconds and the CLI adds `total`.
 
-This document has no `format_version`. On a handled publication error, this command writes a human-readable diagnostic to stderr, writes no JSON result, and exits `1`: unlike the commands with `--json`, it has no JSON error mode.
+This document has no `format_version`. A handled publication error exits `1` and uses the selected human or JSON error rendering. Parser errors remain text output and exit `2`.
 
 ## Compatibility boundary
 

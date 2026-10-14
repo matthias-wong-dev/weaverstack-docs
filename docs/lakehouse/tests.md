@@ -2,7 +2,7 @@
 
 Check that CurrentStatus returns the expected parcels, and that every event uses a recognised status. These validations live beside the same Folder and Tables; Build installs them, and Test runs them separately from Load.
 
-Continue from [Working with Spark SQL](spark-sql.md). For direct entry, the [Lakehouse document snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse) lists the Python, SQL and validation checkpoints. Use the earlier project's bindings and matching published runtime; no new item or catalogue is needed.
+Continue the [Spark SQL project](spark-sql.md), with Event and CurrentStatus loaded. Keep its workspace configuration and published runtime. If you are starting here, the [complete example files](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse) accompany the earlier tasks.
 
 ## Compare CurrentStatus with an independent result
 
@@ -70,7 +70,7 @@ weaver test Lakehouse/Landing \
 
 File mode reads the deployed Tables but records no catalogue Test state. Use the installed-mode command above when you want Health to reflect the result.
 
-## Diagnose one mismatch
+## Optional: diagnose one mismatch
 
 In the Test's expected query only, change P-1001's status from `In transit` to `Delivered`. Leave the Folder, Event and CurrentStatus unchanged. Check and Build the validation edit, then select that installed Test with a whole-name regex:
 
@@ -83,6 +83,6 @@ weaver health --item Lakehouse/Landing
 
 The selected Test should fail and return diagnostic rows showing the expected `Delivered` and actual `In transit`. Health should show the failed validation. There is no Load here because the data declarations and their intended data have not changed. Restore the expected value, Check and Build again, then rerun the selected Test; it should succeed.
 
-The small fixed export made the expected rows explicit. A changing carrier feed needs processing state as well as tests: [Loading changes and bookmarks](incremental.md) shows a complete mutable-source variation, where updating or removing a file changes CurrentStatus without rebuilding its code.
+The small fixed export made the expected rows explicit. A changing carrier feed needs processing state as well as tests: [Loading changes and bookmarks](incremental.md) shows a changing carrier-feed example, where updating or removing a file changes CurrentStatus without rebuilding its code.
 
 [Tests](../reference/weaver-documents/test.md), [Assumptions](../reference/weaver-documents/assumption.md) and [Test behaviour](../reference/operation-behaviour/test.md) own the exact comparison, diagnostic and recording rules. Python validations use the same data: a `Test` implements `expected()` and `actual()` returning Spark DataFrames, while an `Assumption` implements `read()` returning violations; their complete forms are in those references.

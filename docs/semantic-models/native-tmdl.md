@@ -8,13 +8,13 @@ A PBIP project contains the model’s native TMDL and its Report definitions. Yo
 
 ## Before you start
 
-[Install Weaver](../getting-started/installation.md). Use an existing Power BI service workspace and an identity with model/Report create or update rights, refresh rights and permission to view the Report. The service licence and model mode must support those operations.
+[Install Weaver](../getting-started/installation.md). Use an existing Power BI service workspace and an identity allowed to create/update, read and refresh the model. Its licence and capacity must support the model mode.
 
-The example uses inline Import data to isolate deployment from source loading. It can run with just an existing service workspace. It needs no catalogue, Lakehouse, Warehouse or Fabric Environment. This also supports an existing standalone Power BI workspace; [managed Fabric sources](managed-sources.md) add source lineage and recorded estate state later.
+The example contains inline Import data and works in an existing standalone Power BI workspace. No catalogue or source Warehouse is needed. [Managed Fabric sources](managed-sources.md) adds source coordination later.
 
 Download or clone the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi) and work from `examples/parcel-powerbi`. `PowerBI/Parcel/Parcel.pbip` opens the native project. Its model has three parcel rows, two depots, a relationship and a Delivery Count measure. Its Report has a Delivery Count card.
 
-If you are adding this model to an existing Fabric project, copy the example’s `PowerBI/` directory into that project. Add the model and Report under your existing configuration’s `targets`; retain its workspace and catalogue settings. The same commands then register the items in the shared catalogue.
+For an existing Fabric project, copy the `PowerBI/` directory and add the shown targets to its configuration, retaining the workspace and catalogue settings.
 
 ## 1. Choose the destination
 
@@ -40,12 +40,10 @@ Check reads local declarations and definitions. It does not execute M/DAX, deplo
 ## 3. Deploy the native model
 
 ```bash
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
 ```
 
-`PowerBI/Parcel` selects the native model and its linked Report. Because this catalogue-free selection includes a linked Report, it also includes that Report’s local model; Weaver deploys the model first. [Deploy a native Report](../reports/deploy.md) owns Report binding and readback. The broader selection deploys both items; it does not make a Report necessary to author or inspect the model.
-
-Without a catalogue, do not select only a linked Report: include its local model. [Report binding requirements](../reference/power-bi/requirements-and-compatibility.md#report-binding) explain the separate certified-model case with a catalogue.
+This selects **only the semantic model**. Build deploys and verifies `Parcel_Dev`; the Report stays local until you [deploy the linked Report](../reports/deploy.md).
 
 ## 4. Refresh and inspect the model
 
@@ -53,13 +51,41 @@ Without a catalogue, do not select only a linked Report: include its local model
 weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 ```
 
-Find `Parcel_Dev` in the service workspace and inspect its native definition through a supported model-definition tool or the service’s Get Definition API. Delivery and Depot should retain their Import partitions and many-to-one relationship. After refresh, **Delivery Count should evaluate to 2**. That query or the optional Report card is a separate data check; a successful Build does not prove refresh access or Report rendering.
+Find `Parcel_Dev` in the workspace. After refresh, query **Delivery Count: it should be 2**. A model-definition tool or the service’s Get Definition API should show Delivery, Depot, their Import partitions and the many-to-one relationship.
 
-Reports use their semantic model’s data, so refresh the model rather than loading the Report. In a catalogue-backed project, [Health](../reference/cli/health.md) includes the registered model’s refresh state with the rest of the estate. The small catalogue-free example has only the command’s refresh report.
+You now have a deployed native model. Add the rule below to change its field list without editing the native columns.
 
 ## Hide relationship foreign keys
 
-### 1. Inspect the native relationship
+### Add the same-name overlay
+
+Create `PowerBI/Parcel/Parcel.tmdl`:
+
+```tmdl
+model Model
+    annotation 'Weaver.AutoHideForeignKeys' = true
+```
+
+The filename matches `Parcel.SemanticModel`, so it refines that model instead of declaring another one.
+
+### Deploy and inspect
+
+```bash
+weaver check .
+weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
+```
+
+Inspect the deployed native definition through a supported model-definition tool or the service's Get Definition API. `Delivery[DepotId]` should have `isHidden = true`; `Depot[DepotId]` and unrelated columns should stay visible. The relationship and both partitions should remain. You do not need a Report query to verify that transformation.
+
+The local native column is not rewritten. Desktop does not execute Weaver annotations; the visibility change is applied to the deployment definition. Hidden columns are not a security policy or RLS/OLS.
+
+To stop requesting the transformation, remove the annotation and rebuild from source. A declaration of `false` is a no-op, not an instruction to undo an independently authored native hide.
+
+<details markdown="1">
+<summary>Inspect the native relationship</summary>
+
+### Inspect the relationship the rule uses
 
 The native `definition/relationships.tmdl` relates the many-side Delivery key to Depot. Both authored columns are visible:
 
@@ -74,30 +100,7 @@ relationship Delivery_Depot
 
 The rule hides the many-side key from the field list, not the one-side key.
 
-### 2. Add the same-name overlay
-
-Create `PowerBI/Parcel/Parcel.tmdl`:
-
-```tmdl
-model Model
-    annotation 'Weaver.AutoHideForeignKeys' = true
-```
-
-The filename matches `Parcel.SemanticModel`, so it refines that model instead of declaring another one.
-
-### 3. Deploy and inspect
-
-```bash
-weaver check .
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
-```
-
-Inspect the deployed native definition through a supported model-definition tool or the service's Get Definition API. `Delivery[DepotId]` should have `isHidden = true`; `Depot[DepotId]` and unrelated columns should stay visible. The relationship and both partitions should remain. You do not need a Report query to verify that transformation.
-
-The local native column is not rewritten. Desktop does not execute Weaver annotations; the visibility change is applied to the deployment definition. Hidden columns are not a security policy or RLS/OLS.
-
-To stop requesting the transformation, remove the annotation and rebuild from source. A declaration of `false` is a no-op, not an instruction to undo an independently authored native hide.
+</details>
 
 ## Carry the convention to the next model
 

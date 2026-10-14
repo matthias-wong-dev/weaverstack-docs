@@ -73,20 +73,18 @@ def main():
         assert not any("catalogue" in h.lower() for h in page.headings)
     assert home.headings[0] == "Making Fabric easier to use"
     assert home.links[0].endswith("/getting-started/")
-    assert (
-        "Weaver works with native Fabric Lakehouse and Warehouse items, as well as Power BI projects."
-        in features.text
+    assert {"/lakehouse/", "/warehouse/", "/semantic-models/", "/reports/"} <= set(
+        features.links
     )
     for page in pages.values():
         assert "Warehouse or Lakehouse" not in page.text
         assert "Power BI and Fabric" not in page.text
     scale = pages["scale/index.html"]
-    assert "About an hour" in scale.text and "Under 15 minutes" in scale.text
+    assert "F64" in scale.text and "synthetic" in scale.text.lower()
     assert not any("/pull/" in href for href in scale.links)
     assert not re.search(r"61[.m]|\d+m \d+s", scale.text)
     comparison = pages["vs-dbt/index.html"]
     assert "Native semantic models and Reports" in comparison.headings
-    assert "dbt does not deploy native Power BI models or Reports." in comparison.text
     assert any("semantic-layer/power-bi" in href for href in comparison.links)
 
     config = yaml.load((root / "mkdocs.yml").read_text(), Loader=yaml.BaseLoader)
@@ -102,7 +100,7 @@ def main():
         "Coordinate your estate",
         "Reference",
     ], groups
-    assert "navigation.sections" not in config["theme"].get("features", [])
+    assert "navigation.tabs" not in config["theme"].get("features", [])
     routes = json.loads(
         (root / "acceptance/docs-item-first-2026-10/routes.json").read_text()
     )

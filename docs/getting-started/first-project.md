@@ -1,3 +1,8 @@
+---
+search:
+  exclude: true
+---
+
 # Your first Fabric project
 
 Write a small Warehouse Table and View, then Build and Load them. The example starts with ordinary T-SQL and shows the load work Weaver handles around it.

@@ -4,7 +4,7 @@ Turn a carrier CSV export into a Delta Table using ordinary Python. Weaver manag
 
 ## Create the project
 
-[Install the documented Weaver snapshot](../getting-started/installation.md). Use a disposable Fabric workspace on running capacity where you can create or modify a catalogue Warehouse, Lakehouse and Environment. Replace `Parcel Development` with that workspace:
+[Install Weaver](../getting-started/installation.md). Use a disposable Fabric workspace on running capacity where you can create or modify a catalogue Warehouse, Lakehouse and Environment. Replace `Parcel Development` with that workspace:
 
 ```bash
 weaver initialise \
@@ -17,7 +17,7 @@ weaver initialise \
 cd parcel-lakehouse-python
 ```
 
-Initialise writes `workspace-config.yml`, an empty `Lakehouse/Landing` directory and `Environment/Weaver.Environment`. Keep this project for the following Spark SQL and validation pages. The [checked document snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse) has the source files and a checkpoint list; the two files below are the first checkpoint.
+Initialise writes the configuration, a Landing directory and an Environment definition. Add the two files below, or use the [complete Python example](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse). Keep this project as you add SQL and tests.
 
 ## Stage the carrier export
 
@@ -53,7 +53,7 @@ class Parcel__Events(Folder):
         return staging
 ```
 
-This small export is generated so the first run needs no external carrier system. `read()` returns the staging Folder issued by Weaver. `Incremental: false` makes the staged files a complete snapshot; Folders otherwise default to incremental loading.
+The small CSV gives this first run three known events without an external carrier connection. The Folder stages those bytes; `Incremental: false` declares the complete set of files.
 
 ## Read it into a Table
 
@@ -95,7 +95,7 @@ class Parcel__Event(Table):
         )
 ```
 
-The `Files.Parcel__Events` import establishes the dependency. The Table reads the managed Folder through `spark_path()` and casts the event sequence for the declared schema. `Lineage` is descriptive; it does not order execution.
+The Table reads the upstream Folder and casts Event sequence to the declared integer type.
 
 ## Check, build and load
 
@@ -111,7 +111,7 @@ Before the first remote Build, publish the generated Environment:
 weaver fabric environment publish --path Environment/Weaver.Environment
 ```
 
-Publication installs the Weaver release used by your local client into the Fabric Environment. The [runtime page](runtime.md) explains version matching and when to republish. Spark-backed Build checks its hosted runtime before mutation even though it does not call your `read()`.
+This supplies the same Weaver version to the Spark runtime. Do it before the first Build; [runtime setup](runtime.md) explains when the packages need republishing.
 
 Then, from this project directory:
 
@@ -134,6 +134,10 @@ order by [Parcel ID], [Event sequence];
 ```
 
 The result should contain the three rows in `EVENTS`. The managed file is `Files/Parcel/Events/events.csv`.
+
+## What Weaver handled
+
+The Folder staged the file, and Weaver published it under `Files/Parcel/Events`. The Python import supplied the Folder → Table dependency, so Load ran the file work first. Build installed the Table and its code; Load applied the three rows and recorded the result. `Lineage` remains a description, not another dependency declaration.
 
 You now have the event history in a Table. [Add a Spark SQL CurrentStatus Table](spark-sql.md) to answer the next question: where is each parcel now? Keep the Python Event and its Folder; the next page adds one transformation to this project.
 

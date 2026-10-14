@@ -59,7 +59,7 @@ The effective definition merges the native source, then shared policy, then this
 
 ```bash
 weaver check .
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
 weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 ```
 

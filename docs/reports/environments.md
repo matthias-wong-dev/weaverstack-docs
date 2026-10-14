@@ -2,7 +2,7 @@
 
 Use the same native Report and model in both workspaces. The selected workspace configuration changes their physical names and the Report's deployed model binding; it does not change their logical names or authored files.
 
-Continue from [Deploy a native Report](deploy.md) in the same `examples/parcel-powerbi` directory. Direct entrants can use the [complete parcel snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi) and that page's installation and access instructions; no model reauthoring is needed. Keep any model overlay from the native-model task. This page adds only the second destination, not another model or Report.
+Continue from [Deploy a native Report](deploy.md) in the same `examples/parcel-powerbi` directory. If you are starting here, use the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi) and that page's installation and access instructions; no model reauthoring is needed. Keep any model overlay from the native-model task. The next Build adds the second destination.
 
 ## Select the two destinations
 
@@ -52,7 +52,7 @@ weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 weaver load SemanticModel/Parcel --workspace-config workspace-prod.yml
 ```
 
-Both Delivery Count cards should show **2**. Model refresh and Report rendering are separate checks from Build and binding; there is no Report Load or Test. The fixture README includes a before/after hash check for the authored `PowerBI/` files.
+Both Delivery Count cards should show **2**. Model refresh and Report rendering are separate checks from Build and binding; there is no Report Load or Test. The example README includes a before/after hash check for the authored `PowerBI/` files.
 
 An unrelated authored `byConnection` with no local model association stays as authored. Weaver does not reverse-map that external connection to a development or production model. The linked-pair behaviour above applies to the local association; [Report binding rules](../reference/power-bi/requirements-and-compatibility.md#report-binding) also describe same-name model precedence and the catalogue-backed Report-only case.
 

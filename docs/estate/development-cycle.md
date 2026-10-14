@@ -6,9 +6,9 @@ Edit a working definition, check it, inspect the Build preview, install the chan
 edit → check → Build preview → Build → Load → Test → Health → repeat
 ```
 
-Keep the project and configuration you just inspected. The leading commands continue [Landing → Dispatch](connected-items.md) with `workspace-development.yml`, as selected on the mapping and Health pages. Edit a Landing declaration while leaving its logical names and Dispatch connection intact. Direct entrants can use that connection's complete starting checkpoint; Mirror is not required.
+Keep the project and configuration you just inspected. The leading commands continue [Landing → Dispatch](connected-items.md) with `workspace-development.yml`, as selected on the mapping and Health pages. Edit a Landing declaration while leaving its logical names and Dispatch connection intact. Use the [connection task](connected-items.md) if those items are not yet installed.
 
-For another source-data estate, select its actual changed items in the same loop. A Warehouse-only reader can use `--item Warehouse/Operations` with the [StatusEvent/View checkpoint](../warehouse/tests.md). If you chose the managed Parcel variation, stay with it and use [the model-inclusive loop](#include-semantic-models-and-reports) below, rather than returning to either source-data example.
+For another source-data estate, select its actual changed items in the same loop. A Warehouse-only reader can use `--item Warehouse/Operations` with the [StatusEvent project](../warehouse/tests.md). If you chose the managed Parcel variation, stay with it and use [the model-inclusive loop](#include-semantic-models-and-reports) below, rather than returning to either source-data example.
 
 ## Edit and iterate
 
@@ -38,7 +38,7 @@ Use an item-wide run by default. Plain named Load does not add or order dependen
 
 ## Include semantic models and Reports
 
-For the complete [managed-source Parcel checkpoint](../semantic-models/managed-sources.md), keep its Operations Delivery source, model and Report in one project with `workspace-dev.yml`. This is the source-backed variant, not the first StatusEvent/View example with a model pasted onto it.
+For the [managed-source Parcel project](../semantic-models/managed-sources.md), keep its Operations Delivery source, model and Report in one project with `workspace-dev.yml`. Its model reads Operations Delivery; keep that source and its existing connection.
 
 Build source-data definitions first, then changed model/Report definitions separately:
 
@@ -53,7 +53,7 @@ weaver test --workspace-config workspace-dev.yml
 weaver health --workspace-config workspace-dev.yml
 ```
 
-This loop assumes the checkpoint’s model and Report already exist, its native source mapping is configured and its supported service connection is available. Preview each changed Build before applying it. `--bind-data-sources` requests binding to an existing connection; it creates no credentials. Build deploys the model before its linked Report. Estate Load coordinates selected source data and model refreshes; a source change can make the model stale even if its definition did not change. DAX validations are part of Test. **Reports have only a Build/deployment lifecycle, not Load or Test.** Inspect their actual binding and rendering through the [Report task](../reports/deploy.md).
+This loop assumes the project’s model and Report already exist, its native source mapping is configured and its supported service connection is available. Preview each changed Build before applying it. `--bind-data-sources` requests binding to an existing connection; it creates no credentials. Build deploys the model before its linked Report. Estate Load coordinates selected source data and model refreshes; a source change can make the model stale even if its definition did not change. DAX validations are part of Test. **Reports have only a Build/deployment lifecycle, not Load or Test.** Inspect their actual binding and rendering through the [Report task](../reports/deploy.md).
 
 ## Optional: establish a mirrored development baseline
 

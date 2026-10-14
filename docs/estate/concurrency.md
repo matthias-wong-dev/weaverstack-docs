@@ -1,10 +1,10 @@
 # Control concurrency
 
-You can leave concurrency unset. Use a limit when this particular run should use less simultaneous work, then tune resource limits only when measurements justify it.
+Can this run use less simultaneous work? Add `--concurrency 2` to limit it to two scheduled nodes. Leave the setting out when the normal configured limits are appropriate.
 
 ## Limit one run
 
-Continue with the installed workload from [selective runs](selective-runs.md), or use your own established project and its configuration. For the selection snapshot, optionally cap this Load at two scheduled nodes:
+Continue with the installed workload from [selective runs](selective-runs.md), or use your own established project and its configuration. For the selection project, cap one Load at two scheduled nodes:
 
 ```bash
 weaver load Warehouse/Operations --concurrency 2 --workspace-config workspace-dev.yml
@@ -48,7 +48,7 @@ if not report.succeeded:
 
 Workspace selection and runtime prerequisites still apply. The invocation cap does not provision compute or make otherwise unavailable work runnable.
 
-Source/file-mode Tests are serial by default at the documented revision. Explicit concurrency lets them use the run scheduler, subject to their resource limits. A cap limits scheduled work, not the number of DAX queries a single validation contains.
+Source/file-mode Tests are serial by default by default. Explicit concurrency lets them use the run scheduler, subject to their resource limits. A cap limits scheduled work, not the number of DAX queries a single validation contains.
 
 ## Tune persistent resource limits only when needed
 
@@ -72,7 +72,7 @@ There is no `execution.test`, target-level `parallel_workers` setting or `--spar
 
 ## Measure before increasing a limit
 
-Use enough independent work for the cap to matter. The small Load-selection fixture is sufficient to check a local scheduler cap; a single dependency chain will not become parallel merely because the number increases.
+Use enough independent work for the cap to matter. A single dependency chain will not become parallel merely because the number increases.
 
 Compare a fixed workload, record waits, outcomes and resource usage, and change one setting at a time. More concurrency can increase contention or throttling. The historical F64 benchmark used 24 Spark lanes and 12 per Warehouse; these are not defaults, small-capacity recommendations or hard maxima.
 

@@ -2,7 +2,7 @@
 
 Keep the Python event pipeline and add one SQL transformation: the latest status for each parcel. Weaver installs it as another Delta Table and orders its Load after the event Table.
 
-Start from the working [Python checkpoint](python.md) in `parcel-lakehouse-python`. Direct entrants can use that page and the [checked snapshot's checkpoint list](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse). Keep `Files/Parcel__Events.py` and `Tables/Parcel__Event.py`; do not create a second Event document or initialise another project.
+Use the [Python project](python.md) in `parcel-lakehouse-python`, with `Files/Parcel__Events.py` and `Tables/Parcel__Event.py` already working. Add the SQL file below to that same Landing item.
 
 ## Add the current-status query
 

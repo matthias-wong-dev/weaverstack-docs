@@ -6,7 +6,7 @@ Keep your native `.Report` beside its semantic model. Build deploys the model fi
 
 [Install Weaver](../getting-started/installation.md), then work from the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi), in `examples/parcel-powerbi`. It contains the native model and a Report with a Delivery Count card. You do not need to author the model again or complete the semantic-model tutorial first.
 
-If you already deployed this pair in [Deploy a native model](../semantic-models/native-tmdl.md), keep that project, including any overlay you added. This task uses the same Report and model.
+If you already deployed the [native model](../semantic-models/native-tmdl.md), keep that project and any overlay. This task adds its linked Report; the catalogue-free Build includes the model too.
 
 Open `PowerBI/Parcel/Parcel.pbip` in Desktop to inspect the Report. Its association is authored in `PowerBI/Parcel/Parcel.Report/definition.pbir`:
 
@@ -22,7 +22,7 @@ Open `PowerBI/Parcel/Parcel.pbip` in Desktop to inspect the Report. Its associat
 }
 ```
 
-The path is relative to the `.Report` directory. Keep the complete native Report payload as well as this file; the fixture already includes its page and card definitions. [Native project layout](../reference/power-bi/project-layout.md#report-discovery-and-association) describes discovery for your own project.
+The path is relative to the `.Report` directory. Keep the complete native Report payload as well as this file; the example includes its page and card definitions. [Native project layout](../reference/power-bi/project-layout.md#report-discovery-and-association) describes discovery for your own project.
 
 This inline Import example also works in an existing standalone Power BI service workspace. It needs no Weaver catalogue, Lakehouse, Warehouse or Fabric Environment. Do not use `weaver initialise` for that setup: it provisions a catalogue and Environment.
 

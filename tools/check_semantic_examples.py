@@ -193,7 +193,12 @@ def main():
         shutil.copytree(ROOT / "examples/parcel-powerbi", trial)
         original = model(compile_models(trial))
         overlay = trial / "PowerBI/Parcel/Parcel.tmdl"
-        overlay.write_text(blocks("native-tmdl", "tmdl")[-1])
+        native_rule = next(
+            block
+            for block in blocks("native-tmdl", "tmdl")
+            if "annotation 'Weaver.AutoHideForeignKeys' = true" in block
+        )
+        overlay.write_text(native_rule)
         check(trial, "native rule")
         assert_native(model(compile_models(trial)), original)
         (trial / "PowerBI/policy.tmdl").write_text(blocks("shared-policy", "tmdl")[0])
@@ -270,11 +275,7 @@ def main():
             direct = temp / start
             shutil.copytree(ROOT / "examples/parcel-powerbi-validation", direct)
             path = direct / "PowerBI/Parcel/Parcel.tmdl"
-            prior = (
-                blocks("native-tmdl", "tmdl")[-1].encode()
-                if start == "native-rule"
-                else None
-            )
+            prior = native_rule.encode() if start == "native-rule" else None
             if prior is not None:
                 path.write_bytes(prior)
             path.write_text(

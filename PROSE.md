@@ -95,6 +95,14 @@ Code must be complete enough to run in the stated context. Give fenced blocks a 
 
 Descriptive metadata remains descriptive; do not imply that a metadata reference creates an execution dependency. Use explicit `Dependencies` as an override where inference is supported, but preserve explicit declarations where current product rules require them.
 
+## First success and progressive depth
+
+Keep the current architecture. Lead with familiar Python, SQL or native Power BI work, give one working result, then explain the engineering handled around it and the next useful capability. A senior voice is approachable and precise, not dry or exhaustive. Keep full contracts in Reference rather than making them an admission requirement.
+
+State the project, required files and active configuration. Leave checkpoint maps, fixture variants, testing oracles and why examples are different in maintenance evidence; name a real source change plainly when the next task needs it. Keep actual permissions, trusted-code warnings and destructive scope at the action that depends on them.
+
+Make passing validation the ordinary path. Put deliberate failures, diagnostic selectors and restoration exercises behind clearly optional exploration; retain safe restoration and operation-specific failure boundaries. Judge flow through complete rendered reader routes, not sentence/page counts or exact-sentence assertions.
+
 ## Review
 
 For each changed passage, ask:

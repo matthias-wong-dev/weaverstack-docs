@@ -49,11 +49,11 @@ The handler's `value` reads `Parcel metrics`; assignment writes the measure's na
 
 ```bash
 weaver check .
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
 weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 ```
 
-Inspect the deployed Delivery Count measure: its display folder is `Parcel metrics`, its format is `0 "deliveries"`, and the original partition remains. The Report should show `2 deliveries`. Compilation does not rewrite authored native files.
+Inspect the deployed Delivery Count measure: its display folder is `Parcel metrics`, its format is `0 "deliveries"`, and the original partition remains. If you also deployed its Report, the card should show `2 deliveries`. Compilation does not rewrite authored native files.
 
 ## 4. Read a located diagnostic
 
@@ -73,7 +73,7 @@ Back up the normal overlay to an unused filename and restore it even if Build re
 ```bash
 cp PowerBI/Parcel/Parcel.tmdl Parcel.tmdl.saved
 cp failure/Parcel.tmdl PowerBI/Parcel/Parcel.tmdl
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
 mv Parcel.tmdl.saved PowerBI/Parcel/Parcel.tmdl
 ```
 

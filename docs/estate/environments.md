@@ -1,12 +1,12 @@
 # Workspace and environment mappings
 
-Keep project documents and logical item names unchanged when deploying elsewhere. A workspace configuration selects the physical workspace, catalogue and targets; selecting another file changes where the same source is installed.
+Where should the same project deploy? Keep its documents and logical item names unchanged. A workspace configuration selects the physical workspace, catalogue and targets; selecting another file changes where the same source is installed.
 
 Three controls do different jobs: the configuration binds the estate, the selected file chooses development or production, and a published Fabric Environment supplies the Python packages used by Spark work. A target rename neither changes a model’s native data connection nor publishes a runtime.
 
 ## Bind the project to Fabric
 
-Continue the [Landing → Dispatch connection](connected-items.md). Keep its Folder, Event Table and Dispatch View in the same project. Save the existing bindings as `workspace-development.yml`; the example names below are the ones used by that connection, not a request to create another estate:
+Continue the [Landing → Dispatch connection](connected-items.md). Keep its Folder, Event Table and Dispatch View in the same project. Save the existing bindings as `workspace-development.yml`; keep the workspace and physical names from that connection:
 
 ```yaml title="workspace-development.yml"
 workspace: Parcel Development
@@ -27,7 +27,7 @@ weaver test --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml
 ```
 
-The Dispatch View reads Landing directly; it has no separate Load. If you completed the Lakehouse validation checkpoint, Test runs those Event/CurrentStatus checks. Adding a mapping does not invent validations for a project that has none.
+The Dispatch View reads Landing directly; it has no separate Load. If you added the Lakehouse validations, Test runs those Event/CurrentStatus checks. A project without authored validations has no Tests to run.
 
 Build reads `targets` and records settled physical bindings. Catalogue-backed Load, Test and Health use those recorded bindings, not replacement values in an edited configuration. Changing `targets` does not retarget installed work until Build installs it.
 

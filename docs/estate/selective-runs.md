@@ -1,8 +1,8 @@
 # Run part of an estate
 
-Rerun a table and related work without turning a dependency into permission to run another item. Preview the selected work before executing it.
+Can you rerun only this Table and the work it affects? Start with a named Load preview, then add upstream or downstream work when that is the intended scope.
 
-Use the complete [`examples/parcel-load-selection` snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-load-selection) from the documentation repository. This is a deliberate fine-control variation with RawEvents, Events, Daily and Summary, not a rename of the first Warehouse pipeline. Its README includes the selection oracle for checking the graph. Start in that directory, configure disposable targets in `workspace-dev.yml`, and complete its initial Build and item-wide Load. The guide uses this installed graph in `Warehouse/Operations`:
+Use the [`parcel-load-selection` project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-load-selection) from the documentation repository. It contains RawEvents, Events, Daily and Summary. Set disposable targets in `workspace-dev.yml`, Build and Load that project, then use its installed graph below. The guide uses this installed graph in `Warehouse/Operations`:
 
 ```text
 Parcel.RawEvents → Parcel.Events → Parcel.Daily → Parcel.Summary

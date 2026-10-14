@@ -1,8 +1,8 @@
 # Connect items and dependencies
 
-Keep a producer’s logical name when another item reads it. Weaver then installs the connection in order and can coordinate selected source loads with their consumers, rather than leaving each item with a schedule that guesses when another has finished.
+What should a Warehouse read when the data comes from a Lakehouse? Name the existing producer in a logical Shortcut. Weaver installs the connection in order and keeps its dependency with the project.
 
-Continue from [Landing’s working Python pipeline](../lakehouse/python.md): Folder `Parcel.Events` feeds Table `Parcel.Event`; the [Spark SQL extension](../lakehouse/spark-sql.md) adds `Parcel.CurrentStatus`. Direct entrants can use the complete [parcel-lakehouse snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse) and complete those item tasks first. This extension presents that existing Event in a Warehouse; it does not replace Landing’s source or the separate Operations StatusEvent pipeline.
+Continue from [Landing’s working Python pipeline](../lakehouse/python.md): Folder `Parcel.Events` feeds Table `Parcel.Event`; the [Spark SQL extension](../lakehouse/spark-sql.md) adds `Parcel.CurrentStatus`. If you are starting here, use the complete [Lakehouse project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse) and complete those item tasks first. Dispatch will expose Landing’s existing Event Table.
 
 ## Present Landing’s Event in Dispatch
 
@@ -12,7 +12,7 @@ Use an existing disposable `ParcelDispatchDev` Warehouse in the same workspace a
   Warehouse/Dispatch: ParcelDispatchDev
 ```
 
-If you need a complete configuration rather than an addition, use this shape and replace workspace/catalogue/runtime/physical Landing names with the ones already used by your working checkpoint:
+If you need a complete configuration rather than an addition, use this shape and replace workspace/catalogue/runtime/physical Landing names with the ones used by your working project:
 
 ```yaml title="workspace-config.yml"
 workspace: Parcel Development
@@ -65,6 +65,6 @@ A physical Shortcut or a directly qualified external relation is different: it i
 
 A semantic model’s `Weaver.Source` annotation can connect its Table to a managed source. Estate Load then places selected source work before model refresh, and Health can show a model behind its source. A linked Report depends on the model for deployment, but has no data Load or Test of its own.
 
-[Connect a managed Fabric source](../semantic-models/managed-sources.md) is the complete source-backed checkpoint for this extension. It deliberately uses Operations `Parcel.Delivery` with the Parcel model’s Warehouse-backed Delivery partition and inline Depot reference data. It is not a combined runnable version of Landing Event and the first Warehouse StatusEvent example. Use that snapshot as a whole: source-data Build and model/Report Build remain separate calls, and native source mapping, permissions and existing connections remain additional controls.
+[Connect a managed Fabric source](../semantic-models/managed-sources.md) uses Operations `Parcel.Delivery`, a Warehouse-backed Delivery partition and inline Depot data. Start with that complete project for the model extension. Build its source items before its model and Report, using the configured source mapping and an existing service connection.
 
 Once the connections work, [map development and production](environments.md) without changing those logical source identities. [How Weaver works](../core-concepts/how-weaver-works.md) follows the source into installed operations; [Design philosophy](../core-concepts/design-philosophy.md) explains the choices behind keeping native authoring and queryable state.

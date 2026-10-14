@@ -1,8 +1,8 @@
 # Run and inspect an estate
 
-Use the same configuration and operations across the managed estate. Health brings Lakehouse and Warehouse state together with registered model refreshes and validations; Load and Test operate that work without a second set of model-specific procedures.
+What needs to run again? Use Health to decide, then Load or Test the intended installed work. Health brings Lakehouse and Warehouse state together with registered model refreshes and validations; Load and Test operate that work without a second set of model-specific procedures.
 
-Continue the project from the [development loop](development-cycle.md), using the same configuration; no fresh setup or rerun is needed to inspect state. Direct entrants can use the complete [Warehouse checkpoint](../warehouse/tests.md) or [managed-source model checkpoint](../semantic-models/managed-sources.md). The latter contains Operations Delivery and the Parcel model, not the first Warehouse StatusEvent/View pair. Run these commands from the directory containing the intended `workspace-config.yml`; the Landing/Dispatch continuation uses `--workspace-config workspace-development.yml` on every command below. The managed-model variation instead keeps `--workspace-config workspace-dev.yml`.
+Keep the project from the [development loop](development-cycle.md). The Landing/Dispatch commands below use `workspace-development.yml`. For the [managed-source model project](../semantic-models/managed-sources.md), use its `workspace-dev.yml` instead. Run from that project directory and keep the same configuration throughout.
 
 ## 1. Inspect the starting state
 

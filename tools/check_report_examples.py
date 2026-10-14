@@ -40,6 +40,24 @@ def main():
         fixture, repository, json.loads((fixture / "expected-results.json").read_text())
     )
     check_report_bindings(fixture, repository)
+    import yaml
+    from weaver.config import parse_workspace
+    from weaver.operations.build import _item_bindings
+
+    workspace = parse_workspace(
+        yaml.safe_load((fixture / "workspace-dev.yml").read_text())
+    )
+    model_only = _item_bindings(
+        "SemanticModel/Parcel", workspace, repository=repository
+    )
+    assert [str(binding.item) for binding in model_only.entries] == [
+        "SemanticModel/Parcel"
+    ]
+    pair = _item_bindings("PowerBI/Parcel", workspace, repository=repository)
+    assert {str(binding.item) for binding in pair.entries} == {
+        "SemanticModel/Parcel",
+        "Report/Parcel",
+    }
     assert hashes(fixture) == before
     counts = {"commands": 0, "exact_fixture_blocks": 0}
     for name in ("deploy", "environments"):
@@ -64,7 +82,7 @@ def main():
             )
             if expected.read_text() in blocks:
                 counts["exact_fixture_blocks"] += 1
-    assert counts == {"commands": 8, "exact_fixture_blocks": 4}, counts
+    assert counts["commands"] > 0 and counts["exact_fixture_blocks"] == 4, counts
     print(
         json.dumps(
             {

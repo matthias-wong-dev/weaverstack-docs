@@ -15,14 +15,14 @@ weaver initialise \
   --catalogue Catalogue \
   --environment Weaver \
   --warehouse Operations \
-  --no-example \
-  --non-interactive
+  --no-example
 cd parcel-warehouse
 ```
 
-Initialisation creates or reuses the `Catalogue` and `Operations` Warehouses and the `Weaver` Environment. It writes the project configuration and Environment definition but does not publish the Environment. This T-SQL task does not need a Spark runtime. `--non-interactive` prevents browser sign-in, so configure credentials as described in Installation before using it.
+Initialise creates or reuses the named items and writes `workspace-config.yml`. This SQL task needs no Spark runtime; if interactive setup offers Environment publication, decline it for this Warehouse task. Use the project below, or the [complete example files](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-warehouse-journey); start with the two SQL files and add their validations on the next page.
 
-The command ends with `Weaver project ready in .../parcel-warehouse.` The generated `workspace-config.yml` binds `Warehouse/Operations` to the physical `Operations` Warehouse. Its relevant configuration is:
+<details markdown="1">
+<summary>See the generated workspace bindings</summary>
 
 ```yaml
 workspace: Parcel Development
@@ -33,9 +33,9 @@ targets:
   Warehouse/Operations: Operations
 ```
 
-**Ownership:** use a disposable target for this example. Build reconciles selected managed items and may prune undeclared co-located content. Keep irreplaceable sources in a separate physical item; [Schemas, keys and protected data](schema-and-protection.md#keep-the-source-outside-the-managed-target) explains the stronger boundary.
+`Warehouse/Operations` is the logical item; `Operations` is its physical Warehouse. Use your actual workspace name.
 
-For direct entry, the [complete journey snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-warehouse-journey) contains the SQL below plus the next page's validations. Use the two SQL files below for this first checkpoint; add `tests/` and `assumptions/` when you reach that page. The snapshot does not provision Fabric items.
+</details>
 
 ## Write the event Table
 
@@ -68,7 +68,7 @@ from (values
 ) as v ([Parcel ID], [Event sequence], [Status], [Depot]);
 ```
 
-The composite key identifies an event, not a parcel. The declared schema describes the four business columns; Weaver supplies the managed columns used for row auditing and change comparison. You do not write a target INSERT or MERGE procedure.
+The key identifies one event. Keep the SQL as a SELECT; the declaration describes the Table that should receive it.
 
 ## Read the latest event through a View
 
@@ -99,9 +99,11 @@ from ranked
 where [Event rank] = 1;
 ```
 
-The reference to `[Parcel].[StatusEvent]` lets Weaver infer the View's dependency. `Lineage` describes the data; it does not create that edge. Build installs the Table and View in dependency order. Only the Table has data work for Load to run.
+The View reads the event Table and keeps the most recent row for each parcel.
 
 ## Install the definitions, then load the rows
+
+**Use disposable targets.** Build manages the selected item and may prune undeclared co-located content. Keep irreplaceable sources in a separate physical item; [target ownership](schema-and-protection.md#keep-the-source-outside-the-managed-target) explains the boundary.
 
 ```bash
 weaver check
@@ -110,9 +112,7 @@ weaver load Warehouse/Operations
 weaver health --item Warehouse/Operations
 ```
 
-Check prints `Project valid.` It parses the declarations locally; it does not submit T-SQL to Fabric. Build installs the physical Table, its generated load work and the View, but does not populate the three event rows. Its installation summary should report no failed actions.
-
-On the first Load, `Parcel.StatusEvent` should succeed with three rows read and inserted and no rejected rows. The generated work stages the query result, matches keys, compares changed business values and records Load state. Health should show Green Build and Load sections.
+Check should print `Project valid.` Build should report no failed actions. The first Load should read and insert three event rows with no rejects; Health should show Green Build and Load sections.
 
 In a SQL query connected to **Operations**, read the View:
 
@@ -126,6 +126,10 @@ order by [Parcel ID];
 | --- | --- | --- |
 | P-1001 | In transit | Central |
 | P-1002 | Delivered | South |
+
+## What happened around the SELECT
+
+Build created the physical Table, generated its loading procedure and installed the dependent View. The SQL reference supplied the dependency; `Lineage` is descriptive. Load staged the query result, matched keys and reconciled changed values according to the Table’s policy. It also recorded the row changes and processing state for Health. You wrote neither an INSERT/MERGE procedure nor a second load-order definition.
 
 The View now gives you one row per parcel, but a successful Load does not prove that it chose the right event. [Testing Warehouse data](tests.md) adds an independent expected result and a check for unknown statuses to this same project, without initialising another one.
 
