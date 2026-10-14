@@ -1,19 +1,25 @@
 # Internal documentation coverage map
 
-This maintainer-only ledger records the state of the five-section public site. It is not rendered.
+This maintainer-only ledger records the item-first revision and earlier delivery evidence. It is not rendered.
 
-## Restructure status
+## Active item-first revision
 
-| Phase | Scope | Status |
-| --- | --- | --- |
-| 1 | Navigation and ownership | Complete. Public navigation is **Getting started / Core concepts / Basics / Advanced / Reference**. Guides, Contracts and Contributing are not public sections. |
-| 2 | Getting started and Core concepts | Complete. The first-project route is self-contained, and the concept sequence covers documents, operations, catalogue state, Mirrors, Sessions, dependencies and failure. |
-| 3 | Basics | Complete. Task pages use defaults and inference first, separate Python and Spark SQL paths, distinguish logical and physical Shortcuts, and cover normal development, operation and recovery. |
-| 4 | Advanced | Complete. The section covers Build selection, the general incremental Table and bookmark contracts, portable desktop/Fabric execution, history, schema, data protection, partial failure, mirroring, bundles and execution contexts. Notebook and Capacity remain CLI Reference topics. |
-| 5 | Reference | Complete. Weaver documents, Python API, CLI, configuration, operation behaviour, catalogue schema, bundle format and machine-readable output have explicit owners. Generated CLI and Python blocks remain generator-owned. |
-| 6 | Editorial integration | Complete on this branch. The whole rendered tree was checked for reader routes, retired paths and vocabulary, duplicated explanation, assurance and agent-facing language, future-product claims, and cross-page behavioural consistency. |
+Approved plan: `weaver-docs-item-first-reorganisation-agent-plan.md` supplied by Matthias. New navigation: Getting started / Lakehouse / Warehouse / Semantic models / Reports / Coordinate your estate / Reference. This supersedes the previous taxonomy, not its technical evidence.
 
-Final delivery verification must run again on the integrated head. A phase being complete here does not replace that integrated build and link check.
+| Package | Current state |
+|---|---|
+| Frozen evidence and retention map | Committed; 114 original pages accounted for, 35 canonical item/estate routes. See `acceptance/docs-item-first-2026-10/route-map.md`. |
+| Short entrances, sitemap and guidance | Established; target tasks are being authored, not yet integrated/built. |
+| Lakehouse and Warehouse | First approved isolated two-author batch in progress. |
+| Models and Reports | Pending second approved batch. |
+| Estate and reference/link audit | Pending third approved batch. |
+| Independent reader/retention reviews | Pending fourth approved batch after integration. |
+| Technical/browser/search verification | Pending final integrated head; earlier results below do not prove this restructure. |
+| Draft/private-preview delivery | Pending; no release, merge, public publication or live service acceptance. |
+
+The earlier five-section and feedback iterations below are historical evidence.
+Final reader acceptance belongs to Matthias; independent agent/editor review and
+local technical checks do not replace it.
 
 ## Pinned-main refresh
 

@@ -1,6 +1,6 @@
 # Installation
 
-Install Weaver, configure Fabric access, then use the first project to build and operate a small estate. Lakehouse and Warehouse work, semantic models and Reports use the same project with permissions appropriate to each item.
+Install Weaver, then choose the item you want to work with. Lakehouse, Warehouse, semantic-model and Report tasks give their own access requirements; a Warehouse starter is optional.
 
 ## Install the documented snapshot
 
@@ -50,7 +50,7 @@ When adding a semantic model and its linked Report to the project:
 
 An Import model with inline data can run in an existing Power BI workspace without a Weaver catalogue. The deployment example uses that small setup to demonstrate native files. A model reading managed Lakehouse or Warehouse data uses the project’s source mappings and existing service connections; Direct Lake retains its capacity requirements.
 
-Use [Deploy semantic models and Reports with PBIP](../basics/power-bi/deploy-pbip.md) to add their definitions to the project. [Requirements and compatibility](../reference/power-bi/requirements-and-compatibility.md) owns supported modes, bindings and permission boundaries. Microsoft documents [model creation rights](https://learn.microsoft.com/en-us/rest/api/fabric/semanticmodel/items/create-semantic-model) and [licences/workspace types](https://learn.microsoft.com/en-us/fabric/enterprise/licenses).
+Use [Deploy a native model](../semantic-models/native-tmdl.md) to add their definitions to the project. [Requirements and compatibility](../reference/power-bi/requirements-and-compatibility.md) owns supported modes, bindings and permission boundaries. Microsoft documents [model creation rights](https://learn.microsoft.com/en-us/rest/api/fabric/semanticmodel/items/create-semantic-model) and [licences/workspace types](https://learn.microsoft.com/en-us/fabric/enterprise/licenses).
 
 ## When the preview needs a hosted runtime
 
@@ -68,4 +68,4 @@ Keep that checkout at the documented revision, return to the tutorial project di
 
 The desktop CLI uses supported configured credentials, an existing Azure CLI sign-in or interactive browser sign-in. Do not assume every call requires the same credential path. Unattended `--non-interactive` commands must already have usable non-browser credentials. The Python library accepts caller-supplied credentials through its supported Session/API; its defaults are not the CLI's credential policy.
 
-Continue with [your first Fabric project](first-project.md). [Basics](../basics/index.md) adds Lakehouse and Warehouse work, semantic models and Reports. [Automation](../advanced/automation-and-execution-contexts.md) owns unattended execution details.
+Choose [Lakehouse](../lakehouse/index.md), [Warehouse](../warehouse/index.md), [Semantic models](../semantic-models/index.md) or [Reports](../reports/index.md). [Workflows and controlled deployment](../estate/automation-and-deployment.md) owns the route to unattended execution.
