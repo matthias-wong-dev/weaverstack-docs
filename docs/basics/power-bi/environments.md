@@ -5,6 +5,8 @@ search:
 
 # Choose development and production targets
 
-Model and Report targets use the same workspace configuration as other Fabric items. [Configure a workspace and Python runtime](../workspace-and-python-runtime.md#model-and-report-targets) owns the complete two-workspace example and deployment commands.
+Continue at the current task page:
 
-The [workspace reference](../../reference/configuration-files/workspace-config.md) defines mapping, discovery and precedence.
+- [Open reports task](../../reports/environments.md).
+
+[Continue: choose development and production targets](../../reports/environments.md).

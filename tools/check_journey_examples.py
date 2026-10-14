@@ -46,7 +46,7 @@ def main():
 
     catalogue_names = {table.qualified for table in CATALOGUE_TABLES}
     readback_pages = [
-        docs / "basics/tests-and-assumptions.md",
+        docs / "semantic-models/validation.md",
         root / "examples/parcel-powerbi-fabric/README.md",
     ]
     required_names = {
@@ -72,15 +72,11 @@ def main():
             re.DOTALL,
         ).group()
     )
-    pages = sorted((docs / "basics/power-bi").glob("*.md"))
-    pages += sorted((docs / "advanced/power-bi").glob("*.md"))
+    pages = sorted((docs / "semantic-models").glob("*.md"))
+    pages += sorted((docs / "reports").glob("*.md"))
     pages += [
-        docs / "advanced" / f"{name}.md"
-        for name in ("run-part-of-an-estate", "concurrency", "performance-and-scale")
-    ]
-    pages += [
-        docs / "basics/tests-and-assumptions.md",
-        docs / "basics/workspace-and-python-runtime.md",
+        docs / "estate" / f"{name}.md"
+        for name in ("selective-runs", "concurrency", "performance", "environments")
     ]
     assert len(pages) == 15
     counts = {"pages": len(pages), "commands": 0, "configs": 0, "python_calls": 0}
@@ -111,73 +107,73 @@ def main():
                     counts["python_calls"] += 1
     sync = [
         (
-            "basics/power-bi/deploy-pbip.md",
+            "semantic-models/native-tmdl.md",
             "yaml",
             "parcel-powerbi",
             "workspace-dev.yml",
         ),
         (
-            "basics/workspace-and-python-runtime.md",
+            "reports/environments.md",
             "yaml",
             "parcel-powerbi",
             "workspace-dev.yml",
         ),
         (
-            "basics/workspace-and-python-runtime.md",
+            "reports/environments.md",
             "yaml",
             "parcel-powerbi",
             "workspace-prod.yml",
         ),
         (
-            "basics/tests-and-assumptions.md",
+            "semantic-models/validation.md",
             "dax",
             "parcel-powerbi-validation",
             "PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax",
         ),
         (
-            "basics/tests-and-assumptions.md",
+            "semantic-models/validation.md",
             "tmdl",
             "parcel-powerbi-validation",
             "failure/Parcel.tmdl",
         ),
         (
-            "basics/power-bi/deploy-pbip.md",
+            "semantic-models/managed-sources.md",
             "yaml",
             "parcel-powerbi-fabric",
             "workspace-dev.yml",
         ),
         (
-            "basics/power-bi/deploy-pbip.md",
+            "semantic-models/managed-sources.md",
             "tmdl",
             "parcel-powerbi-fabric",
             "PowerBI/Parcel/Parcel.tmdl",
         ),
         (
-            "advanced/power-bi/shared-policy.md",
+            "semantic-models/shared-policy.md",
             "tmdl",
             "parcel-powerbi-standards",
             "PowerBI/policy.tmdl",
         ),
         (
-            "advanced/power-bi/custom-annotations.md",
+            "semantic-models/custom-annotations.md",
             "python",
             "parcel-powerbi-standards",
             "PowerBI/annotations/Parcel__DisplayFolder.py",
         ),
         (
-            "advanced/power-bi/custom-annotations.md",
+            "semantic-models/custom-annotations.md",
             "tmdl",
             "parcel-powerbi-standards",
             "PowerBI/Parcel/Parcel.tmdl",
         ),
         (
-            "advanced/power-bi/model-composition.md",
+            "semantic-models/composition.md",
             "tmdl",
             "parcel-powerbi-variants",
             "PowerBI/Parcel/ParcelOperations.tmdl",
         ),
         (
-            "advanced/power-bi/model-composition.md",
+            "semantic-models/composition.md",
             "tmdl",
             "parcel-powerbi-variants",
             "PowerBI/Parcel/ParcelExecutive.tmdl",
@@ -193,9 +189,9 @@ def main():
             trial = temp / name
             shutil.copytree(root / "examples/parcel-powerbi", trial)
             guide_path = docs / (
-                "basics/power-bi/deploy-pbip.md"
+                "semantic-models/native-tmdl.md"
                 if name == "rule"
-                else "advanced/power-bi/shared-policy.md"
+                else "semantic-models/shared-policy.md"
             )
             snippets = blocks(guide_path, "tmdl")
             if name == "rule":
@@ -224,7 +220,7 @@ def main():
                 assert (
                     group.calculationItems["Current"].expression == "SELECTEDMEASURE()"
                 )
-        guide = docs / "advanced/power-bi/model-from-tmdl.md"
+        guide = docs / "semantic-models/from-tmdl.md"
         snippets = blocks(guide, "tmdl")
         for number, text in enumerate(snippets):
             trial = temp / f"tmdl-{number}"

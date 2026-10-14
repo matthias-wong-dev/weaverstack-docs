@@ -92,4 +92,4 @@ With the source and model validations installed:
 weaver test --workspace-config workspace-config.yml
 ```
 
-The same report contains Lakehouse/Warehouse validations and model-owned DAX validations. A DAX Test can compare a measure with SQL calculated independently over its managed source. To inspect one model, select `SemanticModel/Parcel`; Reports have no separate Test. See [Validate a semantic model](../../basics/tests-and-assumptions.md#semantic-model-validations) and [Compare DAX with source SQL](../../basics/tests-and-assumptions.md#compare-dax-with-source-sql).
+The same report contains Lakehouse/Warehouse validations and model-owned DAX validations. A DAX Test can compare a measure with SQL calculated independently over its managed source. To inspect one model, select `SemanticModel/Parcel`; Reports have no separate Test. See [Validate a semantic model](../../semantic-models/validation.md) and [Compare DAX with source SQL](../../semantic-models/validation.md#compare-dax-with-source-sql).

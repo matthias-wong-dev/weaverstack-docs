@@ -101,4 +101,4 @@ weaver build . --item Warehouse/Operations --workspace-config workspace-config.y
 weaver build . --item PowerBI/Parcel --workspace-config workspace-config.yml
 ```
 
-The first call installs source definitions. The second can read their metadata, deploys the model before its linked Report, and registers them in the same catalogue. Source-data and Power BI definitions use separate Build calls; a workflow can sequence both. See [Connect a semantic model to source data](../../basics/power-bi/deploy-pbip.md#use-a-managed-source).
+The first call installs source definitions. The second can read their metadata, deploys the model before its linked Report, and registers them in the same catalogue. Source-data and Power BI definitions use separate Build calls; a workflow can sequence both. See [Connect a semantic model to source data](../../semantic-models/managed-sources.md).

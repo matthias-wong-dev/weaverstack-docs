@@ -1,144 +1,40 @@
+---
+search:
+  exclude: true
+---
+
 # Build a Lakehouse pipeline with Spark SQL
 
-This guide creates two Spark SQL Tables in one Lakehouse: a seeded event Table and a current-status Table that depends on it. Spark SQL documents require an explicit `Dependencies` field, including `Dependencies: []` when there is no managed dependency.
+Continue at the current task page:
 
-## Prerequisites
+- [Open lakehouse task](../lakehouse/spark-sql.md).
 
-- [Install Weaver](../getting-started/installation.md) and confirm `weaver --version` works.
-- Use a Fabric workspace where you can create or modify a catalogue Warehouse, Lakehouse and Fabric Environment.
+[Continue: build a lakehouse pipeline with spark sql](../lakehouse/spark-sql.md).
 
-The authored transformation is Spark SQL, but desktop Build and generated Load work execute through Weaver's Fabric runtime. Publish a matching Environment before the remote steps. Native SQL is not a promise that the surrounding Weaver execution needs no Weaver package.
+<span id="prerequisites"></span>
 
-## 1. Initialise the project
+[Continue: prerequisites](../lakehouse/spark-sql.md).
 
-Create a project containing `Lakehouse/Landing`:
+<span id="1-initialise-the-project"></span>
 
-```bash
-weaver initialise \
-  --workspace "Parcel Development" \
-  --project-folder ./parcel-lakehouse-sql \
-  --catalogue Catalogue \
-  --lakehouse Landing \
-  --no-example
-cd parcel-lakehouse-sql
-```
+[Continue: 1 initialise the project](../lakehouse/spark-sql.md).
 
-Replace `Parcel Development` with your workspace. Weaver writes `workspace-config.yml` and an empty `Lakehouse/Landing` directory. The command ends with `Weaver project ready in .../parcel-lakehouse-sql.`
+<span id="2-add-the-source-table"></span>
 
-## 2. Add the source Table
+[Continue: 2 add the source table](../lakehouse/spark-sql.md).
 
-Create `Lakehouse/Landing/Tables/Parcel.Event.sql`:
+<span id="3-add-the-dependent-table"></span>
 
-```sql
-/*
-Table ID: Parcel.Event
+[Continue: 3 add the dependent table](../lakehouse/spark-sql.md).
 
-Description: One row per parcel tracking event.
+<span id="4-check-the-documents"></span>
 
-Lineage: A deterministic carrier feed represented by this example.
+[Continue: 4 check the documents](../lakehouse/spark-sql.md).
 
-Dependencies: []
+<span id="5-build-and-load-the-item"></span>
 
-Primary key: Parcel ID, Event sequence
+[Continue: 5 build and load the item](../lakehouse/spark-sql.md).
 
-Schema:
-  Parcel ID: string
-  Event sequence: integer
-  Status: string
-  Depot: string
-*/
-select *
-from values
-    ('P-1001', 1, 'Accepted', 'North'),
-    ('P-1001', 2, 'In transit', 'Central'),
-    ('P-1002', 1, 'Delivered', 'South')
-as event(`Parcel ID`, `Event sequence`, `Status`, `Depot`);
-```
+<span id="6-inspect-the-result"></span>
 
-`Dependencies: []` is required because this Spark SQL Table reads no managed object. The final query supplies its staging rows.
-
-## 3. Add the dependent Table
-
-Create `Lakehouse/Landing/Tables/Parcel.CurrentStatus.sql`:
-
-```sql
-/*
-Table ID: Parcel.CurrentStatus
-
-Description: The latest recorded status for each parcel.
-
-Lineage: Parcel status events ordered by event sequence.
-
-Dependencies:
-  - Parcel.Event
-
-Primary key: Parcel ID
-
-Schema:
-  Parcel ID: string
-  Status: string
-  Depot: string
-*/
-with ranked as (
-    select `Parcel ID`
-         , `Status`
-         , `Depot`
-         , row_number() over (
-               partition by `Parcel ID`
-               order by `Event sequence` desc
-           ) as `Event rank`
-    from Parcel.Event
-)
-select `Parcel ID`, `Status`, `Depot`
-from ranked
-where `Event rank` = 1;
-```
-
-Spark SQL still requires the explicit dependency even though Weaver can find `Parcel.Event` in the query. The declaration establishes the execution relationship; `Lineage` remains descriptive prose.
-
-## 4. Check the documents
-
-Validate the project locally:
-
-```bash
-weaver check
-```
-
-Weaver prints `Project valid.` The check confirms document placement, metadata, declared dependencies and the one-result-query load shape. It does not ask Spark to execute the SQL.
-
-## 5. Build and load the item
-
-Publish the generated Environment first, using the documented snapshot's editable source checkout and `--dev` (omit it for a matched published release):
-
-```bash
-weaver fabric environment publish --path Environment/Weaver.Environment --dev
-```
-
-[Workspace and Python runtime](workspace-and-python-runtime.md) explains publication and version matching. Then install both Tables, run the item-wide load and read the resulting state:
-
-```bash
-weaver build
-weaver load Lakehouse/Landing
-weaver health --item Lakehouse/Landing
-```
-
-Build should finish with no failed actions. Load should run `Tables/Parcel.Event` before `Tables/Parcel.CurrentStatus`; the first Table reads three rows and the second reads two. Health should show Green Build and Load sections.
-
-## 6. Inspect the result
-
-Query the Lakehouse SQL analytics endpoint:
-
-```sql
-select [Parcel ID], [Status], [Depot]
-from [Parcel].[CurrentStatus]
-order by [Parcel ID];
-```
-
-The result is:
-
-| Parcel ID | Status | Depot |
-| --- | --- | --- |
-| P-1001 | In transit | Central |
-| P-1002 | Delivered | South |
-
-After editing either document, run Check and Build again, then use `weaver load Lakehouse/Landing --stale` to catch up work made stale by that Build. The [Dependencies](../core-concepts/dependencies.md) page explains why Spark SQL is an exception to inference-first authoring.
+[Continue: 6 inspect the result](../lakehouse/spark-sql.md).

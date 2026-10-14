@@ -50,7 +50,7 @@ You can also define a custom annotation as a Python handler and declare it in TM
 
 Build merges the native definition, shared policy and local overlay, then applies the annotations to the completed model.
 
-[Deploy semantic models and Reports](../basics/power-bi/deploy-pbip.md) shows the native-first workflow and a simple annotation. [Custom annotations](../advanced/power-bi/custom-annotations.md) implements a handler. [TMDL](../reference/power-bi/tmdl.md) and [Annotations](../reference/power-bi/annotations.md) own the exact syntax and precedence.
+[Deploy semantic models and Reports](../semantic-models/native-tmdl.md) shows the native-first workflow and a simple annotation. [Custom annotations](../semantic-models/custom-annotations.md) implements a handler. [TMDL](../reference/power-bi/tmdl.md) and [Annotations](../reference/power-bi/annotations.md) own the exact syntax and precedence.
 
 ## Documents that validate data
 

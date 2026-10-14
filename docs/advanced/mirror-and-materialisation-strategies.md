@@ -59,4 +59,4 @@ A later Mirror does not refresh borrowed objects in place around local work. It 
 
 Use re-mirroring when the desired result is a new source baseline, not as an iteration step. Review the complete destination boundary first. Preflight failures leave destinations unchanged, but a failure after execution begins does not restore the previous catalogue or targets and does not undo destinations already completed.
 
-The ordinary edit, Build, Load, Test and Health loop belongs in [The development cycle](../basics/development-cycle.md). Exact Mirror planning, confirmation and recovery behaviour is in the [Mirror operation reference](../reference/operation-behaviour/mirror.md).
+The ordinary edit, Build, Load, Test and Health loop belongs in [The development cycle](../estate/development-cycle.md). Exact Mirror planning, confirmation and recovery behaviour is in the [Mirror operation reference](../reference/operation-behaviour/mirror.md).

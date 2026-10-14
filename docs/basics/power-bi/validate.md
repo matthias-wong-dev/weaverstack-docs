@@ -5,6 +5,8 @@ search:
 
 # Validate a semantic model
 
-Semantic-model validation is part of [Add Tests and Assumptions](../tests-and-assumptions.md#semantic-model-validations). That page owns the complete DAX Assumption, deliberate failure and correction example, alongside Warehouse validations.
+Continue at the current task page:
 
-Use [Compare DAX with source SQL](../tests-and-assumptions.md#compare-dax-with-source-sql) for a model connected to managed data. Exact DAX metadata belongs in [Reference](../../reference/power-bi/validations.md).
+- [Open semantic models task](../../semantic-models/validation.md).
+
+[Continue: validate a semantic model](../../semantic-models/validation.md).

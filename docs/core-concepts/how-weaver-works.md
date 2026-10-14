@@ -30,7 +30,7 @@ Tests compare expected and actual rows. Assumptions return rows that violate a c
 
 A model’s DAX result can be checked against SQL calculated independently from its managed source. Installed results share the catalogue’s current validation state and history.
 
-See [Build, Load and Test](build-load-and-test.md) and [Add Tests and Assumptions](../basics/tests-and-assumptions.md).
+See [Build, Load and Test](build-load-and-test.md) and [Add Tests and Assumptions](../warehouse/tests.md).
 
 ## Health reads the whole estate
 
@@ -38,10 +38,10 @@ Health brings Build, Load and Test state together in one report. Without an item
 
 That shared view matters when a source changes after a downstream load or Test passed. Health identifies the downstream work that is now behind, rather than presenting each successful run in isolation.
 
-See [State and health](state-and-health.md) and [Run and inspect the estate](../basics/run-and-inspect-estate.md).
+See [State and health](state-and-health.md) and [Run and inspect the estate](../estate/operate.md).
 
 ## Develop against existing data
 
 Mirror borrows unchanged data through Warehouse Views and OneLake Shortcuts. Build materialises the work you change locally. The project keeps the same logical names and operating flow.
 
-See [Mirrors](mirrors.md) and [The development cycle](../basics/development-cycle.md).
+See [Mirrors](mirrors.md) and [The development cycle](../estate/development-cycle.md).

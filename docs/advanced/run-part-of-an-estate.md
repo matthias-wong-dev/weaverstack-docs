@@ -1,118 +1,48 @@
+---
+search:
+  exclude: true
+---
+
 # Run part of an estate
 
-Rerun a table and related work without turning a dependency into permission to run another item. Preview the selected work before executing it.
+Continue at the current task page:
 
-Use the `examples/parcel-load-selection` project from the documentation repository. Start in that directory, configure disposable targets in `workspace-dev.yml`, and complete its initial Build and item-wide Load. The guide uses this installed graph in `Warehouse/Operations`:
+- [Open estate task](../estate/selective-runs.md).
 
-```text
-Parcel.RawEvents → Parcel.Events → Parcel.Daily → Parcel.Summary
-                                      ↑
-                               Reference.Depot
-```
+[Continue: run part of an estate](../estate/selective-runs.md).
 
-`Reference.Depot` must already be current when a partial selection omits it. Expansion reads installed dependencies; it does not Build edited source.
+<span id="1-choose-the-item-boundary"></span>
 
-## 1. Choose the item boundary
+[Continue: 1 choose the item boundary](../estate/selective-runs.md).
 
-Name the logical items you intend to run. Dependencies never add an unnamed item. Start with `Warehouse/Operations`; the separate `Warehouse/Reporting` item remains outside this selection.
+<span id="2-choose-the-seed"></span>
 
-## 2. Choose the seed
+[Continue: 2 choose the seed](../estate/selective-runs.md).
 
-`--name` is a case-insensitive **whole-name regular expression**, not a glob or substring search. Escape a literal dot with `[.]`:
+<span id="3-inspect-the-preview"></span>
 
-```bash
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --dry-run --workspace-config workspace-dev.yml
-```
+[Continue: 3 inspect the preview](../estate/selective-runs.md).
 
-This selects only `Parcel.Events`. Plain named Load is a deliberate operator override: multiple matches do not imply dependency expansion or ordering between them.
+<span id="4-include-upstream-or-downstream-work"></span>
 
-## 3. Inspect the preview
+[Continue: 4 include upstream or downstream work](../estate/selective-runs.md).
 
-Read the selected identities, dependencies and any required publication/endpoint work in the returned plan. No data is loaded by `--dry-run`. Do not run a command whose selection differs from your intended scope.
+<span id="5-run-the-selection-you-inspected"></span>
 
-## 4. Include upstream or downstream work
+[Continue: 5 run the selection you inspected](../estate/selective-runs.md).
 
-```bash
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --dry-run --workspace-config workspace-dev.yml
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --descendants --dry-run --workspace-config workspace-dev.yml
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --descendants --dry-run --workspace-config workspace-dev.yml
-```
+<span id="6-cross-an-item-boundary-deliberately"></span>
 
-| Request | Selected tables in Operations |
-| --- | --- |
-| Seed alone | Events |
-| Ancestors | RawEvents, Events |
-| Descendants | Events, Daily, Summary |
-| Both directions | RawEvents, Events, Daily, Summary |
+[Continue: 6 cross an item boundary deliberately](../estate/selective-runs.md).
 
-**Both directions start from the original seeds separately. Their union does not add `Reference.Depot`, even though Daily reads it.** An omitted producer is not automatically refreshed. Expanded work runs in dependency order within the selected graph, including required supported barriers; unrelated sibling prerequisites do not become selected data work.
+<span id="7-match-several-names-and-diagnose-a-refusal"></span>
 
-## 5. Run the selection you inspected
+[Continue: 7 match several names and diagnose a refusal](../estate/selective-runs.md).
 
-Remove only the preview flag:
+<span id="8-choose-the-right-kind-of-rerun"></span>
 
-```bash
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --workspace-config workspace-dev.yml
-```
+[Continue: 8 choose the right kind of rerun](../estate/selective-runs.md).
 
-The report should show RawEvents and Events as attempted, with Events ordered after RawEvents. Daily, Summary, Depot and the Reporting item were not requested by that invocation. Inspect outcomes: an attempted node is not necessarily a successful one.
+<span id="related-tasks"></span>
 
-The equivalent combined Python preview is:
-
-```python
-import weaver
-
-preview = weaver.load(
-    'Warehouse/Operations',
-    names=r'Parcel[.]Events',
-    ancestors=True,
-    descendants=True,
-    dry_run=True,
-    workspace_config='workspace-dev.yml',
-)
-print(preview.to_mapping())
-```
-
-## 6. Cross an item boundary deliberately
-
-The fixture also declares `Warehouse/Reporting/Parcel.DashboardInput`, which consumes Operations' Summary. Selecting Operations alone cannot reach it. To include it, name both items:
-
-```bash
-weaver load Warehouse/Operations Warehouse/Reporting --name 'Parcel[.]Events' --descendants --dry-run --workspace-config workspace-dev.yml
-```
-
-This selects Events, Daily and Summary in Operations, then DashboardInput in Reporting. It still omits RawEvents and Depot. Keep both current before that run. A Lakehouse-to-Warehouse equivalent may also need OneLake publication and SQL endpoint readiness; these are ordered by the supported installed graph, not replaced with an arbitrary delay.
-
-## 7. Match several names and diagnose a refusal
-
-Repeat `--name` to take the union of matching seeds. Every supplied pattern must match at least one loadable object inside the requested scope:
-
-```bash
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --name 'Reference[.]Depot' --descendants --dry-run --workspace-config workspace-dev.yml
-weaver load Warehouse/Operations --name 'Parcel[.]DoesNotExist' --dry-run --workspace-config workspace-dev.yml
-```
-
-The second command is a no-match error, not an empty successful run. Check installed spelling and item scope. `Parcel.Events` leaves its dot as a regex wildcard; `[.]` expresses the literal identity.
-
-Lakehouse identities can include `Tables/` or `Files/`. A bare identity can be ambiguous when both areas contain it. Use an area-qualified name, for example:
-
-```bash
-weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry-run --workspace-config workspace-dev.yml
-```
-
-This last command illustrates Lakehouse naming; it is not a command for the Warehouse-only fixture.
-
-## 8. Choose the right kind of rerun
-
-- Ordinary item-wide Load runs the installed item graph.
-- `--stale` selects non-Green work by Load health. It does not refresh every omitted Green prerequisite. `--as-of` supplies its freshness cutoff and requires `--stale`.
-- `--reload` **empties reached selected tables and resets their bookmarks/progress before loading them**. Expansion can enlarge that destructive scope. Preview first; the old data is not automatically restored after failure. Reload is not supported for Folders, and cannot be combined with stale selection.
-- `--fault-tolerant` changes continuation and reject policy, not the item boundary or source definitions. Read the [failure boundary](../reference/operation-behaviour/load.md) before using partial output.
-
-Ancestors and descendants are Load options, not Build or Test options. Catalogue-free semantic-model refresh does not provide installed-graph name, stale, reload or recursive selection; name the model to refresh instead.
-
-## Related tasks
-
-- [Recover failed work](../basics/recover-failed-work.md).
-- [Limit simultaneous work](concurrency.md).
-- [Look up exact selection and identity rules](../reference/operation-behaviour/shared-selection-and-identity.md).
+[Continue: related tasks](../estate/selective-runs.md).

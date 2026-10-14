@@ -57,7 +57,7 @@ ConfigError(message: object, *, executor: str | None = None)
 
 Raised when workspace configuration or supplied configuration-dependent values are invalid. This category covers configuration parsing and validation, not every missing runtime prerequisite.
 
-See [Workspaces and Environments](../../basics/workspace-and-python-runtime.md) for the configuration boundary.
+See [Workspaces and Environments](../../estate/environments.md) for the configuration boundary.
 
 ## `IdentityError`
 
@@ -83,4 +83,4 @@ Raised when a validation cannot be evaluated by its direct validation interface 
 
 `result` defaults to `None`. `ValidationError` does not accept the `executor` keyword exposed by the other constructors on this page.
 
-A validation that executes and finds discrepancies or violations is represented as a failed validation outcome. An evaluation failure is distinct and must not be interpreted as a passing result. See [Add Tests and Assumptions](../../basics/tests-and-assumptions.md).
+A validation that executes and finds discrepancies or violations is represented as a failed validation outcome. An evaluation failure is distinct and must not be interpreted as a passing result. See [Add Tests and Assumptions](../../warehouse/tests.md).

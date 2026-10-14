@@ -1,66 +1,28 @@
+---
+search:
+  exclude: true
+---
+
 # Share native modelling standards
 
-Apply the same formatting and calculation structure to several models without copying the convention into each native project. Shared policy is TMDL; custom Python is not required.
+Continue at the current task page:
 
-Start with a fresh [ordinary parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi) and its [deployment prerequisites](../../basics/power-bi/deploy-pbip.md). The independent [standards fixture](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi-standards) contains the completed policy plus the separate custom annotation example.
+- [Open semantic models task](../../semantic-models/shared-policy.md).
 
-## 1. Add the shared policy
+[Continue: share native modelling standards](../../semantic-models/shared-policy.md).
 
-Create `PowerBI/policy.tmdl`:
+<span id="1-add-the-shared-policy"></span>
 
-```tmdl
-model Model
-	discourageImplicitMeasures
+[Continue: 1 add the shared policy](../../semantic-models/shared-policy.md).
 
-table Delivery
-	measure 'Delivery Count'
-		formatString: #,##0
-	measure InternalCost
-		formatString: #,##0.00
+<span id="2-override-one-convention-locally"></span>
 
-table Display
-	calculationGroup
-		precedence: 10
-		calculationItem Current = SELECTEDMEASURE()
-	column Calculation
-		dataType: string
-		sourceColumn: Name
-		summarizeBy: none
-```
+[Continue: 2 override one convention locally](../../semantic-models/shared-policy.md).
 
-The policy applies to all final models in this project and declares no physical model of its own. Here it sets two measure formats and adds a native Display calculation group with a Current calculation item. The calculation group is native TMDL, not an invented built-in annotation.
+<span id="3-deploy-and-inspect"></span>
 
-## 2. Override one convention locally
+[Continue: 3 deploy and inspect](../../semantic-models/shared-policy.md).
 
-Create `PowerBI/Parcel/Parcel.tmdl`:
+<span id="related-tasks"></span>
 
-```tmdl
-model Model
-    annotation 'Weaver.AutoHideForeignKeys' = true
-
-table Delivery
-    measure 'Delivery Count'
-        formatString: 0 "deliveries"
-```
-
-The effective definition merges the native source, then shared policy, then this model's same-name overlay. The overlay's Delivery Count format wins; InternalCost retains `#,##0.00`. Omission is not general deletion. [TMDL reference](../../reference/power-bi/tmdl.md) owns exact merge and replacement rules.
-
-## 3. Deploy and inspect
-
-```bash
-weaver check .
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
-```
-
-Inspect the deployed native definition. It should contain Display/Current, `discourageImplicitMeasures`, the two intended formats and the hidden many-side Delivery[DepotId]. Original partitions and the relationship remain. The Report's Delivery Count should display `2 deliveries`.
-
-Authored native files still contain the declarations, not the transformed definition. Inspect the deployed definition through the service’s Get Definition API or a native model-definition tool.
-
-Delete only the fixture-created Report/model for cleanup, Reports first.
-
-## Related tasks
-
-- [Add a custom annotation](custom-annotations.md).
-- [Reuse a base model in variants](model-composition.md).
-- [Look up policy and overlay precedence](../../reference/power-bi/tmdl.md).
+[Continue: related tasks](../../semantic-models/shared-policy.md).

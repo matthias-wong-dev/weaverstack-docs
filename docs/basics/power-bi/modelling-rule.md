@@ -5,6 +5,8 @@ search:
 
 # Hide relationship foreign keys
 
-This example is part of [Deploy semantic models and Reports](deploy-pbip.md#add-an-overlay-and-a-weaver-annotation). It introduces native TMDL first, then a same-name overlay using `Weaver.AutoHideForeignKeys`.
+Continue at the current task page:
 
-[Weaver documents](../../core-concepts/weaver-documents.md#native-models-overlays-and-annotations) explains the authoring model. The [annotation reference](../../reference/power-bi/annotations.md#weaverautohideforeignkeys) owns its exact semantics.
+- [Open semantic models task](../../semantic-models/native-tmdl.md).
+
+[Continue: hide relationship foreign keys](../../semantic-models/native-tmdl.md).

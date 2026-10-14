@@ -1,63 +1,20 @@
+---
+search:
+  exclude: true
+---
+
 # Work in Sessions and workflows
 
-Open a Session when several commands will run against one Fabric workspace. Once the sequence is accepted, record it as a workflow and run it as one named unit.
+Continue at the current task page:
 
-## Open one Session
+- [Open estate task](../estate/automation-and-deployment.md).
 
-From a project directory containing `workspace-config.yml`, run:
+[Continue: work in sessions and workflows](../estate/automation-and-deployment.md).
 
-```bash
-weaver session --timings
-```
+<span id="open-one-session"></span>
 
-At the `weaver>` prompt, run the normal lifecycle:
+[Continue: open one session](../estate/automation-and-deployment.md).
 
-```text
-weaver> build .
-weaver> load
-weaver> test
-weaver> health
-weaver> exit
-```
+<span id="turn-the-accepted-sequence-into-a-workflow"></span>
 
-The leading `weaver` is optional at the prompt. Each line uses the ordinary CLI parser and keeps its ordinary operation behaviour.
-
-The commands share the Session's workspace and can reuse capabilities already acquired there, including authentication, item resolution, Warehouse connections, OneLake access and Spark context. The Session acquires only what the commands need and releases what it opened on exit. `--timings` reports Fabric access timings when the Session ends.
-
-A failed command returns to the prompt. Correct the cause, inspect Health and rerun the appropriate command without opening another Session. A Session does not combine the commands into a transaction or change their selections.
-
-## Turn the accepted sequence into a workflow
-
-Create `workflow.yml` in the project directory:
-
-```yaml
-workflows:
-  verify:
-    - check .
-    - build .
-    - load
-    - test
-    - health
-```
-
-For a project that also has native Power BI definitions, use a source-item Build and a separate Power BI Build in the sequence. A workflow is an ordered list of ordinary Weaver commands. It is not a shell or a second execution language. Each entry retains its normal selection, effects and failure behaviour. Exact YAML grammar and allowed command forms are in [Workflow configuration](../reference/configuration-files/workflow.md).
-
-Run the sequence:
-
-```bash
-weaver workflow verify --timings
-```
-
-Weaver parses the entries, resolves one workspace, displays the numbered sequence and asks once for confirmation. The entries then run in file order through one Session. Load and Test outcomes from the sequence share a workflow identifier for catalogue correlation.
-
-An execution error stops later entries. Test/Health findings are collected while later commands continue; the completed workflow then exits unsuccessfully. Completed work is not rolled back. Diagnose the failed operation and rerun an appropriate sequence against the state that remains; a workflow is not a transaction.
-
-For unattended execution, the `full` workflow created by [First project](../getting-started/first-project.md#9-run-the-lifecycle-as-a-workflow) can be authorised explicitly with all interactive input disabled:
-
-```bash
-weaver workflow full --yes --non-interactive
-```
-
-`--yes` authorises the displayed workflow and all its entries. `--non-interactive` also prevents prompts, keypress waits and browser sign-in, so the configured unattended credentials must be sufficient. Piping `y` into `weaver workflow full` is not confirmation: when stdin is not a real terminal, Weaver refuses to run unless `--yes` is present.
-
-For unattended policy, authentication and exact confirmation behaviour, see [Workflow operation behaviour](../reference/operation-behaviour/workflow.md) and [Automation and execution contexts](../advanced/automation-and-execution-contexts.md).
+[Continue: turn the accepted sequence into a workflow](../estate/automation-and-deployment.md).

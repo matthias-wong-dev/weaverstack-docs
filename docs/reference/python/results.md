@@ -136,7 +136,7 @@ MirrorResult(
 
 Returned after `mirror()` completes. `wiped` names emptied destinations in execution order. `copied` maps catalogue table names to copied row counts, and `rows` is their sum. `uncopied` names historical catalogue tables rebuilt without copied rows. `items` names mirrored logical items; `mirrored` carries each item's source, target, and operation-specific counts. `to_mapping()` converts tuples and mappings to transport shapes.
 
-See [`weaver mirror`](../cli/mirror.md) and [Development cycle](../../basics/development-cycle.md).
+See [`weaver mirror`](../cli/mirror.md) and [Development cycle](../../estate/development-cycle.md).
 
 ## Wipe
 
@@ -200,7 +200,7 @@ WipeResult(
 
 Returned by `wipe()`. `items` is the item-level result; `reports` is the lower-level removal detail. `emptied` lists emptied physical targets in execution order. `unbound` contains the catalogue update result when claims were removed. `to_mapping()` includes the plan and item outcomes but not the lower-level `reports` tuple.
 
-See [`weaver wipe`](../cli/wipe.md) and [Recovery](../../basics/recover-failed-work.md) before using the destructive operation.
+See [`weaver wipe`](../cli/wipe.md) and [Recovery](../../estate/recovery.md) before using the destructive operation.
 
 ## Unbind
 
@@ -358,7 +358,7 @@ ValidationRunReport(
 
 Returned by `test()`. `succeeded` is true for `passed` and `planned`. `failed_nodes` and `invalid_nodes` filter the two unsuccessful status classes. `node(name)` performs a case-insensitive lookup by the trailing logical `Schema.Object` and raises `KeyError` when absent. `totals()` returns planned, executed, passed, failed, and invalid node counts plus missing, unexpected, and violation totals. `to_mapping()` includes those totals; `from_mapping(payload)` reconstructs the report.
 
-See [`weaver test`](../cli/test.md) and [Add Tests and Assumptions](../../basics/tests-and-assumptions.md).
+See [`weaver test`](../cli/test.md) and [Add Tests and Assumptions](../../warehouse/tests.md).
 
 ## Health
 
@@ -436,4 +436,4 @@ Returned by `health()`. `sections` is `(load, tests, build)`. `status` is their 
 
 `current_load` summarises the workflow IDs, time range, and status counts behind the estate's current load state. `to_mapping()` emits the health format version, sections, this current-load summary, and load activity.
 
-See [`weaver health`](../cli/health.md) and [Run and inspect an estate](../../basics/run-and-inspect-estate.md).
+See [`weaver health`](../cli/health.md) and [Run and inspect an estate](../../estate/operate.md).

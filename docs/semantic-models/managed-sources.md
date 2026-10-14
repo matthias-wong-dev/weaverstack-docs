@@ -12,7 +12,7 @@ Use the [complete Fabric integration project](https://github.com/matthias-wong-d
 
 You need Warehouse create/alter/load and SELECT rights, catalogue read/write, model/Report deployment and refresh/view rights. Import refresh needs an existing supported service connection and credentials with Warehouse SQL access. Weaver does not create credentials. Only request binding to a connection you are permitted to use.
 
-If you do not yet have a catalogue, the [first Fabric project](../getting-started/first-project.md) supplies the setup route. Do not point this exercise at an existing production estate.
+If you do not yet have a catalogue, the [first Fabric project](../warehouse/first-project.md) supplies the setup route. Do not point this exercise at an existing production estate.
 
 ## 1. Configure destination and source separately
 

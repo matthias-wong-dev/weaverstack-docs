@@ -11,8 +11,8 @@ Approved plan: `weaver-docs-item-first-reorganisation-agent-plan.md` supplied by
 | Frozen evidence and retention map | Committed; 114 original pages accounted for, 35 canonical item/estate routes. See `acceptance/docs-item-first-2026-10/route-map.md`. |
 | Short entrances, sitemap and guidance | Established; target tasks are being authored, not yet integrated/built. |
 | Lakehouse and Warehouse | Integrated and parent-reviewed. Lakehouse: 7 local Check checkpoints / 12 exact fixture blocks; Warehouse: 5 checkpoints / 12 exact blocks. Expected service outcomes remain unobserved. |
-| Models and Reports | Second approved two-author batch in progress on isolated branches. |
-| Estate and reference/link audit | Pending third approved batch. |
+| Models and Reports | Integrated and parent-reviewed. Seven model tasks: 12 compiled Check checkpoints / 16 exact blocks. Reports: 8 command parses / 4 exact blocks / native and offline dev/prod binding gate passed. |
+| Estate and reference/link audit | Third approved two-author batch in progress. Parent generated direct compatibility pointers and is reconciling narrative routes. |
 | Independent reader/retention reviews | Pending fourth approved batch after integration. |
 | Technical/browser/search verification | Pending final integrated head; earlier results below do not prove this restructure. |
 | Draft/private-preview delivery | Pending; no release, merge, public publication or live service acceptance. |
