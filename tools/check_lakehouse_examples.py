@@ -47,7 +47,9 @@ socket.create_connection = blocked
 
 def blocks(page, language):
     return re.findall(
-        r"^```" + language + r"[^\n]*\n(.*?)^```", page.read_text(), re.MULTILINE | re.DOTALL
+        r"^```" + language + r"[^\n]*\n(.*?)^```",
+        page.read_text(),
+        re.MULTILINE | re.DOTALL,
     )
 
 
