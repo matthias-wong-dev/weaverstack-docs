@@ -19,13 +19,16 @@ Source and tests outrank design prose. Maintained projects are realism checks, n
 
 | Section | Reader need | Page responsibility |
 | --- | --- | --- |
-| Getting started | Complete a first successful lifecycle | One shallow, ordered path with only the context needed for the next step. |
-| Core concepts | Reason about Weaver | The public mental model and its consequences. |
-| Basics | Complete normal work | Prerequisites, actions, observable results and recovery routes using defaults first. |
-| Advanced | Understand or apply a deeper mechanism | A bounded explanation or operating pattern with explicit prerequisites and boundaries. |
-| Reference | Look up an interface or specified behaviour | Exact syntax, fields, defaults, selection, state changes, outcomes and failure boundaries. |
+| Getting started | Install and choose a route | Setup with an optional small Warehouse starter, not an admission requirement. |
+| Lakehouse / Warehouse / Semantic models / Reports | Use a familiar item | One start state, one useful result and a connected next task. |
+| Coordinate your estate | Work with connected items | Dependencies, environment mappings, state, development, operation, recovery and tuning. |
+| Reference | Look up precise behaviour | Syntax, defaults, selection, state changes, failures and API signatures. |
 
-If a page starts doing several jobs, keep the task in Basics and link to the owning concept, advanced explanation or reference entry.
+Retained concept and deep-dive URLs stay searchable and are linked contextually.
+Before moving material, extend `acceptance/docs-item-first-2026-10/route-map.md`.
+Record prior/next example checkpoints, direct-entry fixture and any intentional
+source-mode change. Retired routes preserve meaningful fragments as direct links,
+never chains. Human reader acceptance is separate from compiler/browser checks.
 
 ## Write and connect the page
 
