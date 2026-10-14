@@ -68,12 +68,28 @@ def main():
     home = pages["index.html"]
     features = pages["features/index.html"]
     expected = ["Lakehouse", "Warehouse", "Semantic Models", "Reports"]
-    for page in (home, features):
-        assert [h for h in page.headings if h in expected] == expected
-        assert not any("catalogue" in h.lower() for h in page.headings)
+    assert [h for h in home.headings if h in expected] == expected
+    assert not any("catalogue" in h.lower() for h in home.headings)
     assert home.headings[0] == "Making Fabric easier to use"
     assert home.links[0].endswith("/getting-started/")
-    assert {"/lakehouse/", "/warehouse/", "/semantic-models/", "/reports/"} <= set(
+    # Product capability stages replace product item tutorials; the developer
+    # documentation keeps its item-first tasks. Check stable IDs, not copy.
+    feature_html = (site / "features/index.html").read_text()
+    stages = re.findall(
+        r'<section\b[^>]*\bid="([^"]+)"[^>]*data-feature-group=', feature_html
+    )
+    assert stages == [
+        "start-simple",
+        "data-engineering",
+        "power-bi",
+        "operations",
+        "advanced",
+    ]
+    assert {
+        f"https://docs.weaverstack.dev/{item}/"
+        for item in ("lakehouse", "warehouse", "semantic-models", "reports")
+    } <= set(home.links)
+    assert not {"/lakehouse/", "/warehouse/", "/semantic-models/", "/reports/"} & set(
         features.links
     )
     for page in pages.values():
