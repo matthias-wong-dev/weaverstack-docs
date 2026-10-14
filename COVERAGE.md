@@ -14,7 +14,7 @@ Approved plan: `weaver-docs-item-first-reorganisation-agent-plan.md` supplied by
 | Models and Reports | Integrated and parent-reviewed. Seven model tasks: 12 compiled Check checkpoints / 16 exact blocks. Reports: 8 command parses / 4 exact blocks / native and offline dev/prod binding gate passed. |
 | Estate and reference/link audit | Integrated; 35 canonical pages, 114 original routes, 872 old IDs and 26 direct search-excluded compatibility routes pass the rendered gate. Product links canonical. |
 | Independent reader/retention reviews | Four-pair scope finished. Five reader paths and full retention independently reviewed; four verified findings corrected/rechecked by parent. Final human acceptance remains Matthias. |
-| Technical/browser/search verification | Current integrated iteration passes locked build, generators and 1135 focused core cases. Browser: 410 responsive/theme checks, 8 live search queries, only active group expanded, two-click entries and no-JS/touch/keyboard pass. Final rerun follows any review corrections. |
+| Technical/browser/search verification | Final locked build, four generators, item/fixture gates, paired crawl and 1,135 unique focused source tests pass. Broad integrated browser: 410 states; post-correction: 54 states plus eight hit-tested actual search selections. Original search false-negative and parent correction dispositions are recorded, not treated as human approval. |
 | Draft/private-preview delivery | Corrected preview built on existing private routes; final PR heads/readback recorded in final-verification.md. No release, merge, public publication or live service acceptance. |
 
 The earlier five-section and feedback iterations below are historical evidence.
