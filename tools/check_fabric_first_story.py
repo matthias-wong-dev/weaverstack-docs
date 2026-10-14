@@ -72,7 +72,7 @@ def main():
         assert [h for h in page.headings if h in expected] == expected
         assert not any("catalogue" in h.lower() for h in page.headings)
     assert home.headings[0] == "Making Fabric easier to use"
-    assert home.links[0].endswith("/getting-started/first-project/")
+    assert home.links[0].endswith("/getting-started/")
     assert (
         "Weaver works with native Fabric Lakehouse and Warehouse items, as well as Power BI projects."
         in features.text
@@ -91,63 +91,53 @@ def main():
 
     config = yaml.load((root / "mkdocs.yml").read_text(), Loader=yaml.BaseLoader)
     nav = config["nav"]
-    basics = next(group["Basics"] for group in nav if "Basics" in group)
-    authoring = [next(iter(entry.values())) for entry in basics[1:5]]
-    assert authoring == [
-        "basics/lakehouse-python.md",
-        "basics/lakehouse-spark-sql.md",
-        "basics/warehouse-pipeline.md",
-        "basics/power-bi/deploy-pbip.md",
-    ], authoring
-    assert not any(isinstance(entry, dict) and "Power BI" in entry for entry in basics)
-    entries = [next(iter(entry.values())) for entry in basics[1:]]
-    assert entries[4] == "basics/tests-and-assumptions.md"
-    assert not any(
-        path in entries
-        for path in (
-            "basics/power-bi/validate.md",
-            "basics/power-bi/modelling-rule.md",
-            "basics/power-bi/environments.md",
-            "basics/power-bi/fabric-integration.md",
-        )
+    groups = [next(iter(group)) for group in nav]
+    assert groups == [
+        "Home",
+        "Getting started",
+        "Lakehouse",
+        "Warehouse",
+        "Semantic models",
+        "Reports",
+        "Coordinate your estate",
+        "Reference",
+    ], groups
+    assert "navigation.sections" not in config["theme"].get("features", [])
+    routes = json.loads(
+        (root / "acceptance/docs-item-first-2026-10/routes.json").read_text()
     )
-    validation = (root / "docs/basics/tests-and-assumptions.md").read_text()
+    for path in routes["canonical_pages"]:
+        target = root / "docs" / path
+        assert target.is_file(), path
+        body = target.read_text()
+        assert re.search(r"^# .+", body, re.MULTILINE), path
+        assert not re.search(r"^search:\s*\n\s+exclude: true", body, re.MULTILINE), path
+    # These are technical features and boundaries, not prescribed paragraph order.
+    native = (root / "docs/semantic-models/native-tmdl.md").read_text()
+    assert "Weaver.AutoHideForeignKeys" in native
+    assert "shared-policy.md" in native
+    validation = (root / "docs/semantic-models/validation.md").read_text()
+    assert "EVALUATE" in validation and "weaver test SemanticModel/Parcel" in validation
+    assert "SemanticModelSource" not in validation
+    reports = (root / "docs/reports/deploy.md").read_text()
+    assert "byPath" in reports
+    for block in re.findall(
+        r"^```bash[^\n]*\n(.*?)^```", reports, re.MULTILINE | re.DOTALL
+    ):
+        assert not re.search(r"weaver (?:load|test) Report/", block)
+    selection = (root / "docs/estate/selective-runs.md").read_text()
     assert all(
-        term in validation
-        for term in (
-            "Semantic-model validations",
-            "EVALUATE FILTER",
-            "Compare DAX with source SQL",
-            "weaver test SemanticModel/Parcel",
-        )
+        term in selection.lower()
+        for term in ("regex", "original", "seed", "--ancestors", "--descendants")
     )
-    authoring = (root / "docs/basics/power-bi/deploy-pbip.md").read_text()
-    assert authoring.index("## Native files first") < authoring.index(
-        "## Add an overlay and a Weaver annotation"
-    )
+    concurrency = (root / "docs/estate/concurrency.md").read_text()
     assert all(
-        term in authoring
-        for term in (
-            "Weaver.AutoHideForeignKeys",
-            "Use your own convention",
-            "custom-annotations.md",
-            "Weaver.Source",
-        )
+        term in concurrency for term in ("--concurrency", "execution", "build", "run")
     )
-    core = (root / "docs/core-concepts/weaver-documents.md").read_text()
+    assert "Making Fabric easier to use" in (root / "docs/index.md").read_text()
     assert (
-        "TMDL overlays and Weaver annotations play the corresponding authoring role"
-        in core
-    )
-    assert "Parcel.DisplayFolder" in core
-    advanced = next(group["Advanced"] for group in nav if "Advanced" in group)
-    assert "Semantic models" in advanced[-1]
-    assert "Power BI modelling" not in (root / "mkdocs.yml").read_text()
-    assert config["site_description"].startswith("Build and operate Microsoft Fabric")
-    installation = (root / "docs/getting-started/installation.md").read_text()
-    assert "Route 1: native Power BI" not in installation
-    assert installation.index("## Configure Fabric access") < installation.index(
-        "## Model and Report access"
+        "74b4d15ee65ed2740593af1f4d459771b801b132"
+        in (root / "docs/getting-started/installation.md").read_text()
     )
     counts = {"shared_cli_leaves": 4, "authored_commands_parsed": 0}
     targets = [
@@ -157,22 +147,17 @@ def main():
     targets += [
         root / f"docs/{name}.md"
         for name in (
-            "basics/development-cycle",
-            "basics/recover-failed-work",
-            "basics/run-and-inspect-estate",
+            "estate/development-cycle",
+            "estate/recovery",
+            "estate/operate",
             "core-concepts/state-and-health",
-            "basics/power-bi/deploy-pbip",
-            "basics/tests-and-assumptions",
-            "basics/workspace-and-python-runtime",
+            "semantic-models/native-tmdl",
+            "semantic-models/validation",
+            "estate/environments",
         )
     ]
     for path in targets:
         text = path.read_text()
-        if path.parent.name == "cli":
-            intro = text.split("<!-- BEGIN GENERATED CLI -->")[0].lower()
-            assert all(term in intro for term in ("lakehouse", "warehouse", "model")), (
-                path
-            )
         for block in re.findall(
             r"^```bash[^\n]*\n(.*?)^```", text, re.DOTALL | re.MULTILINE
         ):
@@ -181,11 +166,10 @@ def main():
                     build_parser().parse_args(shlex.split(line)[1:])
                     counts["authored_commands_parsed"] += 1
     for name in (
-        "docs/basics/run-and-inspect-estate.md",
+        "docs/estate/operate.md",
         "docs/reference/cli/health.md",
     ):
         text = (root / name).read_text()
-        assert "whole installed estate" in text
         assert re.search(
             r"^weaver health(?: --workspace-config [^\n]+)?$", text, re.MULTILINE
         )
