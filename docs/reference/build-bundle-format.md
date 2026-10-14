@@ -2,7 +2,7 @@
 
 A retained Build bundle is frozen, destination-bound installation input. `weaver build --bundle-only` writes a local directory; `weaver install` accepts it or a `.weaver.zip` archive. Build preview (`--dry-run`) presents the canonical plan but retains no deployable bundle. Neither mode provisions missing Power BI targets.
 
-This page describes format **5** at source revision [`74b4d15ee65ed2740593af1f4d459771b801b132`](https://github.com/matthias-wong-dev/weaverstack/tree/74b4d15ee65ed2740593af1f4d459771b801b132). The loader accepts exactly this format number, not older format-3/4 plans. This is a current representation, not a cross-version interchangeability or upgrade-window promise.
+This page describes Build bundle format **5**. The loader accepts exactly this format number, not older format-3/4 plans. This is a current representation, not a cross-version interchangeability or upgrade-window promise.
 
 ## Directory and archive
 

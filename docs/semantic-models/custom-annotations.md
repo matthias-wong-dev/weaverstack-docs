@@ -4,7 +4,7 @@ Set a native measure's display folder with one small Python handler. Use a custo
 
 ## Before you start
 
-Continue [shared modelling standards](shared-policy.md) with the same Parcel model, policy and local format override. Add the handler and annotation below; keep Delivery, Depot, their partitions and your workspace configuration. For direct entry, the complete [standards snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi-standards) includes this finished checkpoint; use the [ordinary deployment prerequisites](native-tmdl.md#before-you-start).
+Continue [shared modelling standards](shared-policy.md) with the same Parcel model, policy and local format override. Add the handler and annotation below; keep Delivery, Depot, their partitions and your workspace configuration. For direct entry, the complete [standards snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi-standards) includes this finished checkpoint; use the [ordinary deployment prerequisites](native-tmdl.md#before-you-start).
 
 **Annotation files are trusted executable Python.** Weaver loads them while parsing a project, including Check. Do not Check or Build an untrusted project. They are not sandboxed metadata, and Power BI Desktop does not execute them.
 

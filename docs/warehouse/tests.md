@@ -2,7 +2,7 @@
 
 The [first Table and View](first-project.md) produce two current parcel statuses from three events. Keep that project and add two SQL validations: a Test compares the View with an independent expected result, and an Assumption finds events whose status is unknown.
 
-Start from its loaded `Warehouse/Operations` checkpoint. For direct entry, use the [complete journey snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-warehouse-journey) and follow the first page's setup, Build and Load once. It contains the same `Parcel.StatusEvent` Table and `Parcel.CurrentStatus` View, with both passing validations below. Run all commands from the project root.
+Start from its loaded `Warehouse/Operations` checkpoint. For direct entry, use the [complete journey snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-warehouse-journey) and follow the first page's setup, Build and Load once. It contains the same `Parcel.StatusEvent` Table and `Parcel.CurrentStatus` View, with both passing validations below. Run all commands from the project root.
 
 ## Check the result without repeating the ranking query
 

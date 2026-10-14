@@ -2,13 +2,13 @@
 
 The native model can participate in the same dependency graph as its source data. `Weaver.Source` identifies the managed Table; source Load then precedes model refresh, and Health can identify a model that is behind its source.
 
-Continue with Parcel, Delivery and Depot, but change **Delivery’s partition from inline Import data to Warehouse-backed Import**. The complete [Fabric integration snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi-fabric) supplies that changed partition, a shared SQL expression, the Operations source and a reconciliation Test. Work from `examples/parcel-powerbi-fabric`; do not add `Weaver.Source` to the inline fixture and expect its data to switch. Depot remains inline reference data.
+Continue with Parcel, Delivery and Depot, but change **Delivery’s partition from inline Import data to Warehouse-backed Import**. The complete [Fabric integration snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi-fabric) supplies that changed partition, a shared SQL expression, the Operations source and a reconciliation Test. Work from `examples/parcel-powerbi-fabric`; do not add `Weaver.Source` to the inline fixture and expect its data to switch. Depot remains inline reference data.
 
 This is a deliberate source/configuration change, not a second setup inside the [native model task](native-tmdl.md). Existing readers keep their logical names; direct entrants use this complete source-backed snapshot. It does not include the earlier optional visibility overlay. If you retain that rule, merge it into this snapshot’s same-name overlay rather than overwriting its source annotation.
 
 ## Before you start
 
-Use the [complete Fabric integration project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi-fabric) from its example directory. Configure an existing disposable Fabric workspace, compatible Weaver catalogue Warehouse and an empty Operations Warehouse. This SQL/Import route uses no Lakehouse or Spark runtime; Warehouse-only Build does not require a published Fabric Environment.
+Use the [complete Fabric integration project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi-fabric) from its example directory. Configure an existing disposable Fabric workspace, compatible Weaver catalogue Warehouse and an empty Operations Warehouse. This SQL/Import route uses no Lakehouse or Spark runtime; Warehouse-only Build does not require a published Fabric Environment.
 
 You need Warehouse create/alter/load and SELECT rights, catalogue read/write, model/Report deployment and refresh/view rights. Import refresh needs an existing supported service connection and credentials with Warehouse SQL access. Weaver does not create credentials. Only request binding to a connection you are permitted to use.
 

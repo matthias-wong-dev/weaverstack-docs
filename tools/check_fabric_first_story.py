@@ -135,9 +135,11 @@ def main():
         term in concurrency for term in ("--concurrency", "execution", "build", "run")
     )
     assert "Making Fabric easier to use" in (root / "docs/index.md").read_text()
-    assert (
-        "74b4d15ee65ed2740593af1f4d459771b801b132"
-        in (root / "docs/getting-started/installation.md").read_text()
+    installation = (root / "docs/getting-started/installation.md").read_text()
+    assert "python -m pip install --upgrade weaverstack" in installation
+    assert "weaver --version" in installation
+    assert not re.search(
+        r"git\+https|pip install -e|Private documentation preview|--dev", installation
     )
     counts = {"shared_cli_leaves": 4, "authored_commands_parsed": 0}
     targets = [

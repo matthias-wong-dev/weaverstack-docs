@@ -18,7 +18,7 @@ Fabric availability remains an execution boundary. Capacity state, workspace per
 
 Standalone Power BI deployment/refresh and DAX file-mode validation require their REST/query capabilities, not a catalogue or Spark runtime. They return operation reports without persisted Weaver history.
 
-For the private source snapshot, publish an exact matching wheel from its editable checkout (`--dev`) rather than expecting an unpublished version on PyPI. [Runtime configuration](../estate/environments.md) owns that step. A preview is read-only inspection, not a runtime compatibility test.
+Publish the same Weaver release used by the runner into the Fabric Environment. [Running Python in Fabric](../lakehouse/runtime.md) owns that step. A read-only Build preview does not establish runtime compatibility.
 
 ## Sessions reuse acquired capabilities
 

@@ -111,25 +111,9 @@ weaver fabric environment publish \
   --workspace-config workspace-development.yml
 ```
 
-## Development publication
+<span id="development-publication"></span>
 
-`--dev` publishes the running checkout rather than a PyPI Weaver requirement. Weaver finds the checkout by walking upward from its installed module until it finds `pyproject.toml`, then runs the active Python interpreter with:
-
-```text
-python -m build --wheel --outdir <checkout>/dist <checkout>
-```
-
-Development mode:
-
-- removes every `weaverstack` requirement from `environment.yml`;
-- builds and uploads one `weaverstack-*.whl` beneath `Libraries/CustomLibraries/`;
-- removes stale Weaver wheels while preserving unrelated custom libraries;
-- reads `project.dependencies` from the checkout and adds the dependencies needed inside Fabric; and
-- excludes desktop transports and build tools: `azure-identity`, `requests`, `build`, `prompt-toolkit` and `packaging`.
-
-An existing authored requirement is retained when Weaver cannot prove a conflict. A conflicting exact pin or non-overlapping bound is rejected before Environment changes are staged, and the error names both specifiers.
-
-A checkout without `pyproject.toml`, a failed wheel build or a build producing no matching wheel is an error.
+The optional `--dev` mode is for source-runtime maintenance. Ordinary project setup uses the released publication route above.
 
 ## Local-definition authority
 

@@ -4,7 +4,7 @@ Keep your native `.Report` beside its semantic model. Build deploys the model fi
 
 ## Start with the linked pair
 
-[Install the documented snapshot](../getting-started/installation.md), then work from the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi), in `examples/parcel-powerbi`. It contains the native model and a Report with a Delivery Count card. You do not need to author the model again or complete the semantic-model tutorial first.
+[Install Weaver](../getting-started/installation.md), then work from the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi), in `examples/parcel-powerbi`. It contains the native model and a Report with a Delivery Count card. You do not need to author the model again or complete the semantic-model tutorial first.
 
 If you already deployed this pair in [Deploy a native model](../semantic-models/native-tmdl.md), keep that project, including any overlay you added. This task uses the same Report and model.
 

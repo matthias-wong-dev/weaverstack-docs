@@ -2,7 +2,7 @@
 
 Keep a producer’s logical name when another item reads it. Weaver then installs the connection in order and can coordinate selected source loads with their consumers, rather than leaving each item with a schedule that guesses when another has finished.
 
-Continue from [Landing’s working Python pipeline](../lakehouse/python.md): Folder `Parcel.Events` feeds Table `Parcel.Event`; the [Spark SQL extension](../lakehouse/spark-sql.md) adds `Parcel.CurrentStatus`. Direct entrants can use the complete [parcel-lakehouse snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-lakehouse) and complete those item tasks first. This extension presents that existing Event in a Warehouse; it does not replace Landing’s source or the separate Operations StatusEvent pipeline.
+Continue from [Landing’s working Python pipeline](../lakehouse/python.md): Folder `Parcel.Events` feeds Table `Parcel.Event`; the [Spark SQL extension](../lakehouse/spark-sql.md) adds `Parcel.CurrentStatus`. Direct entrants can use the complete [parcel-lakehouse snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse) and complete those item tasks first. This extension presents that existing Event in a Warehouse; it does not replace Landing’s source or the separate Operations StatusEvent pipeline.
 
 ## Present Landing’s Event in Dispatch
 

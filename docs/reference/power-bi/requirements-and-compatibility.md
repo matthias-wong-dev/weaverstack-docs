@@ -1,6 +1,5 @@
 # Power BI requirements and compatibility
 
-This reference targets Weaver source revision [`74b4d15ee65ed2740593af1f4d459771b801b132`](https://github.com/matthias-wong-dev/weaverstack/tree/74b4d15ee65ed2740593af1f4d459771b801b132), not the older published `weaverstack 0.9.0` interface. No release number or date is assigned to these main-branch capabilities here.
 
 ## Runtime and service access
 

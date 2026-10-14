@@ -8,11 +8,11 @@ A PBIP project contains the model’s native TMDL and its Report definitions. Yo
 
 ## Before you start
 
-[Install the documented snapshot](../getting-started/installation.md). Use an existing Power BI service workspace and an identity with model/Report create or update rights, refresh rights and permission to view the Report. The service licence and model mode must support those operations.
+[Install Weaver](../getting-started/installation.md). Use an existing Power BI service workspace and an identity with model/Report create or update rights, refresh rights and permission to view the Report. The service licence and model mode must support those operations.
 
 The example uses inline Import data to isolate deployment from source loading. It can run with just an existing service workspace. It needs no catalogue, Lakehouse, Warehouse or Fabric Environment. This also supports an existing standalone Power BI workspace; [managed Fabric sources](managed-sources.md) add source lineage and recorded estate state later.
 
-Download or clone the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi) and work from `examples/parcel-powerbi`. `PowerBI/Parcel/Parcel.pbip` opens the native project. Its model has three parcel rows, two depots, a relationship and a Delivery Count measure. Its Report has a Delivery Count card.
+Download or clone the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi) and work from `examples/parcel-powerbi`. `PowerBI/Parcel/Parcel.pbip` opens the native project. Its model has three parcel rows, two depots, a relationship and a Delivery Count measure. Its Report has a Delivery Count card.
 
 If you are adding this model to an existing Fabric project, copy the example’s `PowerBI/` directory into that project. Add the model and Report under your existing configuration’s `targets`; retain its workspace and catalogue settings. The same commands then register the items in the shared catalogue.
 

@@ -23,21 +23,20 @@ Local Check needs no Fabric runtime. Desktop Lakehouse Build, Load and Test use 
 
 ## Publish the matching packages
 
-For this source preview, use the [editable source checkout](../getting-started/installation.md#when-the-preview-needs-a-hosted-runtime) at `74b4d15ee65ed2740593af1f4d459771b801b132`, with its build dependencies installed. Keep local and hosted Weaver at the same pinned version. From the Landing project root:
+Use the same Weaver release locally and in Fabric. From the Landing project root:
 
 ```bash
 weaver fabric environment publish \
   --path Environment/Weaver.Environment \
-  --workspace-config workspace-config.yml \
-  --dev
+  --workspace-config workspace-config.yml
 ```
 
-`--dev` builds the matching wheel from that checkout. An unqualified PyPI requirement cannot supply this unpublished development version. For a matching published release, omit `--dev`. Publication creates or updates the selected Environment, overlays the Weaver package requirement and waits for Fabric's terminal publication result. An unchanged successful definition is reported without another publication.
+Publication creates or updates the selected Environment, adds the installed Weaver release to its package requirements and waits for Fabric's terminal publication result. An unchanged successful definition is reported without another publication. No source checkout is needed.
 
 For Tracking, use its `ParcelRuntime` local Environment definition and the configuration from that complete fixture. If it was created in the Fabric portal and no local definition exists, publication can instead use that existing Environment as its authority:
 
 ```bash
-weaver fabric environment publish ParcelRuntime --dev
+weaver fabric environment publish ParcelRuntime
 ```
 
 Run that command from the Tracking project root so the workspace is discovered from its configuration. [Fabric Environment definition](../reference/configuration-files/fabric-environment.md) owns local-directory shape, libraries and existing-Environment authority. A Notebook already in Fabric needs the matching package in its attached runtime, not another remote Spark session.

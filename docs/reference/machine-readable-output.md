@@ -1,6 +1,6 @@
 # Machine-readable output
 
-This page records CLI machine output at source revision `74b4d15ee65ed2740593af1f4d459771b801b132`. Each command owns its result shape; there is no stream of records or schema shared by every command. Each supported invocation writes one indented JSON document. Unless that command exposes a `format_version`, the fields below have no schema-version or forward-compatibility promise.
+This page records the CLI machine-output shapes. Each command owns its result shape; there is no stream of records or schema shared by every command. Each supported invocation writes one indented JSON document. Unless that command exposes a `format_version`, the fields below have no schema-version or forward-compatibility promise.
 
 ## Stream and process behaviour
 

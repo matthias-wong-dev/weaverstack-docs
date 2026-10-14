@@ -2,7 +2,6 @@
 
 Weaver reads native Power BI project definitions, optional TMDL policy/overlays and model-owned DAX validations. Build produces and verifies native service definitions without rewriting the authored project. Models and Reports belong to the same project and operation flow as their managed sources.
 
-This reference describes Weaver source revision [`74b4d15ee65ed2740593af1f4d459771b801b132`](https://github.com/matthias-wong-dev/weaverstack/tree/74b4d15ee65ed2740593af1f4d459771b801b132). It is a source-revision reference, not a claim that the older published `weaverstack 0.9.0` contains these interfaces.
 
 - [Project layout](project-layout.md): discovery, identities, native files and validation ownership.
 - [TMDL](tmdl.md): policy, overlay and composition precedence; native preservation.

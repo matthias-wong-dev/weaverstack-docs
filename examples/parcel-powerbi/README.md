@@ -1,6 +1,6 @@
 # Deploy a native parcel Power BI project
 
-**Weaver source target:** `74b4d15ee65ed2740593af1f4d459771b801b132`. Use a Weaver build containing these interfaces. The older PyPI `0.9.0` package is not the acceptance target.
+Install Weaver from PyPI using the [installation guide](../../docs/getting-started/installation.md).
 
 ## Before you run
 

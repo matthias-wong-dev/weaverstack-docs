@@ -17,6 +17,10 @@ Approved plan: `weaver-docs-item-first-reorganisation-agent-plan.md` supplied by
 | Technical/browser/search verification | Final locked build, four generators, item/fixture gates, paired crawl and 1,135 unique focused source tests pass. Broad integrated browser: 410 states; post-correction: 54 states plus eight hit-tested actual search selections. Original search false-negative and parent correction dispositions are recorded, not treated as human approval. |
 | Draft/private-preview delivery | Corrected preview built on existing private routes; final PR heads/readback recorded in final-verification.md. No release, merge, public publication or live service acceptance. |
 
+## Intended release copy
+
+Matthias has directed prospective PyPI-release copy, not a rollback to the older package. Product/onboarding use normal PyPI installation and runtime publication; all four item routes and the traditional left tree remain. Development procedures and exact source provenance stay in maintainer evidence. `acceptance/docs-item-first-2026-10/intended-release-copy.md` records this scope and actual checks. A matching released-wheel acceptance is still unclaimed and required before public publication.
+
 The earlier five-section and feedback iterations below are historical evidence.
 Final reader acceptance belongs to Matthias; independent agent/editor review and
 local technical checks do not replace it.

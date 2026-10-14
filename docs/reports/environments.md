@@ -2,7 +2,7 @@
 
 Use the same native Report and model in both workspaces. The selected workspace configuration changes their physical names and the Report's deployed model binding; it does not change their logical names or authored files.
 
-Continue from [Deploy a native Report](deploy.md) in the same `examples/parcel-powerbi` directory. Direct entrants can use the [complete parcel snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi) and that page's installation and access instructions; no model reauthoring is needed. Keep any model overlay from the native-model task. This page adds only the second destination, not another model or Report.
+Continue from [Deploy a native Report](deploy.md) in the same `examples/parcel-powerbi` directory. Direct entrants can use the [complete parcel snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi) and that page's installation and access instructions; no model reauthoring is needed. Keep any model overlay from the native-model task. This page adds only the second destination, not another model or Report.
 
 ## Select the two destinations
 

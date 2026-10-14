@@ -12,7 +12,7 @@ The bookmark belongs to the consumer, not the source. It is the UTC instant imme
 
 ## Provision the external Lakehouse
 
-Use the existing [complete mutable-source fixture](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-incremental) in a separate project directory. All paths below are relative to that directory. Create or reuse the `ParcelCatalogue` Warehouse, `ParcelTracking` Lakehouse and `ParcelRuntime` Environment in the **Parcel Development** workspace, and create the separate external `ParcelSourceArchive` Lakehouse. Its configuration is `workspace-config.yml`:
+Use the existing [complete mutable-source fixture](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-incremental) in a separate project directory. All paths below are relative to that directory. Create or reuse the `ParcelCatalogue` Warehouse, `ParcelTracking` Lakehouse and `ParcelRuntime` Environment in the **Parcel Development** workspace, and create the separate external `ParcelSourceArchive` Lakehouse. Its configuration is `workspace-config.yml`:
 
 ```yaml
 workspace: Parcel Development
@@ -173,7 +173,7 @@ The bookmark belongs to `Parcel.CurrentStatus`, not to the source Folder. `files
 
 ## Establish the first boundary
 
-Before the first Build, [publish a matching Fabric runtime](runtime.md). For this preview that requires an editable checkout at the pinned revision and `--dev`; the `environment: ParcelRuntime` binding alone does not publish it. Then, from the **example project root**, check and install the declarations once:
+Before the first Build, [publish a matching Fabric runtime](runtime.md). Use normal Environment publication to install the same Weaver release as the local client; the `environment: ParcelRuntime` binding alone does not publish it. Then, from the **example project root**, check and install the declarations once:
 
 ```bash
 weaver check

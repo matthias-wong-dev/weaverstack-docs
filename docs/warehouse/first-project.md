@@ -35,7 +35,7 @@ targets:
 
 **Ownership:** use a disposable target for this example. Build reconciles selected managed items and may prune undeclared co-located content. Keep irreplaceable sources in a separate physical item; [Schemas, keys and protected data](schema-and-protection.md#keep-the-source-outside-the-managed-target) explains the stronger boundary.
 
-For direct entry, the [complete journey snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-warehouse-journey) contains the SQL below plus the next page's validations. Use the two SQL files below for this first checkpoint; add `tests/` and `assumptions/` when you reach that page. The snapshot does not provision Fabric items.
+For direct entry, the [complete journey snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-warehouse-journey) contains the SQL below plus the next page's validations. Use the two SQL files below for this first checkpoint; add `tests/` and `assumptions/` when you reach that page. The snapshot does not provision Fabric items.
 
 ## Write the event Table
 

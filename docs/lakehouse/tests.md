@@ -2,7 +2,7 @@
 
 Check that CurrentStatus returns the expected parcels, and that every event uses a recognised status. These validations live beside the same Folder and Tables; Build installs them, and Test runs them separately from Load.
 
-Continue from [Working with Spark SQL](spark-sql.md). For direct entry, the [Lakehouse document snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-lakehouse) lists the Python, SQL and validation checkpoints. Use the earlier project's bindings and matching published runtime; no new item or catalogue is needed.
+Continue from [Working with Spark SQL](spark-sql.md). For direct entry, the [Lakehouse document snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse) lists the Python, SQL and validation checkpoints. Use the earlier project's bindings and matching published runtime; no new item or catalogue is needed.
 
 ## Compare CurrentStatus with an independent result
 

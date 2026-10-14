@@ -2,20 +2,18 @@
 
 Install Weaver, then choose the item you want to work with. Lakehouse, Warehouse, semantic-model and Report tasks give their own access requirements; a Warehouse starter is optional.
 
-## Install the documented snapshot
+<span id="install-the-documented-snapshot"></span>
 
-!!! warning "Private documentation preview"
-    These pages describe Weaver revision `74b4d15ee65ed2740593af1f4d459771b801b132`. The published PyPI package `0.9.0` does not contain all of these interfaces. Public publication is held until its matching package is available. For this preview, use the exact source target below rather than an unqualified package install.
+## Install Weaver
 
-Use Python 3.11 or later and Git. In a Python environment:
+Use Python 3.11 or later. In your Python environment:
 
 ```bash
-python -m pip install "weaverstack @ git+https://github.com/matthias-wong-dev/weaverstack.git@74b4d15ee65ed2740593af1f4d459771b801b132"
+python -m pip install --upgrade weaverstack
 weaver --version
-weaver --help
 ```
 
-The installation provides the `weaver` command and importable `weaver` package. The snapshot has a derived development version; it is not a new named release. The help should include Build `--dry-run`, Load recursive selection, invocation concurrency and Unbind.
+The package provides the `weaver` command and the importable `weaver` Python library. Use `weaver --help` to see the available commands.
 
 Check an existing project without service access:
 
@@ -52,17 +50,17 @@ An Import model with inline data can run in an existing Power BI workspace witho
 
 Use [Deploy a native model](../semantic-models/native-tmdl.md) to add their definitions to the project. [Requirements and compatibility](../reference/power-bi/requirements-and-compatibility.md) owns supported modes, bindings and permission boundaries. Microsoft documents [model creation rights](https://learn.microsoft.com/en-us/rest/api/fabric/semanticmodel/items/create-semantic-model) and [licences/workspace types](https://learn.microsoft.com/en-us/fabric/enterprise/licenses).
 
-## When the preview needs a hosted runtime
+<span id="when-the-preview-needs-a-hosted-runtime"></span>
 
-A Lakehouse tutorial that publishes `--dev` needs a checkout-backed installation so Weaver can build the exact local wheel. Use this alternative to the direct Git package install above:
+## Publish the Fabric runtime
+
+Lakehouse work needs the same Weaver version in your local Python environment and the Fabric Environment used by Spark. After the [first Lakehouse task](../lakehouse/python.md) creates the local Environment definition, publish it from the project directory:
 
 ```bash
-git clone https://github.com/matthias-wong-dev/weaverstack.git
-git -C weaverstack checkout 74b4d15ee65ed2740593af1f4d459771b801b132
-python -m pip install -e "./weaverstack[dev]"
+weaver fabric environment publish --path Environment/Weaver.Environment
 ```
 
-Keep that checkout at the documented revision, return to the tutorial project directory, and use its Environment publication step. Do not overlay an unpublished development version from PyPI. A notebook already running in Fabric needs the matching package and dependencies in its attached runtime; it does not need a second remote session merely to run in that workspace.
+Normal publication adds the installed Weaver release to the Environment's package requirements and waits for Fabric to finish publishing. Selecting an Environment in workspace configuration does not publish it. [Running Python in Fabric](../lakehouse/runtime.md) explains the runtime checks and when to republish. Warehouse-only work does not need this Spark runtime.
 
 ## Sign in for the operation
 

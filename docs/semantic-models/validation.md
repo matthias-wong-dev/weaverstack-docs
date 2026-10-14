@@ -11,7 +11,7 @@ A successful refresh says the model ran, not that its measure is right. Add an A
 
 For the Assumption, continue the [native model checkpoint](native-tmdl.md): Parcel has inline Import data, Delivery Count evaluates to 2, and its same-name overlay hides the relationship foreign key. Keep that overlay and your existing workspace configuration. You add one DAX file, not another project or deployment setup.
 
-For direct entry, the complete [validation snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-powerbi-validation) contains the same native Delivery/Depot model and the Assumption below. Configure and deploy it once using the [native task](native-tmdl.md#before-you-start), then return here. That snapshot has no initial overlay; the failure and correction below handle both start states.
+For direct entry, the complete [validation snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi-validation) contains the same native Delivery/Depot model and the Assumption below. Configure and deploy it once using the [native task](native-tmdl.md#before-you-start), then return here. That snapshot has no initial overlay; the failure and correction below handle both start states.
 
 DAX queries need model Read and Build permissions and an identity permitted by the tenant’s Execute Queries setting. Reconciliation also needs SELECT access to the Warehouse source. Use existing permissions; do not change tenant settings for this exercise.
 

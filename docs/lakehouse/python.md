@@ -17,7 +17,7 @@ weaver initialise \
 cd parcel-lakehouse-python
 ```
 
-Initialise writes `workspace-config.yml`, an empty `Lakehouse/Landing` directory and `Environment/Weaver.Environment`. Keep this project for the following Spark SQL and validation pages. The [checked document snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-lakehouse) has the source files and a checkpoint list; the two files below are the first checkpoint.
+Initialise writes `workspace-config.yml`, an empty `Lakehouse/Landing` directory and `Environment/Weaver.Environment`. Keep this project for the following Spark SQL and validation pages. The [checked document snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse) has the source files and a checkpoint list; the two files below are the first checkpoint.
 
 ## Stage the carrier export
 
@@ -108,10 +108,10 @@ Check should print `Project valid.` It validates the local declarations and depe
 Before the first remote Build, publish the generated Environment:
 
 ```bash
-weaver fabric environment publish --path Environment/Weaver.Environment --dev
+weaver fabric environment publish --path Environment/Weaver.Environment
 ```
 
-For this source preview, run publication from the [editable checkout installation at the pinned revision](../getting-started/installation.md#when-the-preview-needs-a-hosted-runtime), not the non-editable Git package install. `--dev` builds the matching wheel; a matched published release omits it. The [runtime page](runtime.md) explains version matching and when to republish. Spark-backed Build checks its hosted runtime before mutation even though it does not call your `read()`.
+Publication installs the Weaver release used by your local client into the Fabric Environment. The [runtime page](runtime.md) explains version matching and when to republish. Spark-backed Build checks its hosted runtime before mutation even though it does not call your `read()`.
 
 Then, from this project directory:
 
