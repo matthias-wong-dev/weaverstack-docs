@@ -8,3 +8,5 @@ Install Weaver, choose your Fabric workspace and start with the item you already
 For a small optional introduction, [Your first Fabric project](../warehouse/first-project.md) uses Warehouse SQL. The other item routes provide their own starting context; this is not a prerequisite for them.
 
 Once items are working, [Coordinate your estate](../estate/index.md) shows how to connect them and inspect their results together.
+
+<span id="getting-started"></span>

@@ -7,15 +7,15 @@ search:
 
 This task is now organised by the item you are working with.
 
-- [Open lakehouse task](../lakehouse/tests.md).
 - [Open warehouse task](../warehouse/tests.md).
+- [Open lakehouse task](../lakehouse/tests.md).
 - [Open semantic models task](../semantic-models/validation.md).
 
 [Continue: add tests and assumptions](../warehouse/tests.md).
 
 <span id="choose-the-validation-form"></span>
 
-[Continue: choose the validation form](../warehouse/tests.md).
+[Continue: choose the validation form](../reference/operation-behaviour/test.md#validation-semantics).
 
 <span id="warehouse-validations"></span>
 
@@ -59,23 +59,23 @@ This task is now organised by the item you are working with.
 
 <span id="before-you-start"></span>
 
-[Continue: before you start](../warehouse/tests.md).
+[Continue: before you start](../semantic-models/validation.md#start-from-the-model-you-already-deployed).
 
 <span id="1-deploy-and-refresh"></span>
 
-[Continue: 1 deploy and refresh](../semantic-models/validation.md).
+[Continue: 1 deploy and refresh](../semantic-models/validation.md#start-from-the-model-you-already-deployed).
 
 <span id="2-run-the-source-assumption"></span>
 
-[Continue: 2 run the source assumption](../semantic-models/validation.md).
+[Continue: 2 run the source assumption](../semantic-models/validation.md#2-run-the-authored-query).
 
 <span id="3-produce-a-finding"></span>
 
-[Continue: 3 produce a finding](../semantic-models/validation.md).
+[Continue: 3 produce a finding](../semantic-models/validation.md#3-produce-a-finding-without-losing-your-overlay).
 
 <span id="4-correct-it"></span>
 
-[Continue: 4 correct it](../semantic-models/validation.md).
+[Continue: 4 correct it](../semantic-models/validation.md#4-restore-the-prior-model-and-rerun).
 
 <span id="compare-dax-with-source-sql"></span>
 
@@ -83,8 +83,8 @@ This task is now organised by the item you are working with.
 
 <span id="produce-and-correct-a-discrepancy"></span>
 
-[Continue: produce and correct a discrepancy](../warehouse/tests.md).
+[Continue: produce and correct a discrepancy](../semantic-models/validation.md#produce-and-correct-a-discrepancy).
 
 <span id="read-the-estate-result"></span>
 
-[Continue: read the estate result](../warehouse/tests.md).
+[Continue: read the estate result](../estate/operate.md).

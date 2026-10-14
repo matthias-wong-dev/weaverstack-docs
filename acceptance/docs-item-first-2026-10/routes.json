@@ -8,7 +8,6 @@
     "basics/lakehouse-spark-sql.md": "lakehouse/spark-sql.md",
     "basics/shortcuts.md": "lakehouse/shortcuts.md",
     "basics/warehouse-pipeline.md": "warehouse/first-project.md",
-    "getting-started/first-project.md": "warehouse/first-project.md",
     "basics/power-bi/deploy-pbip.md": "semantic-models/native-tmdl.md",
     "basics/power-bi/fabric-integration.md": "semantic-models/managed-sources.md",
     "basics/power-bi/modelling-rule.md": "semantic-models/native-tmdl.md",
@@ -53,15 +52,60 @@
     "basics/power-bi/deploy-pbip.md": {
       "use-a-managed-source": "semantic-models/managed-sources.md",
       "add-an-overlay-and-a-weaver-annotation": "semantic-models/native-tmdl.md#hide-relationship-foreign-keys",
-      "hide-relationship-foreign-keys": "semantic-models/native-tmdl.md#hide-relationship-foreign-keys"
+      "hide-relationship-foreign-keys": "semantic-models/native-tmdl.md#hide-relationship-foreign-keys",
+      "before-the-source-backed-example": "semantic-models/managed-sources.md#before-you-start",
+      "1-configure-destination-and-source-separately": "semantic-models/managed-sources.md#1-configure-destination-and-source-separately",
+      "2-build-and-load-the-warehouse-first": "semantic-models/managed-sources.md#2-build-and-load-the-warehouse-first",
+      "3-deploy-the-model-and-report": "semantic-models/managed-sources.md#3-bind-and-refresh-the-model",
+      "3-deploy-the-model-and-linked-report": "reports/deploy.md#choose-the-destination-and-build",
+      "4-refresh-and-view-the-result": "reports/deploy.md#inspect-the-report",
+      "use-your-own-convention": "semantic-models/custom-annotations.md",
+      "cleanup": "reports/environments.md#remove-only-the-example-items"
     },
     "basics/tests-and-assumptions.md": {
       "semantic-model-validations": "semantic-models/validation.md",
       "compare-dax-with-source-sql": "semantic-models/validation.md#compare-dax-with-source-sql",
-      "warehouse-validations": "warehouse/tests.md"
+      "warehouse-validations": "warehouse/tests.md",
+      "before-you-start": "semantic-models/validation.md#start-from-the-model-you-already-deployed",
+      "1-deploy-and-refresh": "semantic-models/validation.md#start-from-the-model-you-already-deployed",
+      "2-run-the-source-assumption": "semantic-models/validation.md#2-run-the-authored-query",
+      "3-produce-a-finding": "semantic-models/validation.md#3-produce-a-finding-without-losing-your-overlay",
+      "4-correct-it": "semantic-models/validation.md#4-restore-the-prior-model-and-rerun",
+      "produce-and-correct-a-discrepancy": "semantic-models/validation.md#produce-and-correct-a-discrepancy",
+      "read-the-estate-result": "estate/operate.md",
+      "choose-the-validation-form": "reference/operation-behaviour/test.md#validation-semantics"
     },
     "basics/workspace-and-python-runtime.md": {
-      "model-and-report-targets": "reports/environments.md"
+      "model-and-report-targets": "reports/environments.md",
+      "1-map-the-two-destinations": "reports/environments.md#select-the-two-destinations",
+      "2-deploy-and-refresh-each-pair": "reports/environments.md#build-and-check-each-binding",
+      "cleanup": "reports/environments.md#remove-only-the-example-items",
+      "add-a-fabric-environment-for-python-work": "lakehouse/runtime.md#bind-the-runtime-you-will-use",
+      "publish-the-runtime": "lakehouse/runtime.md#publish-the-matching-packages",
+      "configure-a-workspace-and-python-runtime": "estate/environments.md"
+    },
+    "basics/power-bi/modelling-rule.md": {
+      "hide-relationship-foreign-keys": "semantic-models/native-tmdl.md#hide-relationship-foreign-keys"
+    },
+    "getting-started/first-project.md": {
+      "3-add-a-test": "warehouse/tests.md",
+      "7-run-the-test": "warehouse/tests.md",
+      "8-read-health": "estate/catalogue-and-health.md",
+      "9-run-the-lifecycle-as-a-workflow": "estate/automation-and-deployment.md"
+    },
+    "advanced/index.md": {
+      "semantic-models": "semantic-models/index.md"
+    },
+    "basics/shortcuts.md": {
+      "connect-managed-items-with-a-logical-shortcut": "estate/connected-items.md",
+      "prerequisites": "estate/connected-items.md",
+      "1-initialise-both-items": "estate/connected-items.md",
+      "2-add-the-source-table": "estate/connected-items.md",
+      "3-present-it-in-the-warehouse": "estate/connected-items.md",
+      "4-check-and-build-the-relationship": "estate/connected-items.md",
+      "5-load-the-producer": "estate/connected-items.md",
+      "6-query-through-the-shortcut": "estate/connected-items.md",
+      "connect-external-data-with-a-physical-shortcut": "estate/connected-items.md"
     }
   },
   "canonical_pages": [

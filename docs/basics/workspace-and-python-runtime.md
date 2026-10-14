@@ -27,20 +27,20 @@ This task is now organised by the item you are working with.
 
 <span id="1-map-the-two-destinations"></span>
 
-[Continue: 1 map the two destinations](../estate/environments.md).
+[Continue: 1 map the two destinations](../reports/environments.md#select-the-two-destinations).
 
 <span id="2-deploy-and-refresh-each-pair"></span>
 
-[Continue: 2 deploy and refresh each pair](../estate/environments.md).
+[Continue: 2 deploy and refresh each pair](../reports/environments.md#build-and-check-each-binding).
 
 <span id="cleanup"></span>
 
-[Continue: cleanup](../estate/environments.md).
+[Continue: cleanup](../reports/environments.md#remove-only-the-example-items).
 
 <span id="add-a-fabric-environment-for-python-work"></span>
 
-[Continue: add a fabric environment for python work](../lakehouse/runtime.md).
+[Continue: add a fabric environment for python work](../lakehouse/runtime.md#bind-the-runtime-you-will-use).
 
 <span id="publish-the-runtime"></span>
 
-[Continue: publish the runtime](../lakehouse/runtime.md).
+[Continue: publish the runtime](../lakehouse/runtime.md#publish-the-matching-packages).

@@ -31,11 +31,11 @@ This task is now organised by the item you are working with.
 
 <span id="3-deploy-the-model-and-linked-report"></span>
 
-[Continue: 3 deploy the model and linked report](../../semantic-models/native-tmdl.md).
+[Continue: 3 deploy the model and linked report](../../reports/deploy.md#choose-the-destination-and-build).
 
 <span id="4-refresh-and-view-the-result"></span>
 
-[Continue: 4 refresh and view the result](../../semantic-models/native-tmdl.md).
+[Continue: 4 refresh and view the result](../../reports/deploy.md#inspect-the-report).
 
 <span id="add-an-overlay-and-a-weaver-annotation"></span>
 
@@ -59,11 +59,11 @@ This task is now organised by the item you are working with.
 
 <span id="use-your-own-convention"></span>
 
-[Continue: use your own convention](../../semantic-models/native-tmdl.md).
+[Continue: use your own convention](../../semantic-models/custom-annotations.md).
 
 <span id="cleanup"></span>
 
-[Continue: cleanup](../../semantic-models/native-tmdl.md).
+[Continue: cleanup](../../reports/environments.md#remove-only-the-example-items).
 
 <span id="use-a-managed-source"></span>
 
@@ -71,19 +71,19 @@ This task is now organised by the item you are working with.
 
 <span id="before-the-source-backed-example"></span>
 
-[Continue: before the source backed example](../../semantic-models/managed-sources.md).
+[Continue: before the source backed example](../../semantic-models/managed-sources.md#before-you-start).
 
 <span id="1-configure-destination-and-source-separately"></span>
 
-[Continue: 1 configure destination and source separately](../../semantic-models/managed-sources.md).
+[Continue: 1 configure destination and source separately](../../semantic-models/managed-sources.md#1-configure-destination-and-source-separately).
 
 <span id="2-build-and-load-the-warehouse-first"></span>
 
-[Continue: 2 build and load the warehouse first](../../semantic-models/managed-sources.md).
+[Continue: 2 build and load the warehouse first](../../semantic-models/managed-sources.md#2-build-and-load-the-warehouse-first).
 
 <span id="3-deploy-the-model-and-report"></span>
 
-[Continue: 3 deploy the model and report](../../semantic-models/managed-sources.md).
+[Continue: 3 deploy the model and report](../../semantic-models/managed-sources.md#3-bind-and-refresh-the-model).
 
 <span id="related-tasks"></span>
 

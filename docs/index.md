@@ -12,3 +12,11 @@ Keep writing Python, SQL and native model definitions. Weaver handles the instal
 When those pieces need to work together, [Coordinate your estate](estate/index.md) covers dependencies, environments, Health and the development loop. Two items are enough to benefit.
 
 New to Weaver? [Start here](getting-started/index.md).
+
+<span id="weaver-documentation"></span>
+
+<span id="build-your-first-project"></span>
+
+<span id="add-work-to-the-project"></span>
+
+<span id="operate-the-estate"></span>

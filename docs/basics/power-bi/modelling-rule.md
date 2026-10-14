@@ -7,6 +7,6 @@ search:
 
 Continue at the current task page:
 
-- [Open semantic models task](../../semantic-models/native-tmdl.md).
+- [Open semantic models task](../../semantic-models/native-tmdl.md#hide-relationship-foreign-keys).
 
-[Continue: hide relationship foreign keys](../../semantic-models/native-tmdl.md).
+[Continue: hide relationship foreign keys](../../semantic-models/native-tmdl.md#hide-relationship-foreign-keys).

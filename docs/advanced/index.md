@@ -13,4 +13,4 @@ Continue at the current task page:
 
 <span id="semantic-models"></span>
 
-[Continue: semantic models](../estate/index.md).
+[Continue: semantic models](../semantic-models/index.md).
