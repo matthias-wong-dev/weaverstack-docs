@@ -35,7 +35,6 @@ theme:
     - content.tabs.link
     - navigation.footer
     - navigation.indexes
-    - navigation.tabs
     - navigation.top
     - search.highlight
     - search.suggest

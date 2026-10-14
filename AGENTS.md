@@ -37,6 +37,8 @@ Examples use a neutral parcel and logistics domain. Keep one continuous story an
 
 The reader-facing navigation is **Getting started → Lakehouse → Warehouse → Semantic models → Reports → Coordinate your estate → Reference**. Home exposes the four items, estate coordination and a quiet Start here link. Item groups teach first success, validation and later useful capabilities. Estate coordination owns shared dependencies, mappings, state, development, recovery and tuning. Reference owns exact interfaces. Concepts and deeper mechanisms remain available through contextual links at stable URLs; Core/Basics/Advanced are no longer reader-facing destinations.
 
+Use the full collapsible navigation tree on the left, with the current section expanded and the page headings on the right. Do not restore horizontal section tabs or hide other top-level groups on desktop. Mobile retains the theme’s drawer and back controls.
+
 Do not add public **Guides**, **Contracts**, **Contributing** or **Architecture** sections. Exact behavioural material belongs under Reference; maintainer instructions belong in root `CONTRIBUTING.md`, `AGENTS.md`, `PROSE.md` and `COVERAGE.md`.
 
 `COVERAGE.md` is the internal documentation ledger. Keep it outside `docs/` and out of public navigation. A target path records ownership, not completion.
