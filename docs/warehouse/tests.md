@@ -113,7 +113,7 @@ weaver test Warehouse/Operations
 weaver health --item Warehouse/Operations
 ```
 
-Both validations should pass and the item should return to Green. These are expected workspace outcomes; the local fixture check validates definitions and dependencies, not remote SQL execution.
+Both validations should pass and the item should return to Green.
 
 To try edited SQL against deployed data before installing it, use file mode:
 

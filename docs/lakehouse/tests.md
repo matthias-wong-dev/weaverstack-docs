@@ -81,7 +81,7 @@ weaver test Lakehouse/Landing --name '^Parcel\.CurrentStatusMatches$'
 weaver health --item Lakehouse/Landing
 ```
 
-The selected Test should fail and return diagnostic rows showing the expected `Delivered` and actual `In transit`. Health should show the failed validation. There is no Load here because the data declarations and their intended data have not changed. Restore the expected value, Check and Build again, then rerun the selected Test; it should succeed. Local Check cannot establish either result.
+The selected Test should fail and return diagnostic rows showing the expected `Delivered` and actual `In transit`. Health should show the failed validation. There is no Load here because the data declarations and their intended data have not changed. Restore the expected value, Check and Build again, then rerun the selected Test; it should succeed.
 
 The small fixed export made the expected rows explicit. A changing carrier feed needs processing state as well as tests: [Loading changes and bookmarks](incremental.md) shows a complete mutable-source variation, where updating or removing a file changes CurrentStatus without rebuilding its code.
 

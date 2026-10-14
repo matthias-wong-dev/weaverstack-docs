@@ -127,8 +127,6 @@ order by [Parcel ID];
 | P-1001 | In transit | Central |
 | P-1002 | Delivered | South |
 
-Those are expected Fabric results, not output observed by the local example check. Local checks validate the published source; Build, Load and endpoint queries require your workspace.
-
 The View now gives you one row per parcel, but a successful Load does not prove that it chose the right event. [Testing Warehouse data](tests.md) adds an independent expected result and a check for unknown statuses to this same project, without initialising another one.
 
 If you edit either SQL document, Check and Build install the changed definition before another Load. [The development cycle](../estate/development-cycle.md) covers that loop; [Table reference](../reference/weaver-documents/table.md) owns the exact authoring and load contract.

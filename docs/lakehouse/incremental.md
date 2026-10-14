@@ -10,7 +10,6 @@ The bookmark belongs to the consumer, not the source. It is the UTC instant imme
 
 `Incremental: true` makes a Table's returned rows candidates for insert or update. Missing candidates do not delete existing rows. This example also returns explicit primary-key delete rows derived from removed filenames. [Table reference](../reference/weaver-documents/table.md#body-and-return-contract) owns all accepted return forms.
 
-
 ## Provision the external Lakehouse
 
 Use the existing [complete mutable-source fixture](https://github.com/matthias-wong-dev/weaverstack-docs/tree/docs/progressive-journeys-refresh/examples/parcel-incremental) in a separate project directory. All paths below are relative to that directory. Create or reuse the `ParcelCatalogue` Warehouse, `ParcelTracking` Lakehouse and `ParcelRuntime` Environment in the **Parcel Development** workspace, and create the separate external `ParcelSourceArchive` Lakehouse. Its configuration is `workspace-config.yml`:
@@ -250,8 +249,6 @@ Inspect three results:
 - the latest Load activity reports the Folder changes and the Table's updated and deleted rows.
 
 Run `weaver load Lakehouse/Tracking` once more without changing the source. The clean run reaches the Table's `return None`: managed files and target rows remain unchanged, while the consumer bookmark advances again.
-
-Local Check validates the complete fixture's authored shape. Physical Shortcut creation, mounted-path access, Load, and the stated file and row results require Fabric and remain pending remote execution.
 
 ## Build only when the declaration changes
 

@@ -103,7 +103,7 @@ The `Files.Parcel__Events` import establishes the dependency. The Table reads th
 weaver check
 ```
 
-Check should print `Project valid.` It parses the documents, identities and dependency without running Python or contacting Fabric.
+Check should print `Project valid.` It validates the local declarations and dependency; it does not execute `read()` or deploy the project.
 
 Before the first remote Build, publish the generated Environment:
 
@@ -121,7 +121,7 @@ weaver load Lakehouse/Landing
 weaver health --item Lakehouse/Landing
 ```
 
-Build should install both definitions without failed actions. Item-wide Load should run `Files/Parcel.Events` before `Tables/Parcel.Event`: one CSV file, then three rows. Health should show Green Build and Load sections. These are the outcomes to verify in Fabric; local Check establishes only authored shape.
+Build should install both definitions without failed actions. Item-wide Load should run `Files/Parcel.Events` before `Tables/Parcel.Event`: one CSV file, then three rows. Health should show Green Build and Load sections.
 
 ## Inspect the Table
 

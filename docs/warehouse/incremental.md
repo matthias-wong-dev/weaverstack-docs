@@ -205,7 +205,7 @@ The `P-1001` candidate updates the target to `Delivered`. The source update that
 weaver load Warehouse/Operations
 ```
 
-The empty window leaves the target unchanged and advances the bookmark again. Failed, rejected, blocked and static-skip outcomes do not advance it. Local Check validates the authored declarations; Shortcut resolution, generated SQL execution, row changes and bookmark readback require Fabric and have not been exercised by the local fixture check.
+The empty window leaves the target unchanged and advances the bookmark again. Failed, rejected, blocked and static-skip outcomes do not advance it.
 
 A hard source deletion leaves no row for either SELECT. To propagate it, retain change evidence such as tombstones, an audit table or CDC until the consumer reads it. This simple timestamp predicate also assumes a compatible UTC time basis and source change visibility; it is not a universal change-capture query.
 
