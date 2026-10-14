@@ -2,6 +2,11 @@
 
 A successful refresh says the model ran, not that its measure is right. Add an Assumption to the working Parcel model, then reconcile its DAX result with independent SQL when Delivery has a managed Warehouse source.
 
+## Choose your working checkpoint
+
+- **Delivery already reads the managed Warehouse:** go straight to [Compare DAX with source SQL](#compare-dax-with-source-sql). Keep the source and model you just loaded; no inline-data setup or new provisioning is needed.
+- **Delivery still uses the native inline data:** [add the DAX Assumption](#start-from-the-model-you-already-deployed) to that existing model and retain your overlay.
+
 ## Start from the model you already deployed
 
 For the Assumption, continue the [native model checkpoint](native-tmdl.md): Parcel has inline Import data, Delivery Count evaluates to 2, and its same-name overlay hides the relationship foreign key. Keep that overlay and your existing workspace configuration. You add one DAX file, not another project or deployment setup.

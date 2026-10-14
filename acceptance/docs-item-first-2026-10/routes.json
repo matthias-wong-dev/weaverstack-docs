@@ -105,7 +105,7 @@
       "4-check-and-build-the-relationship": "estate/connected-items.md",
       "5-load-the-producer": "estate/connected-items.md",
       "6-query-through-the-shortcut": "estate/connected-items.md",
-      "connect-external-data-with-a-physical-shortcut": "estate/connected-items.md"
+      "connect-external-data-with-a-physical-shortcut": "lakehouse/shortcuts.md#expose-an-external-carrier-archive"
     }
   },
   "canonical_pages": [

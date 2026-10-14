@@ -6,30 +6,49 @@ Three controls do different jobs: the configuration binds the estate, the select
 
 ## Bind the project to Fabric
 
-For the working [Warehouse pipeline](../warehouse/first-project.md), save this file beside the project and use the existing workspace, catalogue and physical Warehouse names from your setup:
+Continue the [Landing → Dispatch connection](connected-items.md). Keep its Folder, Event Table and Dispatch View in the same project. Save the existing bindings as `workspace-development.yml`; the example names below are the ones used by that connection, not a request to create another estate:
 
 ```yaml title="workspace-development.yml"
-workspace: Parcel Operations
-catalogue: Warehouse/ParcelCatalogueDev
+workspace: Parcel Development
+catalogue: Warehouse/Catalogue
+environment: Weaver
 targets:
-  Warehouse/Operations: ParcelOperationsDev
+  Lakehouse/Landing: Landing
+  Warehouse/Dispatch: ParcelDispatchDev
 ```
 
-`Warehouse/Operations` is the logical item containing `Parcel.StatusEvent` and the `Parcel.CurrentStatus` View. `ParcelOperationsDev` is its physical Fabric Warehouse. The catalogue is another physical Warehouse that holds the installed definitions, bindings and operation results.
+Use the workspace, catalogue, published runtime and physical names from your working configuration. `Lakehouse/Landing` and `Warehouse/Dispatch` remain logical identities in the source. Selecting this named file is explicit on each command:
 
 ```bash
 weaver check .
-weaver build . --item Warehouse/Operations --workspace-config workspace-development.yml
+weaver build . --item Lakehouse/Landing --item Warehouse/Dispatch --workspace-config workspace-development.yml
 weaver load --workspace-config workspace-development.yml
 weaver test --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml
 ```
+
+The Dispatch View reads Landing directly; it has no separate Load. If you completed the Lakehouse validation checkpoint, Test runs those Event/CurrentStatus checks. Adding a mapping does not invent validations for a project that has none.
 
 Build reads `targets` and records settled physical bindings. Catalogue-backed Load, Test and Health use those recorded bindings, not replacement values in an edited configuration. Changing `targets` does not retarget installed work until Build installs it.
 
 The exact filename `workspace-config.yml` is discovered only in the process’s current working directory. Other names, including the one above, require `--workspace-config`; filenames do not confer development or production semantics. See [Workspace configuration](../reference/configuration-files/workspace-config.md) for all keys and precedence.
 
 ## Keep development and production bindings separate
+
+Use a second configuration to install that same Landing/Dispatch source in another workspace. For example:
+
+```yaml title="workspace-production.yml"
+workspace: Parcel Production
+catalogue: Warehouse/ParcelCatalogue
+environment: WeaverProduction
+targets:
+  Lakehouse/Landing: ParcelLanding
+  Warehouse/Dispatch: ParcelDispatch
+```
+
+Use existing compatible catalogue and item targets, and a matching published runtime in that destination. For this exercise, both workspaces should be disposable. Repeat the same commands with `--workspace-config workspace-production.yml`; the Shortcut still names `Lakehouse/Landing/Tables/Parcel.Event`, not the production Lakehouse's physical name. Keep `workspace-development.yml` selected for the following Health and development pages.
+
+### A model and Report variation
 
 For a whole-project example including model and Report targets, use the complete [managed-source Parcel snapshot](../semantic-models/managed-sources.md). This deliberately replaces the first Warehouse exercise with its Operations `Parcel.Delivery` source, Warehouse-backed Delivery partition and inline Depot reference data. It does not add that model to the StatusEvent/View pipeline by renaming a source.
 

@@ -135,3 +135,18 @@ Representative inspected images: `desktop-home.png`, `mobile-home.png`, the five
 - [ ] Have Matthias assess the corrected continuous routes. This report supplies independent findings, not his approval.
 
 **Revision record:** review report only. No recommended public correction has been applied in this branch.
+
+## Parent correction and recheck — 2026-10-14 13:55 AEDT
+
+The original independent findings above remain an honest record of `8a94013`. The parent applied and verified the following corrections; this is **parent disposition**, not a new independent or human approval.
+
+| Finding | Corrected surface | Actual recheck |
+|---|---|---|
+| R1, clipped mobile/tablet search | Disable header backdrop-filter only at Material's mobile search breakpoint; preserve desktop treatment | Exact new visibility/hit-test regression went RED with output height 10px, then GREEN at 390/768/960/1440, light/dark. Eight real result selections pass; mobile output now 796px at height 844. |
+| R2, estate checkpoint jumps | Leading mapping, Health, development and operation continue Landing/Dispatch using workspace-development.yml. Warehouse and managed-model routes are explicit alternatives, not forced restarts. Managed readers keep workspace-dev.yml and its model-inclusive loop. | Two assembled continuous projects pass real Check; 75 Estate bash forms and six configs parse. Parent reread connect→map→inspect→develop→operate with the unchanged Landing/Dispatch checkpoint and inspected corrected desktop/mobile views. |
+| R3, managed footer starts inline validation | Visible validation entrance offers managed-source reconciliation before the independent inline Assumption route | Both body and footer entries were exercised; the footer's new branch sends the existing managed model directly to compare-dax-with-source-sql, without setup. |
+| Technical review P2, physical Shortcut fragment | routes.json and actual compatibility link now target lakehouse/shortcuts/#expose-an-external-carrier-archive | Actual old-fragment link followed to physical-source explanation at phone/tablet/desktop; rendered route gate and paired crawl pass. |
+
+The focused corrected-page browser run covers 54 route/viewport/theme states, with actual footer and legacy-link interactions; batches were persisted before resuming after timeout. A premature locator count after navigation was corrected to wait for the real destination/heading, not waived. The broad earlier 410 checks remain evidence for the assembled pre-correction layout; the focused run and eight pointer-visible search states prove the changed surfaces. Parent inspected search, mapping, development and validation-chooser screenshots after correction.
+
+Preferences: accepted one contextual custom→managed-source/validation handoff. Retained approved nav order and complete runnable incremental/recovery examples; no speculative split or ranking redesign. Search matches substantive practical owners as well as detailed Reference. Human editorial acceptance remains Matthias's; no new independent review is claimed after these bounded parent corrections.

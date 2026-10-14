@@ -301,3 +301,7 @@ Paths are relative to `docs/`. “Byte-identical” compares complete original/c
 | `reference/weaver-documents/test.md` | byte-identical | `reference/weaver-documents/test.md` |
 | `reference/weaver-documents/view.md` | byte-identical | `reference/weaver-documents/view.md` |
 | `reference/weaver-documents/warehouse-programmable.md` | byte-identical | `reference/weaver-documents/warehouse-programmable.md` |
+
+## Parent disposition
+
+The confirmed physical-Shortcut P2 has been corrected in both the route contract and actual old-fragment continuation. The final rendered gate, paired crawl and direct browser click to the physical archive section pass. The companion reader findings were corrected and rechecked as recorded in reader-review.md. Original source/reference/retention findings above remain tied to their reviewed head, not silently represented as another independent review.

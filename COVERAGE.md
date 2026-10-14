@@ -13,9 +13,9 @@ Approved plan: `weaver-docs-item-first-reorganisation-agent-plan.md` supplied by
 | Lakehouse and Warehouse | Integrated and parent-reviewed. Lakehouse: 7 local Check checkpoints / 12 exact fixture blocks; Warehouse: 5 checkpoints / 12 exact blocks. Expected service outcomes remain unobserved. |
 | Models and Reports | Integrated and parent-reviewed. Seven model tasks: 12 compiled Check checkpoints / 16 exact blocks. Reports: 8 command parses / 4 exact blocks / native and offline dev/prod binding gate passed. |
 | Estate and reference/link audit | Integrated; 35 canonical pages, 114 original routes, 872 old IDs and 26 direct search-excluded compatibility routes pass the rendered gate. Product links canonical. |
-| Independent reader/retention reviews | Fourth/final approved pair in progress; editorial acceptance not yet assessed by these technical gates. |
+| Independent reader/retention reviews | Four-pair scope finished. Five reader paths and full retention independently reviewed; four verified findings corrected/rechecked by parent. Final human acceptance remains Matthias. |
 | Technical/browser/search verification | Current integrated iteration passes locked build, generators and 1135 focused core cases. Browser: 410 responsive/theme checks, 8 live search queries, only active group expanded, two-click entries and no-JS/touch/keyboard pass. Final rerun follows any review corrections. |
-| Draft/private-preview delivery | New private preview built on existing routes; final PR update/readback awaits review dispositions. No release, merge, public publication or live service acceptance. |
+| Draft/private-preview delivery | Corrected preview built on existing private routes; final PR heads/readback recorded in final-verification.md. No release, merge, public publication or live service acceptance. |
 
 The earlier five-section and feedback iterations below are historical evidence.
 Final reader acceptance belongs to Matthias; independent agent/editor review and

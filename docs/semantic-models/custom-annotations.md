@@ -87,6 +87,8 @@ The default `post_schema` phase sees columns after managed-source completion. Th
 
 Cleanup is limited to this fixture's newly created Report/model, Reports first.
 
+If the next question is where Delivery comes from, [connect a managed Fabric source](managed-sources.md); if it is whether the measure is right, [validate the model](validation.md). Both keep the modelling conventions you have added.
+
 ## Related tasks
 
 - [Look up the supported extension API](../reference/python/semantic-models.md).

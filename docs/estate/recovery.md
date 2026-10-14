@@ -2,7 +2,7 @@
 
 Recovery is a new operation against the state that remains. Correct the cause, choose the smallest operation that expresses the intended result, and verify the estate afterward. Build, Load, Test and workflows do not roll back completed work when a later step fails.
 
-Continue with the working [Warehouse checkpoint](../warehouse/tests.md) and its [development configuration](environments.md#bind-the-project-to-fabric), or use the configuration from your failed run. The examples below name the first pipeline’s `Parcel.StatusEvent` Table, not its `Parcel.CurrentStatus` View.
+Keep the project and selected configuration from the failed run. The named commands below are worked examples for the [Warehouse checkpoint](../warehouse/tests.md), whose loadable Table is `Parcel.StatusEvent`, not its `Parcel.CurrentStatus` View. For Landing/Dispatch, keep that estate and choose its actual Lakehouse identities; do not run a Warehouse example against it. State-based recovery does not require changing projects.
 
 Start with one Health report for the managed estate, using the failed command’s workspace configuration. It combines source-data state with registered model refreshes and validations:
 

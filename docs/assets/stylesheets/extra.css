@@ -125,6 +125,13 @@ input {
   backdrop-filter: blur(14px);
 }
 
+/* Material's fixed mobile search must remain viewport-sized. */
+@media screen and (max-width: 59.984375em) {
+  .md-header {
+    backdrop-filter: none;
+  }
+}
+
 .md-header__inner {
   min-height: 3.3rem;
 }

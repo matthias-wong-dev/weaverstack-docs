@@ -45,4 +45,4 @@ Continue at the current task page:
 
 <span id="connect-external-data-with-a-physical-shortcut"></span>
 
-[Continue: connect external data with a physical shortcut](../estate/connected-items.md).
+[Continue: connect external data with a physical shortcut](../lakehouse/shortcuts.md#expose-an-external-carrier-archive).
