@@ -55,7 +55,9 @@ Find `Parcel_Dev` in the workspace. After refresh, query **Delivery Count: it sh
 
 You now have a deployed native model. Add the rule below to change its field list without editing the native columns.
 
-## Hide relationship foreign keys
+<span id="hide-relationship-foreign-keys"></span>
+
+## AutoHideForeignKeys: hide relationship foreign keys
 
 ### Add the same-name overlay
 

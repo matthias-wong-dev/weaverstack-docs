@@ -201,7 +201,7 @@ The generated inventory includes every physical column, including audit columns,
 | `Rows updated` | `bigint` | nullable | Rows the target changed. |
 | `Rows deleted` | `bigint` | nullable | Rows the target lost. |
 | `Rows rejected` | `bigint` | nullable | Incoming rows the load refused, kept in the reject table. |
-| `Is reload` | `bit` | nullable | Whether the load re-read a window it had already read. False until reload is available. |
+| `Is reload` | `bit` | nullable | Whether this object was reset for this reload attempt. A failed attempted reload is still marked as a reload. |
 | `Is static skip` | `bit` | nullable | Whether a Static object was skipped because a clean load had already run for this incarnation. |
 | `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 | `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |

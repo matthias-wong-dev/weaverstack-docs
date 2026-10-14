@@ -4,17 +4,17 @@ Can this run use less simultaneous work? Add `--concurrency 2` to limit it to tw
 
 ## Limit one run
 
-Continue with the installed workload from [selective runs](selective-runs.md), or use your own established project and its configuration. For the selection project, cap one Load at two scheduled nodes:
+Continue the Landing/Dispatch project from [selective runs](selective-runs.md), keeping `workspace-development.yml`. Cap its Landing Load at two scheduled nodes:
 
 ```bash
-weaver load Warehouse/Operations --concurrency 2 --workspace-config workspace-dev.yml
+weaver load Lakehouse/Landing --concurrency 2 --workspace-config workspace-development.yml
 ```
 
 Build and Test accept the same positive-integer option:
 
 ```bash
-weaver build . --item Warehouse/Operations --concurrency 2 --workspace-config workspace-dev.yml
-weaver test Warehouse/Operations --concurrency 2 --workspace-config workspace-dev.yml
+weaver build . --item Lakehouse/Landing --concurrency 2 --workspace-config workspace-development.yml
+weaver test Lakehouse/Landing --concurrency 2 --workspace-config workspace-development.yml
 ```
 
 The cap applies across the invocation, not separately to each item. With two Warehouses and a total cap of two, there are still at most two simultaneous scheduled nodes, not four. Dependencies and resource ceilings can keep actual concurrency lower.
@@ -28,9 +28,9 @@ import weaver
 
 result = weaver.build(
     '.',
-    items='Warehouse/Operations',
+    items='Lakehouse/Landing',
     concurrency=2,
-    workspace_config='workspace-dev.yml',
+    workspace_config='workspace-development.yml',
 )
 if not result.succeeded:
     raise RuntimeError(result.errors)
@@ -41,14 +41,14 @@ In a Fabric notebook, pass the supported project source location and let Weaver 
 ```python
 import weaver
 
-report = weaver.load('Warehouse/Operations', concurrency=2)
+report = weaver.load('Lakehouse/Landing', concurrency=2)
 if not report.succeeded:
     raise RuntimeError('Inspect the failed nodes in the Load report')
 ```
 
 Workspace selection and runtime prerequisites still apply. The invocation cap does not provision compute or make otherwise unavailable work runnable.
 
-Source/file-mode Tests are serial by default by default. Explicit concurrency lets them use the run scheduler, subject to their resource limits. A cap limits scheduled work, not the number of DAX queries a single validation contains.
+Source/file-mode Tests are serial by default. Explicit concurrency lets them use the run scheduler, subject to their resource limits. A cap limits scheduled work, not the number of DAX queries a single validation contains.
 
 ## Tune persistent resource limits only when needed
 

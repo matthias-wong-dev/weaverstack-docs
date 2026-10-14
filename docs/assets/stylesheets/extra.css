@@ -616,3 +616,17 @@ input {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Material sets attribution colours separately from the footer links. */
+html .md-footer-meta.md-typeset .md-copyright,
+html .md-footer-meta.md-typeset .md-copyright__highlight,
+html .md-footer-meta.md-typeset .md-copyright a {
+  color: var(--weaver-muted);
+}
+html .md-footer-meta.md-typeset .md-copyright a:hover {
+  color: var(--weaver-blue);
+}
+.md-dialog {
+  color: var(--weaver-code-text);
+  background: var(--weaver-code);
+}

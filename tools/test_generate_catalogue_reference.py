@@ -80,6 +80,27 @@ class CatalogueReferenceTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "different checkout"):
                 reference.build_manifest(self.checkout)
 
+    def test_reload_meaning_uses_the_current_writer_not_stale_source_prose(self):
+        manifest = {
+            "tables": [
+                {
+                    "name": "_.LoadStatistic",
+                    "key": ["Load statistic SK"],
+                    "columns": [
+                        {
+                            "name": "Is reload",
+                            "type": "bit",
+                            "required": False,
+                            "notes": "False until reload is available.",
+                        }
+                    ],
+                }
+            ]
+        }
+        text = reference.render(manifest)
+        self.assertNotIn("False until reload is available", text)
+        self.assertIn("reset for this reload attempt", text)
+
     def test_duplicate_markers_are_refused(self):
         with patch("importlib.import_module", return_value=self.module):
             (self.root / reference.PAGE).write_text(reference.BEGIN * 2 + reference.END)

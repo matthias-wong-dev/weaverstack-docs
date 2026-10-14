@@ -71,10 +71,19 @@ def render(manifest: dict) -> str:
             "| Column | Type | Null | Meaning |",
             "| --- | --- | --- | --- |",
         ]
-        lines += [
-            f"| `{c['name']}` | `{c['type']}` | {'required' if c['required'] else 'nullable'} | {c['notes'].replace('|', '&#124;').replace(chr(10), ' ')} |"
-            for c in table["columns"]
-        ]
+        for column in table["columns"]:
+            notes = column["notes"]
+            if (table["name"], column["name"]) == ("_.LoadStatistic", "Is reload"):
+                # RunRecord.reset/settled owns the flag; the declaration's note is stale.
+                notes = (
+                    "Whether this object was reset for this reload attempt. "
+                    "A failed attempted reload is still marked as a reload."
+                )
+            meaning = notes.replace("|", "&#124;").replace(chr(10), " ")
+            lines.append(
+                f"| `{column['name']}` | `{column['type']}` | "
+                f"{'required' if column['required'] else 'nullable'} | {meaning} |"
+            )
         lines += [""]
     return "\n".join(lines + [END])
 

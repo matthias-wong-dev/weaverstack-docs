@@ -2,6 +2,46 @@
 
 Can you rerun only this Table and the work it affects? Start with a named Load preview, then add upstream or downstream work when that is the intended scope.
 
+Keep the [Landing → Dispatch project](connected-items.md) and its `workspace-development.yml` from [workspace mappings](environments.md). Landing’s Folder supplies Event, which feeds CurrentStatus. Dispatch’s Shortcut View reads Event directly and has no separate Load.
+
+## Preview one Table
+
+```bash
+weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --dry-run --workspace-config workspace-development.yml
+```
+
+The plan should select only `Tables/Parcel.Event`. No data is loaded by `--dry-run`. Read the selected identities before running; plain named Load does not add producers or infer their ordering. The `[.]` matches a literal dot in this whole-name selector; `Tables/` identifies the Table rather than a Folder.
+
+## Include the work before or after it
+
+```bash
+weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --ancestors --dry-run --workspace-config workspace-development.yml
+weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry-run --workspace-config workspace-development.yml
+```
+
+| Request | Selected Landing work |
+| --- | --- |
+| Seed alone | Table `Parcel.Event` |
+| Ancestors | Folder `Parcel.Events`, then Table `Parcel.Event` |
+| Descendants | Table `Parcel.Event`, then Table `Parcel.CurrentStatus` |
+
+Expansion uses the **installed** dependencies, not edited source files. It restores dependency ordering within the selected graph. It never adds an unnamed item: Dispatch remains outside these requests, and its Shortcut View does not need a data Load anyway. A descendant run omits the Folder, so keep its staged CSV current.
+
+## Run the selection you inspected
+
+Remove only the preview flag when the plan is correct:
+
+```bash
+weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --workspace-config workspace-development.yml
+```
+
+The report should show Event attempted before CurrentStatus. Inspect each outcome; attempted is not the same as succeeded. With the original three-event feed, CurrentStatus should still show the two parcel statuses from the Lakehouse task. The Dispatch View continues to read Event without a separate Load. Next, [limit simultaneous work](concurrency.md) on this same estate.
+
+## Explore a larger branching selection
+
+<details markdown="1">
+<summary>Optional: sibling prerequisites and a second Warehouse</summary>
+
 Use the [`parcel-load-selection` project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-load-selection) from the documentation repository. It contains RawEvents, Events, Daily and Summary. Set disposable targets in `workspace-dev.yml`, Build and Load that project, then use its installed graph below. The guide uses this installed graph in `Warehouse/Operations`:
 
 ```text
@@ -97,10 +137,13 @@ The second command is a no-match error, not an empty successful run. Check insta
 Lakehouse identities can include `Tables/` or `Files/`. A bare identity can be ambiguous when both areas contain it. Use an area-qualified name, for example:
 
 ```bash
-weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry-run --workspace-config workspace-dev.yml
+weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry-run --workspace-config workspace-development.yml
 ```
 
-This last command illustrates Lakehouse naming; it is not a command for the Warehouse-only fixture.
+This returns to the Landing project used at the start of this page; select its development configuration, not the Warehouse example’s configuration.
+
+
+</details>
 
 ## 8. Choose the right kind of rerun
 
