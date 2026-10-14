@@ -1,3 +1,18 @@
+---
+meta_title: Microsoft Fabric automation | Weaver docs
+description: Automate Weaver build, load, test and health operations across Microsoft Fabric from desktop runners or Fabric-hosted processes.
+social_title: Microsoft Fabric automation with Weaver
+image_alt: Weaver documentation for Microsoft Fabric data engineering.
+schema_type: TechArticle
+breadcrumbs:
+  - name: Weaver documentation
+    url: https://docs.weaverstack.dev/
+  - name: Advanced
+    url: https://docs.weaverstack.dev/advanced/
+  - name: Microsoft Fabric automation
+    url: https://docs.weaverstack.dev/advanced/automation-and-execution-contexts/
+---
+
 # Automation and execution contexts
 
 Automation must make three choices explicit: where Weaver runs, how that process authenticates without unexpected interaction, and which command result is the machine interface. A command line that works at an interactive desktop does not by itself define an unattended job.

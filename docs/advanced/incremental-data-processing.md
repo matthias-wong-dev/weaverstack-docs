@@ -1,3 +1,19 @@
+---
+meta_title: Incremental loads in Microsoft Fabric | Weaver docs
+description: Implement incremental loads in Microsoft Fabric with Weaver Tables and Folders, consumer-owned bookmarks, upserts and explicit deletes.
+social_title: Incremental loads in Microsoft Fabric
+image: https://docs.weaverstack.dev/assets/images/og-incremental-loads.png
+image_alt: Incremental loads in Microsoft Fabric with Weaver.
+schema_type: TechArticle
+breadcrumbs:
+  - name: Weaver documentation
+    url: https://docs.weaverstack.dev/
+  - name: Advanced
+    url: https://docs.weaverstack.dev/advanced/
+  - name: Incremental loads in Microsoft Fabric
+    url: https://docs.weaverstack.dev/advanced/incremental-data-processing/
+---
+
 # Incremental data processing
 
 Incremental Build selection and incremental data processing solve different problems. Build decides which definitions to install. Load decides which source changes an installed Table or Folder should apply.

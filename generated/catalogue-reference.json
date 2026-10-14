@@ -532,8 +532,29 @@
           "vocabulary": null
         },
         {
+          "name": "Workspace name",
+          "notes": "The resolved Fabric workspace display name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Workspace GUID",
+          "notes": "The resolved Fabric workspace GUID.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
           "name": "Target name",
-          "notes": "The physical item currently bound to this installation.",
+          "notes": "The resolved Fabric target display name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Target item GUID",
+          "notes": "The resolved Fabric target item GUID.",
           "required": true,
           "type": "varchar(128)",
           "vocabulary": null
@@ -542,20 +563,6 @@
           "name": "Weaver version",
           "notes": "The Weaver version that last reconciled this installation.",
           "required": true,
-          "type": "varchar(128)",
-          "vocabulary": null
-        },
-        {
-          "name": "Workspace ID",
-          "notes": "The resolved Fabric workspace ID.",
-          "required": false,
-          "type": "varchar(128)",
-          "vocabulary": null
-        },
-        {
-          "name": "Item ID",
-          "notes": "The resolved Fabric item ID.",
-          "required": false,
           "type": "varchar(128)",
           "vocabulary": null
         },

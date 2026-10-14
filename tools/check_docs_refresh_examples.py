@@ -580,6 +580,11 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--weaver-checkout", type=Path)
     parser.add_argument(
+        "--runtime-revision",
+        default=PIN,
+        help="Explicit integrated runtime revision; original fixture provenance stays pinned",
+    )
+    parser.add_argument(
         "--check-pbir-schemas",
         action="store_true",
         help="Separate optional check using public Microsoft schemas; requires jsonschema and network",
@@ -596,7 +601,7 @@ def main():
     ).strip()
     # A parallel product-site worktree may advance docs without changing runtime.
     runtime_paths = ["src", "tests", "pyproject.toml"]
-    for comparison in ([PIN, "HEAD"], ["HEAD"]):
+    for comparison in ([args.runtime_revision, "HEAD"], ["HEAD"]):
         result = subprocess.run(
             [
                 "git",
@@ -611,9 +616,11 @@ def main():
             check=False,
         )
         assert result.returncode == 0, (
-            f"Checkout runtime differs from pinned {PIN} (HEAD {revision})"
+            f"Checkout runtime differs from pinned {args.runtime_revision} (HEAD {revision})"
         )
-    print(f"Source runtime matches {PIN}; checkout HEAD {revision}")
+    print(
+        f"Source runtime matches {args.runtime_revision}; checkout HEAD {revision}; fixture provenance {PIN}"
+    )
     sys.path[:0] = [
         str(checkout / "src"),
         str(checkout / "tests"),

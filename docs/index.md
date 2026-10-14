@@ -1,3 +1,10 @@
+---
+meta_title: Microsoft Fabric data engineering | Weaver docs
+description: Build and operate Microsoft Fabric Lakehouses and Warehouses with Weaver using native Python and SQL, dependencies, run state and incremental processing.
+social_title: Weaver documentation for Microsoft Fabric data engineering
+image_alt: Weaver documentation for Microsoft Fabric data engineering.
+---
+
 # Weaver
 
 **Making Fabric easier to use.**

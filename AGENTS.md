@@ -14,7 +14,7 @@ Keep three surfaces distinct:
 
 Use these in order:
 
-1. the explicitly frozen Weaver evidence checkout (`WEAVER_CHECKOUT`); for this preview, behaviour/interfaces are pinned to `74b4d15ee65ed2740593af1f4d459771b801b132`;
+1. the explicitly frozen Weaver evidence checkout (`WEAVER_CHECKOUT`); after the requested main integration, behaviour/interfaces are checked against `0f51b02ce5c33bd46e944c871083663948c6ca6e`; original fixture provenance remains `74b4d15ee65ed2740593af1f4d459771b801b132`;
 2. acceptance journeys and tests that establish behaviour;
 3. existing design documentation in the Weaver repository;
 4. realistic usage in `/opt/data/repos/ilovegov-etl`.

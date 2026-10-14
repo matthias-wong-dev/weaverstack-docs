@@ -30,7 +30,7 @@ Every table also has these required `datetime2(6)` audit columns:
 
 | Question | Tables |
 | --- | --- |
-| Which logical items are installed, and where? | `_.Installation`, including frozen `Workspace ID` and `Item ID` for Power BI registrations |
+| Which logical items are installed, and where? | `_.Installation`, including resolved `Workspace name`, `Workspace GUID`, `Target name` and `Target item GUID` |
 | What is certified and what source contributed it? | `_.Registry`; `Object type` includes Semantic model, Report and Source artifact; `Object role` includes Source |
 | What did authored data and validation declare? | Schema/Table/Folder/Column/Key/ForeignKey/Test dictionaries, `_.Dependency` and `_.Shortcut` |
 | What did model readback record? | `_.SemanticModel`, `_.SemanticModelTable`, `_.SemanticModelColumn`, `_.SemanticModelMeasure`, `_.SemanticModelRelationship` |
@@ -155,10 +155,11 @@ The generated inventory includes every physical column, including audit columns,
 | --- | --- | --- | --- |
 | `Item type` | `varchar(128)` | required | Logical Weaver item type. |
 | `Item name` | `varchar(128)` | required | Logical Weaver item name. |
-| `Target name` | `varchar(128)` | required | The physical item currently bound to this installation. |
+| `Workspace name` | `varchar(128)` | required | The resolved Fabric workspace display name. |
+| `Workspace GUID` | `varchar(128)` | required | The resolved Fabric workspace GUID. |
+| `Target name` | `varchar(128)` | required | The resolved Fabric target display name. |
+| `Target item GUID` | `varchar(128)` | required | The resolved Fabric target item GUID. |
 | `Weaver version` | `varchar(128)` | required | The Weaver version that last reconciled this installation. |
-| `Workspace ID` | `varchar(128)` | nullable | The resolved Fabric workspace ID. |
-| `Item ID` | `varchar(128)` | nullable | The resolved Fabric item ID. |
 | `Signature` | `varchar(128)` | required | Content hash of the Item declaration, so a change can be detected. |
 | `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 | `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
