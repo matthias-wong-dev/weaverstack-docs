@@ -240,3 +240,9 @@ Every retired fragment remains at its original route with an explicit link direc
 - `docs/get-started/index.html` → `https://docs.weaverstack.dev/`
 - `docs/problem/index.html` → `https://docs.weaverstack.dev/`
 - `docs/problem/index.html` → `https://docs.weaverstack.dev/`
+
+## First-pair integration checkpoint
+
+Lakehouse parent integration retains Landing Folder Parcel.Events → Python Parcel.Event → SQL CurrentStatus → validations. The existing parcel-lakehouse fixture gains the latter three declarations; optional independent ServiceLevel remains deliberate fixture-only support. Warehouse settles on the existing Parcel.StatusEvent Table → CurrentStatus View and adds independent expected-row/known-status validations in the coherent parcel-warehouse-journey snapshot. Its original SQL remains byte-identical. Mutable-source variations are explicit, separate complete snapshots, not silent replacements.
+
+Parent reviewed actual diffs and all new prose; reran the maintained Lakehouse checker (7 checkpoints, 12 exact blocks, 3 generated modules) and Warehouse checker (5 checkpoints, 12 exact blocks, 14 SQL program blocks). Removed evaluator diary from public pages while retaining operation qualifications; an overbroad prose whitespace cleanup initially changed fenced bytes, the exact fences were restored and both synchronization/check gates passed. No source runtime or remote service change.
