@@ -10,6 +10,7 @@ import re
 import shlex
 import shutil
 import socket
+import sys
 import tempfile
 from pathlib import Path
 
@@ -19,6 +20,7 @@ p.add_argument("--product", type=Path, required=True)
 a = p.parse_args()
 a.docs = a.docs.resolve()
 a.product = a.product.resolve()
+sys.path.insert(0, str(a.product / "src"))
 import weaver
 
 assert Path(weaver.__file__).resolve().is_relative_to(a.product / "src")

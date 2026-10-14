@@ -9,13 +9,13 @@ Approved plan: `weaver-docs-item-first-reorganisation-agent-plan.md` supplied by
 | Package | Current state |
 |---|---|
 | Frozen evidence and retention map | Committed; 114 original pages accounted for, 35 canonical item/estate routes. See `acceptance/docs-item-first-2026-10/route-map.md`. |
-| Short entrances, sitemap and guidance | Established; target tasks are being authored, not yet integrated/built. |
+| Short entrances, sitemap and guidance | Integrated; strict build and actual two-click item entrances pass. |
 | Lakehouse and Warehouse | Integrated and parent-reviewed. Lakehouse: 7 local Check checkpoints / 12 exact fixture blocks; Warehouse: 5 checkpoints / 12 exact blocks. Expected service outcomes remain unobserved. |
 | Models and Reports | Integrated and parent-reviewed. Seven model tasks: 12 compiled Check checkpoints / 16 exact blocks. Reports: 8 command parses / 4 exact blocks / native and offline dev/prod binding gate passed. |
-| Estate and reference/link audit | Third approved two-author batch in progress. Parent generated direct compatibility pointers and is reconciling narrative routes. |
-| Independent reader/retention reviews | Pending fourth approved batch after integration. |
-| Technical/browser/search verification | Pending final integrated head; earlier results below do not prove this restructure. |
-| Draft/private-preview delivery | Pending; no release, merge, public publication or live service acceptance. |
+| Estate and reference/link audit | Integrated; 35 canonical pages, 114 original routes, 872 old IDs and 26 direct search-excluded compatibility routes pass the rendered gate. Product links canonical. |
+| Independent reader/retention reviews | Fourth/final approved pair in progress; editorial acceptance not yet assessed by these technical gates. |
+| Technical/browser/search verification | Current integrated iteration passes locked build, generators and 1135 focused core cases. Browser: 410 responsive/theme checks, 8 live search queries, only active group expanded, two-click entries and no-JS/touch/keyboard pass. Final rerun follows any review corrections. |
+| Draft/private-preview delivery | New private preview built on existing routes; final PR update/readback awaits review dispositions. No release, merge, public publication or live service acceptance. |
 
 The earlier five-section and feedback iterations below are historical evidence.
 Final reader acceptance belongs to Matthias; independent agent/editor review and
