@@ -8,7 +8,7 @@ Continue the [mapped Landing/Operations project](environments.md#bind-the-projec
 weaver health --workspace-config workspace-development.yml
 ```
 
-If you entered with a different working estate, keep that project's selected configuration instead. The [managed-source model project](environments.md#a-model-and-report-variation) uses `workspace-dev.yml`; use that file on this same Health command and the following development loop. You do not need to switch back to the Warehouse starter.
+If you added models and Reports through [the estate mapping](environments.md#a-model-and-report-variation), keep the same `workspace-development.yml`; their installed refresh and validation results appear in this Health report. For a different working project, use its own configuration consistently. No return to the Warehouse starter is required.
 
 Without an item selector, Health covers the whole managed installed estate. It reads recorded state and, by default, compares installed claims with physical inventory. It does not read unbuilt source, load data or execute validations.
 
