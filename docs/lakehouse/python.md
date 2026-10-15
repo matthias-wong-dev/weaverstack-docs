@@ -39,7 +39,6 @@ Incremental: false
 
 from weaver import Folder
 
-
 EVENTS = """Parcel ID,Event sequence,Status,Depot
 P-1001,1,Accepted,North
 P-1001,2,In transit,Central
@@ -80,6 +79,7 @@ Schema:
 """
 
 from Files.Parcel__Events import Parcel__Events
+
 from weaver import Table
 
 

@@ -1,5 +1,5 @@
 {
-  "wheel_import": "/opt/data/profiles/editor/cache/scratch/named-example-wheel-final/weaver/__init__.py",
+  "wheel_import": "/opt/data/profiles/editor/cache/scratch/named-example-wheel-verified/weaver/__init__.py",
   "network": "refused",
   "fabric_boundary": "offline inventory/creation only",
   "selections": {

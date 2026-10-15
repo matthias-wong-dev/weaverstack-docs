@@ -14,7 +14,7 @@ Keep three surfaces distinct:
 
 Use these in order:
 
-1. the explicitly frozen Weaver evidence checkout (`WEAVER_CHECKOUT`); for the named/additive correction, behaviour/interfaces are checked against `89e93c78f8497454b4544e7919567cc078dbad11`; original fixture provenance remains `74b4d15ee65ed2740593af1f4d459771b801b132`;
+1. the explicitly frozen Weaver evidence checkout (`WEAVER_CHECKOUT`); for the named/additive correction, behaviour/interfaces are checked against `bf908f4754eca4d10a56afd218e9e18d423636d7`; original fixture provenance remains `74b4d15ee65ed2740593af1f4d459771b801b132`;
 2. acceptance journeys and tests that establish behaviour;
 3. existing design documentation in the Weaver repository;
 4. realistic usage in `/opt/data/repos/ilovegov-etl`.

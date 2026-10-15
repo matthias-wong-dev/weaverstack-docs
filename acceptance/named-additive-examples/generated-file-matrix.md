@@ -1,6 +1,6 @@
 # Exact generated-file matrix
 
-Runtime: `89e93c78f8497454b4544e7919567cc078dbad11`. Generated through the public API imported from the separately installed built wheel, with network connections refused. Fabric inventory/creation was an explicit offline boundary, not service execution.
+Runtime: `bf908f4754eca4d10a56afd218e9e18d423636d7`. Generated through the public API imported from the separately installed built wheel, with network connections refused. Fabric inventory/creation was an explicit offline boundary, not service execution.
 
 Parameters: workspace `Example`, Lakehouse `Landing`, Warehouse `Operations`, native model/Report `Parcel` or `Sales` respectively. Different selected item names re-root their item-owned paths. `N` means the supported native model plus linked Report selection; the Report is deployed only when selected for Build.
 
