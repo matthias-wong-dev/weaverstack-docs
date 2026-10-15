@@ -2,7 +2,14 @@
 
 A keyed incremental Table can apply new rows, changed values and cancellations while its definition stays installed. Your SQL returns the candidate rows and delete keys; Weaver generates the target merge and records the consumer's progress.
 
-The [first project](first-project.md) and [its validations](tests.md) use a constant event feed and a latest-status View. This page is a **complete mutable-source variation**, not an edit to that fixture. It keeps `Warehouse/Operations` and the same parcel IDs, but `Parcel.CurrentStatus` is now a managed **Table** over external current-state records, rather than a View over `Parcel.StatusEvent`. Use the existing [incremental Warehouse snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-incremental-warehouse) in its own project directory and disposable targets. Do not overlay it on the first project's installed View or carry its fixed expected-row Test into this variation.
+The [first project](first-project.md) and [its validations](tests.md) use a constant event feed and a latest-status View. This page is a **complete mutable-source variation**, not an edit to that fixture. It keeps `Warehouse/Operations` and the same parcel IDs, but `Parcel.CurrentStatus` is now a managed **Table** over external current-state records, rather than a View over `Parcel.StatusEvent`. Use the existing [incremental Warehouse snapshot](../assets/examples/parcel-incremental-warehouse.zip) in its own project directory and disposable targets. Do not overlay it on the first project's installed View or carry its fixed expected-row Test into this variation.
+
+Save the `parcel-incremental-warehouse.zip` download in an empty working directory, then extract its repository-relative paths and enter the project:
+
+```bash
+python -m zipfile -e parcel-incremental-warehouse.zip .
+cd examples/parcel-incremental-warehouse
+```
 
 ## Keep the changing source separate
 

@@ -4,6 +4,8 @@ Recovery is a new operation against the state that remains. Correct the cause, c
 
 Keep the project and selected configuration from the failed run. The named commands below are worked examples for the [Warehouse checkpoint](../warehouse/tests.md), whose loadable Table is `Parcel.StatusEvent`, not its `Parcel.CurrentStatus` View. For Landing/Dispatch, keep that estate and choose its actual Lakehouse identities; do not run a Warehouse example against it. State-based recovery does not require changing projects.
 
+The commands below use `workspace-development.yml`. If you entered directly from the Warehouse task, replace that filename with its working `workspace-config.yml`; keep the failed run’s workspace and catalogue.
+
 Start with one Health report for the managed estate, using the failed command’s workspace configuration. It combines source-data state with registered model refreshes and validations:
 
 ```bash

@@ -2,7 +2,7 @@
 
 The [first Table and View](first-project.md) produce two current parcel statuses from three events. Keep that project and add a Test that compares the View with an independent expected result.
 
-Use the same loaded `Warehouse/Operations` project and configuration. If you are starting here, use the [complete example](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-warehouse-journey) and follow the [Table and View task](first-project.md) first. Run commands from its project root.
+Use the same loaded `Warehouse/Operations` project and configuration. If you are starting here, use the [complete example](../assets/examples/parcel-warehouse-journey.zip) and follow the [Table and View task](first-project.md) first. Run commands from its project root.
 
 ## Check the result without repeating the ranking query
 

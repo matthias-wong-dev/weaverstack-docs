@@ -4,7 +4,7 @@ Reuse a source foundation without deploying it as a physical base model. Give ea
 
 ## Before you start
 
-This is an audience-variant checkpoint, not a rename of the single deployed Parcel model. The native Delivery/Depot foundation becomes `ParcelBase`; Operations adds a measure and Executive removes an internal-cost table. Use the complete [variant project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi-variants) with the [ordinary Power BI prerequisites](native-tmdl.md), plus DAX query rights for its Assumptions. Configure existing disposable workspaces. No catalogue or Fabric Environment is required by this inline Import example.
+This is an audience-variant checkpoint, not a rename of the single deployed Parcel model. The native Delivery/Depot foundation becomes `ParcelBase`; Operations adds a measure and Executive removes an internal-cost table. Use the complete [variant project](../assets/examples/parcel-powerbi-variants.zip) with the [ordinary Power BI prerequisites](native-tmdl.md), plus DAX query rights for its Assumptions. Configure existing disposable workspaces. No catalogue or Fabric Environment is required by this inline Import example.
 
 `ParcelBase.SemanticModel` supplies complete native data, relationships and measures. The two output packages supply native model properties, while their named TMDL files declare composition. An output package by itself is not a precompiled, independently populated Desktop model.
 

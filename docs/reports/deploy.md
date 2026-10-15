@@ -4,9 +4,16 @@ Keep your native `.Report` beside its semantic model. Build deploys the model fi
 
 ## Start with the linked pair
 
-[Install Weaver](../getting-started/installation.md), then work from the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi), in `examples/parcel-powerbi`. It contains the native model and a Report with a Delivery Count card. You do not need to author the model again or complete the semantic-model tutorial first.
+[Install Weaver](../getting-started/installation.md), then work from the [complete parcel project](../assets/examples/parcel-powerbi.zip), in `examples/parcel-powerbi`. It contains the native model and a Report with a Delivery Count card. You do not need to author the model again or complete the semantic-model tutorial first.
 
 If you already deployed the [native model](../semantic-models/native-tmdl.md), keep that project and any overlay. This task adds its linked Report; the catalogue-free Build includes the model too.
+
+If you are starting here, save the `parcel-powerbi.zip` download in an empty working directory, then extract its repository-relative paths and enter the project:
+
+```bash
+python -m zipfile -e parcel-powerbi.zip .
+cd examples/parcel-powerbi
+```
 
 Open `PowerBI/Parcel/Parcel.pbip` in Desktop to inspect the Report. Its association is authored in `PowerBI/Parcel/Parcel.Report/definition.pbir`:
 

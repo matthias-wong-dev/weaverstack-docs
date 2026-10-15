@@ -2,7 +2,14 @@
 
 Update one carrier file, remove another, and Load the installed pipeline again. The Folder records what changed; the incremental Table uses its own bookmark to read those changes and apply updates and explicit deletes.
 
-The [Landing journey](tests.md) used a constant event export to make the first Python, SQL and validation steps self-contained. This page is a **complete mutable-source variation**, not an addition to that fixed export: `Lakehouse/Tracking` replaces the demo source with externally owned status files and keeps the familiar `Parcel.CurrentStatus` result. Leave the Landing project intact. Do not replace its Python Event with a new SQL seed or rebuild the constant to simulate incoming data.
+Start a **separate mutable-source project** in `examples/parcel-incremental`. It reads changing carrier files in `Lakehouse/Tracking` and keeps the familiar `Parcel.CurrentStatus` result. Leave the [Landing pipeline and its fixed-data validations](tests.md) unchanged; do not rebuild its constant export to simulate incoming data.
+
+Save the `parcel-incremental.zip` download in an empty working directory, then extract its repository-relative paths and enter the project:
+
+```bash
+python -m zipfile -e parcel-incremental.zip .
+cd examples/parcel-incremental
+```
 
 ## Let the consumer remember its progress
 
@@ -12,7 +19,7 @@ The bookmark belongs to the consumer, not the source. It is the UTC instant imme
 
 ## Provision the external Lakehouse
 
-Use the existing [complete mutable-source fixture](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-incremental) in a separate project directory. All paths below are relative to that directory. Create or reuse the `ParcelCatalogue` Warehouse, `ParcelTracking` Lakehouse and `ParcelRuntime` Environment in the **Parcel Development** workspace, and create the separate external `ParcelSourceArchive` Lakehouse. Its configuration is `workspace-config.yml`:
+Use the existing [complete mutable-source fixture](../assets/examples/parcel-incremental.zip) in a separate project directory. All paths below are relative to that directory. Create or reuse the `ParcelCatalogue` Warehouse, `ParcelTracking` Lakehouse and `ParcelRuntime` Environment in the **Parcel Development** workspace, and create the separate external `ParcelSourceArchive` Lakehouse. Its configuration is `workspace-config.yml`:
 
 ```yaml
 workspace: Parcel Development
@@ -176,6 +183,7 @@ The bookmark belongs to `Parcel.CurrentStatus`, not to the source Folder. `files
 Before the first Build, [publish a matching Fabric runtime](runtime.md). Use normal Environment publication to install the same Weaver release as the local client; the `environment: ParcelRuntime` binding alone does not publish it. Then, from the **example project root**, check and install the declarations once:
 
 ```bash
+weaver fabric environment publish ParcelRuntime
 weaver check
 weaver build --item Lakehouse/Tracking
 ```
@@ -202,7 +210,13 @@ weaver load Lakehouse/Tracking
 
 The first Folder Load should publish both files and record their insertions. The Table starts at the initial bookmark, so its first read should include both changes and insert two rows. A clean Load records a new Table bookmark at the instant immediately before that read began.
 
-Inspect the managed Folder and `Parcel.CurrentStatus` in `ParcelTracking`. The Table should contain `P-1001` and `P-1002`.
+In the same notebook, inspect the managed Table:
+
+```python
+spark.sql("SELECT `Parcel ID`, Status, Depot FROM Parcel.CurrentStatus ORDER BY `Parcel ID`").show(truncate=False)
+```
+
+It should contain `P-1001` as `In transit` at `Central` and `P-1002` as `Delivered` at `South`. The managed Folder should contain both CSV files.
 
 In a **SQL query connected to ParcelCatalogue**, record the Table's first successful boundary:
 

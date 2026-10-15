@@ -17,7 +17,7 @@ weaver initialise \
 cd parcel-lakehouse-python
 ```
 
-Initialise writes the configuration, a Landing directory and an Environment definition. Add the two files below, or use the [complete Python example](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse). Keep this project as you add SQL and tests.
+Initialise writes the configuration, a Landing directory and an Environment definition. Add the two files below, or download the [checkpoint files](../assets/examples/parcel-lakehouse.zip). For the download route, extract the ZIP outside this project and copy only `Files/Parcel__Events.py` and `Tables/Parcel__Event.py` from its `examples/parcel-lakehouse/Lakehouse/Landing/` into this project’s `Lakehouse/Landing/`. Keep the generated configuration and Environment definition. Add SQL and Tests here on the following pages.
 
 ## Stage the carrier export
 

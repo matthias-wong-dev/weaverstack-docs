@@ -88,6 +88,10 @@ The fixture checker uses the pinned source's small offline test helpers and expl
 
 Inspect the manifest and every changed owning page. A clean generator check proves that generated facts match the selected checkout, not that surrounding explanations are correct.
 
+## Example downloads
+
+Tutorial project links use same-site ZIP downloads under `docs/assets/examples/`, so a PR preview does not depend on unmerged files in GitHub's `main` branch. Archives retain the `examples/<project>/` layout and contain only tracked files, byte-for-byte. After editing an example, run `python tools/package_examples.py` and commit its updated ZIP. Run `python tools/package_examples.py --check` before building to reject stale downloads.
+
 ## Validate the change
 
 Python 3.11 or later and [uv](https://docs.astral.sh/uv/) are required.

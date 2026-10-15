@@ -2,7 +2,7 @@
 
 Use the same native Report and model in both workspaces. The selected workspace configuration changes their physical names and the Report's deployed model binding; it does not change their logical names or authored files.
 
-Continue from [Deploy a native Report](deploy.md) in the same `examples/parcel-powerbi` directory. If you are starting here, use the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi) and that page's installation and access instructions; no model reauthoring is needed. Keep any model overlay from the native-model task. The next Build adds the second destination.
+Continue from [Deploy a native Report](deploy.md) in the same `examples/parcel-powerbi` directory. If you are starting here, use the [complete parcel project](../assets/examples/parcel-powerbi.zip) and that page's installation and access instructions; no model reauthoring is needed. Keep any model overlay from the native-model task. The next Build adds the second destination.
 
 ## Select the two destinations
 
@@ -43,7 +43,24 @@ Check each Report's actual service binding, including the workspace, not just th
 | `workspace-dev.yml` | Parcel BI Development | `Parcel_Report_Dev` | `Parcel_Dev` |
 | `workspace-prod.yml` | Parcel BI Production | `Parcel_Report` | `Parcel` |
 
-In API readback, `datasetId` must be that environment's model ID and `datasetWorkspaceId` its workspace ID. The production Report must not point to the development model. The native source is unchanged; the resolved IDs go into the deployed Report payload.
+For a concrete binding check, save this as `check-bindings.py` beside the two configuration files and run `python check-bindings.py` from the project root:
+
+```python title="check-bindings.py"
+import weaver
+
+for config, report, model in (
+    ("workspace-dev.yml", "Parcel_Report_Dev", "Parcel_Dev"),
+    ("workspace-prod.yml", "Parcel_Report", "Parcel"),
+):
+    with weaver.session(workspace_config=config) as opened:
+        expected = opened.semantic_model(model)
+        binding = opened.report_item(report).get_binding()
+        assert binding["datasetId"] == expected.model_id
+        assert binding["datasetWorkspaceId"] == expected.workspace_id
+        print(config, binding["datasetId"], binding["datasetWorkspaceId"])
+```
+
+Use the physical names from your configurations if you changed them. The check reads each deployed Report through the Power BI API. The production Report must not point to the development model. The native source is unchanged; the resolved IDs go into the deployed Report payload.
 
 For a viewing check, refresh each model with refresh permission, then open each Report with view/query permission:
 

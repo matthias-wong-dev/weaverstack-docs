@@ -591,6 +591,13 @@ input {
   .md-typeset table:not([class]) {
     min-width: 32rem;
   }
+
+  /* Without Material's JS scroll wrapper, the table must own its scroll. */
+  .no-js .md-typeset table:not([class]) {
+    display: block;
+    min-width: 0;
+    overflow-x: auto;
+  }
 }
 
 @media screen and (max-width: 29.984375em) {

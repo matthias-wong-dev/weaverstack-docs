@@ -19,7 +19,7 @@ weaver initialise \
 cd parcel-warehouse
 ```
 
-Initialise creates or reuses the named items and writes `workspace-config.yml`. This SQL task needs no Spark runtime; if interactive setup offers Environment publication, decline it for this Warehouse task. Use the project below, or the [complete example files](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-warehouse-journey); start with the two SQL files and add their validations on the next page.
+Initialise creates or reuses the named items and writes `workspace-config.yml`. This SQL task needs no Spark runtime; if interactive setup offers Environment publication, decline it for this Warehouse task. Use the project below, or the [complete example files](../assets/examples/parcel-warehouse-journey.zip); start with the two SQL files and add their validations on the next page.
 
 <details markdown="1">
 <summary>See the generated workspace bindings</summary>

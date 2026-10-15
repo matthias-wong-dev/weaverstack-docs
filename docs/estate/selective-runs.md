@@ -42,7 +42,15 @@ The report should show Event attempted before CurrentStatus. Inspect each outcom
 <details markdown="1">
 <summary>Optional: sibling prerequisites and a second Warehouse</summary>
 
-Use the [`parcel-load-selection` project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-load-selection) from the documentation repository. It contains RawEvents, Events, Daily and Summary. Set disposable targets in `workspace-dev.yml`, Build and Load that project, then use its installed graph below. The guide uses this installed graph in `Warehouse/Operations`:
+Use the [`parcel-load-selection` project](../assets/examples/parcel-load-selection.zip) from the documentation repository. It contains RawEvents, Events, Daily and Summary. Set disposable targets in `workspace-dev.yml`, then run from `examples/parcel-load-selection`:
+
+```bash
+weaver check .
+weaver build . --item Warehouse/Operations --item Warehouse/Reporting --workspace-config workspace-dev.yml
+weaver load Warehouse/Operations Warehouse/Reporting --workspace-config workspace-dev.yml
+```
+
+Use its installed graph below. The guide uses this installed graph in `Warehouse/Operations`:
 
 ```text
 Parcel.RawEvents → Parcel.Events → Parcel.Daily → Parcel.Summary
@@ -145,7 +153,7 @@ This returns to the Landing project used at the start of this page; select its d
 
 </details>
 
-## 8. Choose the right kind of rerun
+## Choose the right kind of rerun {#8-choose-the-right-kind-of-rerun}
 
 - Ordinary item-wide Load runs the installed item graph.
 - `--stale` selects non-Green work by Load health. It does not refresh every omitted Green prerequisite. `--as-of` supplies its freshness cutoff and requires `--stale`.

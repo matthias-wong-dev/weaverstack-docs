@@ -2,7 +2,7 @@
 
 Apply the same formatting and calculation structure to several models without copying the convention into each native project. Shared policy is TMDL; custom Python is not required.
 
-Continue the [native Parcel model](native-tmdl.md#hide-relationship-foreign-keys): Delivery, Depot, the relationship and the same-name foreign-key overlay are already working. Add only the policy and format override below, keeping your workspace configuration. Direct entrants can use the complete [standards snapshot](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi-standards) with the same native model and [deployment prerequisites](native-tmdl.md#before-you-start). That snapshot also contains the optional custom handler from the next task; it is not needed for this policy.
+Continue the [native Parcel model](native-tmdl.md#hide-relationship-foreign-keys): Delivery, Depot, the relationship and the same-name foreign-key overlay are already working. Add only the policy and format override below, keeping your workspace configuration. Direct entrants can use the complete [standards snapshot](../assets/examples/parcel-powerbi-standards.zip) with the same native model and [deployment prerequisites](native-tmdl.md#before-you-start). That snapshot also contains the optional custom handler from the next task; it is not needed for this policy.
 
 ## 1. Add the shared policy
 

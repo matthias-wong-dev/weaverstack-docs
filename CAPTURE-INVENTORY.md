@@ -1,0 +1,20 @@
+# Capture after editorial approval
+
+Use the final edited commands, installed matching Weaver release and disposable destinations. Capture real ANSI output and actual service views; do not turn the expected outcomes below into mock output. No captures or remote operations were performed in the preparation pass.
+
+| Capture | Existing project/checkpoint | Page and section |
+| --- | --- | --- |
+| `weaver check .` | `parcel-warehouse-journey`, first Table/View checkpoint | [First Warehouse](docs/warehouse/first-project.md), **Install the definitions, then load the rows** |
+| `weaver build --item Lakehouse/Landing` | `parcel-lakehouse` Python files copied into the initialised project; matching runtime published | [First Python pipeline](docs/lakehouse/python.md), **Check, build and load** |
+| `weaver load Lakehouse/Tracking` before and after the external CSV change; CurrentStatus rows and bookmark | `parcel-incremental`, `workspace-config.yml` | [Loading changes and bookmarks](docs/lakehouse/incremental.md), **Establish the first boundary** and **Change source data, then Load without Build** |
+| `weaver test Warehouse/Operations`, passing and deliberate-finding runs | `parcel-warehouse-journey`, existing passing and `failure/` SQL | [Warehouse Tests](docs/warehouse/tests.md), **Install and run the validations** and **Optional: make one discrepancy visible** |
+| `weaver health --workspace-config workspace-development.yml` before and after operation | `parcel-lakehouse` continued through Landing → Dispatch; preserve the named configuration | [Catalogue and Health](docs/estate/catalogue-and-health.md), **Find the work that needs attention**; [Operate](docs/estate/operate.md), **Inspect the resulting state** |
+| Named `Event` seed, ancestors and descendants with `--dry-run`, then the inspected descendant invocation | Same Landing/Dispatch checkpoint, `workspace-development.yml` | [Selective runs](docs/estate/selective-runs.md), **Preview one Table**, **Include the work before or after it**, **Run the selection you inspected** |
+| `weaver load Lakehouse/Landing --concurrency 2 --workspace-config workspace-development.yml` | Same Landing/Dispatch checkpoint | [Concurrency](docs/estate/concurrency.md), **Limit one run**; retain selected identities and node outcomes |
+| `weaver build . --dry-run --workspace-config workspace-development.yml` after a small source edit | Same Landing/Dispatch checkpoint | [Development cycle](docs/estate/development-cycle.md), **Edit and iterate** |
+| Mirror's displayed source/destination plan, explicit confirmation and resulting Health | `parcel-environment` mappings, completed [same-workspace Mirror prerequisites](docs/estate/mirror.md); use existing disposable targets only | [Mirror](docs/estate/mirror.md), **Prepare existing destinations in the same workspace**. Reset/re-mirror is destructive and needs its own agreed capture scope |
+| Model-only Build/refresh, actual Delivery Count query and deployed foreign-key visibility | `parcel-powerbi`, `workspace-dev.yml`, native model plus rule | [Native TMDL](docs/semantic-models/native-tmdl.md), **Refresh and inspect the model** and **Deploy and inspect**; show relationship/partitions and successful authored-hash check |
+| Source Load → model refresh ordering and reconciliation Test | `parcel-powerbi-fabric`, `workspace-dev.yml`, existing Warehouse source and service connection | [Managed sources](docs/semantic-models/managed-sources.md), **Bind and refresh the model**; [Validation](docs/semantic-models/validation.md), **Compare DAX with source SQL** |
+| Model/Report Build, per-environment binding readback and actual Report card in each workspace | `parcel-powerbi`, both disposable workspace configurations | [Report environments](docs/reports/environments.md), **Build and check each binding** |
+
+Publication remains held for a matching PyPI release and Matthias's explicit approval. Capturing output does not itself authorise publication, new capacity, tenant changes or destructive recovery.

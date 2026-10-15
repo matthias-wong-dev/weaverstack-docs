@@ -12,7 +12,14 @@ A PBIP project contains the model’s native TMDL and its Report definitions. Yo
 
 The example contains inline Import data and works in an existing standalone Power BI workspace. No catalogue or source Warehouse is needed. [Managed Fabric sources](managed-sources.md) adds source coordination later.
 
-Download or clone the [complete parcel project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-powerbi) and work from `examples/parcel-powerbi`. `PowerBI/Parcel/Parcel.pbip` opens the native project. Its model has three parcel rows, two depots, a relationship and a Delivery Count measure. Its Report has a Delivery Count card.
+Download and extract the [complete parcel project](../assets/examples/parcel-powerbi.zip) and work from `examples/parcel-powerbi`. `PowerBI/Parcel/Parcel.pbip` opens the native project. Its model has three parcel rows, two depots, a relationship and a Delivery Count measure. Its Report has a Delivery Count card.
+
+Save the `parcel-powerbi.zip` download in an empty working directory, then extract its repository-relative paths and enter the project:
+
+```bash
+python -m zipfile -e parcel-powerbi.zip .
+cd examples/parcel-powerbi
+```
 
 For an existing Fabric project, copy the `PowerBI/` directory and add the shown targets to its configuration, retaining the workspace and catalogue settings.
 
@@ -30,6 +37,12 @@ targets:
 Logical names stay in the project; this file chooses physical names. Build may create missing selected models and Reports, or update existing ones. Choose names you own. Do not run `weaver initialise` for this route: it also provisions a catalogue Warehouse and Fabric Environment.
 
 ## 2. Check the project
+
+Before the first Build, record hashes of the authored native model files. Run from the example project root; the same-name Weaver overlay is outside this directory:
+
+```bash
+python -c 'import hashlib,json; from pathlib import Path; r=Path("PowerBI/Parcel/Parcel.SemanticModel"); Path("native-source.sha256.json").write_text(json.dumps({str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(r.rglob("*")) if p.is_file()}))'
+```
 
 ```bash
 weaver check .
@@ -51,7 +64,18 @@ This selects **only the semantic model**. Build deploys and verifies `Parcel_Dev
 weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 ```
 
-Find `Parcel_Dev` in the workspace. After refresh, query **Delivery Count: it should be 2**. A model-definition tool or the service’s Get Definition API should show Delivery, Depot, their Import partitions and the many-to-one relationship.
+Find `Parcel_Dev` in the workspace. Save the following as `query-model.py` beside `workspace-dev.yml`, then run `python query-model.py` from that directory. It uses the installed Weaver package and the same authentication and workspace configuration as the CLI:
+
+```python title="query-model.py"
+import weaver
+
+with weaver.session(workspace_config="workspace-dev.yml") as opened:
+    deployed = opened.semantic_model("Parcel_Dev")
+    rows = deployed.query_dax('EVALUATE ROW("DeliveryCount", [Delivery Count])')
+    print(rows)
+```
+
+The returned row should have **DeliveryCount = 2**. This calls the Power BI Execute Queries API: the identity needs model Read and Build permissions and must be allowed by the tenant's Execute Queries setting. Use existing permissions; do not change tenant settings for the exercise. This query checks the deployed model, not a locally opened PBIP file.
 
 You now have a deployed native model. Add the rule below to change its field list without editing the native columns.
 
@@ -78,7 +102,51 @@ weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
 weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 ```
 
-Inspect the deployed native definition through a supported model-definition tool or the service's Get Definition API. `Delivery[DepotId]` should have `isHidden = true`; `Depot[DepotId]` and unrelated columns should stay visible. The relationship and both partitions should remain. You do not need a Report query to verify that transformation.
+Read the deployed definition through Fabric's Get Definition API using the same Session. Save this as `inspect-model.py` beside the configuration and run `python inspect-model.py`:
+
+```python title="inspect-model.py"
+import base64
+import hashlib
+import json
+from pathlib import Path
+
+import weaver
+from weaver.semantic_models import TmdlDefinition
+
+with weaver.session(workspace_config="workspace-dev.yml") as opened:
+    definition = opened.semantic_model("Parcel_Dev").get_definition(format="TMDL")
+parts = {
+    part["path"]: base64.b64decode(part["payload"], validate=True)
+    for part in definition["parts"]
+    if part["payloadType"] == "InlineBase64"
+}
+model = TmdlDefinition(parts).model
+assert model.tables["Delivery"].columns["DepotId"].isHidden is True
+assert model.tables["Depot"].columns["DepotId"].isHidden is not True
+relationship = model.relationships["Delivery_Depot"]
+assert relationship.fromColumn == "Delivery.DepotId"
+assert relationship.toColumn == "Depot.DepotId"
+assert relationship.fromCardinality == "many"
+assert relationship.toCardinality == "one"
+assert relationship.crossFilteringBehavior == "oneDirection"
+root = Path("PowerBI/Parcel/Parcel.SemanticModel")
+authored = TmdlDefinition({
+    path.relative_to(root).as_posix(): path.read_bytes()
+    for path in root.rglob("*") if path.is_file()
+}).model
+for name in ("Delivery", "Depot"):
+    partition = model.tables[name].partitions[name]
+    assert partition.mode == "import"
+    assert partition.source == authored.tables[name].partitions[name].source
+after = {
+    str(path): hashlib.sha256(path.read_bytes()).hexdigest()
+    for path in sorted(root.rglob("*")) if path.is_file()
+}
+assert after == json.loads(Path("native-source.sha256.json").read_text())
+print("Visibility, relationship, Import partitions and authored file hashes checked")
+```
+
+A successful run verifies the deployed many-side key is hidden, the one-side key is visible, the relationship and both Import partitions remain, and all authored native model bytes match the pre-Build baseline. An omitted native `isHidden` property also means visible. Get Definition needs model-definition read access; Build already uses definition readback. These are read-only inspection calls, not a Report rendering test.
 
 The local native column is not rewritten. Desktop does not execute Weaver annotations; the visibility change is applied to the deployment definition. Hidden columns are not a security policy or RLS/OLS.
 

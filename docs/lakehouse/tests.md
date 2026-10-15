@@ -2,7 +2,7 @@
 
 Check that CurrentStatus returns the expected parcels, and that every event uses a recognised status. These validations live beside the same Folder and Tables; Build installs them, and Test runs them separately from Load.
 
-Continue the [Spark SQL project](spark-sql.md), with Event and CurrentStatus loaded. Keep its workspace configuration and published runtime. If you are starting here, the [complete example files](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse) accompany the earlier tasks.
+Continue the [Spark SQL project](spark-sql.md), with Event and CurrentStatus loaded. Keep its workspace configuration and published runtime. If you are starting here, the [complete example files](../assets/examples/parcel-lakehouse.zip) accompany the earlier tasks.
 
 ## Compare CurrentStatus with an independent result
 

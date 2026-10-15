@@ -2,7 +2,7 @@
 
 What should a Warehouse read when the data comes from a Lakehouse? Name the existing producer in a logical Shortcut. Weaver installs the connection in order and keeps its dependency with the project.
 
-Continue from [Landing’s working Python pipeline](../lakehouse/python.md): Folder `Parcel.Events` feeds Table `Parcel.Event`; the [Spark SQL extension](../lakehouse/spark-sql.md) adds `Parcel.CurrentStatus`. If you are starting here, use the complete [Lakehouse project](https://github.com/matthias-wong-dev/weaverstack-docs/tree/main/examples/parcel-lakehouse) and complete those item tasks first. Dispatch will expose Landing’s existing Event Table.
+Continue from [Landing’s working Python pipeline](../lakehouse/python.md): Folder `Parcel.Events` feeds Table `Parcel.Event`; the [Spark SQL extension](../lakehouse/spark-sql.md) adds `Parcel.CurrentStatus`. If you are starting here, use the complete [Lakehouse project](../assets/examples/parcel-lakehouse.zip) and complete those item tasks first. Dispatch will expose Landing’s existing Event Table.
 
 ## Present Landing’s Event in Dispatch
 
