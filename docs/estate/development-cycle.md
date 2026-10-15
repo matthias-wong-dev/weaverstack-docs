@@ -8,7 +8,7 @@ edit → check → Build preview → Build → Load → Test → Health → repe
 
 Keep the project and configuration you just inspected. The leading commands continue [Landing → Operations](connected-items.md) with `workspace-development.yml`, as selected on the mapping and Health pages. Edit a Landing declaration while leaving its logical names and Operations connection intact. Use the [connection task](connected-items.md) if those items are not yet installed.
 
-For another source-data estate, select its actual changed items in the same loop. A Warehouse-only reader can use `--item Warehouse/Operations` with the [StatusEvent project](../warehouse/tests.md). If you chose the managed Parcel variation, stay with it and use [the model-inclusive loop](#include-semantic-models-and-reports) below, rather than returning to either source-data example.
+For another source-data estate, select its actual changed items in the same loop. A Warehouse-only reader can use `--item Warehouse/Operations` with the [StatusEvent project](../warehouse/tests.md). If you have added the native Parcel model and managed-source models to this project, use [the model-inclusive loop](#include-semantic-models-and-reports) below.
 
 ## Edit and iterate
 
@@ -38,22 +38,22 @@ Use an item-wide run by default. Plain named Load does not add or order dependen
 
 ## Include semantic models and Reports
 
-For the [managed-source Parcel project](../semantic-models/managed-sources.md), keep its Operations Delivery source, model and Report in one project with `workspace-dev.yml`. Its model reads Operations Delivery; keep that source and its existing connection.
+For the [managed-source Parcel extension](../semantic-models/managed-sources.md), retain the working Landing/Operations pipelines, the native inline `Parcel` model and its linked Report, and the separate `ParcelWarehouse` model that reads Operations `Parcel.CurrentStatus`. Keep `workspace-development.yml` with the additional model and Report targets described in [workspace mappings](environments.md#a-model-and-report-variation). Source-backed Import refresh requires an existing supported SQL connection.
 
 Build source-data definitions first, then changed model/Report definitions separately:
 
 ```bash
 weaver check .
-weaver build . --item Warehouse/Operations --dry-run --workspace-config workspace-dev.yml
-weaver build . --item Warehouse/Operations --workspace-config workspace-dev.yml
-weaver build . --item PowerBI/Parcel --dry-run --workspace-config workspace-dev.yml
-weaver build . --item PowerBI/Parcel --bind-data-sources --workspace-config workspace-dev.yml
-weaver load --stale --workspace-config workspace-dev.yml
-weaver test --workspace-config workspace-dev.yml
-weaver health --workspace-config workspace-dev.yml
+weaver build . --item Lakehouse/Landing --item Warehouse/Operations --dry-run --workspace-config workspace-development.yml
+weaver build . --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
+weaver build . --item PowerBI/Parcel --dry-run --workspace-config workspace-development.yml
+weaver build . --item PowerBI/Parcel --bind-data-sources --workspace-config workspace-development.yml
+weaver load --stale --workspace-config workspace-development.yml
+weaver test --workspace-config workspace-development.yml
+weaver health --workspace-config workspace-development.yml
 ```
 
-This loop assumes the project’s model and Report already exist, its native source mapping is configured and its supported service connection is available. Preview each changed Build before applying it. `--bind-data-sources` requests binding to an existing connection; it creates no credentials. Build deploys the model before its linked Report. Estate Load coordinates selected source data and model refreshes; a source change can make the model stale even if its definition did not change. DAX validations are part of Test. **Reports have only a Build/deployment lifecycle, not Load or Test.** Inspect their actual binding and rendering through the [Report task](../reports/deploy.md).
+This iteration loop assumes the model and Report targets have already been deployed; a Build preview does not provision missing Power BI items. The `PowerBI/Parcel` selection covers the inline model and linked Report alongside the additional source-backed models. Preview each changed Build before applying it. `--bind-data-sources` requests binding to an existing connection; it does not create credentials. Estate Load coordinates selected source work and model refreshes; a source change can make the dependent model stale even if its definition is unchanged. DAX validations are part of Test. **Reports have only a Build/deployment lifecycle, not Load or Test.** Inspect their actual binding and rendering through the [Report task](../reports/deploy.md).
 
 ## Optional: establish a mirrored development baseline
 
