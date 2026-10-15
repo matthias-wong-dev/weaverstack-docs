@@ -2,7 +2,7 @@
 
 What needs to run again? Use Health to decide, then Load or Test the intended installed work. Health brings Lakehouse and Warehouse state together with registered model refreshes and validations; Load and Test operate that work without a second set of model-specific procedures.
 
-Keep the project from the [development loop](development-cycle.md). The Landing/Dispatch commands below use `workspace-development.yml`. For the [managed-source model project](../semantic-models/managed-sources.md), use its `workspace-dev.yml` instead. Run from that project directory and keep the same configuration throughout.
+Keep the project from the [development loop](development-cycle.md). The Landing/Operations commands below use `workspace-development.yml`. If you added [source-backed models](../semantic-models/managed-sources.md), retain their targets in this same configuration. Run from the same project root throughout.
 
 ## 1. Inspect the starting state
 

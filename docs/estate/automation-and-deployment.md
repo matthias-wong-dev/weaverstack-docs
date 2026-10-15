@@ -2,19 +2,19 @@
 
 Reuse one Session while you develop a command sequence, then record the accepted sequence as a workflow. When installation needs a reviewed handoff, plan a destination-specific bundle instead of asking the installer to reopen and reinterpret source.
 
-Continue with your working project and configuration. The examples below use the [managed-source Parcel project](../semantic-models/managed-sources.md) and its `workspace-dev.yml`: Operations Delivery, the Parcel model and its linked Report. Use that complete project when following these commands; the workflow refers to its Delivery source and model.
+Continue the working Landing/Operations project and `workspace-development.yml`. If you added the native model, Report and source-backed models, retain those bindings too; the Power BI Build below operates those local definitions. Omit that Build when your project has no Power BI items.
 
 ## Open one Session
 
 ```bash
-weaver session --workspace-config workspace-dev.yml --timings
+weaver session --workspace-config workspace-development.yml --timings
 ```
 
 At the `weaver>` prompt, run the normal installed-project sequence:
 
 ```text
 weaver> check .
-weaver> build . --item Warehouse/Operations
+weaver> build . --item Lakehouse/Landing --item Warehouse/Operations
 weaver> build . --item PowerBI/Parcel --bind-data-sources
 weaver> load
 weaver> test
@@ -28,13 +28,13 @@ The Session belongs to one physical workspace and reuses healthy capabilities it
 
 ## Turn the accepted sequence into a workflow
 
-Create `workflow.yml` beside the project:
+Add `verify` under the existing `workflow.yml` workflows, keeping your other workflows:
 
 ```yaml
 workflows:
   verify:
     - check .
-    - build . --item Warehouse/Operations
+    - build . --item Lakehouse/Landing --item Warehouse/Operations
     - build . --item PowerBI/Parcel --bind-data-sources
     - load
     - test
@@ -42,7 +42,7 @@ workflows:
 ```
 
 ```bash
-weaver workflow verify --workspace-config workspace-dev.yml --timings
+weaver workflow verify --workspace-config workspace-development.yml --timings
 ```
 
 Weaver parses the entries, resolves one workspace, displays the numbered sequence and asks once for confirmation. Review and confirm if correct; decline if not. Commands run in file order through one Session. Load/Test outcomes share a workflow identifier for catalogue correlation.
@@ -52,7 +52,7 @@ An execution error stops later entries. Test/Health findings are collected while
 For unattended execution, provide credentials and authorise the settled sequence explicitly:
 
 ```bash
-weaver workflow verify --workspace-config workspace-dev.yml --yes --non-interactive
+weaver workflow verify --workspace-config workspace-development.yml --yes --non-interactive
 ```
 
 `--yes` authorises the workflow and entries. `--non-interactive` separately disables input, keypress waits and browser sign-in. Desktop authentication can use a configured service principal or an existing Azure CLI sign-in; the selected identity still needs permissions for every capability. Store secret material in the runner’s secret store, not the project or bundle. Piped `y` is not authorisation when stdin is not a terminal. [Automation and execution contexts](../advanced/automation-and-execution-contexts.md) explains credential selection, host boundaries and machine output.
@@ -61,7 +61,7 @@ weaver workflow verify --workspace-config workspace-dev.yml --yes --non-interact
 
 A Fabric notebook can call `weaver.build()`, `weaver.load()`, `weaver.test()` and `weaver.health()` using its attached workspace, runtime and identity. The source-data catalogue remains explicit; discovering the workspace does not invent one. Explicit Session construction is optional for context reuse, not a prerequisite for an ordinary attached-notebook call.
 
-[Portable execution between desktop and Fabric](../advanced/portable-execution-between-desktop-and-fabric.md) provides a separate complete Landing/Operations snapshot, notebook Resources layout and native installed execution examples. That variation contains Landing Event/CurrentStatus and Warehouse StatusEvent/View; it is not this Parcel model fixture. It also shows Fabric Git’s Resources support: `fabric notebook push` transports a notebook definition, not local Resources.
+[Portable execution between desktop and Fabric](../advanced/portable-execution-between-desktop-and-fabric.md) shows notebook Resources layout and native execution using Landing/Operations source. Keep the same authored project when changing execution host. Fabric Git’s Resources support remains separate: `fabric notebook push` transports a notebook definition, not local Resources.
 
 The host still supplies the required capabilities. Desktop Lakehouse Build/Load/Test needs the matching published Weaver runtime; the attached-notebook path uses its active Spark session. [Running Python in Fabric](../lakehouse/runtime.md) owns publication. A local Check or preview does not establish runtime admission. Fabric scheduling, capacity, identity and retries remain host responsibilities, not properties inferred from a successful interactive command.
 

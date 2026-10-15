@@ -14,7 +14,7 @@ Keep three surfaces distinct:
 
 Use these in order:
 
-1. the explicitly frozen Weaver evidence checkout (`WEAVER_CHECKOUT`); after the requested main integration, behaviour/interfaces are checked against `0f51b02ce5c33bd46e944c871083663948c6ca6e`; original fixture provenance remains `74b4d15ee65ed2740593af1f4d459771b801b132`;
+1. the explicitly frozen Weaver evidence checkout (`WEAVER_CHECKOUT`); for the named/additive correction, behaviour/interfaces are checked against `89e93c78f8497454b4544e7919567cc078dbad11`; original fixture provenance remains `74b4d15ee65ed2740593af1f4d459771b801b132`;
 2. acceptance journeys and tests that establish behaviour;
 3. existing design documentation in the Weaver repository;
 4. realistic usage in `/opt/data/repos/ilovegov-etl`.
@@ -31,7 +31,7 @@ Avoid claims such as “powerful”, “seamless”, “robust”, “safe”, �
 
 Use Weaver's user model rather than deriving a taxonomy from internal nouns. A project contains Weaver documents such as Tables, Folders, Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata. Do not introduce `resource` or `artefact` as a user-facing category.
 
-Examples use a neutral parcel and logistics domain. Keep one continuous story and stable logical names per item, not one enormous site-wide estate. Each page declares the prior working checkpoint or links to a complete direct-entry snapshot. A fixture switch must explain the changed source/mode; do not restart setup midway through a first task.
+Examples use a neutral parcel and logistics domain. Start the Parcel journey with one selected item through the installed `weaver initialise --example Parcel` generator, then extend that same project. Preserve existing item-owned sources and add distinctly named coordination objects. Sales remains a separate installed example. Direct entrants use Initialise, not a downloadable snapshot or repository checkout. Advanced source variations add complete declarations alongside the working pipeline; retained fixtures are verification inputs, not the reader’s next project.
 
 ## Public site structure
 

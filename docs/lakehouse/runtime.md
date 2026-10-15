@@ -2,7 +2,7 @@
 
 Publish the Python packages once, then keep editing and building your project. The Fabric Environment supplies Weaver to hosted Spark work; it is separate from the Lakehouse and catalogue bindings in your workspace configuration.
 
-The [first Python task](python.md) creates `Environment/Weaver.Environment` and publishes it before Build. Use this page when setting up that runtime or changing its packages. The [mutable-source variation](incremental.md) uses the same process with its Environment named `ParcelRuntime`.
+The [first Python task](python.md) creates `Environment/Weaver.Environment` and publishes it before Build. Use this page when setting up that runtime or changing its packages. The [incremental extension](incremental.md) uses this same published Environment and Landing binding.
 
 ## Bind the runtime you will use
 
@@ -33,13 +33,13 @@ weaver fabric environment publish \
 
 Publication creates or updates the selected Environment, adds the installed Weaver release to its package requirements and waits for Fabric's terminal publication result. An unchanged successful definition is reported without another publication. No source checkout is needed.
 
-For Tracking, use its `ParcelRuntime` local Environment definition and the configuration from that complete fixture. If it was created in the Fabric portal and no local definition exists, publication can instead use that existing Environment as its authority:
+If an Environment was created in the Fabric portal and has no local definition, publication can instead use that existing Environment as its authority:
 
 ```bash
-weaver fabric environment publish ParcelRuntime
+weaver fabric environment publish Weaver
 ```
 
-Run that command from the Tracking project root so the workspace is discovered from its configuration. [Fabric Environment definition](../reference/configuration-files/fabric-environment.md) owns local-directory shape, libraries and existing-Environment authority. A Notebook already in Fabric needs the matching package in its attached runtime, not another remote Spark session.
+Run that command from the same project root so the workspace is discovered from its configuration. [Fabric Environment definition](../reference/configuration-files/fabric-environment.md) owns local-directory shape, libraries and existing-Environment authority. A Notebook already in Fabric needs the matching package in its attached runtime, not another remote Spark session.
 
 ## Keep the runtime and project changes separate
 

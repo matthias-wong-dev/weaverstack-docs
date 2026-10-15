@@ -2,7 +2,7 @@
 
 Recovery is a new operation against the state that remains. Correct the cause, choose the smallest operation that expresses the intended result, and verify the estate afterward. Build, Load, Test and workflows do not roll back completed work when a later step fails.
 
-Keep the project and selected configuration from the failed run. The named commands below are worked examples for the [Warehouse checkpoint](../warehouse/tests.md), whose loadable Table is `Parcel.StatusEvent`, not its `Parcel.CurrentStatus` View. For Landing/Dispatch, keep that estate and choose its actual Lakehouse identities; do not run a Warehouse example against it. State-based recovery does not require changing projects.
+Keep the project and selected configuration from the failed run. The named commands below are worked examples for the [Warehouse checkpoint](../warehouse/tests.md), whose loadable Table is `Parcel.StatusEvent`, not its `Parcel.CurrentStatus` View. For Landing/Operations, keep that estate and choose its actual Lakehouse identities; do not run a Warehouse example against it. State-based recovery does not require changing projects.
 
 The commands below use `workspace-development.yml`. If you entered directly from the Warehouse task, replace that filename with its working `workspace-config.yml`; keep the failed run’s workspace and catalogue.
 
@@ -110,17 +110,17 @@ Test has no rollback step. A failed validation remains the current finding until
 
 ## Recover a model or Report
 
-For this branch, use the separate complete [managed-source Parcel snapshot](../semantic-models/managed-sources.md), whose `workspace-dev.yml` binds Operations Delivery, the Parcel model and its Report. Do not paste its definitions into the StatusEvent checkpoint.
+Keep this same project. If you added the [native and source-backed models](../semantic-models/managed-sources.md), use their existing bindings in `workspace-development.yml`; do not replace the independent pipelines or native model.
 
 A semantic-model refresh is Load work. Fix its source, connection or refresh condition, then rerun Load. A DAX finding is validation work: correct the model, data or query, then rerun Test. Their installed results appear in the same Health report as Lakehouse and Warehouse work.
 
 A definition or binding change needs Build instead. Select the model and linked Report through their project, after any source-data Build:
 
 ```bash
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
-weaver test SemanticModel/Parcel --workspace-config workspace-dev.yml
-weaver health --workspace-config workspace-dev.yml
+weaver build . --item PowerBI/Parcel --workspace-config workspace-development.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-development.yml
+weaver test SemanticModel/Parcel --workspace-config workspace-development.yml
+weaver health --workspace-config workspace-development.yml
 ```
 
 These commands assume the Parcel model and Report are in the project and configured. Reports have no separate Load or Test; inspect the Report’s binding and rendering after recovering its model. See [Deploy models and Reports](../reports/deploy.md) and [Connect a model to source data](../semantic-models/managed-sources.md).
@@ -144,7 +144,7 @@ Wipe is not rollback and is not the normal response to a failed Build or Load. I
 To empty this physical target while retaining the catalogue and removing that target’s claims, request `--unbind` explicitly and inspect the full settled plan:
 
 ```bash
-weaver wipe Warehouse/ParcelOperationsDev \
+weaver wipe Warehouse/Operations \
   --unbind \
   --dry-run \
   --workspace-config workspace-development.yml

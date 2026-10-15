@@ -1,19 +1,19 @@
 # Validate a semantic model
 
-A successful refresh says the model ran, not that its measure is right. Add an Assumption to the working Parcel model, then reconcile its DAX result with independent SQL when Delivery has a managed Warehouse source.
+A successful refresh says the model ran, not that its measure is right. Add an Assumption to the working Parcel model, then reconcile the additional source-backed model with independent Warehouse SQL.
 
 <span id="choose-your-working-checkpoint"></span>
 
 ## Choose the model you are checking
 
-- **Delivery already reads the managed Warehouse:** go straight to [Compare DAX with source SQL](#compare-dax-with-source-sql). Keep the source and model you just loaded; no inline-data setup or new provisioning is needed.
-- **Delivery still uses the native inline data:** [add the DAX Assumption](#start-from-the-model-you-already-deployed) to that existing model and retain your overlay.
+- **ParcelWarehouse already reads the managed Warehouse:** go straight to [Compare DAX with source SQL](#compare-dax-with-source-sql). Keep the source and model you just loaded; no inline-data setup or new provisioning is needed.
+- **You are checking the native inline Parcel model:** [add the DAX Assumption](#start-from-the-model-you-already-deployed) to that existing model and retain your overlay.
 
 ## Start from the model you already deployed
 
 For the Assumption, continue the [native model](native-tmdl.md): Parcel has inline Import data, Delivery Count evaluates to 2, and its same-name overlay hides the relationship foreign key. Keep that overlay and your existing workspace configuration. You add one DAX file, not another project or deployment setup.
 
-If you are starting here, the complete [validation example](../assets/examples/parcel-powerbi-validation.zip) contains the same native Delivery/Depot model and the Assumption below. Configure and deploy it once using the [native task](native-tmdl.md#before-you-start), then return here. It starts without an overlay; keep any overlay you have already added.
+If you are starting here, generate and deploy the [native Parcel example](native-tmdl.md#before-you-start), then add the Assumption below. Keep any existing overlay.
 
 DAX queries need model Read and Build permissions and an identity permitted by the tenant’s Execute Queries setting. Reconciliation also needs SELECT access to the Warehouse source. Use existing permissions; do not change tenant settings for this exercise.
 
@@ -35,7 +35,7 @@ The filename, metadata ID and `assumptions` directory agree. `Parcel` in the dir
 
 ```bash
 weaver check .
-weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax' --workspace-config workspace-dev.yml
+weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
 
 Expect a `passed` validation node with zero violations and CLI exit 0. You do not need Build merely to edit a source query: this run evaluates the new file against the already deployed model.
@@ -47,7 +47,7 @@ The file is evaluated against the model you already deployed. This source run do
 
 ## 3. Produce a finding without losing your overlay
 
-Create `failure/Parcel.tmdl` with the supplied validation snapshot’s complete failure declaration:
+Use this declaration for the optional failure exercise:
 
 ```tmdl
 table Delivery
@@ -65,15 +65,15 @@ if test -f PowerBI/Parcel/Parcel.tmdl; then
 fi
 ```
 
-Edit `PowerBI/Parcel/Parcel.tmdl` to set Delivery Count to `-1`, using the failure declaration above. Keep every other declaration in the overlay. If `table Delivery` or its measure already exists, edit that declaration rather than pasting a second one: duplicate declarations are refused. In the native rule-only checkpoint, add the Delivery section beneath the existing `model Model` annotation. In the direct-entry snapshot with no overlay, create the file with the complete failure declaration.
+Edit `PowerBI/Parcel/Parcel.tmdl` to set Delivery Count to `-1`, using the failure declaration above. Keep every other declaration in the overlay. If `table Delivery` or its measure already exists, edit that declaration rather than pasting a second one: duplicate declarations are refused. In the native rule-only checkpoint, add the Delivery section beneath the existing `model Model` annotation. If you have no overlay, create the file with the complete failure declaration.
 
 Deploy that changed measure and run the same source Assumption:
 
 ```bash
 weaver check .
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
-weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax' --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel
+weaver load SemanticModel/Parcel
+weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
 
 Expect `failed` with one violating row, `DeliveryCount = -1`, and CLI exit 1. This is a finding, not a query failure. A permission or execution failure produces an `invalid` node and also exits 1. Python returns the validation report: inspect `succeeded`, node `status` and diagnostics rather than using a retired `strict=` argument.
@@ -89,15 +89,15 @@ else
   rm PowerBI/Parcel/Parcel.tmdl
 fi
 weaver check .
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
-weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax' --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel
+weaver load SemanticModel/Parcel
+weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
 
 Expect `passed` again. The existing overlay is restored byte for byte, including its foreign-key convention. Only the direct-entry case that had no overlay removes the file created by this exercise. If the shell was interrupted, restore `Parcel.tmdl.saved` manually before deploying again.
 
 
-`--file` explicitly selects source/file mode even when the configuration contains a catalogue. `--source .` identifies the project; it does not force file mode by itself. In the supplied catalogue-free snapshot, `--source .` alone uses source mode. Source/file mode records no installed `_.TestStatus` or Test history. Repeat `--file` for paths/directories/globs and `--name` for case-insensitive whole-validation regex seeds; each supplied name pattern must match.
+`--file` explicitly selects source/file mode even when the configuration contains a catalogue. `--source .` identifies the project; it does not force file mode by itself. Without a configured catalogue, `--source .` alone uses source mode. Source/file mode records no installed `_.TestStatus` or Test history. Repeat `--file` for paths/directories/globs and `--name` for case-insensitive whole-validation regex seeds; each supplied name pattern must match.
 
 To install this Assumption in a catalogue-backed project, Build the changed model declarations, then run Test without `--file`. Installed mode reads the catalogue’s validation definition and records results. Do not assume an edited local DAX file changed that installed definition.
 
@@ -105,34 +105,50 @@ To install this Assumption in a catalogue-backed project, Build the changed mode
 
 ## Compare DAX with source SQL
 
-Use the already loaded [managed-source project](managed-sources.md), in `examples/parcel-powerbi-fabric`. Its Delivery Table reads the Operations Warehouse; Depot remains inline. Keep that source, model and `workspace-dev.yml`. If your model still uses inline Delivery data, connect the managed source before trying this SQL comparison.
+Use the already loaded [managed-source model](managed-sources.md) in this same project. **ParcelWarehouse** reads Operations’ CurrentStatus View; the native **Parcel** model remains inline. Do not compare the inline Delivery data with an unrelated Warehouse result.
 
-The project includes `PowerBI/Parcel/tests/Parcel/Parcel.DeliveryReconciles.dax`:
+Add a measure to the existing `CurrentStatus` declaration in `PowerBI/Parcel/ParcelWarehouse.tmdl`. Its complete contents become:
+
+```tmdl
+model Model
+    culture: en-US
+    defaultMode: import
+    annotation 'Weaver.BaseSemanticModels' = Parcel
+
+table CurrentStatus
+    annotation 'Weaver.Source' = Warehouse/Operations/Parcel.CurrentStatus
+    measure 'Managed Parcel Count' = COUNTROWS(CurrentStatus)
+```
+
+Create `PowerBI/Parcel/tests/ParcelWarehouse/Parcel.CurrentStatusReconciles.dax`:
 
 ```dax
 /*
-Test ID: Parcel.DeliveryReconciles
-Description: Model deliveries agree with the managed Warehouse table.
+Test ID: Parcel.CurrentStatusReconciles
+Description: Model parcel count agrees with the managed Warehouse View.
 Expected source: Warehouse/Operations
 Expected SQL: |
-  SELECT SUM(Delivered) AS DeliveryCount FROM [Parcel].[Delivery]
+  SELECT COUNT_BIG(*) AS ParcelCount FROM [Parcel].[CurrentStatus]
 */
-EVALUATE ROW("DeliveryCount", [Delivery Count])
+EVALUATE ROW("ParcelCount", [Managed Parcel Count])
 ```
 
-The Test compares model DAX with the Warehouse’s independent sum of Delivered. Both should return 2:
+Build installs this model’s measure and Test; refresh it, then compare the model count with independent SQL. Both should return 2:
 
 ```bash
-weaver test SemanticModel/Parcel --name 'Parcel[.]DeliveryReconciles' --workspace-config workspace-dev.yml
-weaver health --workspace-config workspace-dev.yml
+weaver check
+weaver build --item SemanticModel/ParcelWarehouse --bind-data-sources
+weaver load SemanticModel/ParcelWarehouse
+weaver test SemanticModel/ParcelWarehouse --name 'Parcel[.]CurrentStatusReconciles'
+weaver health
 ```
 
 <details markdown="1">
 <summary>Inspect the recorded model and validation evidence</summary>
 
-This is installed mode: the managed-source Build installed the Test. Inspect Delivery's metadata row under logical `SemanticModel/Parcel` in `_.SemanticModelTable`, and its `_.Dependency` row whose authored `Dependency reference` is `Warehouse/Operations/Parcel.Delivery`. Source mode/access belongs in the table metadata; source identity belongs in Dependency. A null `Source access` is valid for this retained authored partition and does not mean its mapping failed.
+This is installed mode. Inspect CurrentStatus under logical `SemanticModel/ParcelWarehouse` in `_.SemanticModelTable`, and the `_.Dependency` row whose authored `Dependency reference` is `Warehouse/Operations/Parcel.CurrentStatus`. Source mode/access belongs in the table metadata; source identity belongs in Dependency. This generated Import partition uses SQL access.
 
-Inspect the installed validation in `_.SemanticModelTest` and its result in `_.TestStatus`. Model refresh and Test results sit beside Warehouse state in the same catalogue. With no item selector, Health covers the managed estate, not every arbitrary item in the workspace.
+Inspect the installed validation in `_.SemanticModelTest` and its result in `_.TestStatus`. Model refresh and Test results sit beside Warehouse state in the same catalogue. With no item selector, Health covers the managed estate, not arbitrary workspace items.
 
 </details>
 
@@ -141,30 +157,17 @@ Inspect the installed validation in `_.SemanticModelTest` and its result in `_.T
 
 ### Produce and correct a discrepancy
 
-The supplied managed snapshot’s `failure/Parcel.tmdl` preserves its source annotation and changes the measure:
-
-```tmdl
-table Delivery
-	annotation 'Weaver.Source' = Warehouse/Operations/Parcel.Delivery
-	measure 'Delivery Count' = SUM(Delivery[Delivered]) + 1
-```
-
-Back up the normal overlay to an unused filename, and restore it even if a command fails:
+Save `PowerBI/Parcel/ParcelWarehouse.tmdl` to an unused `ParcelWarehouse.tmdl.saved` file. In the existing measure declaration, change `COUNTROWS(CurrentStatus)` to `COUNTROWS(CurrentStatus) + 1`. Keep the source annotation and the rest of the file.
 
 ```bash
-test ! -e Parcel.tmdl.saved || exit 1
-cp PowerBI/Parcel/Parcel.tmdl Parcel.tmdl.saved
-cp failure/Parcel.tmdl PowerBI/Parcel/Parcel.tmdl
-weaver build . --item PowerBI/Parcel --bind-data-sources --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
-weaver test SemanticModel/Parcel --name 'Parcel[.]DeliveryReconciles' --workspace-config workspace-dev.yml
-mv Parcel.tmdl.saved PowerBI/Parcel/Parcel.tmdl
-weaver build . --item PowerBI/Parcel --bind-data-sources --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
-weaver test SemanticModel/Parcel --name 'Parcel[.]DeliveryReconciles' --workspace-config workspace-dev.yml
+weaver build --item SemanticModel/ParcelWarehouse --bind-data-sources
+weaver load SemanticModel/ParcelWarehouse
+weaver test SemanticModel/ParcelWarehouse --name 'Parcel[.]CurrentStatusReconciles'
 ```
 
-Expect a failed finding, actual 3 versus SQL expected 2, then a pass after correction. This changes the measure, not Warehouse data. Access/query errors are `invalid` validation nodes, not discrepancies; installed `_.TestStatus` records execution errors as `Error`. Failed/invalid CLI Tests exit 1. `--bind-data-sources` uses a supported existing connection; it does not create credentials or grant source access.
+Expect a discrepancy: actual 3 against SQL expected 2. Restore your saved file even if a command fails, then repeat the three commands. The corrected Test should pass. Do not put restoration behind `&&` or automatic exit-on-error: a deliberate failed Test exits 1.
+
+This edits the additional model’s measure, not Warehouse data or the native Parcel model. Access/query errors are invalid validations, not discrepancies; installed `_.TestStatus` records execution errors as `Error`. Binding uses an existing approved connection, not new credentials.
 
 </details>
 
@@ -172,4 +175,4 @@ Expect a failed finding, actual 3 versus SQL expected 2, then a pass after corre
 
 In a catalogue-backed project, `weaver test` without item selectors runs installed Lakehouse, Warehouse and model validations. [Run and inspect the estate](../estate/operate.md) combines those outcomes with source loads and model refreshes. Exact diagnostics and recording boundaries belong in [Test behaviour](../reference/operation-behaviour/test.md).
 
-For cleanup, delete only example-created Reports/models, Reports first. Retire the managed fixture’s Operations Warehouse only through a scoped approved procedure; retain shared catalogues, workspaces and connections. Do not use unscoped Wipe.
+For cleanup, delete only example-created Reports/models, Reports first. Retire the example’s Operations Warehouse only through a scoped approved procedure; retain shared catalogues, workspaces and connections. Do not use unscoped Wipe.

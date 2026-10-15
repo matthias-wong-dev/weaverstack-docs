@@ -82,7 +82,9 @@ def main():
             )
             if expected.read_text() in blocks:
                 counts["exact_fixture_blocks"] += 1
-    assert counts["commands"] > 0 and counts["exact_fixture_blocks"] == 4, counts
+    # Named Initialise supplies the first-use configuration; only the two
+    # environment mappings and linked native definition are repeated here.
+    assert counts["commands"] > 0 and counts["exact_fixture_blocks"] == 3, counts
     print(
         json.dumps(
             {

@@ -4,19 +4,20 @@ Keep your native `.Report` beside its semantic model. Build deploys the model fi
 
 ## Start with the linked pair
 
-[Install Weaver](../getting-started/installation.md), then work from the [complete parcel project](../assets/examples/parcel-powerbi.zip), in `examples/parcel-powerbi`. It contains the native model and a Report with a Delivery Count card. You do not need to author the model again or complete the semantic-model tutorial first.
-
-If you already deployed the [native model](../semantic-models/native-tmdl.md), keep that project and any overlay. This task adds its linked Report; the catalogue-free Build includes the model too.
-
-If you are starting here, save the `parcel-powerbi.zip` download in an empty working directory, then extract its repository-relative paths and enter the project:
+Continue the [native Parcel model](../semantic-models/native-tmdl.md) in the same project, keeping its overlays. Initialise has already written its linked Report. If you are starting here, [install Weaver](../getting-started/installation.md) and generate the pair:
 
 ```bash
-python -m zipfile -e parcel-powerbi.zip .
-cd examples/parcel-powerbi
+weaver initialise \
+  --workspace "Parcel Development" \
+  --project-folder ./parcel \
+  --semantic-model Parcel \
+  --example Parcel
+cd parcel
 ```
 
 Open `PowerBI/Parcel/Parcel.pbip` in Desktop to inspect the Report. Its association is authored in `PowerBI/Parcel/Parcel.Report/definition.pbir`:
 
+<!-- initialise:PowerBI/Parcel/Parcel.Report/definition.pbir -->
 ```json
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definitionProperties/2.0.0/schema.json",
@@ -28,21 +29,15 @@ Open `PowerBI/Parcel/Parcel.pbip` in Desktop to inspect the Report. Its associat
   }
 }
 ```
+<!-- /initialise -->
 
 The path is relative to the `.Report` directory. Keep the complete native Report payload as well as this file; the example includes its page and card definitions. [Native project layout](../reference/power-bi/project-layout.md#report-discovery-and-association) describes discovery for your own project.
 
-This inline Import example also works in an existing standalone Power BI service workspace. It needs no Weaver catalogue, Lakehouse, Warehouse or Fabric Environment. Do not use `weaver initialise` for that setup: it provisions a catalogue and Environment.
+The inline model needs no source Lakehouse or Warehouse workload. Initialise sets up the project catalogue and Environment; this Report/model Build does not need Spark. The [standalone Power BI setup](../reference/power-bi/requirements-and-compatibility.md) also supports an existing workspace without a catalogue.
 
 ## Choose the destination and Build
 
-Edit `workspace-dev.yml` to name an existing disposable workspace:
-
-```yaml
-workspace: Parcel BI Development
-targets:
-  SemanticModel/Parcel: Parcel_Dev
-  Report/Parcel: Parcel_Report_Dev
-```
+Use the generated `workspace-config.yml`. It already binds `SemanticModel/Parcel` and `Report/Parcel` to their physical items in Parcel Development. Keep any Lakehouse or Warehouse bindings in that file.
 
 Build can create missing selected models and Reports or update existing ones. Choose item names you own. Sign in with an identity allowed to create/update and read back both items; the service licence and capacity must support the model mode. [Service requirements](../reference/power-bi/requirements-and-compatibility.md#runtime-and-service-access) give the platform boundaries.
 
@@ -50,21 +45,21 @@ Run from the example directory:
 
 ```bash
 weaver check .
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel --item Report/Parcel
 ```
 
-Check validates local definitions, not service access. `PowerBI/Parcel` selects the local model and Report together. Build deploys and verifies `Parcel_Dev` before deploying `Parcel_Report_Dev`, then verifies the Report definition and its actual model binding. The deployed payload uses the resolved service workspace/model IDs; your authored `byPath` and native files stay unchanged.
+Check validates local definitions, not service access. These two selectors deploy the inline model and its linked Report without selecting any additional source-backed models. Build deploys and verifies `Parcel` before deploying the Parcel Report, then verifies the Report definition and its actual model binding. The deployed payload uses the resolved service workspace/model IDs; your authored `byPath` and native files stay unchanged.
 
 Without a catalogue, a linked Report must include its local model in the same Build. In a catalogue-backed project, a Report-only Build can use an already certified installed model whose recorded binding matches the resolved destination and source requirements. See [Report binding](../reference/power-bi/requirements-and-compatibility.md#report-binding) before selecting only `Report/Parcel`.
 
 ## Inspect the Report
 
-In the service workspace, find `Parcel_Report_Dev` and check that its linked model is `Parcel_Dev` in **Parcel BI Development**. Use the service's lineage view or Report binding readback; when using API readback, compare `datasetId` and `datasetWorkspaceId` with the deployed model and workspace IDs.
+In the service workspace, find the Parcel Report and check that its linked model is `Parcel` in **Parcel Development**. Open the workspace’s **lineage view** and follow the Report’s model link. Confirm it points to the Parcel semantic model in this workspace, not a similarly named model in another destination.
 
-To view the fixture's card after loading its inline data, refresh the **model** with an identity allowed to refresh it:
+To view the generated Report’s card after loading its inline data, refresh the **model** with an identity allowed to refresh it:
 
 ```bash
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver load SemanticModel/Parcel
 ```
 
 With permission to view the Report and query its model, open the card: **Delivery Count should be 2**. This is a separate viewing check, not a Report deployment requirement. Reports have no separate Load, Test or refresh operation; data refresh and validation belong to the model. Build success alone does not establish refresh access or card rendering.

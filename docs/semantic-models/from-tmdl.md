@@ -4,7 +4,7 @@ A standalone named TMDL file can supply a model without a native `.SemanticModel
 
 ## 1. Write one complete model
 
-Create a new project with `PowerBI/Parcel/ParcelSummary.tmdl`:
+Continue the [generated Parcel project](native-tmdl.md) and add `PowerBI/Parcel/ParcelSummary.tmdl`. Keep its existing native model and Report:
 
 ```tmdl
 model Model
@@ -14,6 +14,8 @@ model Model
 table Delivery
     measure 'Delivery Count' = SUM(Delivery[Delivered])
         formatString: 0
+    measure InternalCost = 7
+        formatString: 0.00
     column Delivered
         dataType: int64
         sourceColumn: Delivered
@@ -29,12 +31,10 @@ table Delivery
 
 The filename declares `SemanticModel/ParcelSummary`. There is no Report in this example. If a same-name native `ParcelSummary.SemanticModel` exists, this file instead overlays it; do not mistake that for two independent definitions.
 
-Create `workspace-dev.yml`, using your existing disposable Power BI workspace:
+Add this binding under `targets` in the existing `workspace-config.yml`, keeping all existing entries:
 
-```yaml
-workspace: Parcel BI Development
-targets:
-  SemanticModel/ParcelSummary: Parcel_Summary_Dev
+```yaml title="Add under targets"
+  SemanticModel/ParcelSummary: ParcelSummary
 ```
 
 Use the [ordinary service licensing and permissions](native-tmdl.md). The inline Import partition needs no managed source, catalogue or Fabric Environment.
@@ -43,41 +43,41 @@ Use the [ordinary service licensing and permissions](native-tmdl.md). The inline
 
 ```bash
 weaver check .
-weaver build . --item SemanticModel/ParcelSummary --workspace-config workspace-dev.yml
-weaver load SemanticModel/ParcelSummary --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/ParcelSummary
+weaver load SemanticModel/ParcelSummary
 ```
 
-Inspect `Parcel_Summary_Dev` through a supported native model-definition tool. After refresh, expect three rows in its Delivery partition and Delivery Count = 2. Check validates local shape, not M evaluation or service eligibility. Delete only the new model for cleanup.
+Inspect `ParcelSummary` through a supported native model-definition tool. After refresh, expect three rows in its Delivery partition and Delivery Count = 2. Check validates local shape, not M evaluation or service eligibility. Delete only the new model for cleanup.
 
 ## 3. Generate from a managed source only when needed
 
 A table without an authored partition can obtain its columns and partition from managed-source metadata. This is a different route with additional prerequisites: a compatible catalogue, built/loaded supported Lakehouse or Warehouse source, resolved endpoints/metadata, and permissions and connections for the model's chosen mode.
 
-Begin with the [Fabric integration fixture](managed-sources.md) in its own directory. Use its existing loaded Warehouse from [the managed-source checkpoint](managed-sources.md); direct entrants complete that task first, once. Then create `PowerBI/Parcel/ParcelSummary.tmdl`:
+Keep the same project and the loaded source from [Managed sources](managed-sources.md). Direct entrants complete that source setup once. Instead of replacing ParcelSummary’s inline table, add a distinctly named `PowerBI/Parcel/ParcelSourceSummary.tmdl`:
 
 ```tmdl
 model Model
     defaultMode: import
+    annotation 'Weaver.BaseSemanticModels' = Parcel
 
-table Delivery
-    annotation 'Weaver.Source' = Warehouse/Operations/Parcel.Delivery
-    measure 'Delivery Count' = SUM(Delivery[Delivered])
-        formatString: 0
+table CurrentStatus
+    annotation 'Weaver.Source' = Warehouse/Operations/Parcel.CurrentStatus
+    measure 'Managed Parcel Count' = COUNTROWS(CurrentStatus)
 ```
 
-Add `SemanticModel/ParcelSummary: Parcel_Summary_Dev` under that fixture's `targets`, then select only this new model:
+Add `SemanticModel/ParcelSourceSummary: ParcelSourceSummary` under the existing targets. Select only this new model:
 
 ```bash
-weaver check .
-weaver build . --item SemanticModel/ParcelSummary --bind-data-sources --workspace-config workspace-dev.yml
-weaver load SemanticModel/ParcelSummary --workspace-config workspace-dev.yml
+weaver check
+weaver build --item SemanticModel/ParcelSourceSummary --bind-data-sources
+weaver load SemanticModel/ParcelSourceSummary
 ```
 
-Inspect the generated native Delivery columns/Import partition and resolved source expression. Delivery Count should be 2 after source Load and model refresh. Weaver uses an existing supported connection, not newly created credentials.
+Inspect its generated CurrentStatus columns, Import partition and resolved source expression. Managed Parcel Count should be 2 after source Load and model refresh. The inline Parcel and ParcelSummary models remain independent. Weaver uses an existing supported connection, not new credentials.
 
 With `defaultMode: import`, generation supplies an M navigation partition. Otherwise this generation path supplies Direct Lake entity partitions, which retain their source, service and capacity prerequisites. Source housekeeping audit/signature columns are omitted unless explicitly authored. Native descriptions win over source metadata; unsupported source types fail.
 
-A table **with** an authored partition retains that partition and its authored column types. Adding `Weaver.Source` to it is lineage/refinement, not permission to overwrite its query or generate all columns. Use the ordinary integration task for that case.
+A table **with** an authored partition retains that partition and its authored column types. Adding `Weaver.Source` to it is lineage/refinement, not permission to overwrite its query or generate all columns. Use the [managed-source task](managed-sources.md) to add source-backed functionality without changing the original partition.
 
 Build deploys the native definition while leaving the authored TMDL in the project unchanged.
 

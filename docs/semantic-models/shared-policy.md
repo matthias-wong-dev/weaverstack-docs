@@ -2,11 +2,11 @@
 
 Apply the same formatting and calculation structure to several models without copying the convention into each native project. Shared policy is TMDL; custom Python is not required.
 
-Continue the [native Parcel model](native-tmdl.md#hide-relationship-foreign-keys): Delivery, Depot, the relationship and the same-name foreign-key overlay are already working. Add only the policy and format override below, keeping your workspace configuration. Direct entrants can use the complete [standards snapshot](../assets/examples/parcel-powerbi-standards.zip) with the same native model and [deployment prerequisites](native-tmdl.md#before-you-start). That snapshot also contains the optional custom handler from the next task; it is not needed for this policy.
+Continue the [native Parcel model](native-tmdl.md#hide-relationship-foreign-keys): Delivery, Depot, the relationship and the same-name foreign-key overlay are already working. Add only the policy and format override below, keeping your workspace configuration. For direct entry, complete the [native model task](native-tmdl.md) first; then add the policy below.
 
 ## 1. Add the shared policy
 
-Create `PowerBI/policy.tmdl` with the standards snapshot’s native formatting and calculation policy:
+Create `PowerBI/policy.tmdl` with the native formatting and calculation policy below:
 
 ```tmdl
 model Model
@@ -38,11 +38,11 @@ model Model
     annotation 'Weaver.AutoHideForeignKeys' = true
 ```
 
-Keep the policy’s Delivery and Display sections below it. The local block in the next step retains the same annotation for readers using the unmodified standards snapshot; once policy owns it, you can omit that duplicate local declaration.
+Keep the policy’s Delivery and Display sections below it. The next step retains that annotation locally too; once policy owns it, you can omit the duplicate local declaration.
 
 ## 2. Override one convention locally
 
-Replace the earlier rule-only `PowerBI/Parcel/Parcel.tmdl` with the local format override below. It retains the same foreign-key declaration, so this complete block also works with the unmodified standards snapshot:
+Replace the earlier rule-only `PowerBI/Parcel/Parcel.tmdl` with the local format override below. It retains the same foreign-key declaration, so the foreign-key rule remains in effect:
 
 ```tmdl
 model Model
@@ -59,8 +59,8 @@ The effective definition merges the native source, then shared policy, then this
 
 ```bash
 weaver check .
-weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel
+weaver load SemanticModel/Parcel
 ```
 
 Inspect the deployed native definition. It should contain Display/Current, `discourageImplicitMeasures`, the two intended formats and the hidden many-side Delivery[DepotId]. Original partitions and the relationship remain. If you deploy the linked Report, its Delivery Count should display `2 deliveries`; the native format properties establish the model result.

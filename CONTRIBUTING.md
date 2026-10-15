@@ -39,7 +39,7 @@ never chains. Human reader acceptance is separate from compiler/browser checks.
 - Use relative links for pages in this site.
 - Give code blocks a language and make commands runnable as written.
 - Use neutral parcel or logistics examples; remove private project, workspace, tenant and item names.
-- Keep each example focused instead of extending one site-wide sample estate.
+- Keep the initial example small; later tasks add declarations without replacing working item-owned sources.
 
 Add contextual links from the reader's likely entry page and onward to the next task or authoritative detail. Search `docs/` for retired paths and vocabulary after a move.
 
@@ -88,9 +88,35 @@ The fixture checker uses the pinned source's small offline test helpers and expl
 
 Inspect the manifest and every changed owning page. A clean generator check proves that generated facts match the selected checkout, not that surrounding explanations are correct.
 
-## Example downloads
+## Generated tutorial files
 
-Tutorial project links use same-site ZIP downloads under `docs/assets/examples/`, so a PR preview does not depend on unmerged files in GitHub's `main` branch. Archives retain the `examples/<project>/` layout and contain only tracked files, byte-for-byte. After editing an example, run `python tools/package_examples.py` and commit its updated ZIP. Run `python tools/package_examples.py --check` before building to reject stale downloads.
+The installed Weaver package owns the Parcel and Sales starting examples. Tutorials use named `weaver initialise --example Parcel` selections and extend the same project; they do not distribute separate project snapshots. Displayed generated files use `initialise` markers. After changing an example, synchronise and check these blocks against the coordinated source checkout:
+
+```bash
+python tools/sync_initialise_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
+python tools/sync_initialise_examples.py --check --weaver-checkout "$WEAVER_CHECKOUT"
+```
+
+Keep technical preservation and compilation assertions in automated tests. Introductory tasks use ordinary queries, field lists and service lineage for observation, not acceptance scripts.
+
+The continuing-project gates use the product interpreter and explicit offline inventory/column inputs:
+
+```bash
+PYTHONPATH="$WEAVER_CHECKOUT/src" "$PRODUCT_PYTHON" tools/check_lakehouse_examples.py --docs . --product "$WEAVER_CHECKOUT"
+PYTHONPATH="$WEAVER_CHECKOUT/src" "$PRODUCT_PYTHON" tools/check_estate_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
+WEAVER_CHECKOUT="$WEAVER_CHECKOUT" PYTHONPATH="$WEAVER_CHECKOUT/src" "$PRODUCT_PYTHON" tools/check_semantic_examples.py
+```
+
+`PRODUCT_PYTHON` must have the selected runtime's dependencies. Keep that environment separate from the locked MkDocs environment. The fixture gate accepts an explicitly reviewed `--runtime-revision` when integration moves beyond its original provenance; a passing stale fixture is not acceptance of a new generator.
+
+For an installed-wheel check, build a wheel, install it into an isolated target directory with its dependencies available to the test interpreter, then run from an empty scratch directory:
+
+```bash
+"$PRODUCT_PYTHON" -I /absolute/path/to/weaverstack-docs/tools/check_installed_examples.py \
+  /absolute/path/to/isolated-install /absolute/path/to/results.json
+```
+
+This checks all named selections, subset preservation and extension orders through the public API with network connections refused. Fabric inventory/creation is an explicit test boundary; it does not prove deployment, SQL execution, refresh or Report rendering.
 
 ## Validate the change
 

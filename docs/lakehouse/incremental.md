@@ -2,14 +2,7 @@
 
 Update one carrier file, remove another, and Load the installed pipeline again. The Folder records what changed; the incremental Table uses its own bookmark to read those changes and apply updates and explicit deletes.
 
-Start a **separate mutable-source project** in `examples/parcel-incremental`. It reads changing carrier files in `Lakehouse/Tracking` and keeps the familiar `Parcel.CurrentStatus` result. Leave the [Landing pipeline and its fixed-data validations](tests.md) unchanged; do not rebuild its constant export to simulate incoming data.
-
-Save the `parcel-incremental.zip` download in an empty working directory, then extract its repository-relative paths and enter the project:
-
-```bash
-python -m zipfile -e parcel-incremental.zip .
-cd examples/parcel-incremental
-```
+Continue the [Landing project](tests.md) in the same folder. Keep Events, Event, CurrentStatus and their validations. Add a separate `Parcel.StatusFiles` Folder and incremental `Parcel.LiveStatus` Table for changing carrier snapshots. The original constant example stays available and unchanged.
 
 ## Let the consumer remember its progress
 
@@ -19,23 +12,12 @@ The bookmark belongs to the consumer, not the source. It is the UTC instant imme
 
 ## Provision the external Lakehouse
 
-Use the existing [complete mutable-source fixture](../assets/examples/parcel-incremental.zip) in a separate project directory. All paths below are relative to that directory. Create or reuse the `ParcelCatalogue` Warehouse, `ParcelTracking` Lakehouse and `ParcelRuntime` Environment in the **Parcel Development** workspace, and create the separate external `ParcelSourceArchive` Lakehouse. Its configuration is `workspace-config.yml`:
+Keep your working `workspace-config.yml`, catalogue, Landing target and published Environment. Create or reuse a separate external **ParcelSourceArchive** Lakehouse in the same workspace for the mutable carrier data. Do not add it to `targets`: Build owns the managed target and may prune undeclared co-located content; the external archive must remain outside that scope.
 
-```yaml
-workspace: Parcel Development
-catalogue: Warehouse/ParcelCatalogue
-environment: ParcelRuntime
+In the Fabric portal, open `ParcelSourceArchive`, create `Files/parcel-status`, and upload two CSV files with the contents below:
 
-targets:
-  Lakehouse/Tracking: ParcelTracking
-```
-
-`ParcelSourceArchive` is deliberately absent from `targets`. Build reconciles `ParcelTracking` and may prune undeclared co-located content there; it must not select the external archive.
-
-In the Fabric portal, open `ParcelSourceArchive`, create `Files/parcel-status`, and upload these checked files:
-
-- `source/parcel-status/P-1001.csv`
-- `source/parcel-status/P-1002.csv`
+- `P-1001.csv`
+- `P-1002.csv`
 
 The complete uploaded files are:
 
@@ -66,7 +48,7 @@ This notebook path verifies the attached external Lakehouse only. The installed 
 
 ## Declare the physical Folder Shortcut
 
-Create `Lakehouse/Tracking/shortcuts.py`:
+Create `Lakehouse/Landing/shortcuts.py`:
 
 ```python
 from weaver import Shortcut
@@ -83,7 +65,7 @@ The assignment name creates the local destination `Files/Parcel/StatusSource`. T
 
 ## Declare the snapshot Folder
 
-Create `Lakehouse/Tracking/Files/Parcel__StatusFiles.py`:
+Create `Lakehouse/Landing/Files/Parcel__StatusFiles.py`:
 
 ```python
 """
@@ -124,11 +106,11 @@ The source existence check happens before Weaver issues or populates staging. An
 
 ## Declare the incremental Table
 
-Create `Lakehouse/Tracking/Tables/Parcel__CurrentStatus.py`:
+Create `Lakehouse/Landing/Tables/Parcel__LiveStatus.py`:
 
 ```python
 """
-Table ID: Parcel.CurrentStatus
+Table ID: Parcel.LiveStatus
 
 Description: The latest status supplied for each parcel.
 
@@ -148,7 +130,7 @@ from Files.Parcel__StatusFiles import Parcel__StatusFiles
 from weaver import Table
 
 
-class Parcel__CurrentStatus(Table):
+class Parcel__LiveStatus(Table):
     def read(self):
         source = Parcel__StatusFiles(self)
         bookmark = self.bookmark()
@@ -174,21 +156,20 @@ class Parcel__CurrentStatus(Table):
         return staged, deletes
 ```
 
-The Folder import establishes the managed dependency, so item-wide Load runs `Parcel.StatusFiles` before `Parcel.CurrentStatus`. The physical Shortcut import in the Folder records an external boundary, not a managed producer.
+The Folder import establishes the managed dependency, so item-wide Load runs `Parcel.StatusFiles` before `Parcel.LiveStatus`. The physical Shortcut import in the Folder records an external boundary, not a managed producer.
 
-The bookmark belongs to `Parcel.CurrentStatus`, not to the source Folder. `files_since()` returns current managed files whose latest event is strictly after that boundary. `deleted_since()` returns paths whose latest event is a deletion after the boundary; those paths normally no longer exist. The code maps deleted filenames to the Table's declared `Parcel ID` key, making Folder deletions explicit Table delete claims.
+The bookmark belongs to `Parcel.LiveStatus`, not to the source Folder. `files_since()` returns current managed files whose latest event is strictly after that boundary. `deleted_since()` returns paths whose latest event is a deletion after the boundary; those paths normally no longer exist. The code maps deleted filenames to the Table's declared `Parcel ID` key, making Folder deletions explicit Table delete claims.
 
 ## Establish the first boundary
 
-Before the first Build, [publish a matching Fabric runtime](runtime.md). Use normal Environment publication to install the same Weaver release as the local client; the `environment: ParcelRuntime` binding alone does not publish it. Then, from the **example project root**, check and install the declarations once:
+Use the [matching Fabric runtime](runtime.md) already published for Landing. If you changed its package requirements, republish; otherwise these added project files do not require another Environment publication. From the **same project root**, check and install the additions:
 
 ```bash
-weaver fabric environment publish ParcelRuntime
 weaver check
-weaver build --item Lakehouse/Tracking
+weaver build --item Lakehouse/Landing
 ```
 
-After Build, attach `ParcelTracking` as the default Lakehouse of a **Fabric notebook** and verify the installed Shortcut before Load:
+After Build, attach `Landing` as the default Lakehouse of a **Fabric notebook** and verify the installed Shortcut before Load:
 
 ```python
 from pathlib import Path
@@ -204,8 +185,8 @@ assert sorted(path.name for path in shortcut_root.glob("*.csv")) == [
 Then, from the **example project root**, run the first Load:
 
 ```bash
-weaver load Lakehouse/Tracking --dry-run
-weaver load Lakehouse/Tracking
+weaver load Lakehouse/Landing --dry-run
+weaver load Lakehouse/Landing
 ```
 
 The first Folder Load should publish both files and record their insertions. The Table starts at the initial bookmark, so its first read should include both changes and insert two rows. A clean Load records a new Table bookmark at the instant immediately before that read began.
@@ -213,20 +194,20 @@ The first Folder Load should publish both files and record their insertions. The
 In the same notebook, inspect the managed Table:
 
 ```python
-spark.sql("SELECT `Parcel ID`, Status, Depot FROM Parcel.CurrentStatus ORDER BY `Parcel ID`").show(truncate=False)
+spark.sql("SELECT `Parcel ID`, Status, Depot FROM Parcel.LiveStatus ORDER BY `Parcel ID`").show(truncate=False)
 ```
 
 It should contain `P-1001` as `In transit` at `Central` and `P-1002` as `Delivered` at `South`. The managed Folder should contain both CSV files.
 
-In a **SQL query connected to ParcelCatalogue**, record the Table's first successful boundary:
+In a **SQL query connected to Catalogue**, record the Table's first successful boundary:
 
 ```sql
 select [Bookmark datetime]
 from [_].[Bookmark]
 where [Item type] = N'Lakehouse'
-  and [Item name] = N'Tracking'
+  and [Item name] = N'Landing'
   and [Schema name] = N'Tables/Parcel'
-  and [Object name] = N'CurrentStatus';
+  and [Object name] = N'LiveStatus';
 ```
 
 ## Change source data, then Load without Build
@@ -250,8 +231,8 @@ assert sorted(path.name for path in source_root.glob("*.csv")) == ["P-1001.csv"]
 From the **example project root**, run Load against the already installed definitions:
 
 ```bash
-weaver load Lakehouse/Tracking --dry-run
-weaver load Lakehouse/Tracking
+weaver load Lakehouse/Landing --dry-run
+weaver load Lakehouse/Landing
 ```
 
 There is deliberately no `weaver build` in this sequence. The Folder should publish one changed file and one deletion. The Table should read both events from its previous clean boundary, update `P-1001`, and delete `P-1002` by primary key.
@@ -259,14 +240,14 @@ There is deliberately no `weaver build` in this sequence. The Folder should publ
 Inspect three results:
 
 - `Files/Parcel/StatusFiles` contains the current `P-1001.csv` and no `P-1002.csv`;
-- `Parcel.CurrentStatus` contains one `P-1001` row with status `Delivered`; and
+- `Parcel.LiveStatus` contains one `P-1001` row with status `Delivered`; and
 - the latest Load activity reports the Folder changes and the Table's updated and deleted rows.
 
-Run `weaver load Lakehouse/Tracking` once more without changing the source. The clean run reaches the Table's `return None`: managed files and target rows remain unchanged, while the consumer bookmark advances again.
+Run `weaver load Lakehouse/Landing` once more without changing the source. The clean run reaches the Table's `return None`: managed files and target rows remain unchanged, while the consumer bookmark advances again.
 
 ## Build only when the declaration changes
 
-The second Load changes source data only. Editing a Folder or Table instead changes the installed code only after Check and Build. For each rebuilt loadable object, Build resets current Load state and its bookmark to the initial boundary; the next Load must ask that new generation for all available history. Use `weaver load Lakehouse/Tracking --stale` for post-Build catch-up, not as a substitute for the data-only sequence above.
+The second Load changes source data only. Editing a Folder or Table instead changes the installed code only after Check and Build. For each rebuilt loadable object, Build resets current Load state and its bookmark to the initial boundary; the next Load must ask that new generation for all available history. Use `weaver load Lakehouse/Landing --stale` for post-Build catch-up, not as a substitute for the data-only sequence above.
 
 With a working mutable source, [Shortcuts and existing data](shortcuts.md) explains how to choose a managed logical source or an external physical boundary. For shared run state and recovery, continue to [Catalogue and Health](../estate/catalogue-and-health.md) and [Recover failed work](../estate/recovery.md).
 

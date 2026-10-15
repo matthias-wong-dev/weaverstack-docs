@@ -2,12 +2,13 @@
 
 Check that CurrentStatus returns the expected parcels, and that every event uses a recognised status. These validations live beside the same Folder and Tables; Build installs them, and Test runs them separately from Load.
 
-Continue the [Spark SQL project](spark-sql.md), with Event and CurrentStatus loaded. Keep its workspace configuration and published runtime. If you are starting here, the [complete example files](../assets/examples/parcel-lakehouse.zip) accompany the earlier tasks.
+Continue the [Spark SQL project](spark-sql.md), with Event and CurrentStatus loaded. Keep its workspace configuration and published runtime. If you are starting here, initialise and run the [Python project](python.md) first.
 
 ## Compare CurrentStatus with an independent result
 
-Create `Lakehouse/Landing/tests/Parcel.CurrentStatusMatches.sql`:
+Open the generated `Lakehouse/Landing/tests/Parcel.CurrentStatusMatches.sql`:
 
+<!-- initialise:Lakehouse/Landing/tests/Parcel.CurrentStatusMatches.sql -->
 ```sql
 /*
 Test ID: Parcel.CurrentStatusMatches
@@ -25,13 +26,15 @@ as expected(`Parcel ID`, `Status`, `Depot`);
 select `Parcel ID`, `Status`, `Depot`
 from Parcel.CurrentStatus;
 ```
+<!-- /initialise -->
 
 The first query is the expected result from the small carrier export; the second reads the installed Table. It does not repeat CurrentStatus's window calculation. Both return `Parcel ID`, `Status` and `Depot` in the same order. `Primary key` pairs diagnostic rows for a parcel; it does not change the comparison.
 
 ## Find unknown event statuses
 
-Create `Lakehouse/Landing/assumptions/Parcel.EventStatusIsKnown.sql`:
+Open the generated `Lakehouse/Landing/assumptions/Parcel.EventStatusIsKnown.sql`:
 
+<!-- initialise:Lakehouse/Landing/assumptions/Parcel.EventStatusIsKnown.sql -->
 ```sql
 /*
 Assumption ID: Parcel.EventStatusIsKnown
@@ -43,6 +46,7 @@ from Parcel.Event
 where `Status` is null
    or `Status` not in ('Accepted', 'In transit', 'Delivered');
 ```
+<!-- /initialise -->
 
 An Assumption returns the rows that contradict its statement. This one passes only when that query returns no rows. SQL validations infer their managed dependencies from relation references; unlike Spark SQL Tables, they do not require an explicit `Dependencies` field.
 
@@ -83,6 +87,6 @@ weaver health --item Lakehouse/Landing
 
 The selected Test should fail and return diagnostic rows showing the expected `Delivered` and actual `In transit`. Health should show the failed validation. There is no Load here because the data declarations and their intended data have not changed. Restore the expected value, Check and Build again, then rerun the selected Test; it should succeed.
 
-The small fixed export made the expected rows explicit. A changing carrier feed needs processing state as well as tests: [Loading changes and bookmarks](incremental.md) shows a changing carrier-feed example, where updating or removing a file changes CurrentStatus without rebuilding its code.
+The small fixed export made the expected rows explicit. A changing carrier feed needs processing state as well as tests: [Loading changes and bookmarks](incremental.md) shows a changing carrier-feed example, where updating or removing a file changes an additional LiveStatus Table without rebuilding its code or replacing this fixed example.
 
 [Tests](../reference/weaver-documents/test.md), [Assumptions](../reference/weaver-documents/assumption.md) and [Test behaviour](../reference/operation-behaviour/test.md) own the exact comparison, diagnostic and recording rules. Python validations use the same data: a `Test` implements `expected()` and `actual()` returning Spark DataFrames, while an `Assumption` implements `read()` returning violations; their complete forms are in those references.

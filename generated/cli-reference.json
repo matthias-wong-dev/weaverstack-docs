@@ -426,12 +426,12 @@
           "required": false
         },
         {
-          "help": "Catalogue Warehouse. Defaults to Catalogue.",
+          "help": "Catalogue Warehouse. Defaults to Catalogue for data projects; omitted for native-only projects.",
           "invocation": "--catalogue CATALOGUE",
           "required": false
         },
         {
-          "help": "Fabric Environment for the project. It may already exist. Defaults to Weaver.",
+          "help": "Fabric Environment for Python work. Defaults to Weaver for data projects; omitted for native-only projects.",
           "invocation": "--environment ENVIRONMENT",
           "required": false
         },
@@ -451,13 +451,12 @@
           "required": false
         },
         {
-          "help": "Add the Sales example: source files and a Power BI project that reads them.",
-          "invocation": "--example",
-          "required": false
-        },
-        {
-          "help": "Do not add example source files.",
-          "invocation": "--no-example",
+          "choices": [
+            "Parcel",
+            "Sales"
+          ],
+          "help": "Add the Parcel or Sales example for the selected items.",
+          "invocation": "--example NAME",
           "required": false
         },
         {
@@ -487,7 +486,7 @@
         }
       ],
       "positionals": [],
-      "synopsis": "weaver initialise [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--semantic-model NAME] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]"
+      "synopsis": "weaver initialise [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--semantic-model NAME] [--example NAME] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]"
     },
     {
       "command": "initialize",
@@ -508,12 +507,12 @@
           "required": false
         },
         {
-          "help": "Catalogue Warehouse. Defaults to Catalogue.",
+          "help": "Catalogue Warehouse. Defaults to Catalogue for data projects; omitted for native-only projects.",
           "invocation": "--catalogue CATALOGUE",
           "required": false
         },
         {
-          "help": "Fabric Environment for the project. It may already exist. Defaults to Weaver.",
+          "help": "Fabric Environment for Python work. Defaults to Weaver for data projects; omitted for native-only projects.",
           "invocation": "--environment ENVIRONMENT",
           "required": false
         },
@@ -533,13 +532,12 @@
           "required": false
         },
         {
-          "help": "Add the Sales example: source files and a Power BI project that reads them.",
-          "invocation": "--example",
-          "required": false
-        },
-        {
-          "help": "Do not add example source files.",
-          "invocation": "--no-example",
+          "choices": [
+            "Parcel",
+            "Sales"
+          ],
+          "help": "Add the Parcel or Sales example for the selected items.",
+          "invocation": "--example NAME",
           "required": false
         },
         {
@@ -569,7 +567,7 @@
         }
       ],
       "positionals": [],
-      "synopsis": "weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--semantic-model NAME] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]"
+      "synopsis": "weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--semantic-model NAME] [--example NAME] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]"
     },
     {
       "command": "install",

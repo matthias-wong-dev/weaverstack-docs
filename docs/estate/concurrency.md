@@ -4,7 +4,7 @@ Can this run use less simultaneous work? Add `--concurrency 2` to limit it to tw
 
 ## Limit one run
 
-Continue the Landing/Dispatch project from [selective runs](selective-runs.md), keeping `workspace-development.yml`. Cap its Landing Load at two scheduled nodes:
+Continue the Landing/Operations project from [selective runs](selective-runs.md), keeping `workspace-development.yml`. Cap its Landing Load at two scheduled nodes:
 
 ```bash
 weaver load Lakehouse/Landing --concurrency 2 --workspace-config workspace-development.yml

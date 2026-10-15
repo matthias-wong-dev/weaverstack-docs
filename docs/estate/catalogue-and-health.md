@@ -2,7 +2,7 @@
 
 What happened after the last run? Read Health to find the data work, validation or installation that needs attention. The catalogue keeps installed definitions and operation results together, so a source Table, its model refresh and a DAX validation can be judged against the same dependency history.
 
-Continue the [mapped Landing/Dispatch project](environments.md#bind-the-project-to-fabric), using the same `workspace-development.yml`. Keep its installed state; inspecting it does not require another Load or Test:
+Continue the [mapped Landing/Operations project](environments.md#bind-the-project-to-fabric), using the same `workspace-development.yml`. Keep its installed state; inspecting it does not require another Load or Test:
 
 ```bash
 weaver health --workspace-config workspace-development.yml

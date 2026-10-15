@@ -2,30 +2,13 @@
 
 A keyed incremental Table can apply new rows, changed values and cancellations while its definition stays installed. Your SQL returns the candidate rows and delete keys; Weaver generates the target merge and records the consumer's progress.
 
-The [first project](first-project.md) and [its validations](tests.md) use a constant event feed and a latest-status View. This page is a **complete mutable-source variation**, not an edit to that fixture. It keeps `Warehouse/Operations` and the same parcel IDs, but `Parcel.CurrentStatus` is now a managed **Table** over external current-state records, rather than a View over `Parcel.StatusEvent`. Use the existing [incremental Warehouse snapshot](../assets/examples/parcel-incremental-warehouse.zip) in its own project directory and disposable targets. Do not overlay it on the first project's installed View or carry its fixed expected-row Test into this variation.
-
-Save the `parcel-incremental-warehouse.zip` download in an empty working directory, then extract its repository-relative paths and enter the project:
-
-```bash
-python -m zipfile -e parcel-incremental-warehouse.zip .
-cd examples/parcel-incremental-warehouse
-```
+Continue the [first Warehouse project](first-project.md) and [its validations](tests.md). Keep StatusEvent and the CurrentStatus View unchanged. Add a new `Parcel.LiveStatus` Table over changing external records, using the same Operations item, configuration and catalogue.
 
 ## Keep the changing source separate
 
-Use the [documented installation and access](../getting-started/installation.md). In your workspace, create three Warehouses: `ParcelCatalogue`, `ParcelOperations` and `ParcelSource`. All shell commands below run from the incremental snapshot's root. Its `workspace-config.yml` contains:
+Keep the working `workspace-config.yml` and its existing targets. Create or reuse a separate disposable **ParcelSource** Warehouse in the same workspace to hold the changing source. Do not add it as a managed target: Build may prune undeclared content in targets it owns. All shell commands below run from your existing project root.
 
-```yaml
-workspace: Parcel Development
-catalogue: Warehouse/ParcelCatalogue
-
-targets:
-  Warehouse/Operations: ParcelOperations
-```
-
-`ParcelSource` is deliberately absent from `targets`. Build may prune undeclared co-located content in managed targets, so the mutable source must remain outside `ParcelOperations`.
-
-The snapshot's `Warehouse/Operations/shortcuts.yml` presents the external Table locally:
+Add this physical mapping to `Warehouse/Operations/shortcuts.yml`, creating the file if absent. Preserve any existing `logical` mappings for the Lakehouse integration:
 
 ```yaml
 physical:
@@ -34,7 +17,7 @@ physical:
 
 Build installs `[Source].[Parcel]` as an item-local View without taking ownership of the physical source. Warehouse physical Shortcuts stay within the configured workspace; [Shortcut reference](../reference/weaver-documents/shortcut.md) owns the exact target forms.
 
-In a **SQL query connected to ParcelSource**, run `source/ParcelSource/01-setup.sql`:
+In a **SQL query connected to ParcelSource**, create the external table with:
 
 ```sql
 if schema_id(N'Source') is null
@@ -51,7 +34,7 @@ begin
 end;
 ```
 
-Then run `source/ParcelSource/02-seed.sql` in the same query editor. This deletes existing source rows, so use the disposable example source:
+Then seed it in the same query editor. This deletes existing source rows, so use the disposable example source:
 
 ```sql
 delete from [Source].[Parcel];
@@ -79,11 +62,11 @@ It should return `P-1001` as `In transit` at `Central` and `P-1002` as `Delivere
 
 ## Let the consumer ask for its own changes
 
-The complete `Warehouse/Operations/Parcel.CurrentStatus.sql` is:
+The complete `Warehouse/Operations/Parcel.LiveStatus.sql` is:
 
 ```sql
 /*
-Table ID: Parcel.CurrentStatus
+Table ID: Parcel.LiveStatus
 
 Description: Current state of active parcels.
 
@@ -108,7 +91,7 @@ set @bookmark_datetime = coalesce(
         where [Item type] = N'Warehouse'
           and [Item name] = N'Operations'
           and [Schema name] = N'Parcel'
-          and [Object name] = N'CurrentStatus'
+          and [Object name] = N'LiveStatus'
     ),
     cast('1900-01-01' as datetime2(6))
 );
@@ -130,7 +113,7 @@ where [Row update datetime] > @bookmark_datetime
 
 The first result set supplies every business column for insert or update candidates. The second supplies primary keys to delete. Absence from the first result set leaves a target row alone; it is not a deletion claim.
 
-The bookmark belongs to this consumer, `Warehouse/Operations/Parcel.CurrentStatus`. The source's `[Row update datetime]` says when its row changed; the catalogue's `[Bookmark datetime]` says how far this Table has processed. The initial 1900 boundary asks for all retained source rows. Later Loads read changes after the previous clean boundary.
+The bookmark belongs to this consumer, `Warehouse/Operations/Parcel.LiveStatus`. The source's `[Row update datetime]` says when its row changed; the catalogue's `[Bookmark datetime]` says how far this Table has processed. The initial 1900 boundary asks for all retained source rows. Later Loads read changes after the previous clean boundary.
 
 `Dependencies: []` is required here: T-SQL inference does not resolve `[Source].[Parcel]` to a physical Warehouse Shortcut. The override removes the nonexistent managed producer edge, not the source access requirement. There is no Weaver-managed source Load to order.
 
@@ -143,7 +126,7 @@ weaver check
 weaver build --item Warehouse/Operations
 ```
 
-After Build, open a **SQL query connected to ParcelOperations** and verify the installed Shortcut:
+After Build, open a **SQL query connected to Operations** and verify the installed Shortcut:
 
 ```sql
 select [Parcel ID], [Status], [Depot], [Row update datetime]
@@ -158,15 +141,15 @@ weaver load Warehouse/Operations --dry-run
 weaver load Warehouse/Operations
 ```
 
-In **ParcelOperations**, inspect the target:
+In **Operations**, inspect the target:
 
 ```sql
 select [Parcel ID], [Status], [Depot]
-from [Parcel].[CurrentStatus]
+from [Parcel].[LiveStatus]
 order by [Parcel ID];
 ```
 
-It should contain the two seeded parcels. A clean Load sets the bookmark to the UTC instant immediately before that Load began. In a **SQL query connected to ParcelCatalogue**, record that boundary:
+It should contain the two seeded parcels. A clean Load sets the bookmark to the UTC instant immediately before that Load began. In a **SQL query connected to Catalogue**, record that boundary:
 
 ```sql
 select [Bookmark datetime]
@@ -174,12 +157,12 @@ from [_].[Bookmark]
 where [Item type] = N'Warehouse'
   and [Item name] = N'Operations'
   and [Schema name] = N'Parcel'
-  and [Object name] = N'CurrentStatus';
+  and [Object name] = N'LiveStatus';
 ```
 
 ## Change the data, not the definition
 
-In **ParcelSource**, run `source/ParcelSource/03-change.sql`:
+In **ParcelSource**, change the source rows:
 
 ```sql
 update [Source].[Parcel]
@@ -200,7 +183,7 @@ weaver load Warehouse/Operations --dry-run
 weaver load Warehouse/Operations
 ```
 
-The `P-1001` candidate updates the target to `Delivered`. The source update that marks `P-1002` as `Cancelled` produces a target delete key: a source update need not become a target update. In `ParcelOperations`, the target query should now return:
+The `P-1001` candidate updates the target to `Delivered`. The source update that marks `P-1002` as `Cancelled` produces a target delete key: a source update need not become a target update. In `Operations`, the target query should now return:
 
 | Parcel ID | Status | Depot |
 | --- | --- | --- |

@@ -1,10 +1,9 @@
-"""Check the continuing Landing/Dispatch instructions without service calls."""
+"""Check the continuing Landing/Operations instructions without service calls."""
 
 import argparse
 import json
 import re
 import shlex
-import shutil
 import socket
 import sys
 import tempfile
@@ -27,6 +26,7 @@ def main():
     import yaml
     from check_docs_refresh_examples import item, parse, refuse_network
     from factories import installed_catalogue, item_bindings
+    from named_journey_support import OfflineInitialiser, sources
     from weaver.config import parse_workspace
     from weaver.load_plan import LoadDag
     from weaver_cli.main import build_parser
@@ -57,34 +57,43 @@ def main():
             if isinstance(obj, dict) and "workspace" in obj:
                 parse_workspace(obj)
                 counts["workspace_configs"] += 1
-    with tempfile.TemporaryDirectory(prefix="estate-continuation-") as directory:
+    with (
+        tempfile.TemporaryDirectory(prefix="estate-continuation-") as directory,
+        OfflineInitialiser() as initialise,
+    ):
         project = Path(directory)
-        shutil.copytree(
-            root / "examples/parcel-lakehouse/Lakehouse", project / "Lakehouse"
+        initialise(project, lakehouse="Landing")
+        original = sources(project)
+        initialise(project, warehouse="Operations")
+        assert all(
+            sources(project).get(p) == content for p, content in original.items()
         )
-        target = project / "Warehouse/Dispatch/shortcuts.yml"
-        target.parent.mkdir(parents=True)
-        target.write_text(
-            'logical:\n  "Warehouse/Dispatch/Parcel.Event": "Lakehouse/Landing/Tables/Parcel.Event"\n'
-        )
-        for page, name in [
-            ("connected-items", "workspace-config.yml"),
-            ("environments", "workspace-development.yml"),
-        ]:
-            configs = re.findall(
-                r"^```yaml[^\n]*\n(.*?)^```",
-                (root / f"docs/estate/{page}.md").read_text(),
+        connected = (root / "docs/estate/connected-items.md").read_text()
+        for relative, language in (
+            ("Warehouse/Operations/shortcuts.yml", "yaml"),
+            ("Warehouse/Operations/Parcel.LakehouseCurrentStatus.sql", "sql"),
+        ):
+            assert (project / relative).read_text() in re.findall(
+                r"^```" + language + r"[^\n]*\n(.*?)^```",
+                connected,
                 re.MULTILINE | re.DOTALL,
             )
-            config = next(block for block in configs if "workspace:" in block)
-            (project / name).write_text(config)
-            assert cli_main(["check", str(project), "--json", "--non-interactive"]) == 0
-            counts["continuous_project_checks"] += 1
+        assert cli_main(["check", str(project), "--json", "--non-interactive"]) == 0
+        counts["continuous_project_checks"] += 1
+        configs = re.findall(
+            r"^```yaml[^\n]*\n(.*?)^```",
+            (root / "docs/estate/environments.md").read_text(),
+            re.MULTILINE | re.DOTALL,
+        )
+        config = next(block for block in configs if "workspace:" in block)
+        (project / "workspace-development.yml").write_text(config)
+        assert cli_main(["check", str(project), "--json", "--non-interactive"]) == 0
+        counts["continuous_project_checks"] += 1
         catalogue = installed_catalogue(
             parse(project),
             item_bindings(
                 ("Lakehouse/Landing", "Landing"),
-                ("Warehouse/Dispatch", "ParcelDispatchDev"),
+                ("Warehouse/Operations", "ParcelOperationsDev"),
             ),
         )
         expected = {
@@ -131,7 +140,7 @@ def main():
                 assert "--concurrency 2" in text
     print(json.dumps(counts, sort_keys=True))
     print(
-        "PASS: Landing/Dispatch continuation, exact real LoadDag selections and active configuration; no service calls"
+        "PASS: Landing/Operations continuation, exact real LoadDag selections and active configuration; no service calls"
     )
 
 

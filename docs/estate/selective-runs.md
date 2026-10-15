@@ -2,7 +2,7 @@
 
 Can you rerun only this Table and the work it affects? Start with a named Load preview, then add upstream or downstream work when that is the intended scope.
 
-Keep the [Landing → Dispatch project](connected-items.md) and its `workspace-development.yml` from [workspace mappings](environments.md). Landing’s Folder supplies Event, which feeds CurrentStatus. Dispatch’s Shortcut View reads Event directly and has no separate Load.
+Keep the [Landing → Operations project](connected-items.md) and its `workspace-development.yml` from [workspace mappings](environments.md). Landing’s Folder supplies Event, which feeds CurrentStatus. Operations exposes Event through a Shortcut and loads the additional LakehouseCurrentStatus Table.
 
 ## Preview one Table
 
@@ -25,7 +25,7 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry
 | Ancestors | Folder `Parcel.Events`, then Table `Parcel.Event` |
 | Descendants | Table `Parcel.Event`, then Table `Parcel.CurrentStatus` |
 
-Expansion uses the **installed** dependencies, not edited source files. It restores dependency ordering within the selected graph. It never adds an unnamed item: Dispatch remains outside these requests, and its Shortcut View does not need a data Load anyway. A descendant run omits the Folder, so keep its staged CSV current.
+Expansion uses the **installed** dependencies, not edited source files. It restores dependency ordering within the selected graph. It never adds an unnamed item: Operations remains outside these requests, and the Shortcut itself has no Load; its consuming Table is selected only when Operations is named. A descendant run omits the Folder, so keep its staged CSV current.
 
 ## Run the selection you inspected
 
@@ -35,19 +35,99 @@ Remove only the preview flag when the plan is correct:
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --workspace-config workspace-development.yml
 ```
 
-The report should show Event attempted before CurrentStatus. Inspect each outcome; attempted is not the same as succeeded. With the original three-event feed, CurrentStatus should still show the two parcel statuses from the Lakehouse task. The Dispatch View continues to read Event without a separate Load. Next, [limit simultaneous work](concurrency.md) on this same estate.
+The report should show Event attempted before CurrentStatus. Inspect each outcome; attempted is not the same as succeeded. With the original three-event feed, CurrentStatus should still show the two parcel statuses from the Lakehouse task. Operations is outside this invocation; its additional cross-item Table is not reloaded by this Landing-only selection. Next, [limit simultaneous work](concurrency.md) on this same estate.
 
 ## Explore a larger branching selection
 
 <details markdown="1">
 <summary>Optional: sibling prerequisites and a second Warehouse</summary>
 
-Use the [`parcel-load-selection` project](../assets/examples/parcel-load-selection.zip) from the documentation repository. It contains RawEvents, Events, Daily and Summary. Set disposable targets in `workspace-dev.yml`, then run from `examples/parcel-load-selection`:
+Extend the same project with these additional declarations. Keep its original pipelines and validations. Create or reuse a separate disposable Reporting Warehouse in your workspace and add `Warehouse/Reporting: Reporting` under the working configuration’s `targets`. Then create the following files; their names do not replace StatusEvent, CurrentStatus or the Lakehouse integration.
+
+```sql title="Warehouse/Operations/Parcel.Daily.sql"
+/*
+Table ID: Parcel.Daily
+Description: Small parcel example table.
+Lineage: $Parcel.Events
+*/
+SELECT e.DepotId, SUM(e.Delivered) AS DeliveryCount FROM [Parcel].[Events] AS e JOIN [Reference].[Depot] AS d ON e.DepotId = d.DepotId GROUP BY e.DepotId
+```
+
+```sql title="Warehouse/Operations/Parcel.Events.sql"
+/*
+Table ID: Parcel.Events
+Description: Small parcel example table.
+Lineage: $Parcel.RawEvents
+*/
+SELECT ParcelId, DepotId, Delivered FROM [Parcel].[RawEvents]
+```
+
+```sql title="Warehouse/Operations/Parcel.RawEvents.sql"
+/*
+Table ID: Parcel.RawEvents
+Description: Small parcel example table.
+Lineage: Constant
+Schema:
+  ParcelId: int
+  DepotId: int
+  Delivered: int
+*/
+SELECT CAST(1 AS int) AS ParcelId, CAST(10 AS int) AS DepotId, CAST(1 AS int) AS Delivered
+```
+
+```sql title="Warehouse/Operations/Parcel.Summary.sql"
+/*
+Table ID: Parcel.Summary
+Description: Small parcel example table.
+Lineage: $Parcel.Daily
+*/
+SELECT SUM(DeliveryCount) AS DeliveryCount FROM [Parcel].[Daily]
+```
+
+```sql title="Warehouse/Operations/Reference.Depot.sql"
+/*
+Table ID: Reference.Depot
+Description: Small parcel example table.
+Lineage: Constant
+Schema:
+  DepotId: int
+  DepotName: varchar(20)
+*/
+SELECT CAST(10 AS int) AS DepotId, CAST('Central' AS varchar(20)) AS DepotName
+```
+
+```sql title="Warehouse/Operations/Reference.Service.sql"
+/*
+Table ID: Reference.Service
+Description: Small parcel example table.
+Lineage: Constant
+Schema:
+  ServiceId: int
+  ServiceName: varchar(20)
+*/
+SELECT CAST(1 AS int) AS ServiceId, CAST('Standard' AS varchar(20)) AS ServiceName
+```
+
+```sql title="Warehouse/Reporting/Parcel.DashboardInput.sql"
+/*
+Table ID: Parcel.DashboardInput
+Description: Small parcel example table.
+Lineage: $Parcel.Summary
+*/
+SELECT DeliveryCount FROM [Parcel].[Summary]
+```
+
+```yaml title="Warehouse/Reporting/shortcuts.yml"
+logical:
+  Warehouse/Reporting/Parcel.Summary: Warehouse/Operations/Parcel.Summary
+```
+
+Install and preload the extended graph using the same estate configuration:
 
 ```bash
-weaver check .
-weaver build . --item Warehouse/Operations --item Warehouse/Reporting --workspace-config workspace-dev.yml
-weaver load Warehouse/Operations Warehouse/Reporting --workspace-config workspace-dev.yml
+weaver check
+weaver build --item Warehouse/Operations --item Warehouse/Reporting --workspace-config workspace-development.yml
+weaver load Warehouse/Operations Warehouse/Reporting --workspace-config workspace-development.yml
 ```
 
 Use its installed graph below. The guide uses this installed graph in `Warehouse/Operations`:
@@ -69,7 +149,7 @@ Name the logical items you intend to run. Dependencies never add an unnamed item
 `--name` is a case-insensitive **whole-name regular expression**, not a glob or substring search. Escape a literal dot with `[.]`:
 
 ```bash
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --dry-run --workspace-config workspace-dev.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --dry-run --workspace-config workspace-development.yml
 ```
 
 This selects only `Parcel.Events`. Plain named Load is a deliberate operator override: multiple matches do not imply dependency expansion or ordering between them.
@@ -81,9 +161,9 @@ Read the selected identities, dependencies and any required publication/endpoint
 ## 4. Include upstream or downstream work
 
 ```bash
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --dry-run --workspace-config workspace-dev.yml
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --descendants --dry-run --workspace-config workspace-dev.yml
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --descendants --dry-run --workspace-config workspace-dev.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --dry-run --workspace-config workspace-development.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --descendants --dry-run --workspace-config workspace-development.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --descendants --dry-run --workspace-config workspace-development.yml
 ```
 
 | Request | Selected tables in Operations |
@@ -100,7 +180,7 @@ weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --descenda
 Remove only the preview flag:
 
 ```bash
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --workspace-config workspace-dev.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --workspace-config workspace-development.yml
 ```
 
 The report should show RawEvents and Events as attempted, with Events ordered after RawEvents. Daily, Summary, Depot and the Reporting item were not requested by that invocation. Inspect outcomes: an attempted node is not necessarily a successful one.
@@ -116,17 +196,17 @@ preview = weaver.load(
     ancestors=True,
     descendants=True,
     dry_run=True,
-    workspace_config='workspace-dev.yml',
+    workspace_config='workspace-development.yml',
 )
 print(preview.to_mapping())
 ```
 
 ## 6. Cross an item boundary deliberately
 
-The fixture also declares `Warehouse/Reporting/Parcel.DashboardInput`, which consumes Operations' Summary. Selecting Operations alone cannot reach it. To include it, name both items:
+The addition above declares `Warehouse/Reporting/Parcel.DashboardInput`, which consumes Operations' Summary. Selecting Operations alone cannot reach it. To include it, name both items:
 
 ```bash
-weaver load Warehouse/Operations Warehouse/Reporting --name 'Parcel[.]Events' --descendants --dry-run --workspace-config workspace-dev.yml
+weaver load Warehouse/Operations Warehouse/Reporting --name 'Parcel[.]Events' --descendants --dry-run --workspace-config workspace-development.yml
 ```
 
 This selects Events, Daily and Summary in Operations, then DashboardInput in Reporting. It still omits RawEvents and Depot. Keep both current before that run. A Lakehouse-to-Warehouse equivalent may also need OneLake publication and SQL endpoint readiness; these are ordered by the supported installed graph, not replaced with an arbitrary delay.
@@ -136,8 +216,8 @@ This selects Events, Daily and Summary in Operations, then DashboardInput in Rep
 Repeat `--name` to take the union of matching seeds. Every supplied pattern must match at least one loadable object inside the requested scope:
 
 ```bash
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --name 'Reference[.]Depot' --descendants --dry-run --workspace-config workspace-dev.yml
-weaver load Warehouse/Operations --name 'Parcel[.]DoesNotExist' --dry-run --workspace-config workspace-dev.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --name 'Reference[.]Depot' --descendants --dry-run --workspace-config workspace-development.yml
+weaver load Warehouse/Operations --name 'Parcel[.]DoesNotExist' --dry-run --workspace-config workspace-development.yml
 ```
 
 The second command is a no-match error, not an empty successful run. Check installed spelling and item scope. `Parcel.Events` leaves its dot as a regex wildcard; `[.]` expresses the literal identity.
@@ -148,7 +228,7 @@ Lakehouse identities can include `Tables/` or `Files/`. A bare identity can be a
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry-run --workspace-config workspace-development.yml
 ```
 
-This returns to the Landing project used at the start of this page; select its development configuration, not the Warehouse example’s configuration.
+This selects Landing in the same project and development configuration used at the start of this page.
 
 
 </details>

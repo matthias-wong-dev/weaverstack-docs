@@ -6,7 +6,7 @@ Edit a working definition, check it, inspect the Build preview, install the chan
 edit → check → Build preview → Build → Load → Test → Health → repeat
 ```
 
-Keep the project and configuration you just inspected. The leading commands continue [Landing → Dispatch](connected-items.md) with `workspace-development.yml`, as selected on the mapping and Health pages. Edit a Landing declaration while leaving its logical names and Dispatch connection intact. Use the [connection task](connected-items.md) if those items are not yet installed.
+Keep the project and configuration you just inspected. The leading commands continue [Landing → Operations](connected-items.md) with `workspace-development.yml`, as selected on the mapping and Health pages. Edit a Landing declaration while leaving its logical names and Operations connection intact. Use the [connection task](connected-items.md) if those items are not yet installed.
 
 For another source-data estate, select its actual changed items in the same loop. A Warehouse-only reader can use `--item Warehouse/Operations` with the [StatusEvent project](../warehouse/tests.md). If you chose the managed Parcel variation, stay with it and use [the model-inclusive loop](#include-semantic-models-and-reports) below, rather than returning to either source-data example.
 
@@ -16,7 +16,7 @@ After editing the source, check it locally and preview the intended installed ch
 
 ```bash
 weaver check .
-weaver build . --item Lakehouse/Landing --item Warehouse/Dispatch --dry-run --workspace-config workspace-development.yml
+weaver build . --item Lakehouse/Landing --item Warehouse/Operations --dry-run --workspace-config workspace-development.yml
 ```
 
 Check catches declaration errors without contacting Fabric. Build preview reads existing targets and shows selected work and destructive consequences without installing or changing catalogue/runtime state. It is not a retained executable bundle, does not prove runtime compatibility, and cannot provision missing selected Power BI targets. Use ordinary Build for first deployment.
@@ -24,7 +24,7 @@ Check catches declaration errors without contacting Fabric. Build preview reads 
 If the preview is the intended change, install and operate that selection:
 
 ```bash
-weaver build . --item Lakehouse/Landing --item Warehouse/Dispatch --workspace-config workspace-development.yml
+weaver build . --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
 weaver load --stale --workspace-config workspace-development.yml
 weaver test --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml

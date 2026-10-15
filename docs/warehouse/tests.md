@@ -1,13 +1,14 @@
 # Testing Warehouse data
 
-The [first Table and View](first-project.md) produce two current parcel statuses from three events. Keep that project and add a Test that compares the View with an independent expected result.
+The [first Table and View](first-project.md) produce two current parcel statuses from three events. Keep that project and inspect its generated Test that compares the View with an independent expected result.
 
-Use the same loaded `Warehouse/Operations` project and configuration. If you are starting here, use the [complete example](../assets/examples/parcel-warehouse-journey.zip) and follow the [Table and View task](first-project.md) first. Run commands from its project root.
+Use the same loaded `Warehouse/Operations` project and configuration. If you are starting here, initialise and run the [Table and View task](first-project.md) first. Run commands from its project root.
 
 ## Check the result without repeating the ranking query
 
-Create `Warehouse/Operations/tests/Parcel.CurrentStatusMatches.sql`:
+Open the generated `Warehouse/Operations/tests/Parcel.CurrentStatusMatches.sql`:
 
+<!-- initialise:Warehouse/Operations/tests/Parcel.CurrentStatusMatches.sql -->
 ```sql
 /*
 Test ID: Parcel.CurrentStatusMatches
@@ -29,6 +30,7 @@ select [Parcel ID]
      , [Depot]
 from [Parcel].[CurrentStatus];
 ```
+<!-- /initialise -->
 
 The first result is expected; the second is actual. The expected rows state what the sample events mean instead of repeating the View's window function. A defect in that function can therefore produce a discrepancy.
 
@@ -40,12 +42,13 @@ weaver build --item Warehouse/Operations
 weaver test Warehouse/Operations
 ```
 
-Expect `Parcel.CurrentStatusMatches` to pass with **0 missing, 0 unexpected**. Build installed the new Test; no data Load is needed because the Table and View have not changed. The expected rows were written independently of the View’s ranking query, so this checks the answer rather than repeating the calculation.
+Expect `Parcel.CurrentStatusMatches` to pass with **0 missing, 0 unexpected**. The generated Test is already installed by the first Build; no data Load is needed because the Table and View have not changed. The expected rows were written independently of the View’s ranking query, so this checks the answer rather than repeating the calculation.
 
 ## Find events outside the accepted vocabulary
 
-Create `Warehouse/Operations/assumptions/Parcel.StatusIsKnown.sql`:
+Open the generated `Warehouse/Operations/assumptions/Parcel.StatusIsKnown.sql`:
 
+<!-- initialise:Warehouse/Operations/assumptions/Parcel.StatusIsKnown.sql -->
 ```sql
 /*
 Assumption ID: Parcel.StatusIsKnown
@@ -59,6 +62,7 @@ from [Parcel].[StatusEvent]
 where [Status] is null
    or [Status] not in ('Accepted', 'In transit', 'Delivered');
 ```
+<!-- /initialise -->
 
 Every returned row violates the description. No returned rows means the Assumption passes. This check reads all events, including those hidden by the latest-status View, and its relation reference establishes the dependency on `Parcel.StatusEvent`.
 

@@ -30,10 +30,15 @@ def main():
     import weaver
     import yaml
     from check_docs_refresh_examples import (
-        compile_models,
         hashes,
         model,
         refuse_network,
+    )
+    from named_journey_support import (
+        OfflineInitialiser,
+        append_target,
+        compiled as compile_models,
+        sources,
     )
     from weaver.catalogue.tables import CATALOGUE_TABLES
     from weaver.config import parse_workspace
@@ -70,37 +75,24 @@ def main():
                     build_parser().parse_args(shlex.split(line)[1:])
                     counts["commands"] += 1
         for block in blocks(page, "yaml"):
-            parse_workspace(yaml.safe_load(block))
+            value = yaml.safe_load(block)
+            if isinstance(value, dict) and any("/" in str(key) for key in value):
+                value = {"targets": value}
+            if isinstance(value, dict) and "workspace" not in value:
+                value = {"workspace": "Parcel Development", **value}
+            parse_workspace(value)
             counts["configs"] += 1
         for block in blocks(page, "python"):
             ast.parse(block)
             counts["python_blocks"] += 1
+    # Generated snippets are checked separately against the installed generator.
+    # Keep fixture comparisons only for unchanged, newly authored extensions.
     sync = [
-        ("native-tmdl", "yaml", "parcel-powerbi", "workspace-dev.yml"),
         (
             "native-tmdl",
             "tmdl",
             "parcel-powerbi",
             "PowerBI/Parcel/Parcel.SemanticModel/definition/relationships.tmdl",
-        ),
-        ("managed-sources", "yaml", "parcel-powerbi-fabric", "workspace-dev.yml"),
-        (
-            "managed-sources",
-            "tmdl",
-            "parcel-powerbi-fabric",
-            "PowerBI/Parcel/Parcel.tmdl",
-        ),
-        (
-            "managed-sources",
-            "tmdl",
-            "parcel-powerbi-fabric",
-            "PowerBI/Parcel/Parcel.SemanticModel/definition/tables/Delivery.tmdl",
-        ),
-        (
-            "managed-sources",
-            "tmdl",
-            "parcel-powerbi-fabric",
-            "PowerBI/Parcel/Parcel.SemanticModel/definition/expressions.tmdl",
         ),
         (
             "validation",
@@ -109,13 +101,6 @@ def main():
             "PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax",
         ),
         ("validation", "tmdl", "parcel-powerbi-validation", "failure/Parcel.tmdl"),
-        (
-            "validation",
-            "dax",
-            "parcel-powerbi-fabric",
-            "PowerBI/Parcel/tests/Parcel/Parcel.DeliveryReconciles.dax",
-        ),
-        ("validation", "tmdl", "parcel-powerbi-fabric", "failure/Parcel.tmdl"),
         ("shared-policy", "tmdl", "parcel-powerbi-standards", "PowerBI/policy.tmdl"),
         (
             "custom-annotations",
@@ -153,12 +138,6 @@ def main():
             page,
             path,
         )
-    readback = re.search(
-        r"Inspect Delivery's metadata row.*?mapping failed\.",
-        (DOC / "validation.md").read_text(),
-        re.DOTALL,
-    ).group()
-    assert readback in (ROOT / "examples/parcel-powerbi-fabric/README.md").read_text()
     names = set(re.findall(r"`(_\.[A-Za-z]+)`", (DOC / "validation.md").read_text()))
     assert (
         {"_.SemanticModelTable", "_.Dependency", "_.SemanticModelTest", "_.TestStatus"}
@@ -185,12 +164,13 @@ def main():
         assert effective.tables["Delivery"].columns["DepotId"].isHidden is True
         assert effective.tables["Depot"].columns["DepotId"].isHidden is None
 
-    with tempfile.TemporaryDirectory(
-        prefix="semantic-model-owning-pages-"
-    ) as directory:
+    with (
+        tempfile.TemporaryDirectory(prefix="semantic-model-owning-pages-") as directory,
+        OfflineInitialiser() as initialise,
+    ):
         temp = Path(directory)
         trial = temp / "continuous"
-        shutil.copytree(ROOT / "examples/parcel-powerbi", trial)
+        initialise(trial, semantic_model="Parcel")
         original = model(compile_models(trial))
         overlay = trial / "PowerBI/Parcel/Parcel.tmdl"
         native_rule = next(
@@ -270,6 +250,45 @@ def main():
             restored.tables["Delivery"].measures["Delivery Count"].displayFolder
             == "Parcel metrics"
         )
+        before_extension = sources(trial)
+        initialise(trial, warehouse="Operations")
+        assert all(
+            sources(trial).get(p) == content for p, content in before_extension.items()
+        )
+        check(
+            trial,
+            "Warehouse added after native modelling policy without overwriting sources",
+        )
+        managed = model(compile_models(trial), "ParcelWarehouse")
+        assert (
+            "Delivery" in managed.tables
+            and "Depot" in managed.tables
+            and "CurrentStatus" in managed.tables
+        )
+        assert (
+            managed.tables["Delivery"].partitions["Delivery"].source
+            == original.tables["Delivery"].partitions["Delivery"].source
+        )
+        extra = trial / "PowerBI/Parcel/ParcelWarehouse.tmdl"
+        extra.write_text(blocks("validation", "tmdl")[-1])
+        test = (
+            trial
+            / "PowerBI/Parcel/tests/ParcelWarehouse/Parcel.CurrentStatusReconciles.dax"
+        )
+        test.parent.mkdir(parents=True)
+        test.write_text(blocks("validation", "dax")[-1])
+        check(trial, "managed-source reconciliation added alongside native Assumption")
+        compile_models(trial)
+        base = trial / "PowerBI/Parcel/ParcelBase.SemanticModel"
+        shutil.copytree(trial / "PowerBI/Parcel/Parcel.SemanticModel", base)
+        append_target(trial, "SemanticModel/ParcelBase")
+        for name, text in zip(
+            ("ParcelOperations", "ParcelExecutive"), blocks("composition", "tmdl")
+        ):
+            (trial / f"PowerBI/Parcel/{name}.tmdl").write_text(text)
+            append_target(trial, "SemanticModel/" + name)
+        check(trial, "composition adds models without renaming Parcel")
+        compile_models(trial)
         # The actual native-to-validation entry has only the model-level rule.
         for start in ("native-rule", "no-overlay"):
             direct = temp / start
@@ -334,26 +353,19 @@ def main():
                 path.read_bytes() == prior if prior is not None else not path.exists()
             )
             assert not (direct / "Parcel.tmdl.saved").exists()
-        for i, text in enumerate(blocks("from-tmdl", "tmdl")):
-            trial = temp / f"standalone-{i}"
-            path = trial / "PowerBI/Parcel/ParcelSummary.tmdl"
-            path.parent.mkdir(parents=True)
-            path.write_text(text)
-            if i:
-                shutil.copytree(
-                    ROOT / "examples/parcel-powerbi-fabric/Warehouse",
-                    trial / "Warehouse",
-                )
-            check(trial, f"standalone TMDL {i}")
-            if not i:
-                effective = model(compile_models(trial), "ParcelSummary")
-                assert (
-                    effective.tables["Delivery"].partitions["Delivery"].mode == "import"
-                )
-                assert (
-                    effective.tables["Delivery"].measures["Delivery Count"].expression
-                    == "SUM(Delivery[Delivered])"
-                )
+        for name, text in zip(
+            ("ParcelSummary", "ParcelSourceSummary"), blocks("from-tmdl", "tmdl")
+        ):
+            (trial / f"PowerBI/Parcel/{name}.tmdl").write_text(text)
+            append_target(trial, "SemanticModel/" + name)
+            check(trial, "additional standalone TMDL " + name)
+            effective = model(compile_models(trial), name)
+            assert effective.tables["Delivery"].partitions["Delivery"].mode == "import"
+            assert (
+                effective.tables["Delivery"].measures["Delivery Count"].expression
+                == "SUM(Delivery[Delivered])"
+            )
+        assert_native(model(compile_models(trial)), original)
     assert hashes(ROOT / "examples") == before
     print(
         "PASS:",
@@ -362,7 +374,7 @@ def main():
     )
     print("PASS:", "; ".join(checks))
     print(
-        "PASS: effective visibility, relationship/partition preservation, policy precedence/calculation group, shared-rule transfer, custom folder, failure/correction preserve prior overlay; exact catalogue names/readback; authored fixture SHA-256 unchanged; no service execution"
+        "PASS: effective visibility, relationship/partition preservation, policy precedence/calculation group, shared-rule transfer, custom folder, failure/correction preserve prior overlay; exact catalogue names; generated native-to-managed/composition journey; authored fixtures unchanged; no service execution"
     )
 
 

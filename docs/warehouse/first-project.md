@@ -6,20 +6,20 @@ Use the [documented Weaver installation](../getting-started/installation.md) and
 
 ## Give the SQL a home
 
-Create an empty project:
+Initialise the Parcel example:
 
 ```bash
 weaver initialise \
   --workspace "Parcel Development" \
-  --project-folder ./parcel-warehouse \
+  --project-folder ./parcel \
   --catalogue Catalogue \
   --environment Weaver \
   --warehouse Operations \
-  --no-example
-cd parcel-warehouse
+  --example Parcel
+cd parcel
 ```
 
-Initialise creates or reuses the named items and writes `workspace-config.yml`. This SQL task needs no Spark runtime; if interactive setup offers Environment publication, decline it for this Warehouse task. Use the project below, or the [complete example files](../assets/examples/parcel-warehouse-journey.zip); start with the two SQL files and add their validations on the next page.
+Initialise creates or reuses the named items and writes the SQL Table, View and validations below. This Warehouse-only project needs no Spark runtime or Environment publication. Open the generated files rather than copying these declarations.
 
 <details markdown="1">
 <summary>See the generated workspace bindings</summary>
@@ -37,10 +37,11 @@ targets:
 
 </details>
 
-## Write the event Table
+## Inspect the event Table {#write-the-event-table}
 
-Create `Warehouse/Operations/Parcel.StatusEvent.sql`:
+Open `Warehouse/Operations/Parcel.StatusEvent.sql`:
 
+<!-- initialise:Warehouse/Operations/Parcel.StatusEvent.sql -->
 ```sql
 /*
 Table ID: Parcel.StatusEvent
@@ -67,13 +68,15 @@ from (values
     ('P-1002', 1, 'Delivered', 'South')
 ) as v ([Parcel ID], [Event sequence], [Status], [Depot]);
 ```
+<!-- /initialise -->
 
 The key identifies one event. Keep the SQL as a SELECT; the declaration describes the Table that should receive it.
 
 ## Read the latest event through a View
 
-Create `Warehouse/Operations/Parcel.CurrentStatus.sql`:
+Open `Warehouse/Operations/Parcel.CurrentStatus.sql`:
 
+<!-- initialise:Warehouse/Operations/Parcel.CurrentStatus.sql -->
 ```sql
 /*
 View ID: Parcel.CurrentStatus
@@ -98,6 +101,7 @@ select [Parcel ID]
 from ranked
 where [Event rank] = 1;
 ```
+<!-- /initialise -->
 
 The View reads the event Table and keeps the most recent row for each parcel.
 
@@ -131,6 +135,6 @@ order by [Parcel ID];
 
 Build created the physical Table, generated its loading procedure and installed the dependent View. The SQL reference supplied the dependency; `Lineage` is descriptive. Load staged the query result, matched keys and reconciled changed values according to the Table’s policy. It also recorded the row changes and processing state for Health. You wrote neither an INSERT/MERGE procedure nor a second load-order definition.
 
-The View now gives you one row per parcel, but a successful Load does not prove that it chose the right event. [Testing Warehouse data](tests.md) adds an independent expected result and a check for unknown statuses to this same project, without initialising another one.
+The View now gives you one row per parcel, but a successful Load does not prove that it chose the right event. [Testing Warehouse data](tests.md) runs the generated independent expected result and check for unknown statuses to this same project, without initialising another one.
 
 If you edit either SQL document, Check and Build install the changed definition before another Load. [The development cycle](../estate/development-cycle.md) covers that loop; [Table reference](../reference/weaver-documents/table.md) owns the exact authoring and load contract.

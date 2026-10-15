@@ -2,11 +2,11 @@
 
 Use the same native Report and model in both workspaces. The selected workspace configuration changes their physical names and the Report's deployed model binding; it does not change their logical names or authored files.
 
-Continue from [Deploy a native Report](deploy.md) in the same `examples/parcel-powerbi` directory. If you are starting here, use the [complete parcel project](../assets/examples/parcel-powerbi.zip) and that page's installation and access instructions; no model reauthoring is needed. Keep any model overlay from the native-model task. The next Build adds the second destination.
+Continue from [Deploy a native Report](deploy.md) in the same `parcel` project. If you are starting here, that page generates and deploys the pair. Keep your model overlays and source bindings.
 
 ## Select the two destinations
 
-The project already has both configuration files. Set their workspace names to two existing disposable workspaces; the production-labelled file is an example, not a reason to use a real production workspace.
+Create `workspace-dev.yml` and `workspace-prod.yml` for two existing disposable workspaces using the minimal configurations below. These inline-model destinations need no source workload. For an estate with Lakehouse or Warehouse items, copy the working configuration instead, retain its catalogue, runtime and source bindings, and change only the intended destinations. A production-labelled example is not a reason to use a real production workspace.
 
 ```yaml title="workspace-dev.yml"
 workspace: Parcel BI Development
@@ -30,8 +30,8 @@ Use an identity with model/Report create or update and readback rights in each w
 
 ```bash
 weaver check .
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
-weaver build . --item PowerBI/Parcel --workspace-config workspace-prod.yml
+weaver build . --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-prod.yml
 ```
 
 If the development pair is already deployed, only the production Build is new work. Both commands select the linked model with the Report, as required for this catalogue-free project.
@@ -43,24 +43,7 @@ Check each Report's actual service binding, including the workspace, not just th
 | `workspace-dev.yml` | Parcel BI Development | `Parcel_Report_Dev` | `Parcel_Dev` |
 | `workspace-prod.yml` | Parcel BI Production | `Parcel_Report` | `Parcel` |
 
-For a concrete binding check, save this as `check-bindings.py` beside the two configuration files and run `python check-bindings.py` from the project root:
-
-```python title="check-bindings.py"
-import weaver
-
-for config, report, model in (
-    ("workspace-dev.yml", "Parcel_Report_Dev", "Parcel_Dev"),
-    ("workspace-prod.yml", "Parcel_Report", "Parcel"),
-):
-    with weaver.session(workspace_config=config) as opened:
-        expected = opened.semantic_model(model)
-        binding = opened.report_item(report).get_binding()
-        assert binding["datasetId"] == expected.model_id
-        assert binding["datasetWorkspaceId"] == expected.workspace_id
-        print(config, binding["datasetId"], binding["datasetWorkspaceId"])
-```
-
-Use the physical names from your configurations if you changed them. The check reads each deployed Report through the Power BI API. The production Report must not point to the development model. The native source is unchanged; the resolved IDs go into the deployed Report payload.
+In each workspace’s **lineage view**, follow the deployed Report’s semantic-model link. Confirm both its name and workspace against the table above. The production Report must link to the production model, not to the development one. The source `byPath` remains unchanged.
 
 For a viewing check, refresh each model with refresh permission, then open each Report with view/query permission:
 
@@ -69,7 +52,7 @@ weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 weaver load SemanticModel/Parcel --workspace-config workspace-prod.yml
 ```
 
-Both Delivery Count cards should show **2**. Model refresh and Report rendering are separate checks from Build and binding; there is no Report Load or Test. The example README includes a before/after hash check for the authored `PowerBI/` files.
+Both Delivery Count cards should show **2**. Model refresh and Report rendering are separate checks from Build and binding; there is no Report Load or Test.
 
 An unrelated authored `byConnection` with no local model association stays as authored. Weaver does not reverse-map that external connection to a development or production model. The linked-pair behaviour above applies to the local association; [Report binding rules](../reference/power-bi/requirements-and-compatibility.md#report-binding) also describe same-name model precedence and the catalogue-backed Report-only case.
 

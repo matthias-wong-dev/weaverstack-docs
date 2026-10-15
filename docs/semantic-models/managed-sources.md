@@ -1,114 +1,82 @@
 # Connect a managed Fabric source
 
-The native model can participate in the same dependency graph as its source data. `Weaver.Source` identifies the managed Table; source Load then precedes model refresh, and Health can identify a model that is behind its source.
-
-Continue with Parcel, Delivery and Depot, but change **Delivery’s partition from inline Import data to Warehouse-backed Import**. The complete [Fabric integration snapshot](../assets/examples/parcel-powerbi-fabric.zip) supplies that changed partition, a shared SQL expression, the Operations source and a reconciliation Test. Work from `examples/parcel-powerbi-fabric`; do not add `Weaver.Source` to the inline fixture and expect its data to switch. Depot remains inline reference data.
-
-Use this source-backed project in a separate directory from the [inline model](native-tmdl.md). The logical model name remains Parcel. To keep the earlier visibility rule, merge it into this project’s same-name overlay without overwriting its source annotation.
+Keep Parcel’s inline Delivery/Depot model and add a model over the working Warehouse. The original Delivery Count still works without a source connection; the new model demonstrates source-to-model coordination.
 
 ## Before you start
 
-Use the [complete Fabric integration project](../assets/examples/parcel-powerbi-fabric.zip) from its example directory. Configure an existing disposable Fabric workspace, compatible Weaver catalogue Warehouse and an empty Operations Warehouse. This SQL/Import route uses no Lakehouse or Spark runtime; Warehouse-only Build does not require a published Fabric Environment.
-
-You need Warehouse create/alter/load and SELECT rights, catalogue read/write, model/Report deployment and refresh/view rights. Import refresh needs an existing supported service connection and credentials with Warehouse SQL access. Weaver does not create credentials. Only request binding to a connection you are permitted to use.
-
-If you do not yet have a catalogue, the [first Fabric project](../warehouse/first-project.md) supplies the setup route. Do not point this exercise at an existing production estate.
+Continue the [native Parcel project](native-tmdl.md). Use its same workspace, catalogue, configuration and overlays. You need Warehouse create/alter/load and SELECT rights, catalogue access, and model deployment, refresh and query permissions. Source-backed Import refresh also needs an existing supported service connection with SQL access. Weaver can bind a matching connection; it does not create credentials or administer gateways.
 
 ## 1. Configure destination and source separately
 
-`workspace-dev.yml`:
+From the directory containing `parcel`, extend the project:
 
-```yaml
-workspace: Parcel Fabric Development
-catalogue: Warehouse/Parcel_Catalogue_Dev
-targets:
-  Warehouse/Operations: Parcel_Operations_Dev
-  SemanticModel/Parcel: Parcel_Dev
-  Report/Parcel: Parcel_Report_Dev
-data_sources:
-  Warehouse/Operations: Warehouse/Parcel_Operations_Dev
+```bash
+weaver initialise \
+  --workspace "Parcel Development" \
+  --project-folder ./parcel \
+  --warehouse Operations \
+  --example Parcel
+cd parcel
 ```
 
-`targets` maps logical items to physical names. `data_sources` maps a supported shared M expression to the physical Warehouse. The native `definition/expressions.tmdl` contains that shared expression; its authored partition still navigates `[Parcel].[Delivery]`. This mapping resolves the selected Warehouse endpoint, not arbitrary M text or an external database.
+If your shell is already in the project, use `--project-folder .` and stay there. Omitted existing items are retained. If Operations is already present, this is an idempotent rerun, not a request to replace it.
 
-The existing Delivery table is refined by `PowerBI/Parcel/Parcel.tmdl`:
+Initialise adds the independent [Warehouse Table and View](../warehouse/first-project.md), their validations, and a **separate** `ParcelWarehouse` model. It retains `Parcel.SemanticModel`, the Report and any same-name Parcel overlay. It also adds the new target bindings to `workspace-config.yml` without changing existing physical names.
 
+Open `PowerBI/Parcel/ParcelWarehouse.tmdl`:
+
+<!-- initialise:PowerBI/Parcel/ParcelWarehouse.tmdl -->
 ```tmdl
-table Delivery
-	annotation 'Weaver.Source' = Warehouse/Operations/Parcel.Delivery
+model Model
+	culture: en-US
+	defaultMode: import
+	annotation 'Weaver.BaseSemanticModels' = Parcel
+
+table CurrentStatus
+	annotation 'Weaver.Source' = Warehouse/Operations/Parcel.CurrentStatus
 ```
+<!-- /initialise -->
 
-`Weaver.Source` adds managed lineage. It does not replace this table's authored partitions/columns, load its source or grant access. The fixture already changes the native Delivery partition to read the shared expression:
+The additional model composes the native Parcel foundation, so existing modelling policy still has its original Delivery/Depot tables to refine. `Weaver.Source` asks Build to generate this model’s CurrentStatus table from the managed Warehouse View. Its Import partition and columns are generated from the resolved source metadata. This is an additional model: it does not substitute a Warehouse partition into the native Delivery table. [Author from TMDL](from-tmdl.md#3-generate-from-a-managed-source-only-when-needed) explains source generation in detail.
 
-```tmdl
-/// Three parcel events, including two delivered parcels.
-table Delivery
-	measure 'Delivery Count' = SUM(Delivery[Delivered])
-		formatString: 0
-	measure InternalCost = 7
-		formatString: 0.00
-	column ParcelId
-		dataType: int64
-		sourceColumn: ParcelId
-		summarizeBy: none
-	column DepotId
-		dataType: int64
-		sourceColumn: DepotId
-		summarizeBy: none
-	column Delivered
-		dataType: int64
-		sourceColumn: Delivered
-		summarizeBy: sum
-	partition Delivery = m
-		mode: import
-		source =
-			let
-			    Source = #"Warehouse/Operations",
-			    Data = Source{[Schema="Parcel", Item="Delivery"]}[Data]
-			in
-			    Data
-```
-
-The fixture’s `definition/expressions.tmdl` declares the supported expression that Build resolves:
-
-```tmdl
-expression 'Warehouse/Operations' = Sql.Database("replace-with-warehouse-sql-endpoint", "Parcel_Operations_Dev")
-```
-
-Both partitions remain Import; this task does not switch to Direct Lake or generate an empty table. [Author from TMDL](from-tmdl.md#3-generate-from-a-managed-source-only-when-needed) covers generation when no partition is authored.
+The project’s `targets` choose physical items. Optional `data_sources` mappings can independently choose which supported physical source a logical expression reads; see [workspace mappings](../estate/environments.md). Neither setting grants SQL access or creates a service connection.
 
 ## 2. Build and load the Warehouse first
 
 ```bash
-weaver check .
-weaver build . --item Warehouse/Operations --workspace-config workspace-dev.yml
-weaver load Warehouse/Operations --workspace-config workspace-dev.yml
+weaver check
+weaver build --item Warehouse/Operations
+weaver load Warehouse/Operations
 ```
 
-In Fabric, open a SQL query connected to `Parcel_Operations_Dev` (or your configured Operations Warehouse) and verify the source before deploying the model:
+In a SQL query connected to Operations, inspect the source:
 
 ```sql
-SELECT ParcelId, DepotId, Delivered
-FROM Parcel.Delivery
-ORDER BY ParcelId;
-
-SELECT SUM(Delivered) AS DeliveryCount
-FROM Parcel.Delivery;
+SELECT [Parcel ID], [Status], [Depot]
+FROM Parcel.CurrentStatus
+ORDER BY [Parcel ID];
 ```
 
-The first query should return three rows with Delivered values 1, 1, 0; the second should return 2.
+Expect P-1001 / In transit / Central and P-1002 / Delivered / South. The Warehouse’s StatusEvent Table and CurrentStatus View remain the same independent pipeline introduced in the Warehouse journey.
 
 ## 3. Bind and refresh the model
 
 ```bash
-weaver build . --item PowerBI/Parcel --bind-data-sources --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver build --item SemanticModel/ParcelWarehouse --bind-data-sources
+weaver load Warehouse/Operations SemanticModel/ParcelWarehouse
 ```
 
-Source-data definitions and model/Report definitions use separate Build calls against the same project and configuration. Do not combine their selections into one Build. `PowerBI/Parcel` also deploys the linked Report; [Report deployment](../reports/deploy.md) owns its binding checks. `--bind-data-sources` requests supported binding to an existing matching connection; it does not administer gateways or create credentials. Inspect the model's resolved shared expression and retained partition navigation, its refresh outcome and the Report's actual model binding. The Report card should show 2.
+Build the source and model in separate requests. `--bind-data-sources` uses an existing matching supported connection. Resolve missing or ambiguous connections with the connection’s owner; do not change tenant settings to make the example run.
 
-After source Load and model refresh, the Warehouse and model should contain the same three delivery rows, but a successful refresh does not establish that the measure is right. [Compare DAX with source SQL](validation.md#compare-dax-with-source-sql) in this same checkpoint: its existing Test independently sums Delivered in the Warehouse. Keep the loaded source and refreshed model; there is no second provisioning sequence.
+The selected Warehouse work now precedes the additional model’s refresh. In the service, open **ParcelWarehouse**, choose Write DAX queries (or use the [Desktop live-connection route](native-tmdl.md#4-refresh-and-inspect-the-model)), and run:
 
-[Run and inspect the estate](../estate/operate.md) brings source Load, model refresh, Test and Health together.
+```dax
+EVALUATE
+CurrentStatus
+```
 
-For cleanup, delete only this fixture’s newly created Report/model, then retire its disposable Operations Warehouse through a scoped approved procedure. Keep existing shared catalogues, workspaces and connections; do not use unscoped Wipe.
+The model should expose the same two current-status rows. The original **Parcel** model still returns Delivery Count = 2 and its Report still uses that model. Opening Parcel rather than ParcelWarehouse would query the independent inline sample, not this managed source.
+
+Adding a Lakehouse works the same way: Initialise retains both pipelines and adds `ParcelLakehouse` over Landing’s CurrentStatus Table. With Lakehouse and Warehouse selected, separately named Warehouse integration objects also connect the Lakehouse Event Table without replacing StatusEvent or changing the original View. [Connect items and dependencies](../estate/connected-items.md) follows that path.
+
+[Compare DAX with source SQL](validation.md#compare-dax-with-source-sql) to validate this source-backed model in the same project. [Run and inspect the estate](../estate/operate.md) combines source Load, model refresh, Test and Health.

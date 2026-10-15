@@ -51,7 +51,7 @@ weaver.health(items: str | Sequence[str] | None=None, *, as_of: str | datetime |
 ### `weaver.initialise`
 
 ```python
-weaver.initialise(project_folder, *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, lakehouse: str | None=None, warehouse: str | None=None, semantic_model: str | None=None, example: bool=False, publish_environment: bool=False, install_weaver: bool | None=None, dry_run: bool=False, session=None, client=None) -> InitialiseReport
+weaver.initialise(project_folder, *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, lakehouse: str | None=None, warehouse: str | None=None, semantic_model: str | None=None, example: str | None=None, publish_environment: bool=False, install_weaver: bool | None=None, dry_run: bool=False, session=None, client=None) -> InitialiseReport
 ```
 
 ### `weaver.load`

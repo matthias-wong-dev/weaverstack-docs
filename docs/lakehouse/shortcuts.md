@@ -2,11 +2,11 @@
 
 Read existing Fabric data through a local Lakehouse name without copying it into another authored source Table. Use a physical Shortcut for externally owned data; use a logical Shortcut when another Weaver item owns the producer.
 
-The Landing pipeline remains unchanged. This optional task adds access to a separate carrier archive. The [incremental variation](incremental.md) uses this same physical boundary in `Lakehouse/Tracking`, then snapshots the files and consumes their changes. Continue there if you want the complete loadable pipeline rather than access alone.
+The Landing pipeline remains unchanged. This optional task adds access to a separate carrier archive. The [incremental variation](incremental.md) uses this same physical boundary alongside the existing pipeline in `Lakehouse/Landing`, then snapshots the files and consumes their changes. Continue there if you want the complete loadable pipeline rather than access alone.
 
 ## Expose an external carrier archive
 
-Use an existing `ParcelSourceArchive` Lakehouse in the configured workspace, outside this project's managed targets, containing `Files/parcel-status`. Verify the source exists and is readable before Build. Create `Lakehouse/Landing/shortcuts.py`:
+Use an existing `ParcelSourceArchive` Lakehouse in the configured workspace, outside this project's managed targets, containing `Files/parcel-status`. Verify the source exists and is readable before Build. The incremental task has already created `Lakehouse/Landing/shortcuts.py`; otherwise, create it now:
 
 ```python
 from weaver import Shortcut
@@ -53,12 +53,15 @@ source_root = Parcel__StatusSource(self).path()
 
 ## Keep a managed source's logical identity
 
-When another Weaver item owns the data, retain its project identity instead of an external physical address. For example, an existing `Warehouse/Dispatch` in this project can present Landing's Python Event as a View with `Warehouse/Dispatch/shortcuts.yml`:
+When another Weaver item owns the data, retain its project identity instead of an external physical address. After you [add Operations to this project](../estate/connected-items.md), its generated `Warehouse/Operations/shortcuts.yml` presents Landing's Python Event under a separate View name. Inspect the existing declaration; do not replace the Warehouse's seeded StatusEvent Table:
+
+<!-- initialise:Warehouse/Operations/shortcuts.yml -->
 
 ```yaml
 logical:
-  "Warehouse/Dispatch/Parcel.Event": "Lakehouse/Landing/Tables/Parcel.Event"
+  Warehouse/Operations/Parcel.LakehouseEvent: Lakehouse/Landing/Tables/Parcel.Event
 ```
+<!-- /initialise -->
 
 This declaration maps destination to source. It reuses the Event already loaded in Landing, not another seed. The configured physical bindings may change between environments while the logical target stays the same. Unlike a physical Shortcut, it carries a managed cross-item dependency and records the relationship in the catalogue. Warehouse Shortcuts are Views and do not have their own Load step.
 

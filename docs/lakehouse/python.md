@@ -9,20 +9,21 @@ Turn a carrier CSV export into a Delta Table using ordinary Python. Weaver manag
 ```bash
 weaver initialise \
   --workspace "Parcel Development" \
-  --project-folder ./parcel-lakehouse-python \
+  --project-folder ./parcel \
   --catalogue Catalogue \
   --environment Weaver \
   --lakehouse Landing \
-  --no-example
-cd parcel-lakehouse-python
+  --example Parcel
+cd parcel
 ```
 
-Initialise writes the configuration, a Landing directory and an Environment definition. Add the two files below, or download the [checkpoint files](../assets/examples/parcel-lakehouse.zip). For the download route, extract the ZIP outside this project and copy only `Files/Parcel__Events.py` and `Tables/Parcel__Event.py` from its `examples/parcel-lakehouse/Lakehouse/Landing/` into this project’s `Lakehouse/Landing/`. Keep the generated configuration and Environment definition. Add SQL and Tests here on the following pages.
+Initialise writes the configuration, Environment definition, carrier Folder, Python Event Table, Spark SQL CurrentStatus Table and validations. Inspect the generated files below; you do not need to copy them into the project.
 
-## Stage the carrier export
+## Inspect the carrier export {#stage-the-carrier-export}
 
-Create `Lakehouse/Landing/Files/Parcel__Events.py`:
+Open `Lakehouse/Landing/Files/Parcel__Events.py`:
 
+<!-- initialise:Lakehouse/Landing/Files/Parcel__Events.py -->
 ```python
 """
 Folder ID: Parcel.Events
@@ -52,13 +53,15 @@ class Parcel__Events(Folder):
             (staging.path / "events.csv").write_text(EVENTS, encoding="utf-8")
         return staging
 ```
+<!-- /initialise -->
 
 The small CSV gives this first run three known events without an external carrier connection. The Folder stages those bytes; `Incremental: false` declares the complete set of files.
 
-## Read it into a Table
+## Inspect the Python Table {#read-it-into-a-table}
 
-Create `Lakehouse/Landing/Tables/Parcel__Event.py`:
+Open `Lakehouse/Landing/Tables/Parcel__Event.py`:
 
+<!-- initialise:Lakehouse/Landing/Tables/Parcel__Event.py -->
 ```python
 """
 Table ID: Parcel.Event
@@ -94,6 +97,7 @@ class Parcel__Event(Table):
             )
         )
 ```
+<!-- /initialise -->
 
 The Table reads the upstream Folder and casts Event sequence to the declared integer type.
 
@@ -121,7 +125,7 @@ weaver load Lakehouse/Landing
 weaver health --item Lakehouse/Landing
 ```
 
-Build should install both definitions without failed actions. Item-wide Load should run `Files/Parcel.Events` before `Tables/Parcel.Event`: one CSV file, then three rows. Health should show Green Build and Load sections.
+Build should install the pipeline definitions without failed actions. Item-wide Load should run `Files/Parcel.Events` before `Tables/Parcel.Event`: one CSV file, then three event rows and two current-status rows. Health should show Green Build and Load sections.
 
 ## Inspect the Table
 
@@ -139,6 +143,6 @@ The result should contain the three rows in `EVENTS`. The managed file is `Files
 
 The Folder staged the file, and Weaver published it under `Files/Parcel/Events`. The Python import supplied the Folder → Table dependency, so Load ran the file work first. Build installed the Table and its code; Load applied the three rows and recorded the result. `Lineage` remains a description, not another dependency declaration.
 
-You now have the event history in a Table. [Add a Spark SQL CurrentStatus Table](spark-sql.md) to answer the next question: where is each parcel now? Keep the Python Event and its Folder; the next page adds one transformation to this project.
+You now have the event history in a Table. [Inspect the Spark SQL CurrentStatus Table](spark-sql.md) to answer the next question: where is each parcel now? Keep the Python Event and its Folder; the next page explains the generated transformation in this same project.
 
 For edits to either declaration, Check and Build again, then use `weaver load Lakehouse/Landing --stale` for post-Build catch-up. Changing the `EVENTS` constant is a code change, not an external data-only incremental run. [Loading changes](incremental.md) supplies that later variation. Exact authored forms are in [Folder](../reference/weaver-documents/folder.md) and [Table](../reference/weaver-documents/table.md).

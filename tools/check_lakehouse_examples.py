@@ -8,7 +8,6 @@ import io
 import json
 import re
 import shlex
-import shutil
 import socket
 import sys
 import tempfile
@@ -26,6 +25,7 @@ import weaver
 assert Path(weaver.__file__).resolve().is_relative_to(a.product / "src")
 print("weaver.__file__:", weaver.__file__)
 import yaml
+from named_journey_support import OfflineInitialiser, sources
 from weaver.config import parse_workspace
 from weaver.declaration import parse_item_repository
 from weaver.declaration.load import generate_load
@@ -112,23 +112,8 @@ sync = [
         "parcel-lakehouse",
         "Lakehouse/Landing/assumptions/Parcel.EventStatusIsKnown.sql",
     ),
-    ("incremental", "yaml", "parcel-incremental", "workspace-config.yml"),
-    ("incremental", "python", "parcel-incremental", "Lakehouse/Tracking/shortcuts.py"),
-    (
-        "incremental",
-        "python",
-        "parcel-incremental",
-        "Lakehouse/Tracking/Files/Parcel__StatusFiles.py",
-    ),
-    (
-        "incremental",
-        "python",
-        "parcel-incremental",
-        "Lakehouse/Tracking/Tables/Parcel__CurrentStatus.py",
-    ),
     ("incremental", "csv", "parcel-incremental", "source/parcel-status/P-1001.csv"),
     ("incremental", "csv", "parcel-incremental", "source/parcel-status/P-1002.csv"),
-    ("shortcuts", "python", "parcel-incremental", "Lakehouse/Tracking/shortcuts.py"),
 ]
 for page, language, fixture, relative in sync:
     content = (a.docs / "examples" / fixture / relative).read_text().rstrip() + "\n"
@@ -152,14 +137,16 @@ original = {
     for path in (a.docs / "examples" / name).rglob("*")
     if path.is_file()
 }
-with tempfile.TemporaryDirectory(prefix="lakehouse-checkpoints-") as temporary:
+with (
+    tempfile.TemporaryDirectory(prefix="lakehouse-checkpoints-") as temporary,
+    OfflineInitialiser() as initialise,
+):
     temp = Path(temporary)
-    for name, n in [("python", 2), ("spark-sql", 3), ("validation", 5)]:
-        checkpoint = temp / name
-        for relative in files[:n]:
-            destination = checkpoint / "Lakehouse/Landing" / relative
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(fixture / "Lakehouse/Landing" / relative, destination)
+    checkpoint = temp / "parcel"
+    initialise(checkpoint, lakehouse="Landing")
+    initial_sources = sources(checkpoint)
+    for name in ("python", "spark-sql", "validation"):
+        n = len(files)
         capture = io.StringIO()
         with contextlib.redirect_stdout(capture):
             result = cli_main(["check", str(checkpoint), "--json", "--non-interactive"])
@@ -215,22 +202,37 @@ with tempfile.TemporaryDirectory(prefix="lakehouse-checkpoints-") as temporary:
             assert expected_edges <= edges, edges
             print("authored dependency edges:", sorted(expected_edges))
         counts["checkpoints"] += 1
-    # The optional physical Shortcut is an addition to Landing, not a new seed.
-    shortcut = temp / "validation" / "Lakehouse/Landing/shortcuts.py"
-    shortcut.write_text(blocks(a.docs / "docs/lakehouse/shortcuts.md", "python")[0])
+    # Add the complete changing-source task alongside the generated pipeline.
+    snippets = blocks(a.docs / "docs/lakehouse/incremental.md", "python")
+    for filename, needle in (
+        ("shortcuts.py", "from weaver import Shortcut"),
+        ("Files/Parcel__StatusFiles.py", "class Parcel__StatusFiles"),
+        ("Tables/Parcel__LiveStatus.py", "class Parcel__LiveStatus"),
+    ):
+        target = checkpoint / "Lakehouse/Landing" / filename
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(next(block for block in snippets if needle in block))
+    assert cli_main(["check", str(checkpoint), "--json", "--non-interactive"]) == 0
+    repository = parse_item_repository(Location(str(checkpoint)))
     assert (
-        cli_main(["check", str(temp / "validation"), "--json", "--non-interactive"])
-        == 0
+        "Lakehouse/Landing/Files/Parcel.StatusFiles",
+        "Lakehouse/Landing/Tables/Parcel.LiveStatus",
+    ) in {(e.upstream, e.downstream) for e in repository.dependency_graph.edges}
+    assert all(
+        sources(checkpoint).get(path) == content
+        for path, content in initial_sources.items()
     )
     counts["checkpoints"] += 1
-    # The logical example resolves the very same Landing Python Table.
-    dispatch = temp / "validation" / "Warehouse/Dispatch/shortcuts.yml"
-    dispatch.parent.mkdir(parents=True)
-    dispatch.write_text(blocks(a.docs / "docs/lakehouse/shortcuts.md", "yaml")[0])
-    assert (
-        cli_main(["check", str(temp / "validation"), "--json", "--non-interactive"])
-        == 0
+    before_extension = sources(checkpoint)
+    initialise(checkpoint, warehouse="Operations")
+    assert all(
+        sources(checkpoint).get(path) == content
+        for path, content in before_extension.items()
     )
+    assert (checkpoint / "Warehouse/Operations/shortcuts.yml").read_text() in blocks(
+        a.docs / "docs/lakehouse/shortcuts.md", "yaml"
+    )
+    assert cli_main(["check", str(checkpoint), "--json", "--non-interactive"]) == 0
     counts["checkpoints"] += 1
 for name in ("parcel-lakehouse", "parcel-incremental"):
     assert (

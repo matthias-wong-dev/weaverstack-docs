@@ -2,7 +2,21 @@
 
 This maintainer-only ledger records the item-first revision and earlier delivery evidence. It is not rendered.
 
-## Active item-first revision
+## Active named/additive correction
+
+The named examples and continuous-project correction supersede the earlier snapshot-based preparation. Runtime evidence: `89e93c78f8497454b4544e7919567cc078dbad11`. Navigation, page order, URLs, sidebar, reference ownership and approved product positioning remain unchanged.
+
+- Parcel and Sales are installed named examples; all seven item combinations and no-example selection are covered. Native-only defaults do not provision Fabric data support. Data extension adds missing support without retargeting existing bindings.
+- Final runtime fast suite: 7,780 passed / 325 deselected, including 63 named-example regressions. Focused suites overlap and are not added to that total.
+- Built-wheel isolation: 21 generated projects, 24 proper subset comparisons, ten extension orders and idempotent reruns, with network access refused and explicit offline inventory boundaries.
+- Sixteen displayed generated-file blocks match the generator. The continuing Lakehouse, Warehouse, native/managed-model, Report and estate checks exercise the actual public Initialise API and production parser/compiler/planner.
+- All 18 example ZIPs, their packaging tool and the beginner hash/API inspection workflow are removed. Existing source fixtures remain for testing. Technical preservation checks remain automated, not reader-facing.
+- Strict build, all four reference generators, 22 documentation tests, route/anchor retention and paired-site crawl pass. The rendered gate retains 114 original routes and 872 original fragments; the paired crawl reports no broken links/anchors.
+- Browser checks cover 50 documentation states, four product Sales disclosure states, actual mobile JavaScript drawer/search navigation and no-JavaScript navigation through the section overview. Human page-by-page review and later real captures remain pending.
+
+See [local verification and limits](acceptance/named-additive-examples/verification.md), the [exact generated-file matrix](acceptance/named-additive-examples/generated-file-matrix.md) and [capture inventory](CAPTURE-INVENTORY.md). Earlier independent reviews below do not certify this corrected head. Live Fabric/Power BI and matching released-PyPI acceptance remain unclaimed; no merge, release or public publication is authorised.
+
+## Earlier item-first revision
 
 Approved plan: `weaver-docs-item-first-reorganisation-agent-plan.md` supplied by Matthias. New navigation: Getting started / Lakehouse / Warehouse / Semantic models / Reports / Coordinate your estate / Reference. This supersedes the previous taxonomy, not its technical evidence.
 

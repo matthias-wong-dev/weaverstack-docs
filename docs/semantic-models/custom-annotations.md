@@ -4,13 +4,13 @@ Set a native measure's display folder with one small Python handler. Use a custo
 
 ## Before you start
 
-Continue [shared modelling standards](shared-policy.md) with the same Parcel model, policy and local format override. Add the handler and annotation below; keep Delivery, Depot, their partitions and your workspace configuration. For direct entry, the complete [standards snapshot](../assets/examples/parcel-powerbi-standards.zip) includes this finished checkpoint; use the [ordinary deployment prerequisites](native-tmdl.md#before-you-start).
+Continue [shared modelling standards](shared-policy.md) with the same Parcel model, policy and local format override. Add the handler and annotation below; keep Delivery, Depot, their partitions and your workspace configuration. For direct entry, complete that task first.
 
 **Annotation files are trusted executable Python.** Weaver loads them while parsing a project, including Check. Do not Check or Build an untrusted project. They are not sandboxed metadata, and Power BI Desktop does not execute them.
 
 ## 1. Define the handler
 
-The fixture's `PowerBI/annotations/Parcel__DisplayFolder.py` is complete:
+Create `PowerBI/annotations/Parcel__DisplayFolder.py`:
 
 ```python
 """Place an annotated measure in a native display folder."""
@@ -49,15 +49,15 @@ The handler's `value` reads `Parcel metrics`; assignment writes the measure's na
 
 ```bash
 weaver check .
-weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel
+weaver load SemanticModel/Parcel
 ```
 
 Inspect the deployed Delivery Count measure: its display folder is `Parcel metrics`, its format is `0 "deliveries"`, and the original partition remains. If you also deployed its Report, the card should show `2 deliveries`. Compilation does not rewrite authored native files.
 
 ## 4. Read a located diagnostic
 
-The standards snapshot supplies `failure/Parcel.tmdl`. If you continued from the native project, create that file with this exact declaration first:
+Create `failure/Parcel.tmdl` with this complete declaration for the optional failure exercise:
 
 ```tmdl
 model Model
@@ -73,7 +73,7 @@ Back up the normal overlay to an unused filename and restore it even if Build re
 ```bash
 cp PowerBI/Parcel/Parcel.tmdl Parcel.tmdl.saved
 cp failure/Parcel.tmdl PowerBI/Parcel/Parcel.tmdl
-weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel
 mv Parcel.tmdl.saved PowerBI/Parcel/Parcel.tmdl
 ```
 
@@ -85,7 +85,7 @@ The supported handler base and native objects come from `weaver.semantic_models`
 
 The default `post_schema` phase sees columns after managed-source completion. This folder handler uses that default. Use `phase = "schema"` only when a handler introduces structure or a managed-source declaration needed for generation. Adding a new managed source during `post_schema` is refused. Composition merges raw bases before handlers run once on the final model.
 
-Cleanup is limited to this fixture's newly created Report/model, Reports first.
+Cleanup is limited to this example’s newly created Report/model, Reports first.
 
 If the next question is where Delivery comes from, [connect a managed Fabric source](managed-sources.md); if it is whether the measure is right, [validate the model](validation.md). Both keep the modelling conventions you have added.
 

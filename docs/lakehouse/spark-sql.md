@@ -1,13 +1,14 @@
 # Working with Spark SQL
 
-Keep the Python event pipeline and add one SQL transformation: the latest status for each parcel. Weaver installs it as another Delta Table and orders its Load after the event Table.
+Keep the Python event pipeline and inspect its generated SQL transformation: the latest status for each parcel. Weaver installs it as another Delta Table and orders its Load after the event Table.
 
-Use the [Python project](python.md) in `parcel-lakehouse-python`, with `Files/Parcel__Events.py` and `Tables/Parcel__Event.py` already working. Add the SQL file below to that same Landing item.
+Use the [Python project](python.md) in `parcel`, with `Files/Parcel__Events.py` and `Tables/Parcel__Event.py` already working. Initialise has already written the SQL file below in that same Landing item.
 
-## Add the current-status query
+## Inspect the current-status query {#add-the-current-status-query}
 
-Create `Lakehouse/Landing/Tables/Parcel.CurrentStatus.sql`:
+Open `Lakehouse/Landing/Tables/Parcel.CurrentStatus.sql`:
 
+<!-- initialise:Lakehouse/Landing/Tables/Parcel.CurrentStatus.sql -->
 ```sql
 /*
 Table ID: Parcel.CurrentStatus
@@ -40,10 +41,11 @@ select `Parcel ID`, `Status`, `Depot`
 from ranked
 where `Event rank` = 1;
 ```
+<!-- /initialise -->
 
 The window selects the last event by sequence. Spark SQL Tables require explicit `Dependencies`, even when the query names the managed source. Here `Parcel.Event` is the Python Table from the previous page. A Spark SQL Table without managed inputs would use `Dependencies: []`; `Lineage` remains descriptive.
 
-## Install the addition and run it
+## Run the transformation {#install-the-addition-and-run-it}
 
 Use the same workspace configuration and already published matching Environment:
 
@@ -54,7 +56,7 @@ weaver load Lakehouse/Landing
 weaver health --item Lakehouse/Landing
 ```
 
-Check should print `Project valid.` It validates the declaration and SQL program shape, not Spark's execution of the query. Build should install CurrentStatus without failed actions. Item-wide Load should run the existing Folder, Event and then CurrentStatus. CurrentStatus should read two rows; Health should show Green Build and Load sections. Adding this project SQL does not itself require republishing the Environment.
+Check should print `Project valid.` It validates the declaration and SQL program shape, not Spark's execution of the query. Build should install CurrentStatus without failed actions. Item-wide Load should run the existing Folder, Event and then CurrentStatus. CurrentStatus should read two rows; Health should show Green Build and Load sections. Editing this project SQL does not itself require republishing the Environment.
 
 ## Read the current statuses
 
