@@ -2,6 +2,10 @@
 
 A successful refresh says the model ran, not that its measure is right. Add an Assumption to the working Parcel model, then reconcile the additional source-backed model with independent Warehouse SQL.
 
+In [Power BI-only mode, without a Catalogue](index.md#two-ways-to-use-weaver-with-power-bi), DAX validations run directly against the selected model using source/file mode. Results return to the caller; Weaver records no installed Test history.
+
+With a Catalogue, Build can install authored validations. Installed Test runs record results in the Catalogue, and Health assesses them alongside other managed work. Source/file mode remains a deliberate option in Catalogue-backed projects too; the commands below distinguish the two.
+
 <span id="choose-your-working-checkpoint"></span>
 
 ## Choose the model you are checking

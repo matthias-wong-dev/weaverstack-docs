@@ -1,10 +1,10 @@
 # Connect a managed Fabric source
 
-Keep Parcel’s inline Delivery/Depot model and add a model over the working Warehouse. The original Delivery Count still works without a source connection; the new model demonstrates source-to-model coordination.
+Extend the existing Parcel project from [Power BI-only operation into a Catalogue-managed Fabric estate](index.md#two-ways-to-use-weaver-with-power-bi). Keep its inline Delivery/Depot model and linked Report, then add a Warehouse and a separate model over its data. The original Delivery Count still works without a source connection.
 
 ## Before you start
 
-Continue the [native Parcel project](native-tmdl.md). Use its same workspace, catalogue, configuration and overlays. You need Warehouse create/alter/load and SELECT rights, catalogue access, and model deployment, refresh and query permissions. Source-backed Import refresh also needs an existing supported service connection with SQL access. Weaver can bind a matching connection; it does not create credentials or administer gateways.
+Continue the [native Parcel project](native-tmdl.md) in the same workspace, retaining its configuration and overlays. That starting path has no Catalogue; adding the Warehouse below introduces one. The workspace now needs Fabric capacity that supports Warehouse work, Warehouse create/alter/load and SELECT rights, Catalogue access, and model deployment, refresh and query permissions. Source-backed Import refresh also needs an existing supported service connection with SQL access. Weaver can bind a matching connection; adding a Catalogue does not create credentials or administer gateways.
 
 ## 1. Configure destination and source separately
 
@@ -21,7 +21,7 @@ cd parcel
 
 If your shell is already in the project, use `--project-folder .` and stay there. Omitted existing items are retained. If Operations is already present, this is an idempotent rerun, not a request to replace it.
 
-Initialise adds the independent [Warehouse Table and View](../warehouse/first-project.md), their validations, and a **separate** `ParcelWarehouse` model. It retains `Parcel.SemanticModel`, the Report and any same-name Parcel overlay. It also adds the new target bindings to `workspace-config.yml` without changing existing physical names.
+Initialise adds the Operations Warehouse with its independent [Table and View](../warehouse/first-project.md), their validations, and a **separate** `ParcelWarehouse` model. It introduces the required Catalogue and Environment support for the data project. It retains `Parcel.SemanticModel`, the Report and previously authored files, including any same-name Parcel overlay. New target bindings are added to `workspace-config.yml` without changing existing physical bindings. This extends the same installation; it does not replace the inline Delivery partition or change the original model’s meaning.
 
 Open `PowerBI/Parcel/ParcelWarehouse.tmdl`:
 

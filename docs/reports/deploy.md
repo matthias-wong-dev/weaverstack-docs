@@ -33,7 +33,7 @@ Open `PowerBI/Parcel/Parcel.pbip` in Desktop to inspect the Report. Its associat
 
 The path is relative to the `.Report` directory. Keep the complete native Report payload as well as this file; the example includes its page and card definitions. [Native project layout](../reference/power-bi/project-layout.md#report-discovery-and-association) describes discovery for your own project.
 
-The inline model needs no source Lakehouse or Warehouse workload. Initialise sets up the project catalogue and Environment; this Report/model Build does not need Spark. The [standalone Power BI setup](../reference/power-bi/requirements-and-compatibility.md) also supports an existing workspace without a catalogue.
+This starts in [Power BI-only mode, without a Catalogue](../semantic-models/index.md#power-bi-only-without-a-catalogue). Native-only Initialise writes the linked pair, workspace configuration and supporting local project files; it creates no Catalogue Warehouse or Fabric Environment by default. This inline model and Report need no Lakehouse, Warehouse workload or Spark runtime. Use an existing, suitably licensed Power BI service workspace with the permissions described below.
 
 ## Choose the destination and Build
 

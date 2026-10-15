@@ -26,7 +26,7 @@ Each task gives its workspace rights, capacity and setup requirements where you 
 
 ## Model and Report access
 
-An existing standalone Power BI service workspace is enough for the inline Import example. You do not need to set up a Warehouse first. [Model and Report requirements](../reference/power-bi/requirements-and-compatibility.md) covers licences, supported modes and service permissions.
+Start with Semantic Models and Reports in an existing, suitably licensed Power BI service workspace without setting up a Fabric Warehouse, Lakehouse or Catalogue. This is distinct from the capacity needed for Fabric data workloads. See the [two operating modes](../semantic-models/index.md#two-ways-to-use-weaver-with-power-bi) and [model and Report requirements](../reference/power-bi/requirements-and-compatibility.md).
 
 <span id="when-the-preview-needs-a-hosted-runtime"></span>
 

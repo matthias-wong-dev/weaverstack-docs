@@ -9,11 +9,13 @@ Models use Fabric native-definition APIs for deployment and readback, and Power 
 
 [Microsoft's semantic-model creation API](https://learn.microsoft.com/en-us/rest/api/fabric/semanticmodel/items/create-semantic-model) and [licensing reference](https://learn.microsoft.com/en-us/fabric/enterprise/licenses) describe platform requirements. Weaver's supported credential chain and notebook identity discovery are separate from licensing; do not enable tenant settings or create credentials merely to make a check pass.
 
-`weaver initialise` provisions a catalogue Warehouse and Fabric Environment even for its Power BI scaffold. It is not the catalogue-free setup route. Use a minimal manual workspace configuration for that route.
+Native-only `weaver initialise --semantic-model Parcel --example Parcel` supports Catalogue-free Power BI deployment: it generates the native model, linked Report and local configuration without provisioning a Catalogue Warehouse or Fabric Environment by default. Explicit support-item requests remain available. Adding Lakehouse or Warehouse items to the same project introduces the necessary Fabric data-project support while preserving existing authored native model and Report sources. See the [two operating modes](../../semantic-models/index.md#two-ways-to-use-weaver-with-power-bi).
+
+The mode boundary is whether a Weaver Catalogue is configured, not whether the user holds a Fabric licence. Dedicated Fabric data-workload capacity is not a blanket requirement for native Power BI operation; the chosen model mode must still have suitable service licensing, permissions and capacity/API support.
 
 ## Mode matrix
 
-| Capability | Without a catalogue | With catalogue/Fabric integration |
+| Capability | Without a Catalogue | With a Catalogue |
 | --- | --- | --- |
 | Deploy native model and Report | Supported; configured targets or explicit bindings | Supported; also publishes installation/certification records |
 | Environment-specific names | Workspace configuration controls physical names | Configured Build destinations become recorded installed bindings |

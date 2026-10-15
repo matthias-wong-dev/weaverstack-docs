@@ -2,6 +2,12 @@
 
 This maintainer-only ledger records the item-first revision and earlier delivery evidence. It is not rendered.
 
+## Power BI operating modes consistency
+
+The canonical two-mode introduction is `docs/semantic-models/index.md`: Power BI only without a Catalogue, or a Fabric estate with a Catalogue, using the same package and native project files. The switch is Catalogue configuration, not licence ownership. The nine assigned overview, setup, tutorial and requirements pages are reconciled; the native annotation exercise reuses the generated linked Report, and managed-source setup introduces Catalogue/Environment support without replacing native sources.
+
+Checks against unchanged runtime `bf908f4754eca4d10a56afd218e9e18d423636d7`: 111 focused source tests; 22 documentation tests (plus three subtests); all four reference generators; 16 Initialise excerpts; model/Report/journey/reference example gates; strict MkDocs; retained routes/fragments; 23,298 local link/asset checks with no broken links/fragments; 45 responsive/theme/JavaScript states across all nine pages. Existing commands and source excerpts are unchanged except selecting the already-generated Report alongside its model for the field-list check. No live service validation, runtime change, new page, navigation change, merge or publication.
+
 ## Active named/additive correction
 
 The named examples and continuous-project correction supersede the earlier snapshot-based preparation. Runtime evidence: `bf908f4754eca4d10a56afd218e9e18d423636d7`. Navigation, page order, URLs, sidebar, reference ownership and approved product positioning remain unchanged.
