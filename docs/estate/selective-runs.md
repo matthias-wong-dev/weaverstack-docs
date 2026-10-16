@@ -10,16 +10,32 @@ Keep the [Landing → Operations project](connected-items.md) and its `workspace
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --dry-run --workspace-config workspace-development.yml
 ```
 
-<!-- cli-capture: {"id": "60-named-load-preview", "title": "Preview \u00b7 one installed Table", "start": "    validated"} -->
+<!-- cli-capture: {"id": "60-named-load-preview", "title": "Preview · one installed Table"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Preview · one installed Table">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>    validated                load:Lakehouse/Landing/Tables/Parcel.Event
+<pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
+
+  Read catalogue                                                                                           2.8s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Execute                                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.8s</span>
+
+<span class="terminal-status-green">plan succeeded: Lakehouse/Landing</span>
+
+    validated                load:Lakehouse/Landing/Tables/Parcel.Event
 
 Plan
     1 selected
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/60-named-load-preview.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -31,18 +47,34 @@ The plan selects only `Tables/Parcel.Event`. No data is loaded by `--dry-run`. R
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --ancestors --dry-run --workspace-config workspace-development.yml
 ```
 
-<!-- cli-capture: {"id": "61-ancestor-load-preview", "title": "Preview \u00b7 include the producer", "start": "    validated"} -->
+<!-- cli-capture: {"id": "61-ancestor-load-preview", "title": "Preview · include the producer"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Preview · include the producer">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>    validated                load:Lakehouse/Landing/Files/Parcel.Events
+<pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
+
+  Read catalogue                                                                                           2.0s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Execute                                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.0s</span>
+
+<span class="terminal-status-green">plan succeeded: Lakehouse/Landing</span>
+
+    validated                load:Lakehouse/Landing/Files/Parcel.Events
     validated                load:Lakehouse/Landing/Tables/Parcel.Event
                              after load:Lakehouse/Landing/Files/Parcel.Events
 
 Plan
     2 selected
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/61-ancestor-load-preview.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -50,18 +82,34 @@ Plan
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry-run --workspace-config workspace-development.yml
 ```
 
-<!-- cli-capture: {"id": "62-descendant-load-preview", "title": "Preview \u00b7 include the consumer", "start": "    validated"} -->
+<!-- cli-capture: {"id": "62-descendant-load-preview", "title": "Preview · include the consumer"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Preview · include the consumer">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>    validated                load:Lakehouse/Landing/Tables/Parcel.Event
+<pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
+
+  Read catalogue                                                                                           2.1s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Execute                                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.1s</span>
+
+<span class="terminal-status-green">plan succeeded: Lakehouse/Landing</span>
+
+    validated                load:Lakehouse/Landing/Tables/Parcel.Event
     validated                load:Lakehouse/Landing/Tables/Parcel.CurrentStatus
                              after load:Lakehouse/Landing/Tables/Parcel.Event
 
 Plan
     2 selected
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/62-descendant-load-preview.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -81,20 +129,11 @@ Remove only the preview flag when the plan is correct:
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --workspace-config workspace-development.yml
 ```
 
-<!-- cli-capture: {"id": "63-descendant-load", "title": "Load \u00b7 the inspected downstream selection", "start": "\u2192   Load", "end": "  Execute", "full": true} -->
+<!-- cli-capture: {"id": "63-descendant-load", "title": "Load · the inspected downstream selection"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · the inspected downstream selection">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>→   Load Lakehouse/Landing/Tables/Parcel.Event
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     16.0s</span>
-
-→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.9s</span>
-
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+<pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.0s
 
@@ -135,7 +174,7 @@ Load summary
     rejected               0
 
   Workflow: [run-id]
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/63-descendant-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -149,13 +188,27 @@ A misspelt selection is an error, not an empty successful run. For example, in u
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]DoesNotExist' --dry-run --workspace-config workspace-development.yml --non-interactive
 ```
 
-<!-- cli-capture: {"id": "68-no-match-unattended-preview", "title": "Preview \u00b7 no installed name matches", "start": "error:"} -->
+<!-- cli-capture: {"id": "68-no-match-unattended-preview", "title": "Preview · no installed name matches"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Preview · no installed name matches">
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">error: no installed loadable object in the requested items matches &#x27;Tables/Parcel[.]DoesNotExist&#x27;. Installed: Files/Parcel.Events, Tables/Parcel.CurrentStatus, Tables/Parcel.Event</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
+
+  Read catalogue                                                                                           2.2s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+<span class="terminal-status-red">✗ Execute                                                                                                  0.0s</span>
+
+<span class="terminal-status-red">✗ Load (dry run)                                                                                           2.2s</span>
+
+<span class="terminal-status-red">error: no installed loadable object in the requested items matches &#x27;Tables/Parcel[.]DoesNotExist&#x27;. Installed: Files/Parcel.Events, Tables/Parcel.CurrentStatus, Tables/Parcel.Event</span>
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/68-no-match-unattended-preview.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

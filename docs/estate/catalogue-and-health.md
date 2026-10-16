@@ -18,11 +18,21 @@ If this Catalogue already contains other projects, their findings are included t
 weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
 ```
 
-<!-- cli-capture: {"id": "56-scoped-estate-health", "title": "Health \u00b7 the two Parcel items after Test", "start": "Weaver Health", "end": "Slowest loads"} -->
+<!-- cli-capture: {"id": "56-scoped-estate-health", "title": "Health · the two Parcel items after Test"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Health · the two Parcel items after Test">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Health
+
+  Read catalogue                                                                                           2.5s
+
+  Check installed items                                                                                    0.2s
+
+  Read installed objects                                                                                   2.5s
+
+<span class="terminal-status-green">✓ Health                                                                                                   5.1s</span>
+
+<span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 3m ago
@@ -34,8 +44,16 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-c
 <span class="terminal-status-green">Build   Green</span>
   Installed estate consistent (26 objects)
 
+Slowest loads
+  Lakehouse/Landing/Tables/Parcel.Event          14.5s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
+  Warehouse/Operations/Parcel.StatusEvent        5.5s
+  Warehouse/Operations/Parcel.LiveStatus         3.1s
+  Lakehouse/Landing/Files/Parcel.Events          3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/56-scoped-estate-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -56,11 +74,27 @@ Green means the assessed subjects have no current finding. Amber identifies work
 
 For example, after loading the connected Parcel items but before rerunning Test, the report retained four successful historical validations and marked them stale:
 
-<!-- cli-capture: {"id": "53-cross-item-health", "title": "Health \u00b7 successful validations with newer inputs", "start": "Tests   Amber", "end": "Build   Green"} -->
+<!-- cli-capture: {"id": "53-cross-item-health", "title": "Health · successful validations with newer inputs"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Health · successful validations with newer inputs">
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-amber">Tests   Amber</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Health
+
+  Read catalogue                                                                                           2.3s
+
+  Check installed items                                                                                    0.2s
+
+  Read installed objects                                                                                   3.0s
+
+<span class="terminal-status-green">✓ Health                                                                                                   5.5s</span>
+
+<span class="terminal-status-amber">Weaver Health  Amber</span>
+
+<span class="terminal-status-green">Load    Green</span>
+  Last load activity   0h 0m ago
+<span class="terminal-status-green">  6 succeeded</span>
+
+<span class="terminal-status-amber">Tests   Amber</span>
 <span class="terminal-status-green">  4 succeeded</span>
 <span class="terminal-status-amber">  Amber  Lakehouse/Landing/Parcel.CurrentStatusMatches</span>
 <span class="terminal-status-green">          Lakehouse/Landing/Files/Parcel.Events has been loaded since this validation passed</span>
@@ -71,8 +105,19 @@ For example, after loading the connected Parcel items but before rerunning Test,
 <span class="terminal-status-amber">  Amber  Warehouse/Operations/Parcel.StatusIsKnown</span>
 <span class="terminal-status-green">          Warehouse/Operations/Parcel.StatusEvent has been loaded since this validation passed</span>
 
+<span class="terminal-status-green">Build   Green</span>
+  Installed estate consistent (26 objects)
+
+Slowest loads
+  Lakehouse/Landing/Tables/Parcel.Event          14.5s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
+  Warehouse/Operations/Parcel.StatusEvent        5.5s
+  Warehouse/Operations/Parcel.LiveStatus         3.1s
+  Lakehouse/Landing/Files/Parcel.Events          3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/53-cross-item-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -81,17 +126,40 @@ For example, after loading the connected Parcel items but before rerunning Test,
 
 The [Warehouse failure exercise](../warehouse/tests.md#optional-make-one-discrepancy-visible) installs an intentionally wrong expected status, then runs Test. Its recorded finding is Red, not Amber:
 
-<!-- cli-capture: {"id": "20-health-failed-test", "title": "Health \u00b7 deliberate Warehouse finding", "start": "Tests   Red", "end": "Build   Green"} -->
+<!-- cli-capture: {"id": "20-health-failed-test", "title": "Health · deliberate Warehouse finding"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Health · deliberate Warehouse finding">
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">Tests   Red</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Health
+
+  Read catalogue                                                                                           2.2s
+
+  Check installed items                                                                                    0.2s
+
+  Read installed objects                                                                                   0.3s
+
+<span class="terminal-status-green">✓ Health                                                                                                   2.6s</span>
+
+<span class="terminal-status-red">Weaver Health  Red</span>
+
+<span class="terminal-status-green">Load    Green</span>
+  Last load activity   0h 3m ago
+<span class="terminal-status-green">  1 succeeded</span>
+
+<span class="terminal-status-red">Tests   Red</span>
 <span class="terminal-status-red">  1 failed · 1 succeeded</span>
 <span class="terminal-status-red">  Red    Warehouse/Operations/Parcel.CurrentStatusMatches</span>
 <span class="terminal-status-red">          the last run failed</span>
 
+<span class="terminal-status-green">Build   Green</span>
+  Installed estate consistent (10 objects)
+
+Slowest loads
+  Warehouse/Operations/Parcel.StatusEvent     3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/20-health-failed-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

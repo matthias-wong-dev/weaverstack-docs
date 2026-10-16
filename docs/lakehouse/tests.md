@@ -61,17 +61,44 @@ weaver load Lakehouse/Landing --stale
 weaver test Lakehouse/Landing
 ```
 
-<!-- cli-capture: {"id": "47-lakehouse-test", "title": "Test \u00b7 independent expected rows and known statuses", "start": "test passed", "end": "  Workflow:"} -->
+<!-- cli-capture: {"id": "47-lakehouse-test", "title": "Test · independent expected rows and known statuses"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Test · independent expected rows and known statuses">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
+
+  Read catalogue                                                                                           2.0s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  33.0s
+
+→   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
+
+→   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
+
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      13.2s</span>
+
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    15.1s</span>
+
+  Execute                                                                                                 13.0s
+
+  Record what the run did                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Test                                                                                                    59.1s</span>
+
+<span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    2 passed</span>
     0 failed
+  Workflow: [run-id]
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/47-lakehouse-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

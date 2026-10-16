@@ -65,18 +65,11 @@ Expect P-1001 / In transit / Central and P-1002 / Delivered / South. The Warehou
 weaver build --item SemanticModel/ParcelWarehouse --bind-data-sources
 ```
 
-<!-- cli-capture: {"id": "113-managed-model-bind-build", "title": "Build \u00b7 install and verify the managed model", "start": "Installation", "full": true} -->
+<!-- cli-capture: {"id": "113-managed-model-bind-build", "title": "Build · install and verify the managed model"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · install and verify the managed model">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
-<span class="terminal-status-green">    5 succeeded</span>
-    0 failed
-    0 skipped
-  Report  [local-path]
-  Bundle  f804e31e3ca885c39ee691d2a4f205f8992398b1d8ed70bf550c8f6a10e81385
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   SemanticModel/ParcelWarehouse
@@ -140,7 +133,7 @@ Installation
     0 skipped
   Report  [local-path]
   Bundle  f804e31e3ca885c39ee691d2a4f205f8992398b1d8ed70bf550c8f6a10e81385
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/113-managed-model-bind-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -148,16 +141,11 @@ Installation
 weaver load Warehouse/Operations SemanticModel/ParcelWarehouse
 ```
 
-<!-- cli-capture: {"id": "114-managed-source-and-model-load", "title": "Load \u00b7 source succeeded, model refresh failed", "start": "Load summary", "end": "  Rows", "full": true} -->
+<!-- cli-capture: {"id": "114-managed-source-and-model-load", "title": "Load · source succeeded, model refresh failed"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · source succeeded, model refresh failed">
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
-<span class="terminal-status-green">    3 succeeded</span>
-<span class="terminal-status-red">    1 failed</span>
-    0 blocked
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+<pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.4s
 
@@ -212,7 +200,7 @@ Load summary
   Workflow: [run-id]
 <span class="terminal-status-red">error: REST reported: Load failed for SemanticModel/ParcelWarehouse: load:SemanticModel/ParcelWarehouse failed: Semantic model refresh [item-id] ended with status &#x27;Failed&#x27;: We cannot refresh this semantic model because this semantic model uses a default data connection without explicit connection credentials. Please replace the default data connection in the semantic model settings with an explicit cloud or gateway data connection.; (Premium_ASWL_Error, ModelRefresh_ShortMessage_ProcessingError, ModelRefresh_DataSourceErrorLabel) No connection has the path [warehouse-endpoint];operations. Create a connection for it in Fabric, then load again.; Load summary: 3 succeeded, 1 failed</span>
   Workflow: [run-id]
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/114-managed-source-and-model-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 

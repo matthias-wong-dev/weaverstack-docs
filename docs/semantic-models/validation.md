@@ -42,17 +42,24 @@ weaver check .
 weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
 
-<!-- cli-capture: {"id": "84-native-source-dax-validation", "title": "Test \u00b7 source DAX against the deployed model", "start": "test passed"} -->
+<!-- cli-capture: {"id": "84-native-source-dax-validation", "title": "Test · source DAX against the deployed model"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Test · source DAX against the deployed model">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
+
+  Read validations                                                                                         0.5s
+
+  Execute                                                                                                  0.7s
+
+<span class="terminal-status-green">✓ Test                                                                                                     1.3s</span>
+
+<span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    1 passed</span>
     0 failed
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/84-native-source-dax-validation.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -94,11 +101,19 @@ weaver load SemanticModel/Parcel
 weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
 
-<!-- cli-capture: {"id": "91-native-failed-source-dax", "title": "Test \u00b7 deliberately wrong measure", "start": "test failed"} -->
+<!-- cli-capture: {"id": "91-native-failed-source-dax", "title": "Test · deliberately wrong measure"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Test · deliberately wrong measure">
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">test failed</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
+
+  Read validations                                                                                         0.6s
+
+  Execute                                                                                                  1.0s
+
+<span class="terminal-status-red">✗ Test                                                                                                     1.6s</span>
+
+<span class="terminal-status-red">test failed</span>
 
 <span class="terminal-status-red">  failed     Assumption  SemanticModel/Parcel/Parcel.PositiveDeliveryCount  (1 violation)</span>
 
@@ -109,7 +124,6 @@ Test summary
   SemanticModel/Parcel/Parcel.PositiveDeliveryCount:
     {&#x27;DeliveryCount&#x27;: -1}
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/91-native-failed-source-dax.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -131,17 +145,24 @@ weaver load SemanticModel/Parcel
 weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
 
-<!-- cli-capture: {"id": "94-native-restored-source-dax", "title": "Test \u00b7 restore the saved overlay", "start": "test passed"} -->
+<!-- cli-capture: {"id": "94-native-restored-source-dax", "title": "Test · restore the saved overlay"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Test · restore the saved overlay">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
+
+  Read validations                                                                                         0.6s
+
+  Execute                                                                                                  0.8s
+
+<span class="terminal-status-green">✓ Test                                                                                                     1.5s</span>
+
+<span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    1 passed</span>
     0 failed
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/94-native-restored-source-dax.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

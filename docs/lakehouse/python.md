@@ -107,13 +107,12 @@ The Table reads the upstream Folder and casts Event sequence to the declared int
 weaver check
 ```
 
-<!-- cli-capture: {"id": "43-lakehouse-check", "title": "Check \u00b7 continuing Parcel project"} -->
+<!-- cli-capture: {"id": "43-lakehouse-check", "title": "Check · continuing Parcel project"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Check · continuing Parcel project">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Project valid.
+<pre tabindex="0" aria-label="Terminal output"><code>Project valid.
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/43-lakehouse-check.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -133,18 +132,11 @@ Then, from this project directory:
 weaver build --item Lakehouse/Landing
 ```
 
-<!-- cli-capture: {"id": "45-lakehouse-build", "title": "Build \u00b7 Landing pipeline", "start": "Installation", "full": true} -->
+<!-- cli-capture: {"id": "45-lakehouse-build", "title": "Build · Landing pipeline"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · Landing pipeline">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
-<span class="terminal-status-green">   18 succeeded</span>
-    0 failed
-    0 skipped
-  Report  [local-path]
-  Bundle  aea0ca32e070c26bae008625e4564a7a2e7012b5fb759597dab0d2b1fa4efd66
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
@@ -222,7 +214,7 @@ Installation
     0 skipped
   Report  [local-path]
   Bundle  aea0ca32e070c26bae008625e4564a7a2e7012b5fb759597dab0d2b1fa4efd66
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/45-lakehouse-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -230,23 +222,11 @@ Installation
 weaver load Lakehouse/Landing
 ```
 
-<!-- cli-capture: {"id": "46-lakehouse-load", "title": "Load \u00b7 carrier file and Delta Tables", "start": "Load summary", "end": "  Workflow:", "full": true} -->
+<!-- cli-capture: {"id": "46-lakehouse-load", "title": "Load · carrier file and Delta Tables"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · carrier file and Delta Tables">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
-<span class="terminal-status-green">    3 succeeded</span>
-    0 failed
-    0 blocked
-  Rows
-    read                   6
-    inserted               6
-    updated                0
-    deleted                0
-    rejected               0
-
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+<pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.3s
 
@@ -291,7 +271,7 @@ Load summary
     rejected               0
 
   Workflow: [run-id]
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/46-lakehouse-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -303,17 +283,44 @@ Run the generated checks before reading Health:
 weaver test Lakehouse/Landing
 ```
 
-<!-- cli-capture: {"id": "47-lakehouse-test", "title": "Test \u00b7 generated Lakehouse validations", "start": "test passed", "end": "  Workflow:"} -->
+<!-- cli-capture: {"id": "47-lakehouse-test", "title": "Test · generated Lakehouse validations"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Test · generated Lakehouse validations">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
+
+  Read catalogue                                                                                           2.0s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  33.0s
+
+→   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
+
+→   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
+
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      13.2s</span>
+
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    15.1s</span>
+
+  Execute                                                                                                 13.0s
+
+  Record what the run did                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Test                                                                                                    59.1s</span>
+
+<span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    2 passed</span>
     0 failed
+  Workflow: [run-id]
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/47-lakehouse-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -321,11 +328,21 @@ Test summary
 weaver health --item Lakehouse/Landing
 ```
 
-<!-- cli-capture: {"id": "48-lakehouse-health", "title": "Health \u00b7 loaded and tested Landing", "start": "Weaver Health", "end": "Slowest loads"} -->
+<!-- cli-capture: {"id": "48-lakehouse-health", "title": "Health · loaded and tested Landing"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Health · loaded and tested Landing">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Health
+
+  Read catalogue                                                                                           2.2s
+
+  Check installed items                                                                                    0.1s
+
+  Read installed objects                                                                                   2.6s
+
+<span class="terminal-status-green">✓ Health                                                                                                   4.9s</span>
+
+<span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 1m ago
@@ -337,8 +354,16 @@ weaver health --item Lakehouse/Landing
 <span class="terminal-status-green">Build   Green</span>
   Installed estate consistent (12 objects)
 
+Slowest loads
+  Lakehouse/Landing/Tables/Parcel.Event          12.2s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  12.1s
+  Lakehouse/Landing/Files/Parcel.Events          3.6s
+
+Largest changes
+  Lakehouse/Landing/Tables/Parcel.Event          read 3  +3 ~0 -0 !0
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  read 2  +2 ~0 -0 !0
+  Lakehouse/Landing/Files/Parcel.Events          read 1  +1 ~0 -0 !0
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/48-lakehouse-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

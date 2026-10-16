@@ -78,18 +78,11 @@ weaver check
 weaver build --item Lakehouse/Landing --item Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "51-cross-item-build", "title": "Build \u00b7 connect the two managed items", "start": "Installation", "full": true} -->
+<!-- cli-capture: {"id": "51-cross-item-build", "title": "Build · connect the two managed items"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · connect the two managed items">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
-<span class="terminal-status-green">    7 succeeded</span>
-    0 failed
-    0 skipped
-  Report  [local-path]
-  Bundle  4336a4562544b0ef721d2a9af60b5449b30a87ac245ba979db01c626fb788312
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
@@ -155,7 +148,7 @@ Installation
     0 skipped
   Report  [local-path]
   Bundle  4336a4562544b0ef721d2a9af60b5449b30a87ac245ba979db01c626fb788312
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/51-cross-item-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -163,23 +156,11 @@ Installation
 weaver load Lakehouse/Landing Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "52-cross-item-load", "title": "Load \u00b7 Lakehouse producer and Warehouse consumer", "start": "Load summary", "end": "  Workflow:", "full": true} -->
+<!-- cli-capture: {"id": "52-cross-item-load", "title": "Load · Lakehouse producer and Warehouse consumer"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · Lakehouse producer and Warehouse consumer">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
-<span class="terminal-status-green">    6 succeeded</span>
-    0 failed
-    0 blocked
-  Rows
-    read                  11
-    inserted               2
-    updated                0
-    deleted                0
-    rejected               0
-
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+<pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.3s
 
@@ -241,7 +222,7 @@ Load summary
     rejected               0
 
   Workflow: [run-id]
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/52-cross-item-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -249,11 +230,21 @@ Load summary
 weaver health --item Lakehouse/Landing --item Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "53-cross-item-health", "title": "Health \u00b7 loaded data needs current validations", "start": "Weaver Health", "end": "Slowest loads"} -->
+<!-- cli-capture: {"id": "53-cross-item-health", "title": "Health · loaded data needs current validations"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Health · loaded data needs current validations">
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-amber">Weaver Health  Amber</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Health
+
+  Read catalogue                                                                                           2.3s
+
+  Check installed items                                                                                    0.2s
+
+  Read installed objects                                                                                   3.0s
+
+<span class="terminal-status-green">✓ Health                                                                                                   5.5s</span>
+
+<span class="terminal-status-amber">Weaver Health  Amber</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 0m ago
@@ -273,8 +264,16 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations
 <span class="terminal-status-green">Build   Green</span>
   Installed estate consistent (26 objects)
 
+Slowest loads
+  Lakehouse/Landing/Tables/Parcel.Event          14.5s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
+  Warehouse/Operations/Parcel.StatusEvent        5.5s
+  Warehouse/Operations/Parcel.LiveStatus         3.1s
+  Lakehouse/Landing/Files/Parcel.Events          3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/53-cross-item-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

@@ -194,32 +194,11 @@ weaver load Lakehouse/Landing --dry-run
 weaver load Lakehouse/Landing
 ```
 
-<!-- cli-capture: {"id": "73-lakehouse-incremental-first-load", "title": "Load \u00b7 first file snapshot", "start": "\u2192   Load", "end": "  Execute", "full": true} -->
+<!-- cli-capture: {"id": "73-lakehouse-incremental-first-load", "title": "Load · first file snapshot"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · first file snapshot">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>→   Load Lakehouse/Landing/Files/Parcel.Events
-
-→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.4s</span>
-
-→   Load Lakehouse/Landing/Tables/Parcel.Event
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 2, +2 ~0 -0 !0)                                 4.3s</span>
-
-→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                10.8s</span>
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     13.4s</span>
-
-→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.7s</span>
-
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+<pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.3s
 
@@ -272,7 +251,7 @@ Load summary
     rejected               0
 
   Workflow: [run-id]
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/73-lakehouse-incremental-first-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -322,32 +301,11 @@ weaver load Lakehouse/Landing --dry-run
 weaver load Lakehouse/Landing
 ```
 
-<!-- cli-capture: {"id": "75-lakehouse-changed-load", "title": "Load \u00b7 one changed file and one deletion", "start": "\u2192   Load", "end": "  Execute", "full": true} -->
+<!-- cli-capture: {"id": "75-lakehouse-changed-load", "title": "Load · one changed file and one deletion"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · one changed file and one deletion">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>→   Load Lakehouse/Landing/Files/Parcel.Events
-
-→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.3s</span>
-
-→   Load Lakehouse/Landing/Tables/Parcel.Event
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~1 -1 !0)                                 3.6s</span>
-
-→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     15.2s</span>
-
-→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                             12.9s</span>
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                32.4s</span>
-
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+<pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.1s
 
@@ -400,7 +358,7 @@ Load summary
     rejected               0
 
   Workflow: [run-id]
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/75-lakehouse-changed-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -420,20 +378,11 @@ Run Load once more without changing the source:
 weaver load Lakehouse/Landing
 ```
 
-<!-- cli-capture: {"id": "76-lakehouse-noop-load", "title": "Load \u00b7 unchanged source", "start": "\u2713   Load Lakehouse/Landing/Tables/Parcel.LiveStatus", "end": "  Execute", "full": true} -->
+<!-- cli-capture: {"id": "76-lakehouse-noop-load", "title": "Load · unchanged source"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · unchanged source">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.3s</span>
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     12.0s</span>
-
-→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.5s</span>
-
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+<pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           3.4s
 
@@ -486,7 +435,7 @@ Load summary
     rejected               0
 
   Workflow: [run-id]
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/76-lakehouse-noop-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 

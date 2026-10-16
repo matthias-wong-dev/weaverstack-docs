@@ -141,23 +141,11 @@ weaver load Warehouse/Operations --dry-run
 weaver load Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "33-incremental-first-load", "title": "Load \u00b7 establish the incremental Table", "start": "Load summary", "end": "  Workflow:", "full": true} -->
+<!-- cli-capture: {"id": "33-incremental-first-load", "title": "Load · establish the incremental Table"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · establish the incremental Table">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
-<span class="terminal-status-green">    2 succeeded</span>
-    0 failed
-    0 blocked
-  Rows
-    read                   5
-    inserted               2
-    updated                0
-    deleted                0
-    rejected               0
-
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+<pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.4s
 
@@ -196,7 +184,7 @@ Load summary
     rejected               0
 
   Workflow: [run-id]
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/33-incremental-first-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -242,11 +230,38 @@ weaver load Warehouse/Operations --dry-run
 weaver load Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "35-incremental-changed-load", "title": "Load \u00b7 source update and cancellation", "start": "Load summary", "end": "  Workflow:"} -->
+<!-- cli-capture: {"id": "35-incremental-changed-load", "title": "Load · source update and cancellation"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · source update and cancellation">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
+<pre tabindex="0" aria-label="Terminal output"><code>Load
+
+  Read catalogue                                                                                           2.1s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+
+→   Load Warehouse/Operations/Parcel.LiveStatus
+
+→   Load Warehouse/Operations/Parcel.StatusEvent
+
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.5s</span>
+
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                     6.7s</span>
+
+  Execute                                                                                                  6.9s
+
+  Record what the run did                                                                                  0.5s
+
+<span class="terminal-status-green">✓ Load                                                                                                     9.5s</span>
+
+<span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
+
+Load summary
 <span class="terminal-status-green">    2 succeeded</span>
     0 failed
     0 blocked
@@ -257,8 +272,8 @@ weaver load Warehouse/Operations
     deleted                1
     rejected               0
 
+  Workflow: [run-id]
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/35-incremental-changed-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -274,11 +289,38 @@ The `P-1001` candidate updates the target to `Delivered`. The source update that
 weaver load Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "36-incremental-noop-load", "title": "Load \u00b7 no new incremental changes", "start": "Load summary", "end": "  Workflow:"} -->
+<!-- cli-capture: {"id": "36-incremental-noop-load", "title": "Load · no new incremental changes"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · no new incremental changes">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
+<pre tabindex="0" aria-label="Terminal output"><code>Load
+
+  Read catalogue                                                                                           2.1s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+
+→   Load Warehouse/Operations/Parcel.LiveStatus
+
+→   Load Warehouse/Operations/Parcel.StatusEvent
+
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     1.8s</span>
+
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.2s</span>
+
+  Execute                                                                                                  4.4s
+
+  Record what the run did                                                                                  0.6s
+
+<span class="terminal-status-green">✓ Load                                                                                                     7.1s</span>
+
+<span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
+
+Load summary
 <span class="terminal-status-green">    2 succeeded</span>
     0 failed
     0 blocked
@@ -289,8 +331,8 @@ weaver load Warehouse/Operations
     deleted                0
     rejected               0
 
+  Workflow: [run-id]
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/36-incremental-noop-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

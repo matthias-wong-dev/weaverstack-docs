@@ -38,18 +38,11 @@ weaver check .
 weaver build . --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-dev.yml
 ```
 
-<!-- cli-capture: {"id": "100-report-development-build", "title": "Build \u00b7 development pair and binding", "start": "Installation", "full": true} -->
+<!-- cli-capture: {"id": "100-report-development-build", "title": "Build · development pair and binding"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · development pair and binding">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
-<span class="terminal-status-green">    4 succeeded</span>
-    0 failed
-    0 skipped
-  Report  [local-path]
-  Bundle  fdca322af022d22becb26011d253df6e9d1dd198279fb3967138a4f4c26629a7
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
 Catalogue  none
 Targets
   SemanticModel/Parcel → SemanticModel/Parcel_Dev
@@ -109,7 +102,7 @@ Installation
     0 skipped
   Report  [local-path]
   Bundle  fdca322af022d22becb26011d253df6e9d1dd198279fb3967138a4f4c26629a7
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/100-report-development-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -117,18 +110,11 @@ Installation
 weaver build . --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-prod.yml
 ```
 
-<!-- cli-capture: {"id": "101-report-production-build", "title": "Build \u00b7 production-labelled pair and binding", "start": "Installation", "full": true} -->
+<!-- cli-capture: {"id": "101-report-production-build", "title": "Build · production-labelled pair and binding"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · production-labelled pair and binding">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
-<span class="terminal-status-green">    4 succeeded</span>
-    0 failed
-    0 skipped
-  Report  [local-path]
-  Bundle  2b7649788915c15a48ef067717f36925c5e9a765b6be9e6deff233c2e7c1fe7f
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
 Catalogue  none
 Targets
   SemanticModel/Parcel
@@ -186,7 +172,7 @@ Installation
     0 skipped
   Report  [local-path]
   Bundle  2b7649788915c15a48ef067717f36925c5e9a765b6be9e6deff233c2e7c1fe7f
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/101-report-production-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -199,7 +185,7 @@ Check each Report's actual service binding, including the workspace, not just th
 | `workspace-dev.yml` | Parcel BI Development | `Parcel_Report_Dev` | `Parcel_Dev` |
 | `workspace-prod.yml` | Parcel BI Production | `Parcel_Report` | `Parcel` |
 
-The [live binding readbacks](../assets/cli-captures/readbacks.json) verified `Parcel_Report_Dev` → `Parcel_Dev` and `Parcel_Report` → `Parcel`. Both captures used the authorised disposable **Weaver Example** workspace, with distinct physical pairs. They demonstrate configuration-specific binding, not access to a second workspace or a real production deployment.
+The live binding readbacks verified `Parcel_Report_Dev` → `Parcel_Dev` and `Parcel_Report` → `Parcel`. Both captures used the authorised disposable **Weaver Example** workspace, with distinct physical pairs. They demonstrate configuration-specific binding, not access to a second workspace or a real production deployment.
 
 In each workspace’s **lineage view**, follow the deployed Report’s semantic-model link. Confirm both its name and workspace against the table above. The production Report must link to the production model, not to the development one. The source `byPath` remains unchanged.
 
@@ -210,18 +196,38 @@ weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 weaver load SemanticModel/Parcel --workspace-config workspace-prod.yml
 ```
 
-<!-- cli-capture: {"id": "103-report-production-refresh", "title": "Load \u00b7 refresh the production-labelled model", "start": "load succeeded:"} -->
+<!-- cli-capture: {"id": "103-report-production-refresh", "title": "Load · refresh the production-labelled model"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · refresh the production-labelled model">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Load
+
+  Resolve semantic models                                                                                  0.5s
+
+  Read catalogue                                                                                           0.0s
+
+Workspace  Weaver Example
+Catalogue  none
+Targets
+  SemanticModel/Parcel
+
+  Build run graph                                                                                          0.0s
+
+→   Load SemanticModel/Parcel
+
+<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              4.8s</span>
+
+  Execute                                                                                                  4.9s
+
+<span class="terminal-status-green">✓ Load                                                                                                     5.4s</span>
+
+<span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
 
 Load summary
 <span class="terminal-status-green">    1 succeeded</span>
     0 failed
     0 blocked
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/103-report-production-refresh.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

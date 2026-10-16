@@ -42,17 +42,42 @@ weaver build --item Warehouse/Operations
 weaver test Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "14-warehouse-test", "title": "Test \u00b7 both generated validations", "start": "test passed", "end": "  Workflow:"} -->
+<!-- cli-capture: {"id": "14-warehouse-test", "title": "Test · both generated validations"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Test · both generated validations">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
+
+  Read catalogue                                                                                           2.5s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+
+→   Test Warehouse/Operations/Parcel.CurrentStatusMatches
+
+→   Test Warehouse/Operations/Parcel.StatusIsKnown
+
+<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.3s</span>
+
+<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  7.5s</span>
+
+  Execute                                                                                                  7.7s
+
+  Record what the run did                                                                                  0.5s
+
+<span class="terminal-status-green">✓ Test                                                                                                    10.7s</span>
+
+<span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    2 passed</span>
     0 failed
+  Workflow: [run-id]
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/14-warehouse-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -130,24 +155,11 @@ weaver build --item Warehouse/Operations
 weaver test Warehouse/Operations --name 'Parcel[.]CurrentStatusMatches'
 ```
 
-<!-- cli-capture: {"id": "19-failed-warehouse-test", "title": "Test \u00b7 deliberate discrepancy", "start": "test failed", "full": true} -->
+<!-- cli-capture: {"id": "19-failed-warehouse-test", "title": "Test · deliberate discrepancy"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Test · deliberate discrepancy">
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">test failed</span>
-
-<span class="terminal-status-red">  failed     Test        Warehouse/Operations/Parcel.CurrentStatusMatches  (1 missing, 1 unexpected)</span>
-
-Test summary
-    0 passed
-<span class="terminal-status-red">    1 failed</span>
-  Workflow: [run-id]
-
-  Warehouse/Operations/Parcel.CurrentStatusMatches:
-    {&#x27;_weaver_side&#x27;: &#x27;expected&#x27;, &#x27;_weaver_sk&#x27;: 1, &#x27;Parcel ID&#x27;: &#x27;P-1002&#x27;, &#x27;Status&#x27;: &#x27;In transit&#x27;, &#x27;Depot&#x27;: &#x27;South&#x27;}
-    {&#x27;_weaver_side&#x27;: &#x27;actual&#x27;, &#x27;_weaver_sk&#x27;: 1, &#x27;Parcel ID&#x27;: &#x27;P-1002&#x27;, &#x27;Status&#x27;: &#x27;Delivered&#x27;, &#x27;Depot&#x27;: &#x27;South&#x27;}
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Test
+<pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read catalogue                                                                                           2.4s
 
@@ -180,7 +192,7 @@ Test summary
   Warehouse/Operations/Parcel.CurrentStatusMatches:
     {&#x27;_weaver_side&#x27;: &#x27;expected&#x27;, &#x27;_weaver_sk&#x27;: 1, &#x27;Parcel ID&#x27;: &#x27;P-1002&#x27;, &#x27;Status&#x27;: &#x27;In transit&#x27;, &#x27;Depot&#x27;: &#x27;South&#x27;}
     {&#x27;_weaver_side&#x27;: &#x27;actual&#x27;, &#x27;_weaver_sk&#x27;: 1, &#x27;Parcel ID&#x27;: &#x27;P-1002&#x27;, &#x27;Status&#x27;: &#x27;Delivered&#x27;, &#x27;Depot&#x27;: &#x27;South&#x27;}
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/19-failed-warehouse-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -188,11 +200,21 @@ Test summary
 weaver health --item Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "20-health-failed-test", "title": "Health \u00b7 recorded failed validation", "start": "Weaver Health", "end": "Slowest loads"} -->
+<!-- cli-capture: {"id": "20-health-failed-test", "title": "Health · recorded failed validation"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Health · recorded failed validation">
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">Weaver Health  Red</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Health
+
+  Read catalogue                                                                                           2.2s
+
+  Check installed items                                                                                    0.2s
+
+  Read installed objects                                                                                   0.3s
+
+<span class="terminal-status-green">✓ Health                                                                                                   2.6s</span>
+
+<span class="terminal-status-red">Weaver Health  Red</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 3m ago
@@ -206,8 +228,12 @@ weaver health --item Warehouse/Operations
 <span class="terminal-status-green">Build   Green</span>
   Installed estate consistent (10 objects)
 
+Slowest loads
+  Warehouse/Operations/Parcel.StatusEvent     3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/20-health-failed-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -222,11 +248,21 @@ weaver test Warehouse/Operations
 weaver health --item Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "23-health-restored", "title": "Health \u00b7 restored validation", "start": "Weaver Health", "end": "Slowest loads"} -->
+<!-- cli-capture: {"id": "23-health-restored", "title": "Health · restored validation"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Health · restored validation">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Health
+
+  Read catalogue                                                                                           2.3s
+
+  Check installed items                                                                                    0.2s
+
+  Read installed objects                                                                                   0.4s
+
+<span class="terminal-status-green">✓ Health                                                                                                   2.9s</span>
+
+<span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 4m ago
@@ -238,8 +274,12 @@ weaver health --item Warehouse/Operations
 <span class="terminal-status-green">Build   Green</span>
   Installed estate consistent (10 objects)
 
+Slowest loads
+  Warehouse/Operations/Parcel.StatusEvent     3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/23-health-restored.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

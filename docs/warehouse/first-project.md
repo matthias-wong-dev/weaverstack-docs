@@ -19,25 +19,84 @@ weaver initialise \
 cd parcel
 ```
 
-<!-- cli-capture: {"id": "10-warehouse-initialise", "title": "Initialise \u00b7 Parcel Warehouse", "start": "  Catalogue    Catalogue", "end": "Next:"} -->
+<!-- cli-capture: {"id": "10-warehouse-initialise", "title": "Initialise · Parcel Warehouse"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Initialise · Parcel Warehouse">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>  Catalogue    Catalogue   already exists
+<pre tabindex="0" aria-label="Terminal output"><code>Set up a Weaver project.
+
+Lakehouse (optional)
+Use a Lakehouse for files and Python/Delta tables.
+Press Enter if this project does not need one.
+Existing: Landing
+Examples: Landing, Bronze
+Lakehouse:
+
+Project
+
+  Project folder  ./parcel
+  Workspace       Weaver Example
+  Catalogue       Catalogue
+  Environment     Weaver
+  Lakehouse       None
+  Warehouse       Operations
+  Example         Parcel
+  Semantic Model  None
+
+1. Continue
+2. Change an answer
+3. Cancel
+Choose [1/2/3]: 1
+Publishing a Fabric Environment can take about 5 minutes.
+Publish the Environment now? [y/N]: n
+
+Setting up the Weaver project
+
+  Checking the workspace                                                                                   0.4s
+
+  Reading the Environment                                                                                 21.6s
+
+  Checking the project files                                                                               0.4s
+
+  Creating the Warehouse Operations                                                                        8.8s
+
+  Writing the project files                                                                                0.0s
+
+<span class="terminal-status-green">✓ Setting up the Weaver project                                                                           31.2s</span>
+
+  Catalogue    Catalogue   already exists
   Environment  Weaver      already exists
   Warehouse    Operations  created
   Environment publication: deferred
 
 Weaver project ready in ./parcel.
 
+Next:
+
+  cd ./parcel
+
+Environment publication deferred.
+Publish it before the first load that runs Python.
+
+  weaver fabric environment publish --path Environment/Weaver.Environment
+  weaver workflow full
+
+Or run individually:
+  weaver build
+  weaver load
+  weaver test
+  weaver health
+
+You can set this up again with:
+
+  weaver initialise --workspace &#x27;Weaver Example&#x27; --project-folder ./parcel --catalogue Catalogue --environment Weaver --warehouse Operations --example Parcel --non-interactive
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/10-warehouse-initialise.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
 Initialise creates or reuses the named items and writes the SQL Table, View and validations below. This Warehouse-only project needs no Spark runtime or Environment publication. Open the generated files rather than copying these declarations.
 
-These live captures use a built development wheel from runtime `bf908f47` in the disposable **Weaver Example** trial workspace. They do not establish published-PyPI availability. Use your workspace name; timings vary. [Capture provenance](../assets/cli-captures/manifest.json).
+These live captures use a built development wheel from runtime `bf908f47` in the disposable **Weaver Example** trial workspace. They do not establish published-PyPI availability. Use your workspace name; timings vary.
 
 <details markdown="1">
 <summary>See the generated workspace bindings</summary>
@@ -131,13 +190,12 @@ The View reads the event Table and keeps the most recent row for each parcel.
 weaver check
 ```
 
-<!-- cli-capture: {"id": "11-warehouse-check", "title": "Check \u00b7 local project"} -->
+<!-- cli-capture: {"id": "11-warehouse-check", "title": "Check · local project"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Check · local project">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Project valid.
+<pre tabindex="0" aria-label="Terminal output"><code>Project valid.
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/11-warehouse-check.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -147,18 +205,11 @@ Install the definitions:
 weaver build --item Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "12-warehouse-build", "title": "Build \u00b7 first Warehouse installation", "start": "Installation", "full": true} -->
+<!-- cli-capture: {"id": "12-warehouse-build", "title": "Build · first Warehouse installation"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · first Warehouse installation">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
-<span class="terminal-status-green">   18 succeeded</span>
-    0 failed
-    0 skipped
-  Report  [local-path]
-  Bundle  9b8429565c5101b39fdec126ffe26eb858fc30d94f6c2e0af1a0d80bad9055c9
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
@@ -244,7 +295,7 @@ Installation
     0 skipped
   Report  [local-path]
   Bundle  9b8429565c5101b39fdec126ffe26eb858fc30d94f6c2e0af1a0d80bad9055c9
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/12-warehouse-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -254,11 +305,34 @@ Load the event rows:
 weaver load Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "13-warehouse-load", "title": "Load \u00b7 first event rows", "start": "Load summary", "end": "  Workflow:"} -->
+<!-- cli-capture: {"id": "13-warehouse-load", "title": "Load · first event rows"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · first event rows">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
+<pre tabindex="0" aria-label="Terminal output"><code>Load
+
+  Read catalogue                                                                                           2.7s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+
+→   Load Warehouse/Operations/Parcel.StatusEvent
+
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +3 ~0 -0 !0)                                    3.1s</span>
+
+  Execute                                                                                                  3.3s
+
+  Record what the run did                                                                                  0.7s
+
+<span class="terminal-status-green">✓ Load                                                                                                     6.7s</span>
+
+<span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
+
+Load summary
 <span class="terminal-status-green">    1 succeeded</span>
     0 failed
     0 blocked
@@ -269,8 +343,8 @@ weaver load Warehouse/Operations
     deleted                0
     rejected               0
 
+  Workflow: [run-id]
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/13-warehouse-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -280,17 +354,42 @@ Run the generated validations, then inspect the installed result:
 weaver test Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "14-warehouse-test", "title": "Test \u00b7 generated validations", "start": "test passed", "end": "  Workflow:"} -->
+<!-- cli-capture: {"id": "14-warehouse-test", "title": "Test · generated validations"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Test · generated validations">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
+
+  Read catalogue                                                                                           2.5s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+
+→   Test Warehouse/Operations/Parcel.CurrentStatusMatches
+
+→   Test Warehouse/Operations/Parcel.StatusIsKnown
+
+<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.3s</span>
+
+<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  7.5s</span>
+
+  Execute                                                                                                  7.7s
+
+  Record what the run did                                                                                  0.5s
+
+<span class="terminal-status-green">✓ Test                                                                                                    10.7s</span>
+
+<span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    2 passed</span>
     0 failed
+  Workflow: [run-id]
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/14-warehouse-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -298,11 +397,21 @@ Test summary
 weaver health --item Warehouse/Operations
 ```
 
-<!-- cli-capture: {"id": "15-warehouse-health", "title": "Health \u00b7 loaded and tested Warehouse", "start": "Weaver Health", "end": "Slowest loads"} -->
+<!-- cli-capture: {"id": "15-warehouse-health", "title": "Health · loaded and tested Warehouse"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Health · loaded and tested Warehouse">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Health
+
+  Read catalogue                                                                                           2.6s
+
+  Check installed items                                                                                    0.1s
+
+  Read installed objects                                                                                   0.3s
+
+<span class="terminal-status-green">✓ Health                                                                                                   3.0s</span>
+
+<span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 0m ago
@@ -314,8 +423,12 @@ weaver health --item Warehouse/Operations
 <span class="terminal-status-green">Build   Green</span>
   Installed estate consistent (10 objects)
 
+Slowest loads
+  Warehouse/Operations/Parcel.StatusEvent     3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/15-warehouse-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

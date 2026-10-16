@@ -55,14 +55,56 @@ weaver build --item Lakehouse/Landing
 weaver load Lakehouse/Landing
 ```
 
-<!-- cli-capture: {"id": "46-lakehouse-load", "title": "CurrentStatus \u00b7 step from the first pipeline Load", "start": "\u2713   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus", "end": "  Execute"} -->
+<!-- cli-capture: {"id": "46-lakehouse-load", "title": "CurrentStatus · step from the first pipeline Load"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="CurrentStatus · step from the first pipeline Load">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)                             12.1s</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Load
 
+  Read catalogue                                                                                           2.3s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  35.4s
+
+→   Load Lakehouse/Landing/Files/Parcel.Events
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +1 ~0 -0 !0)                                      3.6s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.Event
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +3 ~0 -0 !0)                                     12.2s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)                             12.1s</span>
+
+  Execute                                                                                                 27.8s
+
+  Record what the run did                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Load                                                                                                    1m14s</span>
+
+<span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
+
+Load summary
+<span class="terminal-status-green">    3 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   6
+    inserted               6
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: [run-id]
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/46-lakehouse-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

@@ -122,7 +122,7 @@ This checks all named selections, subset preservation and extension orders throu
 
 `docs/assets/cli-captures/manifest.json` records the actual commands, installed development-package version, runtime revision, workspace, exit status and capture context. Sanitised ANSI and plain-text transcripts live beside it. `readbacks.json` contains separately labelled live SQL/API observations, not simulated CLI output. Keep original captures, credentials and full service definitions outside this repository.
 
-Pages select output through `cli-capture` markers. Their `id` resolves a manifest entry; optional `start` and `end` select complete observed lines, and `full: true` adds a native disclosure with the complete sanitised transcript. Never edit the generated HTML or transcript values to make a result look better. Record retries, interruptions, actual failures and documented-order disagreements in the capture ledger.
+Pages display complete output through `cli-capture` markers. Their `id` resolves a manifest entry; `title` supplies accessible context without replacing the visible Terminal output label. Every panel includes the whole plain-text capture, not a selected summary or a second disclosure. Long output scrolls within a height-limited box. Never edit the generated HTML or transcript values to make a result look better. Record retries, interruptions, actual failures and documented-order disagreements in the capture ledger.
 
 ```bash
 python tools/render_cli_captures.py --write
@@ -130,7 +130,7 @@ python tools/render_cli_captures.py --check
 "$PRODUCT_PYTHON" -m pytest -q tools/test_cli_captures.py
 ```
 
-The renderer only escapes text and adds presentation classes. Generic Terminal/Terminal output labels and footer text are presentation, not invented terminal lines. Shell prompts are CSS-only, leaving command clipboard targets unchanged. Keep command/output widths aligned and place each TODO at the exact pending result or inspection step. Its raw-asset links account for MkDocs directory URLs. Review output text and copied source bytes, mobile/local scrolling, both themes and no-JavaScript disclosures after regeneration. Strip ANSI again during privacy checks so identifiers split by styling cannot escape the scan. [Capture inventory](CAPTURE-INVENTORY.md) records live coverage and remaining limits.
+The renderer only escapes text and adds presentation classes. Generic Terminal/Terminal output labels are presentation, not invented terminal lines. Shell prompts are CSS-only, leaving command clipboard targets unchanged. Keep command/output widths aligned and place each TODO at the exact pending result or inspection step. Do not add transcript footers, raw-file links or JSON provenance links to tutorials; evidence remains available through the maintainer ledger. Compare every panel's complete text with its source, then review copied command bytes, mobile/local scrolling, both themes and no-JavaScript readability after regeneration. Strip ANSI again during privacy checks so identifiers split by styling cannot escape the scan. [Capture inventory](CAPTURE-INVENTORY.md) records live coverage and remaining limits.
 
 ## Validate the change
 

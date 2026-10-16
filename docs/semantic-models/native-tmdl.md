@@ -73,18 +73,11 @@ Check reads local declarations and definitions. It does not execute M/DAX, deplo
 weaver build --item SemanticModel/Parcel
 ```
 
-<!-- cli-capture: {"id": "82-native-catalogue-free-build", "title": "Build \u00b7 native model without a Catalogue", "start": "Installation", "full": true} -->
+<!-- cli-capture: {"id": "82-native-catalogue-free-build", "title": "Build · native model without a Catalogue"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · native model without a Catalogue">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
-<span class="terminal-status-green">    2 succeeded</span>
-    0 failed
-    0 skipped
-  Report  [local-path]
-  Bundle  a8ab22d2285b5b2ef3cae58135c2db97216bca04d09ebfb46bb8556544dec410
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
 Catalogue  none
 Targets
   SemanticModel/Parcel
@@ -128,7 +121,7 @@ Installation
     0 skipped
   Report  [local-path]
   Bundle  a8ab22d2285b5b2ef3cae58135c2db97216bca04d09ebfb46bb8556544dec410
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/82-native-catalogue-free-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -140,33 +133,11 @@ This selects **only the inline semantic model**, even if your project also has s
 weaver load SemanticModel/Parcel
 ```
 
-<!-- cli-capture: {"id": "83-native-catalogue-free-refresh", "title": "Load \u00b7 refresh the inline model", "start": "Workspace", "full": true} -->
+<!-- cli-capture: {"id": "83-native-catalogue-free-refresh", "title": "Load · refresh the inline model"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · refresh the inline model">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
-Catalogue  none
-Targets
-  SemanticModel/Parcel
-
-  Build run graph                                                                                          0.0s
-
-→   Load SemanticModel/Parcel
-
-<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              4.8s</span>
-
-  Execute                                                                                                  4.8s
-
-<span class="terminal-status-green">✓ Load                                                                                                     5.3s</span>
-
-<span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
-
-Load summary
-<span class="terminal-status-green">    1 succeeded</span>
-    0 failed
-    0 blocked
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+<pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Resolve semantic models                                                                                  0.5s
 
@@ -193,7 +164,7 @@ Load summary
 <span class="terminal-status-green">    1 succeeded</span>
     0 failed
     0 blocked
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/83-native-catalogue-free-refresh.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -232,18 +203,11 @@ weaver check
 weaver build --item SemanticModel/Parcel --item Report/Parcel
 ```
 
-<!-- cli-capture: {"id": "85-native-annotation-and-report-build", "title": "Build \u00b7 apply the rule and bind the linked Report", "start": "Installation", "full": true} -->
+<!-- cli-capture: {"id": "85-native-annotation-and-report-build", "title": "Build · apply the rule and bind the linked Report"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · apply the rule and bind the linked Report">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
-<span class="terminal-status-green">    4 succeeded</span>
-    0 failed
-    0 skipped
-  Report  [local-path]
-  Bundle  492f2106fc8b073d07249ff8e01ca42c9f6af3df84fb3918dcc7fe30cc0c5712
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
 Catalogue  none
 Targets
   SemanticModel/Parcel
@@ -301,7 +265,7 @@ Installation
     0 skipped
   Report  [local-path]
   Bundle  492f2106fc8b073d07249ff8e01ca42c9f6af3df84fb3918dcc7fe30cc0c5712
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/85-native-annotation-and-report-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 
@@ -309,18 +273,38 @@ Installation
 weaver load SemanticModel/Parcel
 ```
 
-<!-- cli-capture: {"id": "86-native-annotation-refresh", "title": "Load \u00b7 refresh after the modelling rule", "start": "load succeeded:"} -->
+<!-- cli-capture: {"id": "86-native-annotation-refresh", "title": "Load · refresh after the modelling rule"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Load · refresh after the modelling rule">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Load
+
+  Resolve semantic models                                                                                  0.7s
+
+  Read catalogue                                                                                           0.0s
+
+Workspace  Weaver Example
+Catalogue  none
+Targets
+  SemanticModel/Parcel
+
+  Build run graph                                                                                          0.0s
+
+→   Load SemanticModel/Parcel
+
+<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              7.0s</span>
+
+  Execute                                                                                                  7.0s
+
+<span class="terminal-status-green">✓ Load                                                                                                     7.7s</span>
+
+<span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
 
 Load summary
 <span class="terminal-status-green">    1 succeeded</span>
     0 failed
     0 blocked
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/86-native-annotation-refresh.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -339,7 +323,7 @@ The deployed model definition and DAX readback showed:
 | `Depot[DepotId]` | Visible | Visible |
 | Delivery Count | 2 | 2 |
 
-These are [captured service-model readbacks](../assets/cli-captures/readbacks.json), not results from opening the unchanged local PBIP.
+These are captured service-model readbacks, not results from opening the unchanged local PBIP.
 
 The native files and inline data remain in place. Desktop does not execute Weaver annotations when opening the local PBIP; inspect the service-connected model for the change. Hidden fields are not a security policy or RLS/OLS.
 

@@ -59,17 +59,53 @@ weaver load Lakehouse/Landing Warehouse/Operations --workspace-config workspace-
 weaver test Lakehouse/Landing Warehouse/Operations --workspace-config workspace-development.yml
 ```
 
-<!-- cli-capture: {"id": "54-estate-test", "title": "Test \u00b7 both sides of the Parcel connection", "start": "test passed", "end": "  Workflow:"} -->
+<!-- cli-capture: {"id": "54-estate-test", "title": "Test · both sides of the Parcel connection"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Test · both sides of the Parcel connection">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
+
+  Read catalogue                                                                                           2.2s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  38.3s
+
+→   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
+
+→   Test Warehouse/Operations/Parcel.StatusIsKnown
+
+→   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
+
+→   Test Warehouse/Operations/Parcel.CurrentStatusMatches
+
+<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.9s</span>
+
+<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  5.4s</span>
+
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      10.0s</span>
+
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    12.4s</span>
+
+  Execute                                                                                                 10.6s
+
+  Record what the run did                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Test                                                                                                    1m11s</span>
+
+<span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    4 passed</span>
     0 failed
+  Workflow: [run-id]
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/54-estate-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 
@@ -77,11 +113,21 @@ Test summary
 weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
 ```
 
-<!-- cli-capture: {"id": "56-scoped-estate-health", "title": "Health \u00b7 Parcel estate after validation", "start": "Weaver Health", "end": "Slowest loads"} -->
+<!-- cli-capture: {"id": "56-scoped-estate-health", "title": "Health · Parcel estate after validation"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Health · Parcel estate after validation">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
+<pre tabindex="0" aria-label="Terminal output"><code>Health
+
+  Read catalogue                                                                                           2.5s
+
+  Check installed items                                                                                    0.2s
+
+  Read installed objects                                                                                   2.5s
+
+<span class="terminal-status-green">✓ Health                                                                                                   5.1s</span>
+
+<span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 3m ago
@@ -93,8 +139,16 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-c
 <span class="terminal-status-green">Build   Green</span>
   Installed estate consistent (26 objects)
 
+Slowest loads
+  Lakehouse/Landing/Tables/Parcel.Event          14.5s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
+  Warehouse/Operations/Parcel.StatusEvent        5.5s
+  Warehouse/Operations/Parcel.LiveStatus         3.1s
+  Lakehouse/Landing/Files/Parcel.Events          3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0
 </code></pre>
-<p class="terminal-source"><a href="../../assets/cli-captures/56-scoped-estate-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
 

@@ -48,20 +48,11 @@ weaver check .
 weaver build . --item SemanticModel/Parcel --item Report/Parcel
 ```
 
-<!-- cli-capture: {"id": "85-native-annotation-and-report-build", "title": "Build \u00b7 deploy and verify the linked pair", "start": "\u2192   Report/Parcel \u00b7 Deploy Report definitions", "end": "  Install", "full": true} -->
+<!-- cli-capture: {"id": "85-native-annotation-and-report-build", "title": "Build · deploy and verify the linked pair"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · deploy and verify the linked pair">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Captured terminal output"><code>→   Report/Parcel · Deploy Report definitions · 1 action
-
-<span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.3s</span>
-
-→   Report/Parcel · Verify deployed Report definitions · 1 action
-
-<span class="terminal-status-green">✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         20.6s</span>
-
-</code></pre>
-<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
 Catalogue  none
 Targets
   SemanticModel/Parcel
@@ -119,7 +110,7 @@ Installation
     0 skipped
   Report  [local-path]
   Bundle  492f2106fc8b073d07249ff8e01ca42c9f6af3df84fb3918dcc7fe30cc0c5712
-</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/85-native-annotation-and-report-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</code></pre>
 </figure>
 <!-- /cli-capture -->
 

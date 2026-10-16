@@ -672,8 +672,10 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   font-weight: 400;
 }
 .md-typeset .weaver-terminal pre {
+  box-sizing: border-box;
   margin: 0;
   padding: 0.9rem;
+  max-height: min(28rem, 60vh);
   overflow: auto;
   background: transparent;
   border-radius: 0;
@@ -681,6 +683,8 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   font: 0.7rem/1.55 var(--weaver-mono);
   white-space: pre;
   scrollbar-width: thin;
+  scrollbar-color: #71829a transparent;
+  scrollbar-gutter: stable;
 }
 .md-typeset .weaver-terminal pre code {
   display: block;
@@ -700,30 +704,6 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
 .md-typeset .weaver-terminal .terminal-status-green { color: #88d6aa; }
 .md-typeset .weaver-terminal .terminal-status-amber { color: #f2cc82; }
 .md-typeset .weaver-terminal .terminal-status-red { color: #ffaaa4; }
-.md-typeset .weaver-terminal details {
-  margin: 0;
-  border: 0;
-  border-top: 1px solid rgba(223, 231, 247, 0.18);
-  border-radius: 0;
-  box-shadow: none;
-  background: transparent;
-  color: var(--weaver-code-text);
-}
-.md-typeset .weaver-terminal details summary {
-  margin: 0;
-  padding: 0.65rem 0.9rem 0.65rem 2rem;
-  background: rgba(223, 231, 247, 0.04);
-  color: var(--weaver-code-text);
-}
-.md-typeset .weaver-terminal details pre { max-height: 24rem; }
-.md-typeset .weaver-terminal .terminal-source {
-  margin: 0;
-  padding: 0.5rem 0.9rem 0.7rem;
-  color: #b8c4d6;
-  font-size: 0.65rem;
-  line-height: 1.6;
-}
-.md-typeset .weaver-terminal .terminal-source a { color: #9dccff; }
 
 /* Shell prompts are presentation only: clipboard targets remain authored code. */
 .md-typeset .language-bash.highlight {
