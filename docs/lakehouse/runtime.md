@@ -45,6 +45,6 @@ Run that command from the same project root so the workspace is discovered from 
 
 Republish after changing Environment libraries or the Weaver package mode/version. Editing a Python Table, Folder, Test or Assumption does not itself require republication: Check and Build install project changes. Adding a Spark SQL transformation follows the same project loop.
 
-Build checks matching Weaver version, supported plan format, writer version and required executor capabilities before mutation. A read-only preview does not establish runtime compatibility.
+Build checks matching Weaver version, supported plan format, writer version and required executor capabilities before mutation.
 
 Return to [the first pipeline](python.md#check-build-and-load), or use [the development cycle](../estate/development-cycle.md) for repeated edits. [Session and runtime behaviour](../reference/operation-behaviour/session-runtime.md) and [Environment CLI](../reference/cli/fabric-environment.md) own the exact runtime and publication interfaces.

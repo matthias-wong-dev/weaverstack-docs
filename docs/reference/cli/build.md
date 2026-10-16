@@ -70,7 +70,7 @@ Repeat `--item ITEM[=TARGET]` for exact logical bindings, item-type selectors or
 ## Execution modes
 
 - Normal Build deploys selected changes and can create missing selected model/Report targets. Selected semantic models deploy/verify even when unchanged; source-item fixed points and catalogue-backed Report-only fixed points differ.
-- `--dry-run` reads state and returns the canonical preview without mutations, target creation or a retained bundle. Suitable existing targets are required; execution-runtime compatibility is not proved.
+- `--dry-run` reads state and returns the canonical preview without mutations, target creation or a retained bundle. Suitable existing targets are required.
 - `--bundle-only` retains a frozen executable bundle without installing. `--bundle-path` requires this mode and an absent/empty destination. It does not provision missing targets.
 
 Dry run and bundle-only are mutually exclusive. Install executes retained input without reopening source or replanning/retargeting. `--concurrency N` caps total scheduled actions alongside configured resource limits; it does not edit configuration. `--data-source Expression=Warehouse/Name` overrides supported typed shared-expression mappings; `--bind-data-sources` requests existing connection binding, not credentials creation.

@@ -63,7 +63,7 @@ A Fabric notebook can call `weaver.build()`, `weaver.load()`, `weaver.test()` an
 
 [Portable execution between desktop and Fabric](../advanced/portable-execution-between-desktop-and-fabric.md) shows notebook Resources layout and native execution using Landing/Operations source. Keep the same authored project when changing execution host. Fabric Git’s Resources support remains separate: `fabric notebook push` transports a notebook definition, not local Resources.
 
-The host still supplies the required capabilities. Desktop Lakehouse Build/Load/Test needs the matching published Weaver runtime; the attached-notebook path uses its active Spark session. [Running Python in Fabric](../lakehouse/runtime.md) owns publication. A local Check or preview does not establish runtime admission. Fabric scheduling, capacity, identity and retries remain host responsibilities, not properties inferred from a successful interactive command.
+Desktop Lakehouse Build/Load/Test needs the matching published Weaver runtime; the attached-notebook path uses its active Spark session. [Running Python in Fabric](../lakehouse/runtime.md) explains publication. Fabric scheduling, capacity, identity and retries remain host responsibilities.
 
 ## Hand off frozen installation work
 

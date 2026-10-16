@@ -68,4 +68,4 @@ With a catalogue and no `--file`, Test runs installed validation definitions aga
 
 Targeted name/file runs collect diagnostic rows; item-wide runs normally collect counts. All completed runs return a Python report, including findings and invalid outcomes. Inspect `succeeded`, `status` and nodes. The CLI returns `1` for failed/invalid results, `0` for passed/planned; no `strict=True` parameter is supported by `weaver.test`.
 
-A dry run parses/resolves without dispatching DAX/SQL or writing Log/TestStatus. It does not prove query permissions or deployed data correctness. See [Test behaviour](../operation-behaviour/test.md), [mode requirements](requirements-and-compatibility.md) and [machine output](../machine-readable-output.md).
+A dry run parses/resolves without dispatching DAX/SQL or writing Log/TestStatus. See [Test behaviour](../operation-behaviour/test.md), [mode requirements](requirements-and-compatibility.md) and [machine output](../machine-readable-output.md).

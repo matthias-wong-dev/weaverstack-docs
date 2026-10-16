@@ -54,8 +54,6 @@ Largest changes
 </figure>
 <!-- /cli-capture -->
 
-This is the scoped result after both items were tested. The same capture workspace’s unscoped report also found older, unrelated installations; restricting the report does not repair or erase those findings.
-
 
 ## Find the work that needs attention
 

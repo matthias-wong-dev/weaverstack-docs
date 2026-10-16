@@ -95,7 +95,7 @@ Before asking for confirmation, Weaver:
 3. rejects excluded commands and shell syntax; and
 4. resolves the one shared Workspace configuration.
 
-This validates local syntax and configuration. It does not prove that remote Fabric items exist or that every operation will succeed.
+This validates local syntax and configuration.
 
 A mixed project can use one configuration and two Build steps:
 

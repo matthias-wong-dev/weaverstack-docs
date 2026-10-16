@@ -112,7 +112,7 @@ targets:
 
 No catalogue or Environment is required for this Power BI deployment configuration. Explicit catalogue-free model refresh and source/file Tests resolve configured names or fall back to the logical model/item name. Build uses configured/explicit destinations and requires a binding for each selected item; do not infer missing Build bindings from refresh fallback. Reports have no Load/Test.
 
-`targets` may be absent or empty. Two logical items may parse with the same physical name, but one Build or Mirror cannot install two ordinary items of the same kind into one destination. A valid configuration therefore does not prove that all its bindings can be used together.
+`targets` may be absent or empty. Two logical items may parse with the same physical name, but one Build or Mirror cannot install two ordinary items of the same kind into one destination.
 
 ## What each binding controls
 

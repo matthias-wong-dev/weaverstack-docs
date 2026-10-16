@@ -48,7 +48,7 @@ Inside the attached Fabric workspace, notebook identity is used for Fabric and W
 
 An unqualified Environment name resolves in the operation's workspace. `Workspace/Environment` may name an Environment owned by another workspace where Fabric permits that attachment. The Spark session still runs in the operation's workspace; qualification changes Environment ownership, not the Session's workspace.
 
-Desktop-dispatched Lakehouse Python Load/Test requires a configured published Environment containing Weaver. Warehouse-only T-SQL and standalone Power BI deployment/refresh require no Spark Environment. Source parsing alone does not prove that a later execution runtime is available.
+Desktop-dispatched Lakehouse Python Load/Test requires a configured published Environment containing Weaver. Warehouse-only T-SQL and standalone Power BI deployment/refresh require no Spark Environment.
 
 Spark-backed Build/Install, Wipe or Mirror mutation execution admits the runtime before dispatch. On a desktop, the Session probes the published Environment and requires the exact client Weaver version, supported sealed-plan format (`5` here), Delta writer (`deltalake==1.6.6` here) and executor capabilities needed by the plan. Missing/incompatible runtime refuses before target work and asks for Environment publication. Inside an attached Fabric session the active runtime is checked. This applies even when Build does not call authored `read()` and even when authored source is Spark SQL. Successful Build preview explicitly leaves execution-runtime compatibility unchecked. No operation silently publishes an Environment to repair this failure.
 

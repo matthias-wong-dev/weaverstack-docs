@@ -19,7 +19,7 @@ weaver check .
 weaver build . --item Lakehouse/Landing --item Warehouse/Operations --dry-run --workspace-config workspace-development.yml
 ```
 
-Check catches declaration errors without contacting Fabric. Build preview reads existing targets and shows selected work and destructive consequences without installing or changing catalogue/runtime state. It is not a retained executable bundle, does not prove runtime compatibility, and cannot provision missing selected Power BI targets. Use ordinary Build for first deployment.
+Check catches declaration errors without contacting Fabric. Build preview reads existing targets and shows selected work and destructive consequences without changing the estate. Use ordinary Build for first deployment; previews require existing targets.
 
 If the preview is the intended change, install and operate that selection:
 

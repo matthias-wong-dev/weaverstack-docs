@@ -117,6 +117,6 @@ weaver load SemanticModel/Parcel
     Open this deployed Report after the model Load above and confirm its card shows 2. Deployment, binding and model queries passed; the service viewing result is still unobserved.
 <!-- /review-todo -->
 
-With permission to view the Report and query its model, open the card: **Delivery Count should be 2**. This is a separate viewing check, not a Report deployment requirement. Reports have no separate Load, Test or refresh operation; data refresh and validation belong to the model. Build success alone does not establish refresh access or card rendering.
+With permission to view the Report and query its model, open the card: **Delivery Count should be 2**. Reports have no separate Load, Test or refresh operation; data refresh and validation belong to the model.
 
 The development Report now has a destination-specific model binding while the source still names `../Parcel.SemanticModel`. [Use the same Report in development and production](environments.md) by selecting a second configuration, not editing that path.

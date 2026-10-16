@@ -123,4 +123,4 @@ This document has no `format_version`. A handled publication error exits `1` and
 
 ## Compatibility boundary
 
-These are the fields emitted by the referenced source revision and pinned by its representation tests. Absence of `format_version` is not an implicit version 1. Scripts should validate the command-specific fields they need and reject an unexpected shape; this page does not promise that unversioned documents remain unchanged in later releases.
+Validate the command-specific fields your scripts need and reject unexpected shapes. Where `format_version` is absent, the document is unversioned; do not treat it as an implicit version 1.

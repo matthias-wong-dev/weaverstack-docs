@@ -120,6 +120,6 @@ The live SQL query returned:
 | P-1001 | In transit | Central |
 | P-1002 | Delivered | South |
 
-A successful Load tells you the query ran. It does not establish that the latest-event rule selected the right rows. [Test these same Tables](tests.md) against an independent expected result and reject unknown event statuses.
+[Test these same Tables](tests.md) against an independent expected result and reject unknown event statuses.
 
 [Table reference](../reference/weaver-documents/table.md#spark-sql) owns the SQL body rules. For the shared ordering and selection model, see [Connect items and dependencies](../estate/connected-items.md).

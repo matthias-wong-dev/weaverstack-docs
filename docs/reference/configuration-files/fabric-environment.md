@@ -158,7 +158,7 @@ publish_status: AlreadyInstalled
 
 For comparison, Weaver accounts for Fabric's observed normalisation of line endings, JSON/YAML formatting and `runtime_version` quoting. A Weaver wheel is compared by its content-addressed filename; unrelated custom libraries are compared by bytes.
 
-Spark-backed Build mutation execution requires the published runtime to match the client Weaver version, sealed plan format and required executor capabilities, including the pinned Delta writer. A package declaration or successful read-only Build preview is not proof of that admission. Build does not call authored `read()`, but its hosted execution still runs Weaver. See [Session runtime qualification](../operation-behaviour/session-runtime.md#fabric-environment-qualification).
+Spark-backed Build mutation execution requires the published runtime to match the client Weaver version, sealed plan format and required executor capabilities, including the pinned Delta writer. Build does not call authored `read()`, but its hosted execution still runs Weaver. See [Session runtime qualification](../operation-behaviour/session-runtime.md#fabric-environment-qualification).
 
 Environment publication changes the Python runtime available to notebooks and Livy sessions. It does not Build project documents, install a build bundle, select a catalogue or run Mirror.
 

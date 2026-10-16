@@ -4,7 +4,7 @@ The Weaver catalogue is a set of Warehouse tables in schema `_`. This page recor
 
 It is a read-only integration boundary. Query these tables for inspection and reporting; do not insert, update, delete, truncate, rebuild, or add application-owned objects under `_`. Build and runtime operations own their rows and lifecycle.
 
-This is not a versioned database schema. The catalogue has no schema-version table or compatibility number, and this page makes no promise that a later Weaver release preserves these columns. Weaver checks the tables and columns it needs when it opens a catalogue and rejects missing or incompatible state rather than offering a general schema migration contract.
+The catalogue schema is unversioned: it has no schema-version table or compatibility number. Weaver checks the tables and columns it needs when opening a catalogue and rejects missing or incompatible state.
 
 ## Reading the tables
 
@@ -43,7 +43,7 @@ Semantic metadata is projected from deployed readback, not a claim to discover a
 
 `_.Mirror` records local object identity and physical source/form. It is removed when an object becomes local. Protected mirror materialisation retains data/bookmarks under its specific Build rules; ordinary replacement and Wipe have different boundaries.
 
-The generated inventory includes every physical column, including audit columns, as declared by the pinned implementation. Keys are shown in stored order. Vocabulary spellings are recorded in the checked-in manifest; they do not imply relational constraints or a versioned migration policy.
+The generated inventory includes every physical column, including audit columns. Keys are shown in stored order. Vocabulary spellings are recorded in the checked-in manifest; they do not imply relational constraints or a versioned migration policy.
 
 <!-- BEGIN GENERATED CATALOGUE REFERENCE -->
 

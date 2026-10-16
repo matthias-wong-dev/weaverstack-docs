@@ -34,7 +34,7 @@ With a catalogue, verified model/readback metadata and item registrations are pu
 weaver build . --item PowerBI/Parcel --dry-run --workspace-config workspace-dev.yml
 ```
 
-Preview uses the same canonical plan construction and reads destination state. It reports selected objects, action classifications, destructive consequences, certification/runtime/validation changes and uncertainty. It performs no target mutation, missing-item provisioning, catalogue publication, endpoint refresh or retained bundle write. It does not prove execution-runtime compatibility, service rights to mutate or later target state. Suitable existing targets are required; a missing selected Power BI target is not created by preview.
+Preview uses the same canonical plan construction and reads destination state. It reports selected objects, action classifications, destructive consequences, certification/runtime/validation changes and uncertainty. It performs no target mutation, missing-item provisioning, catalogue publication, endpoint refresh or retained bundle write. Suitable existing targets are required; a missing selected Power BI target is not created by preview.
 
 `--dry-run` and `--bundle-only` are mutually exclusive. `--bundle-path` requires bundle-only mode. Neither preview nor bundle-only mode uses ordinary missing-target provisioning.
 

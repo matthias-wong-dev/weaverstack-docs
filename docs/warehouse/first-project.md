@@ -91,8 +91,6 @@ You can set this up again with:
 
 Initialise creates or reuses the named items and writes the SQL Table, View and validations below. This Warehouse-only project needs no Spark runtime or Environment publication. Open the generated files rather than copying these declarations.
 
-These live captures use a built development wheel from runtime `bf908f47` in the disposable **Weaver Example** trial workspace. They do not establish published-PyPI availability. Use your workspace name; timings vary.
-
 <details markdown="1">
 <summary>See the generated workspace bindings</summary>
 
@@ -396,6 +394,6 @@ order by [Parcel ID];
 
 Build created the physical Table, generated its loading procedure and installed the dependent View. The SQL reference supplied the dependency; `Lineage` is descriptive. Load staged the query result, matched keys and reconciled changed values according to the Table’s policy. It also recorded the row changes and processing state for Health. You wrote neither an INSERT/MERGE procedure nor a second load-order definition.
 
-The View now gives you one row per parcel, but a successful Load does not prove that it chose the right event. [Testing Warehouse data](tests.md) runs the generated independent expected result and check for unknown statuses to this same project, without initialising another one.
+The View now gives you one row per parcel. [Testing Warehouse data](tests.md) runs the generated independent expected result and check for unknown statuses against this same project.
 
 If you edit either SQL document, Check and Build install the changed definition before another Load. [The development cycle](../estate/development-cycle.md) covers that loop; [Table reference](../reference/weaver-documents/table.md) owns the exact authoring and load contract.

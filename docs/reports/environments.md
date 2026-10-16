@@ -152,8 +152,6 @@ Check each Report's actual service binding, including the workspace, not just th
 | `workspace-dev.yml` | Parcel BI Development | `Parcel_Report_Dev` | `Parcel_Dev` |
 | `workspace-prod.yml` | Parcel BI Production | `Parcel_Report` | `Parcel` |
 
-The live binding readbacks verified `Parcel_Report_Dev` → `Parcel_Dev` and `Parcel_Report` → `Parcel`. Both captures used the authorised disposable **Weaver Example** workspace, with distinct physical pairs. They demonstrate configuration-specific binding, not access to a second workspace or a real production deployment.
-
 In each workspace’s **lineage view**, follow the deployed Report’s semantic-model link. Confirm both its name and workspace against the table above. The production Report must link to the production model, not to the development one. The source `byPath` remains unchanged.
 
 For a viewing check, refresh each model with refresh permission, then open each Report with view/query permission:

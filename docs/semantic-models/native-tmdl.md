@@ -286,8 +286,6 @@ The deployed model definition and DAX readback showed:
 | `Depot[DepotId]` | Visible | Visible |
 | Delivery Count | 2 | 2 |
 
-These are captured service-model readbacks, not results from opening the unchanged local PBIP.
-
 The native files and inline data remain in place. Desktop does not execute Weaver annotations when opening the local PBIP; inspect the service-connected model for the change. Hidden fields are not a security policy or RLS/OLS.
 
 To stop requesting the transformation, remove the annotation and rebuild. Setting it to `false` is a no-op, not an instruction to undo an independently authored native hide.

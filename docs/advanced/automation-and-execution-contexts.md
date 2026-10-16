@@ -29,11 +29,9 @@ Weaver exposes the same lifecycle operations from a desktop process and from Pyt
 
 A Session belongs to one physical workspace. It is not moved to another workspace between commands. If the selected host cannot supply a required capability, the operation fails rather than falling back to local execution or silently changing target.
 
-Fabric availability remains an execution boundary. Capacity state, workspace permissions, Environment publication, item existence and service-side timing are properties of the workspace at run time; a local Check or successful plan does not establish them.
-
 Standalone Power BI deployment/refresh and DAX file-mode validation require their REST/query capabilities, not a catalogue or Spark runtime. They return operation reports without persisted Weaver history.
 
-Publish the same Weaver release used by the runner into the Fabric Environment. [Running Python in Fabric](../lakehouse/runtime.md) owns that step. A read-only Build preview does not establish runtime compatibility.
+For hosted Spark work, publish the same Weaver release used by the runner into the Fabric Environment. [Running Python in Fabric](../lakehouse/runtime.md) explains publication.
 
 ## Sessions reuse acquired capabilities
 

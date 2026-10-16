@@ -177,7 +177,7 @@ Load summary
     The Load above failed because Operations has no explicit cloud or gateway connection with credentials. Bind an approved connection, rerun this Load and replace this TODO with its successful terminal result.
 <!-- /review-todo -->
 
-The capture’s source Loads succeeded, but the model refresh failed: the service had no explicit cloud or gateway connection with credentials for Operations. Build success verifies the deployed definition, not the credentials needed to refresh it. Select an existing approved connection with the connection’s owner before rerunning Load.
+Refreshing ParcelWarehouse requires a cloud or gateway connection with credentials for Operations. Select an existing connection with its owner, then rerun Load.
 
 Build the source and model in separate requests. `--bind-data-sources` uses an existing matching supported connection. Resolve missing or ambiguous connections with the connection’s owner; do not change tenant settings to make the example run.
 
