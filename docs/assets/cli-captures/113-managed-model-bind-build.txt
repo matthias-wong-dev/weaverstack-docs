@@ -1,0 +1,64 @@
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  SemanticModel/ParcelWarehouse
+
+Build
+
+    Create SemanticModel/ParcelWarehouse                                                                  20.7s
+
+  Create Power BI items                                                                                   20.7s
+
+  Check target occupancy                                                                                   0.0s
+
+  Resolve semantic data sources                                                                            0.3s
+
+  Read catalogue                                                                                           1.6s
+
+    Resolve SemanticModel/ParcelWarehouse                                                                  0.0s
+
+    Read Warehouse/Catalogue inventory                                                                     0.0s
+
+  Read target inventories                                                                                  0.0s
+
+  Read semantic sources                                                                                    0.6s
+
+  Prepare bundle                                                                                           0.1s
+
+Install selection
+  SemanticModel/ParcelWarehouse
+    changed                 1
+    selected for build      1
+
+→   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
+
+✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          1.6s
+
+→   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action
+
+✓   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action                                21.0s
+
+→   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action
+
+✓   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action                                24.1s
+
+→   Warehouse/Catalogue · Updating catalogue definitions · 1 action
+
+✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        2.3s
+
+→   Warehouse/Catalogue · Finalising catalogue · 1 action
+
+✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s
+
+  Install                                                                                                 49.6s
+
+warning: SemanticModel/ParcelWarehouse reads [warehouse-endpoint];operations, and no connection has that path. Create a connection for it in Fabric before refreshing.
+
+✓ Build                                                                                                   1m14s
+
+Installation
+    5 succeeded
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  f804e31e3ca885c39ee691d2a4f205f8992398b1d8ed70bf550c8f6a10e81385

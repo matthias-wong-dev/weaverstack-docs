@@ -1,0 +1,67 @@
+Set up a Weaver project.
+
+Lakehouse (optional)
+Use a Lakehouse for files and Python/Delta tables.
+Press Enter if this project does not need one.
+Existing: Landing
+Examples: Landing, Bronze
+Lakehouse:
+
+Project
+
+  Project folder  ./parcel
+  Workspace       Weaver Example
+  Catalogue       Catalogue
+  Environment     Weaver
+  Lakehouse       None
+  Warehouse       Operations
+  Example         Parcel
+  Semantic Model  None
+
+1. Continue
+2. Change an answer
+3. Cancel
+Choose [1/2/3]: 1
+Publishing a Fabric Environment can take about 5 minutes.
+Publish the Environment now? [y/N]: n
+
+Setting up the Weaver project
+
+  Checking the workspace                                                                                   0.4s
+
+  Reading the Environment                                                                                 21.6s
+
+  Checking the project files                                                                               0.4s
+
+  Creating the Warehouse Operations                                                                        8.8s
+
+  Writing the project files                                                                                0.0s
+
+✓ Setting up the Weaver project                                                                           31.2s
+
+  Catalogue    Catalogue   already exists
+  Environment  Weaver      already exists
+  Warehouse    Operations  created
+  Environment publication: deferred
+
+Weaver project ready in ./parcel.
+
+Next:
+
+  cd ./parcel
+
+Environment publication deferred.
+Publish it before the first load that runs Python.
+
+  weaver fabric environment publish --path Environment/Weaver.Environment
+  weaver workflow full
+
+Or run individually:
+  weaver build
+  weaver load
+  weaver test
+  weaver health
+
+You can set this up again with:
+
+  weaver initialise --workspace 'Weaver Example' --project-folder ./parcel --catalogue Catalogue --environment Weaver --warehouse Operations --example Parcel --non-interactive

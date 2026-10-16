@@ -1,0 +1,31 @@
+Health
+
+  Read catalogue                                                                                           2.5s
+
+  Check installed items                                                                                    0.2s
+
+  Read installed objects                                                                                   2.5s
+
+✓ Health                                                                                                   5.1s
+
+Weaver Health  Green
+
+Load    Green
+  Last load activity   0h 3m ago
+  6 succeeded
+
+Tests   Green
+  4 succeeded
+
+Build   Green
+  Installed estate consistent (26 objects)
+
+Slowest loads
+  Lakehouse/Landing/Tables/Parcel.Event          14.5s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
+  Warehouse/Operations/Parcel.StatusEvent        5.5s
+  Warehouse/Operations/Parcel.LiveStatus         3.1s
+  Lakehouse/Landing/Files/Parcel.Events          3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0

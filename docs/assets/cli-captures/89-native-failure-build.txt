@@ -1,0 +1,40 @@
+Workspace  Weaver Example
+Catalogue  none
+Targets
+  SemanticModel/Parcel
+
+Build
+
+  Resolve semantic data sources                                                                            0.0s
+
+    Resolve SemanticModel/Parcel                                                                           0.0s
+
+  Read target inventories                                                                                  0.1s
+
+  Read semantic sources                                                                                    0.0s
+
+  Prepare bundle                                                                                           0.1s
+
+Install selection
+  SemanticModel/Parcel
+    changed                 1
+    selected for build      1
+
+→   SemanticModel/Parcel · Deploy semantic definitions · 1 action
+
+✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.6s
+
+→   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action
+
+✓   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action                                20.5s
+
+  Install                                                                                                 41.2s
+
+✓ Build                                                                                                   41.5s
+
+Installation
+    2 succeeded
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  83bdc10fbd2dcfcd366ca441266de5273493d292ccc79f096ba09fd58f40a13c

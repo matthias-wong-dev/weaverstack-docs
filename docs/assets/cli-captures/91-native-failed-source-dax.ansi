@@ -1,0 +1,17 @@
+
+Test
+
+[2m⋯[0m Test                                                                                                 [2m    0.0s[0m                                                                                                               [2m⋯[0m Read validations                                                                                     [2m    0.0s[0m                                                                                                                [0m Read validations                                                                                     [2m    0.6s[0m
+[2m⋯[0m Test                                                                                                 [2m    0.6s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    0.0s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    0.4s[0m                                                                                                                [0m Execute                                                                                              [2m    1.0s[0m
+[2m⋯[0m Test                                                                                                 [2m    1.6s[0m                                                                                                               [31m✗[0m Test                                                                                                 [2m    1.6s[0m
+
+test [31mfailed[0m
+
+  [31mfailed    [0m Assumption  SemanticModel/Parcel/Parcel.PositiveDeliveryCount  (1 violation)
+
+Test summary
+[2m    0 passed[0m
+[31m    1 failed[0m
+
+  SemanticModel/Parcel/Parcel.PositiveDeliveryCount:
+    {'DeliveryCount': -1}

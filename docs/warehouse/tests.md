@@ -42,7 +42,20 @@ weaver build --item Warehouse/Operations
 weaver test Warehouse/Operations
 ```
 
-Expect `Parcel.CurrentStatusMatches` to pass with **0 missing, 0 unexpected**. The generated Test is already installed by the first Build; no data Load is needed because the Table and View have not changed. The expected rows were written independently of the View’s ranking query, so this checks the answer rather than repeating the calculation.
+<!-- cli-capture: {"id": "14-warehouse-test", "title": "Test \u00b7 both generated validations", "start": "test passed", "end": "  Workflow:"} -->
+<figure class="weaver-terminal">
+<figcaption>Test · both generated validations <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+
+Test summary
+<span class="terminal-status-green">    2 passed</span>
+    0 failed
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/14-warehouse-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+Both generated validations passed. The generated Test is already installed by the first Build; no data Load is needed because the Table and View have not changed. The expected rows were written independently of the View’s ranking query, so this checks the answer rather than repeating the calculation.
 
 ## Find events outside the accepted vocabulary
 
@@ -114,10 +127,88 @@ Install the edited Test and select it for diagnostics:
 weaver check
 weaver build --item Warehouse/Operations
 weaver test Warehouse/Operations --name 'Parcel[.]CurrentStatusMatches'
+```
+
+<!-- cli-capture: {"id": "19-failed-warehouse-test", "title": "Test \u00b7 deliberate discrepancy", "start": "test failed", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Test · deliberate discrepancy <span class="terminal-exit">exit 1</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">test failed</span>
+
+<span class="terminal-status-red">  failed     Test        Warehouse/Operations/Parcel.CurrentStatusMatches  (1 missing, 1 unexpected)</span>
+
+Test summary
+    0 passed
+<span class="terminal-status-red">    1 failed</span>
+  Workflow: [run-id]
+
+  Warehouse/Operations/Parcel.CurrentStatusMatches:
+    {&#x27;_weaver_side&#x27;: &#x27;expected&#x27;, &#x27;_weaver_sk&#x27;: 1, &#x27;Parcel ID&#x27;: &#x27;P-1002&#x27;, &#x27;Status&#x27;: &#x27;In transit&#x27;, &#x27;Depot&#x27;: &#x27;South&#x27;}
+    {&#x27;_weaver_side&#x27;: &#x27;actual&#x27;, &#x27;_weaver_sk&#x27;: 1, &#x27;Parcel ID&#x27;: &#x27;P-1002&#x27;, &#x27;Status&#x27;: &#x27;Delivered&#x27;, &#x27;Depot&#x27;: &#x27;South&#x27;}
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Test
+
+  Read catalogue                                                                                           2.4s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+
+→   Test Warehouse/Operations/Parcel.CurrentStatusMatches
+
+<span class="terminal-status-red">✗   Test Warehouse/Operations/Parcel.CurrentStatusMatches  (1 missing, 1 unexpected)                       6.8s</span>
+
+  Execute                                                                                                  6.9s
+
+  Record what the run did                                                                                  0.6s
+
+<span class="terminal-status-red">✗ Test                                                                                                     9.9s</span>
+
+<span class="terminal-status-red">test failed</span>
+
+<span class="terminal-status-red">  failed     Test        Warehouse/Operations/Parcel.CurrentStatusMatches  (1 missing, 1 unexpected)</span>
+
+Test summary
+    0 passed
+<span class="terminal-status-red">    1 failed</span>
+  Workflow: [run-id]
+
+  Warehouse/Operations/Parcel.CurrentStatusMatches:
+    {&#x27;_weaver_side&#x27;: &#x27;expected&#x27;, &#x27;_weaver_sk&#x27;: 1, &#x27;Parcel ID&#x27;: &#x27;P-1002&#x27;, &#x27;Status&#x27;: &#x27;In transit&#x27;, &#x27;Depot&#x27;: &#x27;South&#x27;}
+    {&#x27;_weaver_side&#x27;: &#x27;actual&#x27;, &#x27;_weaver_sk&#x27;: 1, &#x27;Parcel ID&#x27;: &#x27;P-1002&#x27;, &#x27;Status&#x27;: &#x27;Delivered&#x27;, &#x27;Depot&#x27;: &#x27;South&#x27;}
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/19-failed-warehouse-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+```bash
 weaver health --item Warehouse/Operations
 ```
 
-The expected finding is one missing row (`P-1002`, `In transit`, `South`) and one unexpected row (`P-1002`, `Delivered`, `South`). Test exits non-zero; Health records Tests as Red. The selector is a case-insensitive whole-name regular expression, so `[.]` matches the literal dot.
+<!-- cli-capture: {"id": "20-health-failed-test", "title": "Health \u00b7 recorded failed validation", "start": "Weaver Health", "end": "Slowest loads"} -->
+<figure class="weaver-terminal">
+<figcaption>Health · recorded failed validation <span class="terminal-exit">exit 1</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">Weaver Health  Red</span>
+
+<span class="terminal-status-green">Load    Green</span>
+  Last load activity   0h 3m ago
+<span class="terminal-status-green">  1 succeeded</span>
+
+<span class="terminal-status-red">Tests   Red</span>
+<span class="terminal-status-red">  1 failed · 1 succeeded</span>
+<span class="terminal-status-red">  Red    Warehouse/Operations/Parcel.CurrentStatusMatches</span>
+<span class="terminal-status-red">          the last run failed</span>
+
+<span class="terminal-status-green">Build   Green</span>
+  Installed estate consistent (10 objects)
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/20-health-failed-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+The finding is one missing row (`P-1002`, `In transit`, `South`) and one unexpected row (`P-1002`, `Delivered`, `South`). Test exits non-zero; Health records Tests as Red. The selector is a case-insensitive whole-name regular expression, so `[.]` matches the literal dot.
 
 Restore the passing Test shown above, then install and rerun it:
 
@@ -128,7 +219,27 @@ weaver test Warehouse/Operations
 weaver health --item Warehouse/Operations
 ```
 
-Both validations should pass and the item should return to Green.
+<!-- cli-capture: {"id": "23-health-restored", "title": "Health \u00b7 restored validation", "start": "Weaver Health", "end": "Slowest loads"} -->
+<figure class="weaver-terminal">
+<figcaption>Health · restored validation <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
+
+<span class="terminal-status-green">Load    Green</span>
+  Last load activity   0h 4m ago
+<span class="terminal-status-green">  1 succeeded</span>
+
+<span class="terminal-status-green">Tests   Green</span>
+<span class="terminal-status-green">  2 succeeded</span>
+
+<span class="terminal-status-green">Build   Green</span>
+  Installed estate consistent (10 objects)
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/23-health-restored.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+Both validations passed and the item returned to Green.
 
 To try edited SQL against deployed data before installing it, use file mode:
 

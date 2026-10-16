@@ -1,0 +1,25 @@
+Health
+
+  Read catalogue                                                                                           2.7s
+
+  Check installed items                                                                                    0.1s
+
+  Read installed objects                                                                                   0.0s
+
+✓ Health                                                                                                   2.8s
+
+Weaver Health  Red
+
+Load    Red
+  Last load activity   0h 0m ago
+  1 failed
+  Red    SemanticModel/ParcelWarehouse
+          the last load failed
+
+Tests   Amber
+  1 pending
+  Amber  SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles
+          the last run pending
+
+Build   Green
+  Installed estate consistent (2 objects)

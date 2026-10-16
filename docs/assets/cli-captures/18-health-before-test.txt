@@ -1,0 +1,29 @@
+Health
+
+  Read catalogue                                                                                           2.2s
+
+  Check installed items                                                                                    0.1s
+
+  Read installed objects                                                                                   0.3s
+
+✓ Health                                                                                                   2.7s
+
+Weaver Health  Amber
+
+Load    Green
+  Last load activity   0h 3m ago
+  1 succeeded
+
+Tests   Amber
+  1 pending · 1 succeeded
+  Amber  Warehouse/Operations/Parcel.CurrentStatusMatches
+          the last run pending
+
+Build   Green
+  Installed estate consistent (10 objects)
+
+Slowest loads
+  Warehouse/Operations/Parcel.StatusEvent     3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0

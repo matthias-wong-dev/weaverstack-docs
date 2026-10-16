@@ -118,6 +118,20 @@ For an installed-wheel check, build a wheel, install it into an isolated target 
 
 This checks all named selections, subset preservation and extension orders through the public API with network connections refused. Fabric inventory/creation is an explicit test boundary; it does not prove deployment, SQL execution, refresh or Report rendering.
 
+## Captured terminal output
+
+`docs/assets/cli-captures/manifest.json` records the actual commands, installed development-package version, runtime revision, workspace, exit status and capture context. Sanitised ANSI and plain-text transcripts live beside it. `readbacks.json` contains separately labelled live SQL/API observations, not simulated CLI output. Keep original captures, credentials and full service definitions outside this repository.
+
+Pages select output through `cli-capture` markers. Their `id` resolves a manifest entry; optional `start` and `end` select complete observed lines, and `full: true` adds a native disclosure with the complete sanitised transcript. Never edit the generated HTML or transcript values to make a result look better. Record retries, interruptions, actual failures and documented-order disagreements in the capture ledger.
+
+```bash
+python tools/render_cli_captures.py --write
+python tools/render_cli_captures.py --check
+"$PRODUCT_PYTHON" -m pytest -q tools/test_cli_captures.py
+```
+
+The renderer only escapes text and adds presentation classes. Caption/footer labels are presentation, not invented terminal lines. Its raw-asset links account for MkDocs directory URLs. Review output text and copied source bytes, mobile/local scrolling, both themes and no-JavaScript disclosures after regeneration. Strip ANSI again during privacy checks so identifiers split by styling cannot escape the scan. [Capture inventory](CAPTURE-INVENTORY.md) records live coverage and remaining limits.
+
 ## Validate the change
 
 Python 3.11 or later and [uv](https://docs.astral.sh/uv/) are required.

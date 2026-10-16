@@ -1,0 +1,53 @@
+Load
+
+  Read catalogue                                                                                           2.1s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  35.2s
+
+→   Load Lakehouse/Landing/Files/Parcel.Events
+
+→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
+
+✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.3s
+
+→   Load Lakehouse/Landing/Tables/Parcel.Event
+
+✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~1 -1 !0)                                 3.6s
+
+→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
+
+✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     15.2s
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                             12.9s
+
+✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                32.4s
+
+  Execute                                                                                                 33.9s
+
+  Record what the run did                                                                                  0.0s
+
+✓ Load                                                                                                    1m21s
+
+load succeeded: Lakehouse/Landing
+
+Load summary
+    5 succeeded
+    0 failed
+    0 blocked
+  Rows
+    read                   8
+    inserted               0
+    updated                2
+    deleted                2
+    rejected               0
+
+  Workflow: [run-id]

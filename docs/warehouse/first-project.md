@@ -19,7 +19,24 @@ weaver initialise \
 cd parcel
 ```
 
+<!-- cli-capture: {"id": "10-warehouse-initialise", "title": "Initialise \u00b7 Parcel Warehouse", "start": "  Catalogue    Catalogue", "end": "Next:"} -->
+<figure class="weaver-terminal">
+<figcaption>Initialise · Parcel Warehouse <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>  Catalogue    Catalogue   already exists
+  Environment  Weaver      already exists
+  Warehouse    Operations  created
+  Environment publication: deferred
+
+Weaver project ready in ./parcel.
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/10-warehouse-initialise.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
 Initialise creates or reuses the named items and writes the SQL Table, View and validations below. This Warehouse-only project needs no Spark runtime or Environment publication. Open the generated files rather than copying these declarations.
+
+These live captures use a built development wheel from runtime `bf908f47` in the disposable **Weaver Example** trial workspace. They do not establish published-PyPI availability. Use your workspace name; timings vary. [Capture provenance](../assets/cli-captures/manifest.json).
 
 <details markdown="1">
 <summary>See the generated workspace bindings</summary>
@@ -111,12 +128,191 @@ The View reads the event Table and keeps the most recent row for each parcel.
 
 ```bash
 weaver check
+```
+
+<!-- cli-capture: {"id": "11-warehouse-check", "title": "Check \u00b7 local project"} -->
+<figure class="weaver-terminal">
+<figcaption>Check · local project <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Project valid.
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/11-warehouse-check.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+Install the definitions:
+
+```bash
 weaver build --item Warehouse/Operations
+```
+
+<!-- cli-capture: {"id": "12-warehouse-build", "title": "Build \u00b7 first Warehouse installation", "start": "Installation", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Build · first Warehouse installation <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
+<span class="terminal-status-green">   18 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  9b8429565c5101b39fdec126ffe26eb858fc30d94f6c2e0af1a0d80bad9055c9
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+Build
+
+  Check target occupancy                                                                                   0.0s
+
+  Resolve semantic data sources                                                                            0.0s
+
+  Read catalogue                                                                                           6.1s
+
+    Read Warehouse/Operations inventory                                                                    0.9s
+
+    Read Warehouse/Catalogue inventory                                                                     0.2s
+
+  Read target inventories                                                                                  1.1s
+
+  Read semantic sources                                                                                    0.0s
+
+  Prepare bundle                                                                                           0.2s
+
+Install selection
+  Warehouse/Operations
+    new                     13
+    selected for build      13
+
+→   Warehouse/Catalogue · Upgrade catalogue identity and semantic keys · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Upgrade catalogue identity and semantic keys · 1 action                         16.2s</span>
+
+→   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                                 3.9s</span>
+
+→   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.0s</span>
+
+→   Warehouse/Operations · Creating schemas · 2 actions
+
+→   Warehouse/Catalogue · Removing unmanaged objects · 2 actions
+
+→   Warehouse/Operations · Building objects · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Operations · Creating schemas · 2 actions                                                    0.5s</span>
+
+→   Warehouse/Operations · Creating shortcuts · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Removing unmanaged objects · 2 actions                                           0.5s</span>
+
+<span class="terminal-status-green">✓   Warehouse/Operations · Creating shortcuts · 1 action                                                   0.1s</span>
+
+→   Warehouse/Operations · Installing load and test artefacts · 5 actions
+
+<span class="terminal-status-green">✓   Warehouse/Operations · Building objects · 1 action                                                     1.6s</span>
+
+→   Warehouse/Operations · Building objects · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Operations · Building objects · 1 action                                                     0.0s</span>
+
+<span class="terminal-status-green">✓   Warehouse/Operations · Installing load and test artefacts · 5 actions                                  1.1s</span>
+
+→   Warehouse/Catalogue · Recording created Views · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Recording created Views · 1 action                                               0.5s</span>
+
+→   Warehouse/Catalogue · Updating catalogue definitions · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        7.8s</span>
+
+→   Warehouse/Catalogue · Finalising catalogue · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s</span>
+
+  Install                                                                                                 32.7s
+
+<span class="terminal-status-green">✓ Build                                                                                                   52.9s</span>
+
+Installation
+<span class="terminal-status-green">   18 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  9b8429565c5101b39fdec126ffe26eb858fc30d94f6c2e0af1a0d80bad9055c9
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/12-warehouse-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+Load the event rows:
+
+```bash
 weaver load Warehouse/Operations
+```
+
+<!-- cli-capture: {"id": "13-warehouse-load", "title": "Load \u00b7 first event rows", "start": "Load summary", "end": "  Workflow:"} -->
+<figure class="weaver-terminal">
+<figcaption>Load · first event rows <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
+<span class="terminal-status-green">    1 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   3
+    inserted               3
+    updated                0
+    deleted                0
+    rejected               0
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/13-warehouse-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+Run the generated validations, then inspect the installed result:
+
+```bash
+weaver test Warehouse/Operations
+```
+
+<!-- cli-capture: {"id": "14-warehouse-test", "title": "Test \u00b7 generated validations", "start": "test passed", "end": "  Workflow:"} -->
+<figure class="weaver-terminal">
+<figcaption>Test · generated validations <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+
+Test summary
+<span class="terminal-status-green">    2 passed</span>
+    0 failed
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/14-warehouse-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+```bash
 weaver health --item Warehouse/Operations
 ```
 
-Check should print `Project valid.` Build should report no failed actions. The first Load should read and insert three event rows with no rejects; Health should show Green Build and Load sections.
+<!-- cli-capture: {"id": "15-warehouse-health", "title": "Health \u00b7 loaded and tested Warehouse", "start": "Weaver Health", "end": "Slowest loads"} -->
+<figure class="weaver-terminal">
+<figcaption>Health · loaded and tested Warehouse <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
+
+<span class="terminal-status-green">Load    Green</span>
+  Last load activity   0h 0m ago
+<span class="terminal-status-green">  1 succeeded</span>
+
+<span class="terminal-status-green">Tests   Green</span>
+<span class="terminal-status-green">  2 succeeded</span>
+
+<span class="terminal-status-green">Build   Green</span>
+  Installed estate consistent (10 objects)
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/15-warehouse-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
 
 In a SQL query connected to **Operations**, read the View:
 

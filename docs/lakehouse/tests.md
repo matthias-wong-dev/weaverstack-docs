@@ -59,10 +59,26 @@ weaver check
 weaver build --item Lakehouse/Landing
 weaver load Lakehouse/Landing --stale
 weaver test Lakehouse/Landing
+```
+
+<!-- cli-capture: {"id": "47-lakehouse-test", "title": "Test \u00b7 independent expected rows and known statuses", "start": "test passed", "end": "  Workflow:"} -->
+<figure class="weaver-terminal">
+<figcaption>Test · independent expected rows and known statuses <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+
+Test summary
+<span class="terminal-status-green">    2 passed</span>
+    0 failed
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/47-lakehouse-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+```bash
 weaver health --item Lakehouse/Landing
 ```
 
-Check should accept both documents. Build installs them but does not evaluate them. The stale Load catches up any data work made stale by Build; Test does not load its dependencies for you. With the original export, Test should record `Succeeded` for both validations, with zero missing/unexpected rows and zero assumption violations. Inspect the Test section of Health rather than treating a successful Load as a quality result.
+Build installs validations but does not evaluate them. The stale Load catches up changed data work; Test does not load its dependencies for you. Both validations passed against the original export. Read the Test section of Health separately from Load.
 
 To run these source files before installing a validation edit:
 

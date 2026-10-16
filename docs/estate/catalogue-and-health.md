@@ -12,6 +12,35 @@ If you added models and Reports through [the estate mapping](environments.md#a-m
 
 Without an item selector, Health covers the whole managed installed estate. It reads recorded state and, by default, compares installed claims with physical inventory. It does not read unbuilt source, load data or execute validations.
 
+If this Catalogue already contains other projects, their findings are included too. To inspect only the continuing Parcel items:
+
+```bash
+weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
+```
+
+<!-- cli-capture: {"id": "56-scoped-estate-health", "title": "Health \u00b7 the two Parcel items after Test", "start": "Weaver Health", "end": "Slowest loads"} -->
+<figure class="weaver-terminal">
+<figcaption>Health · the two Parcel items after Test <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
+
+<span class="terminal-status-green">Load    Green</span>
+  Last load activity   0h 3m ago
+<span class="terminal-status-green">  6 succeeded</span>
+
+<span class="terminal-status-green">Tests   Green</span>
+<span class="terminal-status-green">  4 succeeded</span>
+
+<span class="terminal-status-green">Build   Green</span>
+  Installed estate consistent (26 objects)
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/56-scoped-estate-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+This is the scoped result after both items were tested. The same capture workspace’s unscoped report also found older, unrelated installations; restricting the report does not repair or erase those findings.
+
+
 ## Find the work that needs attention
 
 Health separates three questions:
@@ -23,6 +52,49 @@ Health separates three questions:
 | Build | Installed claims that are inconsistent or absent in the inspected physical form | Inspect bindings and installation, then reconcile with Build |
 
 Green means the assessed subjects have no current finding. Amber identifies work that needs attention without a current failure, such as an unrun Table, rejected input or stale Test. Red identifies a recorded failure or inconsistent installation. The overall colour is the worst section colour; act on its named findings, not on colour alone.
+
+For example, after loading the connected Parcel items but before rerunning Test, the report retained four successful historical validations and marked them stale:
+
+<!-- cli-capture: {"id": "53-cross-item-health", "title": "Health \u00b7 successful validations with newer inputs", "start": "Tests   Amber", "end": "Build   Green"} -->
+<figure class="weaver-terminal">
+<figcaption>Health · successful validations with newer inputs <span class="terminal-exit">exit 1</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-amber">Tests   Amber</span>
+<span class="terminal-status-green">  4 succeeded</span>
+<span class="terminal-status-amber">  Amber  Lakehouse/Landing/Parcel.CurrentStatusMatches</span>
+<span class="terminal-status-green">          Lakehouse/Landing/Files/Parcel.Events has been loaded since this validation passed</span>
+<span class="terminal-status-amber">  Amber  Lakehouse/Landing/Parcel.EventStatusIsKnown</span>
+<span class="terminal-status-green">          Lakehouse/Landing/Files/Parcel.Events has been loaded since this validation passed</span>
+<span class="terminal-status-amber">  Amber  Warehouse/Operations/Parcel.CurrentStatusMatches</span>
+<span class="terminal-status-green">          Warehouse/Operations/Parcel.StatusEvent has been loaded since this validation passed</span>
+<span class="terminal-status-amber">  Amber  Warehouse/Operations/Parcel.StatusIsKnown</span>
+<span class="terminal-status-green">          Warehouse/Operations/Parcel.StatusEvent has been loaded since this validation passed</span>
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/53-cross-item-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+<details markdown="1">
+<summary>A failed validation is different from a stale one</summary>
+
+The [Warehouse failure exercise](../warehouse/tests.md#optional-make-one-discrepancy-visible) installs an intentionally wrong expected status, then runs Test. Its recorded finding is Red, not Amber:
+
+<!-- cli-capture: {"id": "20-health-failed-test", "title": "Health \u00b7 deliberate Warehouse finding", "start": "Tests   Red", "end": "Build   Green"} -->
+<figure class="weaver-terminal">
+<figcaption>Health · deliberate Warehouse finding <span class="terminal-exit">exit 1</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">Tests   Red</span>
+<span class="terminal-status-red">  1 failed · 1 succeeded</span>
+<span class="terminal-status-red">  Red    Warehouse/Operations/Parcel.CurrentStatusMatches</span>
+<span class="terminal-status-red">          the last run failed</span>
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/20-health-failed-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+Restoring the expected SQL and rerunning Test returned that item to Green.
+
+</details>
 
 A successful model refresh can later become stale because its source was loaded afterward. A passing DAX Test becomes stale when the model it reads changes. Reports have installation/model-dependency claims, but no independent data refresh or Test health. Health is not a Report rendering check.
 

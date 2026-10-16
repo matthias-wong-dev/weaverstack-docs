@@ -1,0 +1,444 @@
+{
+  "evidence": "Real SQL, Fabric definition and Power BI query readbacks; not CLI output and not screenshots",
+  "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7",
+  "weaver_version": "0.9.0.dev16746776803276843971",
+  "workspace": "Weaver Example, authorised disposable trial workspace",
+  "observations": {
+    "warehouse-current-status": {
+      "sql": "select [Parcel ID], [Status], [Depot] from [Parcel].[CurrentStatus] order by [Parcel ID];",
+      "target": "Warehouse/Operations",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "In transit",
+          "Depot": "Central"
+        },
+        {
+          "Parcel ID": "P-1002",
+          "Status": "Delivered",
+          "Depot": "South"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "incremental-target-initial": {
+      "sql": "select [Parcel ID], [Status], [Depot]\nfrom [Parcel].[LiveStatus]\norder by [Parcel ID];\n",
+      "target": "Warehouse/Operations",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "In transit",
+          "Depot": "Central"
+        },
+        {
+          "Parcel ID": "P-1002",
+          "Status": "Delivered",
+          "Depot": "South"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "incremental-target-changed": {
+      "sql": "select [Parcel ID], [Status], [Depot]\nfrom [Parcel].[LiveStatus]\norder by [Parcel ID];\n",
+      "target": "Warehouse/Operations",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "Delivered",
+          "Depot": "Central"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "incremental-target-noop": {
+      "sql": "select [Parcel ID], [Status], [Depot]\nfrom [Parcel].[LiveStatus]\norder by [Parcel ID];\n",
+      "target": "Warehouse/Operations",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "Delivered",
+          "Depot": "Central"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "incremental-bookmark-first": {
+      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Warehouse'\n  and [Item name] = N'Operations'\n  and [Schema name] = N'Parcel'\n  and [Object name] = N'LiveStatus';\n",
+      "target": "Warehouse/Catalogue",
+      "rows": [
+        {
+          "Bookmark datetime": "2026-10-15 23:07:21.144843"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "incremental-bookmark-changed": {
+      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Warehouse'\n  and [Item name] = N'Operations'\n  and [Schema name] = N'Parcel'\n  and [Object name] = N'LiveStatus';\n",
+      "target": "Warehouse/Catalogue",
+      "rows": [
+        {
+          "Bookmark datetime": "2026-10-15 23:08:25.251306"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "incremental-bookmark-noop": {
+      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Warehouse'\n  and [Item name] = N'Operations'\n  and [Schema name] = N'Parcel'\n  and [Object name] = N'LiveStatus';\n",
+      "target": "Warehouse/Catalogue",
+      "rows": [
+        {
+          "Bookmark datetime": "2026-10-15 23:08:38.511204"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "cross-item-original-current-status": {
+      "sql": "SELECT [Parcel ID], [Status], [Depot] FROM Parcel.CurrentStatus ORDER BY [Parcel ID];",
+      "target": "Warehouse/Operations",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "In transit",
+          "Depot": "Central"
+        },
+        {
+          "Parcel ID": "P-1002",
+          "Status": "Delivered",
+          "Depot": "South"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "cross-item-warehouse-current-status": {
+      "sql": "SELECT [Parcel ID], [Status], [Depot] FROM Parcel.LakehouseCurrentStatus ORDER BY [Parcel ID];",
+      "target": "Warehouse/Operations",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "In transit",
+          "Depot": "Central"
+        },
+        {
+          "Parcel ID": "P-1002",
+          "Status": "Delivered",
+          "Depot": "South"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "lakehouse-current-status-query": {
+      "sql": "select [Parcel ID], [Status], [Depot] from [Parcel].[CurrentStatus] order by [Parcel ID];",
+      "target": "Lakehouse/Landing SQL analytics endpoint",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "In transit",
+          "Depot": "Central"
+        },
+        {
+          "Parcel ID": "P-1002",
+          "Status": "Delivered",
+          "Depot": "South"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL readback, not CLI transcript"
+    },
+    "lakehouse-event-query": {
+      "sql": "select [Parcel ID], [Event sequence], [Status], [Depot] from [Parcel].[Event] order by [Parcel ID], [Event sequence];",
+      "target": "Lakehouse/Landing SQL analytics endpoint",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Event sequence": 1,
+          "Status": "Accepted",
+          "Depot": "North"
+        },
+        {
+          "Parcel ID": "P-1001",
+          "Event sequence": 2,
+          "Status": "In transit",
+          "Depot": "Central"
+        },
+        {
+          "Parcel ID": "P-1002",
+          "Event sequence": 1,
+          "Status": "Delivered",
+          "Depot": "South"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL readback, not CLI transcript"
+    },
+    "lakehouse-incremental-target-first": {
+      "sql": "SELECT [Parcel ID], [Status], [Depot] FROM Parcel.LiveStatus ORDER BY [Parcel ID];",
+      "target": "Lakehouse/Landing SQL analytics endpoint",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "In transit",
+          "Depot": "Central"
+        },
+        {
+          "Parcel ID": "P-1002",
+          "Status": "Delivered",
+          "Depot": "South"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL readback, not CLI transcript"
+    },
+    "lakehouse-incremental-target-changed": {
+      "sql": "SELECT [Parcel ID], [Status], [Depot] FROM Parcel.LiveStatus ORDER BY [Parcel ID];",
+      "target": "Lakehouse/Landing SQL analytics endpoint",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "Delivered",
+          "Depot": "Central"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL readback, not CLI transcript"
+    },
+    "lakehouse-incremental-target-noop": {
+      "sql": "SELECT [Parcel ID], [Status], [Depot] FROM Parcel.LiveStatus ORDER BY [Parcel ID];",
+      "target": "Lakehouse/Landing SQL analytics endpoint",
+      "rows": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "Delivered",
+          "Depot": "Central"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL readback, not CLI transcript"
+    },
+    "lakehouse-bookmark-first": {
+      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Lakehouse'\n  and [Item name] = N'Landing'\n  and [Schema name] = N'Tables/Parcel'\n  and [Object name] = N'LiveStatus';\n",
+      "target": "Warehouse/Catalogue",
+      "rows": [
+        {
+          "Bookmark datetime": "2026-10-15 23:44:44.149369"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "lakehouse-bookmark-changed": {
+      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Lakehouse'\n  and [Item name] = N'Landing'\n  and [Schema name] = N'Tables/Parcel'\n  and [Object name] = N'LiveStatus';\n",
+      "target": "Warehouse/Catalogue",
+      "rows": [
+        {
+          "Bookmark datetime": "2026-10-15 23:47:15.276935"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "lakehouse-bookmark-noop": {
+      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Lakehouse'\n  and [Item name] = N'Landing'\n  and [Schema name] = N'Tables/Parcel'\n  and [Object name] = N'LiveStatus';\n",
+      "target": "Warehouse/Catalogue",
+      "rows": [
+        {
+          "Bookmark datetime": "2026-10-15 23:49:03.357835"
+        }
+      ],
+      "executed_live": true,
+      "kind": "SQL execution/readback, not CLI transcript",
+      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
+    },
+    "lakehouse-bookmark-progression-observed": {
+      "bookmarks": [
+        [
+          {
+            "Bookmark datetime": "2026-10-15 23:44:44.149369"
+          }
+        ],
+        [
+          {
+            "Bookmark datetime": "2026-10-15 23:47:15.276935"
+          }
+        ],
+        [
+          {
+            "Bookmark datetime": "2026-10-15 23:49:03.357835"
+          }
+        ]
+      ],
+      "changed_advanced": true,
+      "noop_advanced": true,
+      "final_target": [
+        {
+          "Parcel ID": "P-1001",
+          "Status": "Delivered",
+          "Depot": "Central"
+        }
+      ]
+    },
+    "native-before-annotation": {
+      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
+      "model": "Parcel",
+      "fields": [
+        {
+          "table": "Delivery",
+          "column": "DepotId",
+          "hidden": false
+        },
+        {
+          "table": "Depot",
+          "column": "DepotId",
+          "hidden": false
+        }
+      ],
+      "dax_rows": [
+        {
+          "[DeliveryCount]": 2
+        }
+      ]
+    },
+    "native-after-annotation": {
+      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
+      "model": "Parcel",
+      "fields": [
+        {
+          "table": "Delivery",
+          "column": "DepotId",
+          "hidden": true
+        },
+        {
+          "table": "Depot",
+          "column": "DepotId",
+          "hidden": false
+        }
+      ],
+      "dax_rows": [
+        {
+          "[DeliveryCount]": 2
+        }
+      ]
+    },
+    "native-failed-measure": {
+      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
+      "model": "Parcel",
+      "fields": [
+        {
+          "table": "Delivery",
+          "column": "DepotId",
+          "hidden": true
+        },
+        {
+          "table": "Depot",
+          "column": "DepotId",
+          "hidden": false
+        }
+      ],
+      "dax_rows": [
+        {
+          "[DeliveryCount]": -1
+        }
+      ]
+    },
+    "native-report-binding": {
+      "kind": "Live Report definition readback, not UI rendering",
+      "model": "Parcel",
+      "report": "Parcel",
+      "binding_matches_actual_model": true
+    },
+    "report-development-binding": {
+      "kind": "Live Report definition readback, not UI rendering",
+      "model": "Parcel_Dev",
+      "report": "Parcel_Report_Dev",
+      "binding_matches_actual_model": true
+    },
+    "report-production-binding": {
+      "kind": "Live Report definition readback, not UI rendering",
+      "model": "Parcel",
+      "report": "Parcel_Report",
+      "binding_matches_actual_model": true
+    },
+    "102-report-development-refresh-dax": {
+      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
+      "model": "Parcel_Dev",
+      "fields": [
+        {
+          "table": "Delivery",
+          "column": "DepotId",
+          "hidden": true
+        },
+        {
+          "table": "Depot",
+          "column": "DepotId",
+          "hidden": false
+        }
+      ],
+      "dax_rows": [
+        {
+          "[DeliveryCount]": 2
+        }
+      ]
+    },
+    "103-report-production-refresh-dax": {
+      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
+      "model": "Parcel",
+      "fields": [
+        {
+          "table": "Delivery",
+          "column": "DepotId",
+          "hidden": true
+        },
+        {
+          "table": "Depot",
+          "column": "DepotId",
+          "hidden": false
+        }
+      ],
+      "dax_rows": [
+        {
+          "[DeliveryCount]": 2
+        }
+      ]
+    },
+    "native-after-managed-model": {
+      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
+      "model": "Parcel",
+      "fields": [
+        {
+          "table": "Delivery",
+          "column": "DepotId",
+          "hidden": true
+        },
+        {
+          "table": "Depot",
+          "column": "DepotId",
+          "hidden": false
+        }
+      ],
+      "dax_rows": [
+        {
+          "[DeliveryCount]": 2
+        }
+      ]
+    }
+  }
+}

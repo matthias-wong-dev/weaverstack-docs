@@ -637,3 +637,84 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   color: var(--weaver-code-text);
   background: var(--weaver-code);
 }
+
+/* Real CLI captures: the text and status glyphs carry meaning without colour. */
+.md-typeset .weaver-terminal {
+  margin: 1.25rem 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--weaver-line-strong);
+  border-radius: 0.65rem;
+  color: var(--weaver-code-text);
+  background: var(--weaver-code);
+  text-align: left;
+}
+.md-typeset .weaver-terminal figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  margin: 0;
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid rgba(223, 231, 247, 0.18);
+  color: var(--weaver-code-text);
+  font: 600 0.7rem/1.5 var(--weaver-mono);
+}
+.md-typeset .weaver-terminal .terminal-exit {
+  color: #b8c4d6;
+  font-weight: 400;
+}
+.md-typeset .weaver-terminal pre {
+  margin: 0;
+  padding: 0.9rem;
+  overflow: auto;
+  background: transparent;
+  border-radius: 0;
+  color: var(--weaver-code-text);
+  font: 0.7rem/1.55 var(--weaver-mono);
+  white-space: pre;
+  scrollbar-width: thin;
+}
+.md-typeset .weaver-terminal pre code {
+  display: block;
+  min-width: 100%;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  white-space: pre;
+}
+.md-typeset .weaver-terminal pre:focus-visible {
+  outline: 2px solid #9dccff;
+  outline-offset: -3px;
+}
+.md-typeset .weaver-terminal .terminal-status-green { color: #88d6aa; }
+.md-typeset .weaver-terminal .terminal-status-amber { color: #f2cc82; }
+.md-typeset .weaver-terminal .terminal-status-red { color: #ffaaa4; }
+.md-typeset .weaver-terminal details {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid rgba(223, 231, 247, 0.18);
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  color: var(--weaver-code-text);
+}
+.md-typeset .weaver-terminal details summary {
+  margin: 0;
+  padding: 0.65rem 0.9rem 0.65rem 2rem;
+  background: rgba(223, 231, 247, 0.04);
+  color: var(--weaver-code-text);
+}
+.md-typeset .weaver-terminal details pre { max-height: 24rem; }
+.md-typeset .weaver-terminal .terminal-source {
+  margin: 0;
+  padding: 0.5rem 0.9rem 0.7rem;
+  color: #b8c4d6;
+  font-size: 0.65rem;
+  line-height: 1.6;
+}
+.md-typeset .weaver-terminal .terminal-source a { color: #9dccff; }

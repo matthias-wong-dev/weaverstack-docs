@@ -1,0 +1,33 @@
+Test
+
+  Read catalogue                                                                                           2.1s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  38.1s
+
+→   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
+
+→   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
+
+✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      12.4s
+
+✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    14.8s
+
+  Execute                                                                                                 15.1s
+
+  Record what the run did                                                                                  0.0s
+
+✓ Test                                                                                                    1m04s
+
+test passed
+
+Test summary
+    2 passed
+    0 failed
+  Workflow: [run-id]

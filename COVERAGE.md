@@ -2,6 +2,14 @@
 
 This maintainer-only ledger records the item-first revision and earlier delivery evidence. It is not rendered.
 
+## Live CLI demonstrations — 16 October 2026
+
+The live pass now adds 51 authentic terminal panels to 17 existing tutorial/estate pages, with shared static terminal styling, sanitised ANSI/text/provenance and separately labelled SQL/API readbacks. Warehouse and Lakehouse execution, controlled validation failure/restoration, both incremental pipelines, scoped Health, selection, scheduling, native Power BI DAX/annotations and two disposable Report configurations were exercised. See [capture coverage, deviations and exact remaining limits](CAPTURE-INVENTORY.md) and [verification](acceptance/live-cli-captures/verification.md).
+
+Managed model Build/certification succeeded but refresh failed because Operations has no explicit credentialled cloud/gateway connection available to this model. Its DAX/SQL reconciliation remains unexecuted. Mirror/reset scope is unapproved; service UI rendering and actual second-workspace access remain unverified. No tenant settings, new connections or capacity were provisioned. Runtime source stayed at `bf908f4754eca4d10a56afd218e9e18d423636d7`.
+
+Earlier statements below about live captures remaining pending describe their historical checkpoints, not this pass. Matching released-package acceptance, human review and explicit publication approval are still outstanding; no merge or public deployment is authorised.
+
 ## Power BI operating modes consistency
 
 The canonical two-mode introduction is `docs/semantic-models/index.md`: Power BI only without a Catalogue, or a Fabric estate with a Catalogue, using the same package and native project files. The switch is Catalogue configuration, not licence ownership. The nine assigned overview, setup, tutorial and requirements pages are reconciled; the native annotation exercise reuses the generated linked Report, and managed-source setup introduces Catalogue/Environment support without replacing native sources.

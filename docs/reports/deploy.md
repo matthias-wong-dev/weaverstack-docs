@@ -48,6 +48,80 @@ weaver check .
 weaver build . --item SemanticModel/Parcel --item Report/Parcel
 ```
 
+<!-- cli-capture: {"id": "85-native-annotation-and-report-build", "title": "Build \u00b7 deploy and verify the linked pair", "start": "\u2192   Report/Parcel \u00b7 Deploy Report definitions", "end": "  Install", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Build · deploy and verify the linked pair <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>→   Report/Parcel · Deploy Report definitions · 1 action
+
+<span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.3s</span>
+
+→   Report/Parcel · Verify deployed Report definitions · 1 action
+
+<span class="terminal-status-green">✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         20.6s</span>
+
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+Catalogue  none
+Targets
+  SemanticModel/Parcel
+  Report/Parcel
+
+Build
+
+    Create Report/Parcel                                                                                  20.9s
+
+  Create Power BI items                                                                                   20.9s
+
+  Resolve semantic data sources                                                                            0.0s
+
+    Resolve SemanticModel/Parcel                                                                           0.0s
+
+    Resolve Report/Parcel                                                                                  0.0s
+
+  Read target inventories                                                                                  0.2s
+
+  Read semantic sources                                                                                    0.0s
+
+  Prepare bundle                                                                                           0.1s
+
+Install selection
+  SemanticModel/Parcel
+    changed                 1
+    selected for build      1
+  Report/Parcel
+    changed                 1
+    selected for build      1
+
+→   SemanticModel/Parcel · Deploy semantic definitions · 1 action
+
+<span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.6s</span>
+
+→   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action
+
+<span class="terminal-status-green">✓   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action                 20.5s</span>
+
+→   Report/Parcel · Deploy Report definitions · 1 action
+
+<span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.3s</span>
+
+→   Report/Parcel · Verify deployed Report definitions · 1 action
+
+<span class="terminal-status-green">✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         20.6s</span>
+
+  Install                                                                                                 1m22s
+
+<span class="terminal-status-green">✓ Build                                                                                                   1m43s</span>
+
+Installation
+<span class="terminal-status-green">    4 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  492f2106fc8b073d07249ff8e01ca42c9f6af3df84fb3918dcc7fe30cc0c5712
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/85-native-annotation-and-report-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
 Check validates local definitions, not service access. These two selectors deploy the inline model and its linked Report without selecting any additional source-backed models. Build deploys and verifies `Parcel` before deploying the Parcel Report, then verifies the Report definition and its actual model binding. The deployed payload uses the resolved service workspace/model IDs; your authored `byPath` and native files stay unchanged.
 
 Without a catalogue, a linked Report must include its local model in the same Build. In a catalogue-backed project, a Report-only Build can use an already certified installed model whose recorded binding matches the resolved destination and source requirements. See [Report binding](../reference/power-bi/requirements-and-compatibility.md#report-binding) before selecting only `Report/Parcel`.

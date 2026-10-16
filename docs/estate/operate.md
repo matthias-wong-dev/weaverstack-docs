@@ -52,6 +52,50 @@ weaver health --workspace-config workspace-development.yml
 
 Green means the assessed Load, Tests and Build subjects have no current finding. Amber identifies work that is pending, stale or otherwise needs attention without a current failure. Red identifies a recorded failure or inconsistent installed state. Act on the finding rather than the overall colour alone.
 
+To operate only the Parcel items when the Catalogue also contains other projects, give the same scope to Load, Test and Health:
+
+```bash
+weaver load Lakehouse/Landing Warehouse/Operations --workspace-config workspace-development.yml
+weaver test Lakehouse/Landing Warehouse/Operations --workspace-config workspace-development.yml
+```
+
+<!-- cli-capture: {"id": "54-estate-test", "title": "Test \u00b7 both sides of the Parcel connection", "start": "test passed", "end": "  Workflow:"} -->
+<figure class="weaver-terminal">
+<figcaption>Test · both sides of the Parcel connection <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+
+Test summary
+<span class="terminal-status-green">    4 passed</span>
+    0 failed
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/54-estate-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+```bash
+weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
+```
+
+<!-- cli-capture: {"id": "56-scoped-estate-health", "title": "Health \u00b7 Parcel estate after validation", "start": "Weaver Health", "end": "Slowest loads"} -->
+<figure class="weaver-terminal">
+<figcaption>Health · Parcel estate after validation <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
+
+<span class="terminal-status-green">Load    Green</span>
+  Last load activity   0h 3m ago
+<span class="terminal-status-green">  6 succeeded</span>
+
+<span class="terminal-status-green">Tests   Green</span>
+<span class="terminal-status-green">  4 succeeded</span>
+
+<span class="terminal-status-green">Build   Green</span>
+  Installed estate consistent (26 objects)
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/56-scoped-estate-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
 For a complete source-and-model example, follow [Connect a semantic model to source data](../semantic-models/managed-sources.md).
 
 Use [Troubleshooting](../basics/troubleshooting.md) when the final report is not Green. If an item-wide run is broader than the intended work, [run part of an estate](selective-runs.md). To cap simultaneous scheduled work for one invocation, [control concurrency](concurrency.md). Both are optional controls, not prerequisites for normal operation. See [Operation behaviour](../reference/operation-behaviour/index.md) and the [CLI reference](../reference/cli.md) for selection, freshness, inventory controls, named execution and machine-readable output.

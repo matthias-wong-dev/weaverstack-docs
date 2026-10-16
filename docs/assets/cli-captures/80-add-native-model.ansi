@@ -1,0 +1,33 @@
+
+Setting up the Weaver project
+
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.0s[0m                                                                                                               [2m⋯[0m Checking the workspace                                                                               [2m    0.0s[0m                                                                                                                [0m Checking the workspace                                                                               [2m    0.8s[0m
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.8s[0m                                                                                                               [2m⋯[0m Reading the Environment                                                                              [2m    0.0s[0m                                                                                                                [0m Reading the Environment                                                                              [2m    0.0s[0m
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.8s[0m                                                                                                               [2m⋯[0m Checking the project files                                                                           [2m    0.0s[0m                                                                                                               [2m⋯[0m Checking the project files                                                                           [2m    0.2s[0m                                                                                                                [0m Checking the project files                                                                           [2m    0.6s[0m
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    1.4s[0m                                                                                                               [2m⋯[0m Writing the project files                                                                            [2m    0.0s[0m                                                                                                                [0m Writing the project files                                                                            [2m    0.0s[0m
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    1.4s[0m                                                                                                               [32m✓[0m Setting up the Weaver project                                                                        [2m    1.4s[0m
+
+  Catalogue    Catalogue   already exists
+  Environment  Weaver      already exists
+  Lakehouse    Landing     already exists
+  Warehouse    Operations  already exists
+  Environment publication: deferred
+
+Weaver project ready in ./parcel.
+
+Next:
+
+  cd ./parcel
+
+Environment publication deferred.
+Publish it before the first build.
+
+  weaver fabric environment publish --path Environment/Weaver.Environment
+  weaver workflow full
+
+Or run individually:
+  weaver build --item Lakehouse --item Warehouse
+  weaver build --item PowerBI
+  weaver load
+  weaver test
+  weaver health

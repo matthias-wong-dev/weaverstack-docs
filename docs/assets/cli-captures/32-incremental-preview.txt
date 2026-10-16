@@ -1,0 +1,22 @@
+Load (dry run)
+
+  Read catalogue                                                                                           2.2s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+
+  Execute                                                                                                  0.0s
+
+✓ Load (dry run)                                                                                           2.2s
+
+plan succeeded: Warehouse/Operations
+
+    validated                load:Warehouse/Operations/Parcel.LiveStatus
+    validated                load:Warehouse/Operations/Parcel.StatusEvent
+
+Plan
+    2 selected

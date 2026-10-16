@@ -42,7 +42,20 @@ weaver check .
 weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
 
-Expect a `passed` validation node with zero violations and CLI exit 0. You do not need Build merely to edit a source query: this run evaluates the new file against the already deployed model.
+<!-- cli-capture: {"id": "84-native-source-dax-validation", "title": "Test \u00b7 source DAX against the deployed model", "start": "test passed"} -->
+<figure class="weaver-terminal">
+<figcaption>Test · source DAX against the deployed model <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+
+Test summary
+<span class="terminal-status-green">    1 passed</span>
+    0 failed
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/84-native-source-dax-validation.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+The Assumption passed with zero violations and exit 0. You do not need Build merely to edit a source query: this run evaluates the new file against the already deployed model.
 
 The file is evaluated against the model you already deployed. This source run does not install a validation or write catalogue history. [Test modes](../reference/cli/test.md) explains installing a validation when you want recorded estate results.
 
@@ -80,7 +93,25 @@ weaver load SemanticModel/Parcel
 weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
 
-Expect `failed` with one violating row, `DeliveryCount = -1`, and CLI exit 1. This is a finding, not a query failure. A permission or execution failure produces an `invalid` node and also exits 1. Python returns the validation report: inspect `succeeded`, node `status` and diagnostics rather than using a retired `strict=` argument.
+<!-- cli-capture: {"id": "91-native-failed-source-dax", "title": "Test \u00b7 deliberately wrong measure", "start": "test failed"} -->
+<figure class="weaver-terminal">
+<figcaption>Test · deliberately wrong measure <span class="terminal-exit">exit 1</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">test failed</span>
+
+<span class="terminal-status-red">  failed     Assumption  SemanticModel/Parcel/Parcel.PositiveDeliveryCount  (1 violation)</span>
+
+Test summary
+    0 passed
+<span class="terminal-status-red">    1 failed</span>
+
+  SemanticModel/Parcel/Parcel.PositiveDeliveryCount:
+    {&#x27;DeliveryCount&#x27;: -1}
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/91-native-failed-source-dax.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+Test returned one violating row, `DeliveryCount = -1`, and exit 1. This is a finding, not a query failure. A permission or execution failure produces an `invalid` node and also exits 1. Python returns the validation report: inspect `succeeded`, node `status` and diagnostics rather than using a retired `strict=` argument.
 
 ## 4. Restore the prior model and rerun
 
@@ -98,7 +129,20 @@ weaver load SemanticModel/Parcel
 weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
 
-Expect `passed` again. The existing overlay is restored byte for byte, including its foreign-key convention. Only the direct-entry case that had no overlay removes the file created by this exercise. If the shell was interrupted, restore `Parcel.tmdl.saved` manually before deploying again.
+<!-- cli-capture: {"id": "94-native-restored-source-dax", "title": "Test \u00b7 restore the saved overlay", "start": "test passed"} -->
+<figure class="weaver-terminal">
+<figcaption>Test · restore the saved overlay <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+
+Test summary
+<span class="terminal-status-green">    1 passed</span>
+    0 failed
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/94-native-restored-source-dax.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+The Assumption passed again. The existing overlay is restored byte for byte, including its foreign-key convention. Only the direct-entry case that had no overlay removes the file created by this exercise. If the shell was interrupted, restore `Parcel.tmdl.saved` manually before deploying again.
 
 
 `--file` explicitly selects source/file mode even when the configuration contains a catalogue. `--source .` identifies the project; it does not force file mode by itself. Without a configured catalogue, `--source .` alone uses source mode. Source/file mode records no installed `_.TestStatus` or Test history. Repeat `--file` for paths/directories/globs and `--name` for case-insensitive whole-validation regex seeds; each supplied name pattern must match.

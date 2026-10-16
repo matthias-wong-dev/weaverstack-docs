@@ -1,0 +1,33 @@
+Test
+
+  Read catalogue                                                                                           2.4s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+
+→   Test Warehouse/Operations/Parcel.CurrentStatusMatches
+
+✗   Test Warehouse/Operations/Parcel.CurrentStatusMatches  (1 missing, 1 unexpected)                       6.8s
+
+  Execute                                                                                                  6.9s
+
+  Record what the run did                                                                                  0.6s
+
+✗ Test                                                                                                     9.9s
+
+test failed
+
+  failed     Test        Warehouse/Operations/Parcel.CurrentStatusMatches  (1 missing, 1 unexpected)
+
+Test summary
+    0 passed
+    1 failed
+  Workflow: [run-id]
+
+  Warehouse/Operations/Parcel.CurrentStatusMatches:
+    {'_weaver_side': 'expected', '_weaver_sk': 1, 'Parcel ID': 'P-1002', 'Status': 'In transit', 'Depot': 'South'}
+    {'_weaver_side': 'actual', '_weaver_sk': 1, 'Parcel ID': 'P-1002', 'Status': 'Delivered', 'Depot': 'South'}

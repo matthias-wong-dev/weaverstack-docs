@@ -73,6 +73,64 @@ Check reads local declarations and definitions. It does not execute M/DAX, deplo
 weaver build --item SemanticModel/Parcel
 ```
 
+<!-- cli-capture: {"id": "82-native-catalogue-free-build", "title": "Build \u00b7 native model without a Catalogue", "start": "Installation", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Build · native model without a Catalogue <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
+<span class="terminal-status-green">    2 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  a8ab22d2285b5b2ef3cae58135c2db97216bca04d09ebfb46bb8556544dec410
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+Catalogue  none
+Targets
+  SemanticModel/Parcel
+
+Build
+
+    Create SemanticModel/Parcel                                                                           20.6s
+
+  Create Power BI items                                                                                   20.6s
+
+  Resolve semantic data sources                                                                            0.0s
+
+    Resolve SemanticModel/Parcel                                                                           0.0s
+
+  Read target inventories                                                                                  0.1s
+
+  Read semantic sources                                                                                    0.0s
+
+  Prepare bundle                                                                                           0.1s
+
+Install selection
+  SemanticModel/Parcel
+    changed                 1
+    selected for build      1
+
+→   SemanticModel/Parcel · Deploy semantic definitions · 1 action
+
+<span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.9s</span>
+
+→   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action
+
+<span class="terminal-status-green">✓   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action                                20.5s</span>
+
+  Install                                                                                                 41.4s
+
+<span class="terminal-status-green">✓ Build                                                                                                   1m02s</span>
+
+Installation
+<span class="terminal-status-green">    2 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  a8ab22d2285b5b2ef3cae58135c2db97216bca04d09ebfb46bb8556544dec410
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/82-native-catalogue-free-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
 This selects **only the inline semantic model**, even if your project also has source-backed models. Find `Parcel` in your workspace. The Report stays local until you [deploy it](../reports/deploy.md).
 
 ## 4. Refresh and inspect the model
@@ -81,6 +139,62 @@ This selects **only the inline semantic model**, even if your project also has s
 weaver load SemanticModel/Parcel
 ```
 
+<!-- cli-capture: {"id": "83-native-catalogue-free-refresh", "title": "Load \u00b7 refresh the inline model", "start": "Workspace", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Load · refresh the inline model <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+Catalogue  none
+Targets
+  SemanticModel/Parcel
+
+  Build run graph                                                                                          0.0s
+
+→   Load SemanticModel/Parcel
+
+<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              4.8s</span>
+
+  Execute                                                                                                  4.8s
+
+<span class="terminal-status-green">✓ Load                                                                                                     5.3s</span>
+
+<span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
+
+Load summary
+<span class="terminal-status-green">    1 succeeded</span>
+    0 failed
+    0 blocked
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+
+  Resolve semantic models                                                                                  0.5s
+
+  Read catalogue                                                                                           0.0s
+
+Workspace  Weaver Example
+Catalogue  none
+Targets
+  SemanticModel/Parcel
+
+  Build run graph                                                                                          0.0s
+
+→   Load SemanticModel/Parcel
+
+<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              4.8s</span>
+
+  Execute                                                                                                  4.8s
+
+<span class="terminal-status-green">✓ Load                                                                                                     5.3s</span>
+
+<span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
+
+Load summary
+<span class="terminal-status-green">    1 succeeded</span>
+    0 failed
+    0 blocked
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/83-native-catalogue-free-refresh.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
 In the workspace, open the deployed **Parcel** semantic model and choose **Write DAX queries**. Run:
 
 ```dax
@@ -88,7 +202,7 @@ EVALUATE
 ROW("DeliveryCount", [Delivery Count])
 ```
 
-The result should be **DeliveryCount = 2**. [DAX query view](https://learn.microsoft.com/en-us/power-bi/transform-model/dax-query-view) needs model write permission and the workspace’s existing web modelling setting. If it is unavailable, connect Power BI Desktop to the published Parcel semantic model using a live connection and run the query in Desktop’s DAX query view with Read and Build permission. Do not query the local PBIP instead: you are checking the deployed model.
+The live query returned **DeliveryCount = 2**. [DAX query view](https://learn.microsoft.com/en-us/power-bi/transform-model/dax-query-view) needs model write permission and the workspace’s existing web modelling setting. If it is unavailable, connect Power BI Desktop to the published Parcel semantic model using a live connection and run the query in Desktop’s DAX query view with Read and Build permission. Do not query the local PBIP instead: you are checking the deployed model.
 
 Use the linked Report already generated by Initialise for the field-list check below; there is no need to create another Report.
 
@@ -114,14 +228,109 @@ Build the model and its existing linked Report together. Without a Catalogue, th
 ```bash
 weaver check
 weaver build --item SemanticModel/Parcel --item Report/Parcel
+```
+
+<!-- cli-capture: {"id": "85-native-annotation-and-report-build", "title": "Build \u00b7 apply the rule and bind the linked Report", "start": "Installation", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Build · apply the rule and bind the linked Report <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
+<span class="terminal-status-green">    4 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  492f2106fc8b073d07249ff8e01ca42c9f6af3df84fb3918dcc7fe30cc0c5712
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+Catalogue  none
+Targets
+  SemanticModel/Parcel
+  Report/Parcel
+
+Build
+
+    Create Report/Parcel                                                                                  20.9s
+
+  Create Power BI items                                                                                   20.9s
+
+  Resolve semantic data sources                                                                            0.0s
+
+    Resolve SemanticModel/Parcel                                                                           0.0s
+
+    Resolve Report/Parcel                                                                                  0.0s
+
+  Read target inventories                                                                                  0.2s
+
+  Read semantic sources                                                                                    0.0s
+
+  Prepare bundle                                                                                           0.1s
+
+Install selection
+  SemanticModel/Parcel
+    changed                 1
+    selected for build      1
+  Report/Parcel
+    changed                 1
+    selected for build      1
+
+→   SemanticModel/Parcel · Deploy semantic definitions · 1 action
+
+<span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.6s</span>
+
+→   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action
+
+<span class="terminal-status-green">✓   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action                 20.5s</span>
+
+→   Report/Parcel · Deploy Report definitions · 1 action
+
+<span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.3s</span>
+
+→   Report/Parcel · Verify deployed Report definitions · 1 action
+
+<span class="terminal-status-green">✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         20.6s</span>
+
+  Install                                                                                                 1m22s
+
+<span class="terminal-status-green">✓ Build                                                                                                   1m43s</span>
+
+Installation
+<span class="terminal-status-green">    4 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  492f2106fc8b073d07249ff8e01ca42c9f6af3df84fb3918dcc7fe30cc0c5712
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/85-native-annotation-and-report-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+```bash
 weaver load SemanticModel/Parcel
 ```
 
-In the Power BI service, open the generated **Parcel** Report in **Edit** mode. Expand Delivery and Depot in its **Data** pane (field list), with hidden fields excluded, and inspect the existing Delivery Count card:
+<!-- cli-capture: {"id": "86-native-annotation-refresh", "title": "Load \u00b7 refresh after the modelling rule", "start": "load succeeded:"} -->
+<figure class="weaver-terminal">
+<figcaption>Load · refresh after the modelling rule <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
 
-- `Delivery[DepotId]` is now hidden.
-- `Depot[DepotId]` remains visible.
-- Delivery Count still evaluates to 2.
+Load summary
+<span class="terminal-status-green">    1 succeeded</span>
+    0 failed
+    0 blocked
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/86-native-annotation-refresh.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+In the Power BI service, open the generated **Parcel** Report in **Edit** mode. Expand Delivery and Depot in its **Data** pane (field list), with hidden fields excluded, and inspect the existing Delivery Count card.
+
+The deployed model definition and DAX readback showed:
+
+| Check | Before the rule | After the rule |
+| --- | --- | --- |
+| `Delivery[DepotId]` | Visible | Hidden |
+| `Depot[DepotId]` | Visible | Visible |
+| Delivery Count | 2 | 2 |
+
+These are [captured service-model readbacks](../assets/cli-captures/readbacks.json), not results from opening the unchanged local PBIP.
 
 The native files and inline data remain in place. Desktop does not execute Weaver annotations when opening the local PBIP; inspect the service-connected model for the change. Hidden fields are not a security policy or RLS/OLS.
 

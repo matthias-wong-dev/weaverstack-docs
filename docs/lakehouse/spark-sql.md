@@ -53,10 +53,23 @@ Use the same workspace configuration and already published matching Environment:
 weaver check
 weaver build --item Lakehouse/Landing
 weaver load Lakehouse/Landing
-weaver health --item Lakehouse/Landing
 ```
 
-Check should print `Project valid.` It validates the declaration and SQL program shape, not Spark's execution of the query. Build should install CurrentStatus without failed actions. Item-wide Load should run the existing Folder, Event and then CurrentStatus. CurrentStatus should read two rows; Health should show Green Build and Load sections. Editing this project SQL does not itself require republishing the Environment.
+<!-- cli-capture: {"id": "46-lakehouse-load", "title": "CurrentStatus \u00b7 step from the first pipeline Load", "start": "\u2713   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus", "end": "  Execute"} -->
+<figure class="weaver-terminal">
+<figcaption>CurrentStatus · step from the first pipeline Load <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)                             12.1s</span>
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/46-lakehouse-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+The first pipeline Load already ran this generated transformation after Event and read two current-status rows. Repeating the item-wide Load keeps that dependency order. Editing this project SQL does not itself require republishing the Environment.
+
+```bash
+weaver health --item Lakehouse/Landing
+```
 
 ## Read the current statuses
 
@@ -68,7 +81,7 @@ from [Parcel].[CurrentStatus]
 order by [Parcel ID];
 ```
 
-The expected result is:
+The live SQL query returned:
 
 | Parcel ID | Status | Depot |
 | --- | --- | --- |

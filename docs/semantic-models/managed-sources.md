@@ -63,12 +63,162 @@ Expect P-1001 / In transit / Central and P-1002 / Delivered / South. The Warehou
 
 ```bash
 weaver build --item SemanticModel/ParcelWarehouse --bind-data-sources
+```
+
+<!-- cli-capture: {"id": "113-managed-model-bind-build", "title": "Build \u00b7 install and verify the managed model", "start": "Installation", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Build · install and verify the managed model <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
+<span class="terminal-status-green">    5 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  f804e31e3ca885c39ee691d2a4f205f8992398b1d8ed70bf550c8f6a10e81385
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  SemanticModel/ParcelWarehouse
+
+Build
+
+    Create SemanticModel/ParcelWarehouse                                                                  20.7s
+
+  Create Power BI items                                                                                   20.7s
+
+  Check target occupancy                                                                                   0.0s
+
+  Resolve semantic data sources                                                                            0.3s
+
+  Read catalogue                                                                                           1.6s
+
+    Resolve SemanticModel/ParcelWarehouse                                                                  0.0s
+
+    Read Warehouse/Catalogue inventory                                                                     0.0s
+
+  Read target inventories                                                                                  0.0s
+
+  Read semantic sources                                                                                    0.6s
+
+  Prepare bundle                                                                                           0.1s
+
+Install selection
+  SemanticModel/ParcelWarehouse
+    changed                 1
+    selected for build      1
+
+→   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          1.6s</span>
+
+→   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action
+
+<span class="terminal-status-green">✓   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action                                21.0s</span>
+
+→   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action                                24.1s</span>
+
+→   Warehouse/Catalogue · Updating catalogue definitions · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        2.3s</span>
+
+→   Warehouse/Catalogue · Finalising catalogue · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s</span>
+
+  Install                                                                                                 49.6s
+
+<span class="terminal-status-amber">warning: SemanticModel/ParcelWarehouse reads [warehouse-endpoint];operations, and no connection has that path. Create a connection for it in Fabric before refreshing.</span>
+
+<span class="terminal-status-green">✓ Build                                                                                                   1m14s</span>
+
+Installation
+<span class="terminal-status-green">    5 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  f804e31e3ca885c39ee691d2a4f205f8992398b1d8ed70bf550c8f6a10e81385
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/113-managed-model-bind-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+```bash
 weaver load Warehouse/Operations SemanticModel/ParcelWarehouse
 ```
 
+<!-- cli-capture: {"id": "114-managed-source-and-model-load", "title": "Load \u00b7 source succeeded, model refresh failed", "start": "Load summary", "end": "  Rows", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Load · source succeeded, model refresh failed <span class="terminal-exit">exit 1</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
+<span class="terminal-status-green">    3 succeeded</span>
+<span class="terminal-status-red">    1 failed</span>
+    0 blocked
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+
+  Read catalogue                                                                                           2.4s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+  SemanticModel/ParcelWarehouse
+
+  Build run graph                                                                                          0.0s
+
+→   Load Warehouse/Operations/Parcel.StatusEvent
+
+→   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
+
+→   Load Warehouse/Operations/Parcel.LiveStatus
+
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     2.9s</span>
+
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.4s</span>
+
+→   Load SemanticModel/ParcelWarehouse
+
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +0 ~0 -0 !0)                         4.6s</span>
+
+<span class="terminal-status-amber">warning: SemanticModel/ParcelWarehouse reads [warehouse-endpoint];operations, and no connection has that path. If the refresh fails, create a connection for it.</span>
+
+<span class="terminal-status-red">✗   Load SemanticModel/ParcelWarehouse                                                                     6.0s</span>
+
+  Execute                                                                                                 10.6s
+
+  Record what the run did                                                                                  0.7s
+
+<span class="terminal-status-red">✗ Load                                                                                                    13.7s</span>
+
+load partially_succeeded: Warehouse/Operations, SemanticModel/ParcelWarehouse
+
+<span class="terminal-status-red">  ✗ failed                   load:SemanticModel/ParcelWarehouse</span>
+<span class="terminal-status-red">      error: load:SemanticModel/ParcelWarehouse failed: Semantic model refresh [item-id] ended with status &#x27;Failed&#x27;: We cannot refresh this semantic model because this semantic model uses a default data connection without explicit connection credentials. Please replace the default data connection in the semantic model settings with an explicit cloud or gateway data connection.; (Premium_ASWL_Error, ModelRefresh_ShortMessage_ProcessingError, ModelRefresh_DataSourceErrorLabel) No connection has the path [warehouse-endpoint];operations. Create a connection for it in Fabric, then load again.</span>
+
+Load summary
+<span class="terminal-status-green">    3 succeeded</span>
+<span class="terminal-status-red">    1 failed</span>
+    0 blocked
+  Rows
+    read                   5
+    inserted               0
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: [run-id]
+<span class="terminal-status-red">error: REST reported: Load failed for SemanticModel/ParcelWarehouse: load:SemanticModel/ParcelWarehouse failed: Semantic model refresh [item-id] ended with status &#x27;Failed&#x27;: We cannot refresh this semantic model because this semantic model uses a default data connection without explicit connection credentials. Please replace the default data connection in the semantic model settings with an explicit cloud or gateway data connection.; (Premium_ASWL_Error, ModelRefresh_ShortMessage_ProcessingError, ModelRefresh_DataSourceErrorLabel) No connection has the path [warehouse-endpoint];operations. Create a connection for it in Fabric, then load again.; Load summary: 3 succeeded, 1 failed</span>
+  Workflow: [run-id]
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/114-managed-source-and-model-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+The capture’s source Loads succeeded, but the model refresh failed: the service had no explicit cloud or gateway connection with credentials for Operations. Build success verifies the deployed definition, not the credentials needed to refresh it. Select an existing approved connection with the connection’s owner before rerunning Load.
+
 Build the source and model in separate requests. `--bind-data-sources` uses an existing matching supported connection. Resolve missing or ambiguous connections with the connection’s owner; do not change tenant settings to make the example run.
 
-The selected Warehouse work now precedes the additional model’s refresh. In the service, open **ParcelWarehouse**, choose Write DAX queries (or use the [Desktop live-connection route](native-tmdl.md#4-refresh-and-inspect-the-model)), and run:
+The selected Warehouse work precedes the additional model’s refresh. After refresh succeeds, open **ParcelWarehouse** in the service, choose Write DAX queries (or use the [Desktop live-connection route](native-tmdl.md#4-refresh-and-inspect-the-model)), and run:
 
 ```dax
 EVALUATE

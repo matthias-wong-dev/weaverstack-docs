@@ -10,14 +10,57 @@ Keep the [Landing → Operations project](connected-items.md) and its `workspace
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --dry-run --workspace-config workspace-development.yml
 ```
 
-The plan should select only `Tables/Parcel.Event`. No data is loaded by `--dry-run`. Read the selected identities before running; plain named Load does not add producers or infer their ordering. The `[.]` matches a literal dot in this whole-name selector; `Tables/` identifies the Table rather than a Folder.
+<!-- cli-capture: {"id": "60-named-load-preview", "title": "Preview \u00b7 one installed Table", "start": "    validated"} -->
+<figure class="weaver-terminal">
+<figcaption>Preview · one installed Table <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>    validated                load:Lakehouse/Landing/Tables/Parcel.Event
+
+Plan
+    1 selected
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/60-named-load-preview.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+The plan selects only `Tables/Parcel.Event`. No data is loaded by `--dry-run`. Read the selected identities before running; plain named Load does not add producers or infer their ordering. The `[.]` matches a literal dot in this whole-name selector; `Tables/` identifies the Table rather than a Folder.
 
 ## Include the work before or after it
 
 ```bash
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --ancestors --dry-run --workspace-config workspace-development.yml
+```
+
+<!-- cli-capture: {"id": "61-ancestor-load-preview", "title": "Preview \u00b7 include the producer", "start": "    validated"} -->
+<figure class="weaver-terminal">
+<figcaption>Preview · include the producer <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>    validated                load:Lakehouse/Landing/Files/Parcel.Events
+    validated                load:Lakehouse/Landing/Tables/Parcel.Event
+                             after load:Lakehouse/Landing/Files/Parcel.Events
+
+Plan
+    2 selected
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/61-ancestor-load-preview.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+```bash
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry-run --workspace-config workspace-development.yml
 ```
+
+<!-- cli-capture: {"id": "62-descendant-load-preview", "title": "Preview \u00b7 include the consumer", "start": "    validated"} -->
+<figure class="weaver-terminal">
+<figcaption>Preview · include the consumer <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>    validated                load:Lakehouse/Landing/Tables/Parcel.Event
+    validated                load:Lakehouse/Landing/Tables/Parcel.CurrentStatus
+                             after load:Lakehouse/Landing/Tables/Parcel.Event
+
+Plan
+    2 selected
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/62-descendant-load-preview.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
 
 | Request | Selected Landing work |
 | --- | --- |
@@ -35,7 +78,83 @@ Remove only the preview flag when the plan is correct:
 weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --workspace-config workspace-development.yml
 ```
 
-The report should show Event attempted before CurrentStatus. Inspect each outcome; attempted is not the same as succeeded. With the original three-event feed, CurrentStatus should still show the two parcel statuses from the Lakehouse task. Operations is outside this invocation; its additional cross-item Table is not reloaded by this Landing-only selection. Next, [limit simultaneous work](concurrency.md) on this same estate.
+<!-- cli-capture: {"id": "63-descendant-load", "title": "Load \u00b7 the inspected downstream selection", "start": "\u2192   Load", "end": "  Execute", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Load · the inspected downstream selection <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>→   Load Lakehouse/Landing/Tables/Parcel.Event
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     16.0s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.9s</span>
+
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+
+  Read catalogue                                                                                           2.0s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  32.0s
+
+→   Load Lakehouse/Landing/Tables/Parcel.Event
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     16.0s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.9s</span>
+
+  Execute                                                                                                 23.4s
+
+  Record what the run did                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Load                                                                                                    1m08s</span>
+
+<span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
+
+Load summary
+<span class="terminal-status-green">    2 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   5
+    inserted               0
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: [run-id]
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/63-descendant-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+Event ran before CurrentStatus. Inspect each outcome; attempted is not the same as succeeded. With the original three-event feed, CurrentStatus should still show the two parcel statuses from the Lakehouse task. Operations is outside this invocation; its additional cross-item Table is not reloaded by this Landing-only selection. Next, [limit simultaneous work](concurrency.md) on this same estate.
+
+## Diagnose an unmatched name
+
+A misspelt selection is an error, not an empty successful run. For example, in unattended mode:
+
+```bash
+weaver load Lakehouse/Landing --name 'Tables/Parcel[.]DoesNotExist' --dry-run --workspace-config workspace-development.yml --non-interactive
+```
+
+<!-- cli-capture: {"id": "68-no-match-unattended-preview", "title": "Preview \u00b7 no installed name matches", "start": "error:"} -->
+<figure class="weaver-terminal">
+<figcaption>Preview · no installed name matches <span class="terminal-exit">exit 1</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">error: no installed loadable object in the requested items matches &#x27;Tables/Parcel[.]DoesNotExist&#x27;. Installed: Files/Parcel.Events, Tables/Parcel.CurrentStatus, Tables/Parcel.Event</span>
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/68-no-match-unattended-preview.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+Check the installed names and item scope. In an interactive terminal, Esc leaves the error prompt; Enter retries the same request.
 
 ## Explore a larger branching selection
 

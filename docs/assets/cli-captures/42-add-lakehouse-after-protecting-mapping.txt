@@ -1,0 +1,35 @@
+Setting up the Weaver project
+
+  Checking the workspace                                                                                   0.5s
+
+  Reading the Environment                                                                                  0.0s
+
+  Checking the project files                                                                               0.6s
+
+  Writing the project files                                                                                0.0s
+
+✓ Setting up the Weaver project                                                                            1.0s
+
+  Catalogue    Catalogue   already exists
+  Environment  Weaver      already exists
+  Lakehouse    Landing     already exists
+  Warehouse    Operations  already exists
+  Environment publication: deferred
+
+Weaver project ready in ./parcel.
+
+Next:
+
+  cd ./parcel
+
+Environment publication deferred.
+Publish it before the first build.
+
+  weaver fabric environment publish --path Environment/Weaver.Environment
+  weaver workflow full
+
+Or run individually:
+  weaver build
+  weaver load
+  weaver test
+  weaver health

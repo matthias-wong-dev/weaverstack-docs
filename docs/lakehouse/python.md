@@ -107,7 +107,16 @@ The Table reads the upstream Folder and casts Event sequence to the declared int
 weaver check
 ```
 
-Check should print `Project valid.` It validates the local declarations and dependency; it does not execute `read()` or deploy the project.
+<!-- cli-capture: {"id": "43-lakehouse-check", "title": "Check \u00b7 continuing Parcel project"} -->
+<figure class="weaver-terminal">
+<figcaption>Check · continuing Parcel project <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Project valid.
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/43-lakehouse-check.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+Check validates the local declarations and dependency; it does not execute `read()` or deploy the project.
 
 Before the first remote Build, publish the generated Environment:
 
@@ -121,11 +130,213 @@ Then, from this project directory:
 
 ```bash
 weaver build --item Lakehouse/Landing
+```
+
+<!-- cli-capture: {"id": "45-lakehouse-build", "title": "Build \u00b7 Landing pipeline", "start": "Installation", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Build · Landing pipeline <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Installation
+<span class="terminal-status-green">   18 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  aea0ca32e070c26bae008625e4564a7a2e7012b5fb759597dab0d2b1fa4efd66
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+Build
+
+  Check target occupancy                                                                                   0.0s
+
+  Resolve semantic data sources                                                                            0.0s
+
+  Read catalogue                                                                                           1.6s
+
+    Read Warehouse/Catalogue inventory                                                                     0.0s
+
+    Read Lakehouse/Landing inventory  (34.3s waiting for Spark)                                           58.3s
+
+  Read target inventories                                                                                 58.3s
+
+  Read semantic sources                                                                                    0.0s
+
+  Prepare bundle                                                                                           0.2s
+
+Install selection
+  Lakehouse/Landing
+    new                     8
+    selected for build      8
+
+→   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                                 3.1s</span>
+
+→   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.6s</span>
+
+→   Lakehouse/Landing · Creating schemas · 1 action
+
+→   Lakehouse/Landing · Building objects · 1 action
+
+→   Lakehouse/Landing · Installing load and test artefacts · 8 actions
+
+→   Lakehouse/Landing · Removing unmanaged objects · 2 actions
+
+<span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        0.2s</span>
+
+<span class="terminal-status-green">✓   Lakehouse/Landing · Creating schemas · 1 action                                                        0.5s</span>
+
+→   Lakehouse/Landing · Building objects · 1 action
+
+<span class="terminal-status-green">✓   Lakehouse/Landing · Removing unmanaged objects · 2 actions                                             0.5s</span>
+
+<span class="terminal-status-green">✓   Lakehouse/Landing · Installing load and test artefacts · 8 actions                                     1.4s</span>
+
+<span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        1.5s</span>
+
+→   Lakehouse/Landing · Building objects · 1 action
+
+<span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        3.6s</span>
+
+→   Warehouse/Catalogue · Updating catalogue definitions · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        5.0s</span>
+
+→   Warehouse/Catalogue · Finalising catalogue · 1 action
+
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.5s</span>
+
+  Install                                                                                                 24.0s
+
+<span class="terminal-status-green">✓ Build                                                                                                   1m26s</span>
+
+Installation
+<span class="terminal-status-green">   18 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  aea0ca32e070c26bae008625e4564a7a2e7012b5fb759597dab0d2b1fa4efd66
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/45-lakehouse-build.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+```bash
 weaver load Lakehouse/Landing
+```
+
+<!-- cli-capture: {"id": "46-lakehouse-load", "title": "Load \u00b7 carrier file and Delta Tables", "start": "Load summary", "end": "  Workflow:", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Load · carrier file and Delta Tables <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
+<span class="terminal-status-green">    3 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   6
+    inserted               6
+    updated                0
+    deleted                0
+    rejected               0
+
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+
+  Read catalogue                                                                                           2.3s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  35.4s
+
+→   Load Lakehouse/Landing/Files/Parcel.Events
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +1 ~0 -0 !0)                                      3.6s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.Event
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +3 ~0 -0 !0)                                     12.2s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)                             12.1s</span>
+
+  Execute                                                                                                 27.8s
+
+  Record what the run did                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Load                                                                                                    1m14s</span>
+
+<span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
+
+Load summary
+<span class="terminal-status-green">    3 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   6
+    inserted               6
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: [run-id]
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/46-lakehouse-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+The item-wide run loads the carrier Folder, Event and CurrentStatus in order. Its six inserted entries comprise one CSV file, three event rows and two current-status rows.
+
+Run the generated checks before reading Health:
+
+```bash
+weaver test Lakehouse/Landing
+```
+
+<!-- cli-capture: {"id": "47-lakehouse-test", "title": "Test \u00b7 generated Lakehouse validations", "start": "test passed", "end": "  Workflow:"} -->
+<figure class="weaver-terminal">
+<figcaption>Test · generated Lakehouse validations <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
+
+Test summary
+<span class="terminal-status-green">    2 passed</span>
+    0 failed
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/47-lakehouse-test.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+```bash
 weaver health --item Lakehouse/Landing
 ```
 
-Build should install the pipeline definitions without failed actions. Item-wide Load should run `Files/Parcel.Events` before `Tables/Parcel.Event`: one CSV file, then three event rows and two current-status rows. Health should show Green Build and Load sections.
+<!-- cli-capture: {"id": "48-lakehouse-health", "title": "Health \u00b7 loaded and tested Landing", "start": "Weaver Health", "end": "Slowest loads"} -->
+<figure class="weaver-terminal">
+<figcaption>Health · loaded and tested Landing <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
+
+<span class="terminal-status-green">Load    Green</span>
+  Last load activity   0h 1m ago
+<span class="terminal-status-green">  3 succeeded</span>
+
+<span class="terminal-status-green">Tests   Green</span>
+<span class="terminal-status-green">  2 succeeded</span>
+
+<span class="terminal-status-green">Build   Green</span>
+  Installed estate consistent (12 objects)
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/48-lakehouse-health.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
 
 ## Inspect the Table
 

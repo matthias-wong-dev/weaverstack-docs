@@ -141,6 +141,64 @@ weaver load Warehouse/Operations --dry-run
 weaver load Warehouse/Operations
 ```
 
+<!-- cli-capture: {"id": "33-incremental-first-load", "title": "Load \u00b7 establish the incremental Table", "start": "Load summary", "end": "  Workflow:", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Load · establish the incremental Table <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
+<span class="terminal-status-green">    2 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   5
+    inserted               2
+    updated                0
+    deleted                0
+    rejected               0
+
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+
+  Read catalogue                                                                                           2.4s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+
+→   Load Warehouse/Operations/Parcel.LiveStatus
+
+→   Load Warehouse/Operations/Parcel.StatusEvent
+
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                     3.8s</span>
+
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.5s</span>
+
+  Execute                                                                                                  4.8s
+
+  Record what the run did                                                                                  0.5s
+
+<span class="terminal-status-green">✓ Load                                                                                                     7.7s</span>
+
+<span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
+
+Load summary
+<span class="terminal-status-green">    2 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   5
+    inserted               2
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: [run-id]
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/33-incremental-first-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
 In **Operations**, inspect the target:
 
 ```sql
@@ -183,6 +241,25 @@ weaver load Warehouse/Operations --dry-run
 weaver load Warehouse/Operations
 ```
 
+<!-- cli-capture: {"id": "35-incremental-changed-load", "title": "Load \u00b7 source update and cancellation", "start": "Load summary", "end": "  Workflow:"} -->
+<figure class="weaver-terminal">
+<figcaption>Load · source update and cancellation <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
+<span class="terminal-status-green">    2 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   4
+    inserted               0
+    updated                1
+    deleted                1
+    rejected               0
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/35-incremental-changed-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
 The `P-1001` candidate updates the target to `Delivered`. The source update that marks `P-1002` as `Cancelled` produces a target delete key: a source update need not become a target update. In `Operations`, the target query should now return:
 
 | Parcel ID | Status | Depot |
@@ -195,7 +272,26 @@ The `P-1001` candidate updates the target to `Delivered`. The source update that
 weaver load Warehouse/Operations
 ```
 
-The empty window leaves the target unchanged and advances the bookmark again. Failed, rejected, blocked and static-skip outcomes do not advance it.
+<!-- cli-capture: {"id": "36-incremental-noop-load", "title": "Load \u00b7 no new incremental changes", "start": "Load summary", "end": "  Workflow:"} -->
+<figure class="weaver-terminal">
+<figcaption>Load · no new incremental changes <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
+<span class="terminal-status-green">    2 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   3
+    inserted               0
+    updated                0
+    deleted                0
+    rejected               0
+
+</code></pre>
+<p class="terminal-source"><a href="../../assets/cli-captures/36-incremental-noop-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+LiveStatus reads no new candidates; the original StatusEvent still reads its three constant rows. The item summary therefore shows three rows read but no inserts, updates or deletes. The empty incremental window leaves the target unchanged and advances the bookmark again. Failed, rejected, blocked and static-skip outcomes do not advance it.
 
 A hard source deletion leaves no row for either SELECT. To propagate it, retain change evidence such as tombstones, an audit table or CDC until the consumer reads it. This simple timestamp predicate also assumes a compatible UTC time basis and source change visibility; it is not a universal change-capture query.
 

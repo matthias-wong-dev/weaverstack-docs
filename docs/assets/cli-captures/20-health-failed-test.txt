@@ -1,0 +1,29 @@
+Health
+
+  Read catalogue                                                                                           2.2s
+
+  Check installed items                                                                                    0.2s
+
+  Read installed objects                                                                                   0.3s
+
+✓ Health                                                                                                   2.6s
+
+Weaver Health  Red
+
+Load    Green
+  Last load activity   0h 3m ago
+  1 succeeded
+
+Tests   Red
+  1 failed · 1 succeeded
+  Red    Warehouse/Operations/Parcel.CurrentStatusMatches
+          the last run failed
+
+Build   Green
+  Installed estate consistent (10 objects)
+
+Slowest loads
+  Warehouse/Operations/Parcel.StatusEvent     3.1s
+
+Largest changes
+  Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0

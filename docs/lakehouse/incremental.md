@@ -189,7 +189,88 @@ weaver load Lakehouse/Landing --dry-run
 weaver load Lakehouse/Landing
 ```
 
-The first Folder Load should publish both files and record their insertions. The Table starts at the initial bookmark, so its first read should include both changes and insert two rows. A clean Load records a new Table bookmark at the instant immediately before that read began.
+<!-- cli-capture: {"id": "73-lakehouse-incremental-first-load", "title": "Load \u00b7 first file snapshot", "start": "\u2192   Load", "end": "  Execute", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Load · first file snapshot <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>→   Load Lakehouse/Landing/Files/Parcel.Events
+
+→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.4s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.Event
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 2, +2 ~0 -0 !0)                                 4.3s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                10.8s</span>
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     13.4s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.7s</span>
+
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+
+  Read catalogue                                                                                           2.3s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  32.0s
+
+→   Load Lakehouse/Landing/Files/Parcel.Events
+
+→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.4s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.Event
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 2, +2 ~0 -0 !0)                                 4.3s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                10.8s</span>
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     13.4s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.7s</span>
+
+  Execute                                                                                                 23.4s
+
+  Record what the run did                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Load                                                                                                    1m07s</span>
+
+<span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
+
+Load summary
+<span class="terminal-status-green">    5 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                  10
+    inserted               4
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: [run-id]
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/73-lakehouse-incremental-first-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+The Folder published both files and the Table inserted both rows. The new Table bookmark marks the instant immediately before that read began.
 
 In the same notebook, inspect the managed Table:
 
@@ -235,7 +316,90 @@ weaver load Lakehouse/Landing --dry-run
 weaver load Lakehouse/Landing
 ```
 
-There is deliberately no `weaver build` in this sequence. The Folder should publish one changed file and one deletion. The Table should read both events from its previous clean boundary, update `P-1001`, and delete `P-1002` by primary key.
+<!-- cli-capture: {"id": "75-lakehouse-changed-load", "title": "Load \u00b7 one changed file and one deletion", "start": "\u2192   Load", "end": "  Execute", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Load · one changed file and one deletion <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code>→   Load Lakehouse/Landing/Files/Parcel.Events
+
+→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.3s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.Event
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~1 -1 !0)                                 3.6s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     15.2s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                             12.9s</span>
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                32.4s</span>
+
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+
+  Read catalogue                                                                                           2.1s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  35.2s
+
+→   Load Lakehouse/Landing/Files/Parcel.Events
+
+→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.3s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.Event
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~1 -1 !0)                                 3.6s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     15.2s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                             12.9s</span>
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                32.4s</span>
+
+  Execute                                                                                                 33.9s
+
+  Record what the run did                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Load                                                                                                    1m21s</span>
+
+<span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
+
+Load summary
+<span class="terminal-status-green">    5 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   8
+    inserted               0
+    updated                2
+    deleted                2
+    rejected               0
+
+  Workflow: [run-id]
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/75-lakehouse-changed-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+The Folder and Table each report `~1 -1`: one update and one deletion at each stage. The aggregate summary counts both stages, not just the final business rows.
+
+There is no Build between these Loads: only source data changed. The Table read both events after its previous clean boundary, updated `P-1001`, and deleted `P-1002` by primary key.
 
 Inspect three results:
 
@@ -243,7 +407,82 @@ Inspect three results:
 - `Parcel.LiveStatus` contains one `P-1001` row with status `Delivered`; and
 - the latest Load activity reports the Folder changes and the Table's updated and deleted rows.
 
-Run `weaver load Lakehouse/Landing` once more without changing the source. The clean run reaches the Table's `return None`: managed files and target rows remain unchanged, while the consumer bookmark advances again.
+Run Load once more without changing the source:
+
+```bash
+weaver load Lakehouse/Landing
+```
+
+<!-- cli-capture: {"id": "76-lakehouse-noop-load", "title": "Load \u00b7 unchanged source", "start": "\u2713   Load Lakehouse/Landing/Tables/Parcel.LiveStatus", "end": "  Execute", "full": true} -->
+<figure class="weaver-terminal">
+<figcaption>Load · unchanged source <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.3s</span>
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     12.0s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.5s</span>
+
+</code></pre>
+<details><summary>Show the complete capture</summary><pre tabindex="0" aria-label="Captured terminal output"><code>Load
+
+  Read catalogue                                                                                           3.4s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+  Wait for Spark session                                                                                  40.6s
+
+→   Load Lakehouse/Landing/Files/Parcel.Events
+
+→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.2s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.Event
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~0 -0 !0)                                 2.2s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.3s</span>
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     12.0s</span>
+
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.5s</span>
+
+  Execute                                                                                                 18.9s
+
+  Record what the run did                                                                                  0.0s
+
+<span class="terminal-status-green">✓ Load                                                                                                    1m14s</span>
+
+<span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
+
+Load summary
+<span class="terminal-status-green">    5 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   7
+    inserted               0
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: [run-id]
+</code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/76-lakehouse-noop-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
+</figure>
+<!-- /cli-capture -->
+
+The Table read zero rows and made no changes. Its clean `return None` still advanced the consumer bookmark; the target retained only `P-1001`, now `Delivered`.
 
 ## Build only when the declaration changes
 

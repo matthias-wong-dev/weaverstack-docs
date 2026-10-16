@@ -1,0 +1,16 @@
+Load (dry run)
+
+  Read catalogue                                                                                           2.2s
+
+Workspace  Weaver Example
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+
+✗ Execute                                                                                                  0.0s
+
+✗ Load (dry run)                                                                                           2.2s
+
+error: no installed loadable object in the requested items matches 'Tables/Parcel[.]DoesNotExist'. Installed: Files/Parcel.Events, Tables/Parcel.CurrentStatus, Tables/Parcel.Event

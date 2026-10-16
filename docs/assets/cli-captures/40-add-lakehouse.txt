@@ -1,0 +1,13 @@
+Setting up the Weaver project
+
+  Checking the workspace                                                                                   0.4s
+
+  Reading the Environment                                                                                  0.0s
+
+✗ Checking the project files                                                                               0.0s
+
+✗ Setting up the Weaver project                                                                            0.4s
+
+error: Project setup would overwrite files in ./parcel:
+  Warehouse/Operations/shortcuts.yml
+Choose another project folder.
