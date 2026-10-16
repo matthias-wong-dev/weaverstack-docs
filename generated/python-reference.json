@@ -1,5 +1,5 @@
 {
-  "export_count": 51,
+  "export_count": 55,
   "exports": [
     {
       "kind": "class",
@@ -107,6 +107,14 @@
     },
     {
       "kind": "class",
+      "name": "UnbindPlan"
+    },
+    {
+      "kind": "class",
+      "name": "UnbindResult"
+    },
+    {
+      "kind": "class",
       "name": "ValidationError"
     },
     {
@@ -152,7 +160,7 @@
     {
       "kind": "function",
       "name": "build",
-      "signature": "(source=None, *, items: str | Sequence[str] | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, bundle_only: bool=False, bundle_path: str | Path | None=None, session=None) -> BuildResult"
+      "signature": "(source=None, *, items: str | Sequence[str] | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, data_sources=None, bind_data_sources: bool=False, dry_run: bool=False, bundle_only: bool=False, bundle_path: str | Path | None=None, concurrency: int | None=None, session=None) -> BuildResult"
     },
     {
       "kind": "function",
@@ -177,7 +185,7 @@
     {
       "kind": "function",
       "name": "initialise",
-      "signature": "(project_folder, *, workspace: str | None=None, catalogue: str=DEFAULT_CATALOGUE, environment: str=DEFAULT_ENVIRONMENT, lakehouse: str | None=None, warehouse: str | None=None, example: bool=False, publish_environment: bool=False, install_weaver: bool | None=None, dry_run: bool=False, session=None, client=None) -> InitialiseReport"
+      "signature": "(project_folder, *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, lakehouse: str | None=None, warehouse: str | None=None, semantic_model: str | None=None, example: str | None=None, publish_environment: bool=False, install_weaver: bool | None=None, dry_run: bool=False, session=None, client=None) -> InitialiseReport"
     },
     {
       "kind": "function",
@@ -187,7 +195,7 @@
     {
       "kind": "function",
       "name": "load",
-      "signature": "(items: str | Sequence[str] | None=None, *, names: str | Sequence[str] | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, fault_tolerant: bool=False, dry_run: bool=False, reload: bool=False, stale: bool=False, as_of: str | datetime | None=None, session=None) -> LoadRunReport"
+      "signature": "(items: str | Sequence[str] | None=None, *, names: str | Sequence[str] | None=None, ancestors: bool=False, descendants: bool=False, source=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, fault_tolerant: bool=False, dry_run: bool=False, reload: bool=False, ignore_stability_threshold: bool=False, stale: bool=False, as_of: str | datetime | None=None, concurrency: int | None=None, session=None) -> LoadRunReport"
     },
     {
       "kind": "function",
@@ -201,8 +209,13 @@
     },
     {
       "kind": "function",
+      "name": "plan_unbind",
+      "signature": "(targets: str | Iterable[str], *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, session=None) -> UnbindPlan"
+    },
+    {
+      "kind": "function",
       "name": "plan_wipe",
-      "signature": "(targets: str | Iterable[str]=(), *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, session=None) -> WipePlan"
+      "signature": "(targets: str | Iterable[str]=(), *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, preserve_data_source: bool=False, session=None) -> WipePlan"
     },
     {
       "kind": "function",
@@ -212,12 +225,17 @@
     {
       "kind": "function",
       "name": "test",
-      "signature": "(items: str | Sequence[str] | None=None, *, name: str | None=None, file: str | Path | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, dry_run: bool=False, strict: bool=False, session=None) -> ValidationRunReport"
+      "signature": "(items: str | Sequence[str] | None=None, *, names: str | Sequence[str] | None=None, files: str | Path | Sequence[str | Path] | None=None, source=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, dry_run: bool=False, concurrency: int | None=None, session=None) -> ValidationRunReport"
+    },
+    {
+      "kind": "function",
+      "name": "unbind",
+      "signature": "(targets: str | Iterable[str]=(), *, plan: UnbindPlan | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, dry_run: bool=False, session=None) -> UnbindResult"
     },
     {
       "kind": "function",
       "name": "wipe",
-      "signature": "(targets: str | Iterable[str]=(), *, plan: WipePlan | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, dry_run: bool=False, session=None) -> WipeResult"
+      "signature": "(targets: str | Iterable[str]=(), *, plan: WipePlan | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, preserve_data_source: bool | None=None, dry_run: bool=False, session=None) -> WipeResult"
     }
   ],
   "ownership": {
@@ -247,6 +265,8 @@
     "SparkSqlTest": "docs/reference/python/validation.md",
     "Table": "docs/reference/python/objects.md",
     "Test": "docs/reference/python/validation.md",
+    "UnbindPlan": "docs/reference/python/results.md",
+    "UnbindResult": "docs/reference/python/results.md",
     "ValidationError": "docs/reference/python/errors.md",
     "ValidationNodeReport": "docs/reference/python/results.md",
     "ValidationRunReport": "docs/reference/python/results.md",
@@ -268,9 +288,11 @@
     "load": "docs/reference/python/operations.md",
     "mirror": "docs/reference/python/operations.md",
     "plan_mirror": "docs/reference/python/operations.md",
+    "plan_unbind": "docs/reference/python/operations.md",
     "plan_wipe": "docs/reference/python/operations.md",
     "session": "docs/reference/python/session.md",
     "test": "docs/reference/python/operations.md",
+    "unbind": "docs/reference/python/operations.md",
     "wipe": "docs/reference/python/operations.md"
   },
   "page_count": 7,

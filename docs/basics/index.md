@@ -1,30 +1,24 @@
+---
+search:
+  exclude: true
+---
+
 # Basics
 
-Use these tasks after [First project](../getting-started/first-project.md). They cover the normal path from project source to an installed, loaded and tested estate.
+Continue at the current task page:
 
-## Build a pipeline
+- [Open index.md task](../index.md).
 
-Choose the engine and authoring form for the work:
+[Continue: basics](../index.md).
 
-- [Build a Warehouse pipeline](warehouse-pipeline.md) — create a T-SQL Table and dependent View.
-- [Build a Lakehouse pipeline with Python](lakehouse-python.md) — load files with Python and an inferred dependency.
-- [Build a Lakehouse pipeline with Spark SQL](lakehouse-spark-sql.md) — create a Spark SQL Table.
+<span id="author-the-items"></span>
 
-Then add the behaviour the pipeline needs:
+[Continue: author the items](../index.md).
 
-- [Add Tests and Assumptions](tests-and-assumptions.md) — install and run validations.
-- [Connect data with Shortcuts](shortcuts.md) — connect managed project data or an external Fabric location.
+<span id="validate-and-configure"></span>
 
-## Set up repeated work
+[Continue: validate and configure](../index.md).
 
-- [Configure a workspace and Python runtime](workspace-and-python-runtime.md) — bind logical items to Fabric, switch between development and production, and publish the runtime needed by Python work.
-- [Work in Sessions and workflows](sessions-and-workflows.md) — reuse one execution context, then save an accepted command sequence.
-- [The development cycle](development-cycle.md) — establish a mirrored development baseline and iterate with Check, Build, stale Load, Test and Health.
+<span id="develop-and-operate"></span>
 
-## Operate and recover
-
-- [Run and inspect an estate](run-and-inspect-estate.md) — inspect state, run installed work and verify the result.
-- [Troubleshooting](troubleshooting.md) — start from a Check, Build, Load, Test, Health or runtime symptom.
-- [Recover failed work](recover-failed-work.md) — choose a rerun, reconstruction, validation, mirror refresh or deliberate Wipe.
-
-For the mental model behind these tasks, start with [How Weaver works](../core-concepts/how-weaver-works.md). Use [Advanced](../advanced/index.md) for deeper mechanisms and [Reference](../reference/index.md) for exact syntax and operation behaviour.
+[Continue: develop and operate](../index.md).

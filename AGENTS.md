@@ -14,7 +14,7 @@ Keep three surfaces distinct:
 
 Use these in order:
 
-1. current source in `/opt/data/repos/weaverstack`;
+1. the explicitly frozen Weaver evidence checkout (`WEAVER_CHECKOUT`); the 17 October 2026 walkthrough checked behaviour/interfaces against the integration recorded in `CAPTURE-INVENTORY.md` (`afb5b31c36498aeb8b70927e7f723de054225d5e`); original fixture provenance remains `74b4d15ee65ed2740593af1f4d459771b801b132`;
 2. acceptance journeys and tests that establish behaviour;
 3. existing design documentation in the Weaver repository;
 4. realistic usage in `/opt/data/repos/ilovegov-etl`.
@@ -31,17 +31,13 @@ Avoid claims such as “powerful”, “seamless”, “robust”, “safe”, �
 
 Use Weaver's user model rather than deriving a taxonomy from internal nouns. A project contains Weaver documents such as Tables, Folders, Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata. Do not introduce `resource` or `artefact` as a user-facing category.
 
-Examples use a neutral parcel and logistics domain. Keep them small and independent rather than building one giant tutorial estate.
+Examples use a neutral parcel and logistics domain. Start the Parcel journey with one selected item through the installed `weaver initialise --example Parcel` generator, then extend that same project. Preserve existing item-owned sources and add distinctly named coordination objects. Sales remains a separate installed example. Direct entrants use Initialise, not a downloadable snapshot or repository checkout. Advanced source variations add complete declarations alongside the working pipeline; retained fixtures are verification inputs, not the reader’s next project.
 
 ## Public site structure
 
-The rendered site has five reader-facing sections, each with one job:
+The reader-facing navigation is **Getting started → Lakehouse → Warehouse → Semantic models → Reports → Coordinate your estate → Reference**. Home exposes the four items, estate coordination and a quiet Start here link. Item groups teach first success, validation and later useful capabilities. Estate coordination owns shared dependencies, mappings, state, development, recovery and tuning. Reference owns exact interfaces. Concepts and deeper mechanisms remain available through contextual links at stable URLs; Core/Basics/Advanced are no longer reader-facing destinations.
 
-- **Getting started** — the shortest complete path to a working Weaver project.
-- **Core concepts** — the mental model needed to reason about Weaver.
-- **Basics** — normal authoring, development and operating workflows, using defaults and inference first.
-- **Advanced** — deeper mechanisms and non-basic operating patterns.
-- **Reference** — exact supported syntax, interfaces and behaviour.
+Use the full collapsible navigation tree on the left, with the current section expanded and the page headings on the right. Do not restore horizontal section tabs or hide other top-level groups on desktop. Mobile retains the theme’s drawer and back controls.
 
 Do not add public **Guides**, **Contracts**, **Contributing** or **Architecture** sections. Exact behavioural material belongs under Reference; maintainer instructions belong in root `CONTRIBUTING.md`, `AGENTS.md`, `PROSE.md` and `COVERAGE.md`.
 

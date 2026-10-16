@@ -5,13 +5,13 @@
 ## Synopsis
 
 ```text
-weaver wipe [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--unbind] [--dry-run] [--yes] [--json] [--non-interactive] [TARGET ...]
+weaver wipe [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--unbind] [--preserve-data-source] [--dry-run] [--yes] [--json] [--non-interactive] [TARGET ...]
 ```
 
 ## Positional arguments
 
 `TARGET`
-: Physical items to empty, as Lakehouse/Name or Warehouse/Name. Naming none empties the estate the catalogue records.
+: Physical items to empty: Lakehouse/Name, Warehouse/Name or SemanticModel/Name. Naming none empties the estate the catalogue records.
 
 ## Options
 
@@ -33,6 +33,9 @@ weaver wipe [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [
 `--unbind`
 : Keep the catalogue and remove its claims for the named targets. Requires a catalogue and at least one target.
 
+`--preserve-data-source`
+: Retain one Automatic SQL / Direct Lake source in a hidden columnless table.
+
 `--dry-run`
 : Show the estate this would empty.
 
@@ -51,11 +54,11 @@ weaver wipe [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [
 
 `wipe` empties the named physical Fabric items and, when a catalogue resolves, empties that catalogue last. `--unbind` instead preserves the catalogue and removes its claims for the named targets.
 
-Each positional `TARGET` is a physical `Lakehouse/Name` or `Warehouse/Name`, not a logical Weaver item. Named targets select exactly those items. With no targets, Weaver reads the estate recorded by the resolved catalogue. `--unbind` requires a resolved catalogue and at least one target.
+Each positional `TARGET` is a physical `Lakehouse/Name`, `Warehouse/Name` or `SemanticModel/Name`, not a logical Weaver item. Named targets select exactly those items. With no targets, Weaver reads the estate recorded by the resolved catalogue. `--unbind` requires a resolved catalogue and at least one target. A named semantic-model-only selection retains the catalogue and removes model claims by default. Reports cannot be wiped; use standalone [Unbind](unbind.md). An unscoped wipe with configured targets refuses installations not bound there to the same physical items.
 
 ## Execution
 
-Weaver resolves one plan before asking for confirmation and executes that same plan without rediscovering the estate. A Lakehouse wipe removes its selected physical contents; a Warehouse wipe empties the selected Warehouse. This operation cannot be undone.
+Weaver resolves one plan before asking for confirmation and executes that same plan without rediscovering the estate. A Lakehouse wipe removes its selected physical contents; a Warehouse wipe empties the selected Warehouse. A semantic-model wipe retains the service item and resets its native definition. `--preserve-data-source` retains a supported hidden source shell, not the whole model, source data or credentials. This operation has no rollback; independent targets may already have changed when one fails. See [Wipe behaviour](../operation-behaviour/wipe.md) for accepted source-preservation forms and catalogue scope.
 
 `--dry-run` resolves and displays the plan without emptying or unbinding anything. It does not require `--yes`.
 

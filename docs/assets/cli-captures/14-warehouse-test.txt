@@ -1,0 +1,23 @@
+Test
+
+  Read catalogue                                                                                           3.0s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+→   Test Warehouse/Operations/Parcel.CurrentStatusMatches
+→   Test Warehouse/Operations/Parcel.StatusIsKnown
+✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.7s
+✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  7.7s
+  Execute                                                                                                  7.9s
+  Record what the run did                                                                                  0.9s
+✓ Test                                                                                                    11.8s
+
+test passed
+
+Test summary
+    2 passed
+    0 failed
+  Workflow: 487b69ed9b984916b74bdc7e3243fcd7

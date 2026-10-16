@@ -1,0 +1,40 @@
+Workspace  Parcel Development
+Catalogue  none
+Targets
+  SemanticModel/Parcel → SemanticModel/Parcel_Dev
+  Report/Parcel → Report/Parcel_Report_Dev
+
+
+Build
+
+  Resolve semantic data sources                                                                            0.0s
+    Resolve SemanticModel/Parcel_Dev                                                                       0.0s
+    Resolve Report/Parcel_Report_Dev                                                                       0.0s
+  Read target inventories                                                                                  0.2s
+  Read semantic sources                                                                                    0.0s
+  Prepare bundle                                                                                           0.0s
+Install selection
+  SemanticModel/Parcel
+    changed                 1
+    selected for build      1
+  Report/Parcel
+    changed                 1
+    selected for build      1
+
+→   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action
+✓   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action                                     21.5s
+→   SemanticModel/Parcel_Dev, Report/Parcel_Report_Dev · Verify deployed semantic definitions · 1 action
+✓   SemanticModel/Parcel_Dev, Report/Parcel_Report_Dev · Verify deployed semantic definitions · 1 action   20.5s
+→   Report/Parcel_Report_Dev · Deploy Report definitions · 1 action
+✓   Report/Parcel_Report_Dev · Deploy Report definitions · 1 action                                       20.4s
+→   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action
+✓   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action                              21.2s
+  Install                                                                                                 1m23s
+✓ Build                                                                                                   1m23s
+
+Installation
+    4 succeeded
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  d4da8e0cdf80545685fe83c06a61f3362febf0fdb2eb4bca4d3d7d46794c8e72

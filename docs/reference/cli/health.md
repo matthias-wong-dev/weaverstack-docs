@@ -1,5 +1,7 @@
 # `weaver health`
 
+Read one operational report for the managed estate: Lakehouse and Warehouse work, registered model refreshes and their validations. Without an item selector, Health covers the whole installed estate; it does not rerun the work.
+
 <!-- BEGIN GENERATED CLI -->
 
 ## Synopsis
@@ -14,7 +16,7 @@ weaver health [-h] [--item ITEM] [--as-of DATETIME] [--no-inventory] [--json] [-
 : show this help message and exit
 
 `--item ITEM`
-: Weaver item to report on, as Lakehouse/Name or Warehouse/Name. Repeat to select more than one. Naming none reports on the whole installed estate.
+: Weaver item to report on, as Lakehouse/Name, Warehouse/Name or SemanticModel/Name. Repeat to select more than one. Naming none reports on the whole installed estate.
 
 `--as-of DATETIME`
 : ISO-8601 instant with a zone. A load settled before it reads as stale. Defaults to 24 hours ago.
@@ -41,7 +43,7 @@ weaver health [-h] [--item ITEM] [--as-of DATETIME] [--no-inventory] [--json] [-
 
 ## Responsibility and selection
 
-Report load, test and build health for the installed estate. Repeat `--item` with `Lakehouse/Name` or `Warehouse/Name` to restrict the report; naming none selects the whole installed estate.
+Report load, test and build health for the installed estate. Repeat `--item` with exact logical Lakehouse, Warehouse, SemanticModel or Report item names to restrict the report; naming none selects the whole installed estate.
 
 `--as-of` sets the load freshness threshold and must be an ISO-8601 instant with a time zone. It defaults to 24 hours before the report. `--no-inventory` skips checking certified objects against physical inventory.
 
@@ -79,3 +81,13 @@ weaver health \
   --no-inventory \
   --workspace-config workspace-config.yml
 ```
+
+## One report for the estate
+
+```bash
+weaver health --workspace-config workspace-config.yml
+```
+
+This reads the installed estate without separate commands for its data items and models. Source loads, model refreshes and installed SQL, Python and DAX validations contribute to the same Build, Load and Tests assessment. A source change can make a model or its previously passing validation stale.
+
+For models and Reports, Health uses recorded catalogue evidence rather than a live model/Report inventory. Check Report rendering in the service. The [Health behaviour reference](../operation-behaviour/health.md) defines the exact evidence and status rules.

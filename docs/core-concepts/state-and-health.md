@@ -4,11 +4,19 @@ Build, Load and Test leave different kinds of evidence in the Weaver catalogue. 
 
 Health does not read unbuilt project source, execute data work or run validations. It is a view of installed and operational state, optionally checked against the physical objects in Fabric.
 
+One Health report covers the managed estate, including Lakehouse and Warehouse data, registered semantic-model refreshes and installed DAX validations. Run it without an item selector to see that shared state:
+
+```bash
+weaver health --workspace-config workspace-config.yml
+```
+
+A model refreshed before its source changes is now behind, even if that refresh succeeded. A DAX Test that passed before the model refreshed is likewise stale. The shared graph lets Health expose those relationships. Reports use their model’s data rather than having a separate Load or Test.
+
 ## Three views of the estate
 
 A Health report separates three concerns:
 
-- **Load** — whether each installed Table or Folder has settled for its installed generation and remains fresh enough to use.
+- **Load** — whether recorded Tables, Folders and registered semantic-model refreshes have settled and remain fresh enough to use.
 - **Tests** — whether each installed Test and Assumption has run against the data it now depends on.
 - **Build** — whether the catalogue's installed claims are internally consistent and, when inventory is read, agree with the physical estate.
 

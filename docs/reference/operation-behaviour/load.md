@@ -1,6 +1,6 @@
 # Load behaviour
 
-Load executes installed Table and Folder work from the catalogue. It does not read project source; unbuilt source changes do not affect a run.
+Load executes installed Table/Folder work and semantic-model refresh. Catalogue-backed runs use installed definitions; source edits have no effect until Build. Without a catalogue, explicit semantic models refresh using configured targets or their own names and record no Weaver state. Reports have no Load.
 
 ## Selection
 
@@ -10,15 +10,16 @@ Within that item boundary, Load has three selection modes:
 
 - **Item-wide:** with no `--name` or `--stale`, select every installed loadable owned by the items.
 - **Stale:** `--stale` selects loadables whose Load assessment is not Green. It uses the same current-state, age and managed-ancestor rules as Health. `--as-of` is a zoned ISO-8601 cutoff, defaults to 24 hours before the run started and is valid only with `--stale`. An empty stale selection succeeds.
-- **Named:** repeatable `--name` selects only the named installed loadables inside the item boundary. Area qualification distinguishes Lakehouse Tables and Folders where needed. Names are deduplicated. Named selection adds neither dependencies nor readiness barriers and has no dependency-order edges.
+- **Named:** repeatable `--name` is a case-insensitive whole-name regular expression, not a glob or substring. Every pattern must match; matches are deduplicated. Use `Parcel[.]Events` for a literal dot. Lakehouse names can require `Tables/` or `Files/` to disambiguate. Without expansion this is an operator override: only matches run, with no dependency edges or inferred readiness barriers.
+- **Expanded:** `--ancestors` and/or `--descendants` recursively expand original selected loadables separately within requested installed items. Their union runs in dependency order with required endpoint/publication barriers. Use named selection to choose a narrow seed; newly added descendants do not seed a second ancestor closure. For RawEvents → Events → Daily → Summary with Depot → Daily, both flags from Events select RawEvents/Events/Daily/Summary, not Depot. An omitted prerequisite is not automatically refreshed.
 
-`--name` may be combined with `--stale`; the run is the named objects that are also non-Green, still without graph expansion or dependency ordering. `--reload` and `--stale` are mutually exclusive.
+`--name` may be combined with `--stale`; freshness filtering and requested expansion follow the installed selection rules. Without expansion named selection still omits ordering. `--reload` and `--stale` are mutually exclusive. Catalogue-free refresh rejects names, stale, reload and both expansion flags; name explicit models or use PowerBI/project selectors with `--source` for project context.
 
 ## Planning and ordering
 
 Item-wide and stale runs use the installed dependency graph. Selected upstream work precedes selected downstream work, but dependencies never add an unselected item. Stale planning may cross an omitted Green loadable or View to preserve an ordering relationship between selected nodes without executing the omitted node.
 
-Where an installed cross-engine path requires it, planning inserts SQL-endpoint refresh or OneLake-publication readiness barriers between selected work. Named selection deliberately omits those inferred edges and barriers.
+Where an installed cross-engine path requires it, planning inserts SQL-endpoint refresh or OneLake-publication readiness barriers between selected work. Unexpanded named selection deliberately omits those inferred edges and barriers; expanded named selection restores them within the requested scope.
 
 A cycle, unresolved installed dependency, ambiguous physical address, unknown name or unsupported reload selection is rejected during planning. `--reload` accepts Tables only; selecting a Folder rejects the whole request before execution, including in a dry run.
 
@@ -30,7 +31,7 @@ Dry-run nodes are `validated`, `invalid` or `blocked`. The report is `succeeded`
 
 ## Execution
 
-For a normal item-wide or stale run, ready nodes execute in deterministic topological order. A named run executes its exact nodes without dependency ordering. Table and Folder code applies its installed contract; a Load run does not reparse the source project.
+Item-wide, stale and expanded runs schedule ready nodes under installed dependency ordering and resource limits; independent nodes may run concurrently. Longest-downstream-chain priority does not promise optimal duration-aware scheduling. An unexpanded named run executes only matches without dependency ordering. `--concurrency N` / Python `concurrency=N` adds a total scheduled-node cap across the call, not per item, alongside configured limits. Table and Folder code applies its installed contract; a Load run does not reparse the source project.
 
 Static means load once for the installed generation. An ordinary run that reaches an already-loaded static object records a static skip and does not call its authored source or advance its bookmark. An established static object is Green regardless of age and is therefore excluded by `--stale`. Reload resets the generation state first, so a selected static Table runs again.
 
@@ -41,13 +42,13 @@ Rows or files that violate the installed key, null or file-key rules are rejects
 - a declared delete/update stability-threshold breach never modifies the target; fault tolerance changes whether that refusal is raised or returned, not whether the change is applied; and
 - an incremental merge that would violate an existing unique key is fatal regardless of fault tolerance and does not modify the target.
 
-The orchestrated CLI exposes no option to waive a declared stability threshold.
+`--ignore-stability-threshold` / Python `ignore_stability_threshold=True` waives declared delete/update thresholds for this invocation only. Use it only when the large change is intended. It does not waive null/unique-key checks, change fault tolerance, selection, declarations or bookmarks. Without that override the refusal above applies.
 
 ## Reload
 
 `--reload` reconstructs each selected Table from zero. Immediately before a reached Table executes, Weaver writes and flushes pending Load state and the initial bookmark boundary, empties the target, then calls the installed load against that reset state.
 
-Reload does not add descendants. A node never reached retains its previous target, bookmark and status. A failed reached reload is not rolled back: its target may be empty or partially reconstructed, its bookmark remains at the initial boundary and its current state records the failure. A later ordinary load starts from that reset boundary; rerun with `--reload` when full reconstruction is still required.
+Reload itself adds no descendants; an explicit ancestor/descendant expansion can enlarge the final destructive selection. A node never reached retains its previous target, bookmark and status. A failed reached reload is not rolled back: its target may be empty or partially reconstructed, its bookmark remains at the initial boundary and its current state records the failure. A later ordinary load starts from that reset boundary; rerun with `--reload` when full reconstruction is still required.
 
 ## Outcomes and failure policy
 
@@ -65,7 +66,7 @@ The execution report is `succeeded`, `succeeded_with_rejects`, `partially_succee
 
 ## Persistent state and partial effects
 
-Every node in an executed plan, including barriers, blocked and pending nodes, receives one append-only Log row. Each logical loadable receives current LoadStatus; executed primitives also write LoadStatistic. Required catalogue writes are flushed before a completed report is returned or an intolerant failure is raised. A catalogue write failure is an operation failure.
+In catalogue mode every node in an executed plan, including barriers, blocked and pending nodes, receives one append-only Log row. Each logical loadable receives current LoadStatus; executed primitives also write LoadStatistic. Required catalogue writes are flushed before a completed report is returned or an intolerant failure is raised. A catalogue write failure is an operation failure.
 
 A bookmark advances only when executed work establishes a clean successful boundary. Rejecting, failed, blocked, pending and static-skip outcomes do not advance it. Dry runs write no state.
 

@@ -1,36 +1,24 @@
+---
+search:
+  exclude: true
+---
+
 # Core concepts
 
-Core concepts explain the public model needed to design and operate a Weaver estate.
+Continue at the current task page:
 
-Begin with [How Weaver works](how-weaver-works.md) for the complete model, then read [Design philosophy](design-philosophy.md) for the principles behind it. Follow the sequence behind the work:
+- [Open estate task](../estate/index.md).
 
-```text
-Weaver documents
-        ↓
-Build → Load → Test
-        ↓
-Catalogue and health state
-        ↓
-Dependencies and fault tolerance
-```
+[Continue: core concepts](../estate/index.md).
 
-## Establish the estate boundary
+<span id="establish-the-estate-boundary"></span>
 
-- [Projects and estates](projects-and-estates.md) separates version-controlled source, installed Fabric definitions and operational catalogue state.
-- [Logical and physical items](logical-and-physical-items.md) explains how stable project identities bind to environment-specific Fabric targets.
-- [Weaver documents](weaver-documents.md) explains how paths, document types and metadata declare the estate.
+[Continue: establish the estate boundary](../estate/index.md).
 
-## Follow authored work into operation
+<span id="follow-authored-work-into-operation"></span>
 
-- [Build, Load and Test](build-load-and-test.md) explains how authored work becomes installed definitions, data and validation outcomes.
-- [Catalogue](catalogue.md) describes the recorded state behind Build, Load, Test and Health.
-- [State and health](state-and-health.md) explains the current estate view.
-- [Mirrors](mirrors.md) explains borrowed and locally materialised state.
-- [Sessions and workflows](sessions-and-workflows.md) explains shared execution context and ordered command composition.
+[Continue: follow authored work into operation](../estate/index.md).
 
-## Reason about ordering and failure
+<span id="reason-about-ordering-and-failure"></span>
 
-- [Dependencies](dependencies.md) explains operation order, change impact and item-selection boundaries.
-- [Fault tolerance](fault-tolerance.md) explains what each operation attempts after work fails.
-
-Use [Basics](../basics/index.md) to complete normal work and [Reference](../reference/index.md) to look up exact interfaces and behaviour.
+[Continue: reason about ordering and failure](../estate/index.md).

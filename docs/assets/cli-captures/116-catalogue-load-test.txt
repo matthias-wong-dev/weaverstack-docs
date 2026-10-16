@@ -1,0 +1,23 @@
+Load
+
+  Read catalogue                                                                                           2.9s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  SemanticModel/Parcel
+
+  Build run graph                                                                                          0.0s
+→   Load SemanticModel/Parcel
+✓   Load SemanticModel/Parcel                                                                              7.2s
+  Execute                                                                                                  7.3s
+  Record what the run did                                                                                  0.6s
+✓ Load                                                                                                    10.8s
+
+load succeeded: SemanticModel/Parcel
+
+Load summary
+    1 succeeded
+    0 failed
+    0 blocked
+
+  Workflow: 7cae57dd175042068f40aa8f20efa833

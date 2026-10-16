@@ -46,6 +46,6 @@ The one Workflow confirmation sets authorisation for every entry, including Mirr
 
 ## Execution and failure
 
-Entries run in file order with their ordinary parsed arguments. The Workflow stops at the first handler that returns a non-zero status or raises a Weaver error. It reports that entry and does not run later entries. A successful Workflow reports the number of completed commands; `--timings` reports Session timings after success or failure.
+Entries run in file order with their ordinary parsed arguments. A non-zero Test or Health handler status records findings and allows later entries to run; the Workflow returns `1` after the sequence if any such findings occurred. Other non-zero handler statuses or a raised Weaver error stop the sequence immediately and leave later entries unrun. A completed Workflow reports the number of completed commands; `--timings` reports Session timings after success or failure.
 
-Each command keeps its own selection, dry-run, fault-tolerance, strictness, publication and result semantics. A Workflow does not retry failed work. State changed by completed commands and partial state left by the failing command remain. There is no Workflow rollback; recovery follows the failed operation's behaviour and starts a new command or Workflow against the remaining state.
+Each command keeps its own selection, dry-run, fault-tolerance, findings, publication and result semantics. A Workflow does not retry failed work. State changed by completed commands and partial state left by the failing command remain. There is no Workflow rollback; recovery follows the failed operation's behaviour and starts a new command or Workflow against the remaining state.

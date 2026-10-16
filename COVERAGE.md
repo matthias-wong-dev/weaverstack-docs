@@ -1,19 +1,91 @@
 # Internal documentation coverage map
 
-This maintainer-only ledger records the state of the five-section public site. It is not rendered.
+This maintainer-only ledger records the item-first revision and earlier delivery evidence. It is not rendered.
 
-## Restructure status
+## Full walkthrough and capture refresh — 17 October 2026
 
-| Phase | Scope | Status |
+Every tutorial and estate page was followed in reader order from an empty Weaver Example workspace. All 78 terminal panels were recaptured and all 18 TODO markers were resolved (the two rendered-card checks by binding and DAX value, not a viewed card); flow fixes landed across Getting started, Warehouse, Lakehouse, estate, semantic-model and Report pages. Three Initialise runtime fixes and one TMDL example fix were required. Runtime basis, fixes and observations: [capture inventory](CAPTURE-INVENTORY.md). Entries below are historical.
+
+## Live CLI demonstrations — 16 October 2026
+
+The live pass now adds 51 authentic terminal panels to 17 existing tutorial/estate pages, with shared static terminal styling, sanitised ANSI/text/provenance and separately labelled SQL/API readbacks. Warehouse and Lakehouse execution, controlled validation failure/restoration, both incremental pipelines, scoped Health, selection, scheduling, native Power BI DAX/annotations and two disposable Report configurations were exercised. See [capture coverage, deviations and exact remaining limits](CAPTURE-INVENTORY.md) and [verification](acceptance/live-cli-captures/verification.md).
+
+Managed model Build/certification succeeded but refresh failed because Operations has no explicit credentialled cloud/gateway connection available to this model. Its DAX/SQL reconciliation remains unexecuted. Mirror/reset scope is unapproved; service UI rendering and actual second-workspace access remain unverified. No tenant settings, new connections or capacity were provisioned. Runtime source stayed at `bf908f4754eca4d10a56afd218e9e18d423636d7`.
+
+Earlier statements below about live captures remaining pending describe their historical checkpoints, not this pass. Matching released-package acceptance, human review and explicit publication approval are still outstanding; no merge or public deployment is authorised.
+
+## Power BI operating modes consistency
+
+The canonical two-mode introduction is `docs/semantic-models/index.md`: Power BI only without a Catalogue, or a Fabric estate with a Catalogue, using the same package and native project files. The switch is Catalogue configuration, not licence ownership. The nine assigned overview, setup, tutorial and requirements pages are reconciled; the native annotation exercise reuses the generated linked Report, and managed-source setup introduces Catalogue/Environment support without replacing native sources.
+
+Checks against unchanged runtime `bf908f4754eca4d10a56afd218e9e18d423636d7`: 111 focused source tests; 22 documentation tests (plus three subtests); all four reference generators; 16 Initialise excerpts; model/Report/journey/reference example gates; strict MkDocs; retained routes/fragments; 23,298 local link/asset checks with no broken links/fragments; 45 responsive/theme/JavaScript states across all nine pages. Existing commands and source excerpts are unchanged except selecting the already-generated Report alongside its model for the field-list check. No live service validation, runtime change, new page, navigation change, merge or publication.
+
+## Active named/additive correction
+
+The named examples and continuous-project correction supersede the earlier snapshot-based preparation. Runtime evidence: `bf908f4754eca4d10a56afd218e9e18d423636d7`. Navigation, page order, URLs, sidebar, reference ownership and approved product positioning remain unchanged.
+
+- Parcel and Sales are installed named examples; all seven item combinations and no-example selection are covered. Native-only defaults do not provision Fabric data support. Data extension adds missing support without retargeting existing bindings.
+- Final-head Windows/Python 3.13 CI: 7,773 passed / 7 POSIX-pty cases skipped / 325 deselected, including the 63 named-example regressions. Linux/Python 3.11 passed all 7,780 cases before the two-file import-spacing-only follow-up; the redundant slow Linux rerun was stopped after final-head CI passed. Counts are not added together.
+- Built-wheel isolation: 21 generated projects, 24 proper subset comparisons, ten extension orders and idempotent reruns, with network access refused and explicit offline inventory boundaries.
+- Sixteen displayed generated-file blocks match the generator. The continuing Lakehouse, Warehouse, native/managed-model, Report and estate checks exercise the actual public Initialise API and production parser/compiler/planner.
+- All 18 example ZIPs, their packaging tool and the beginner hash/API inspection workflow are removed. Existing source fixtures remain for testing. Technical preservation checks remain automated, not reader-facing.
+- Strict build, all four reference generators, 22 documentation tests, route/anchor retention and paired-site crawl pass. The rendered gate retains 114 original routes and 872 original fragments; the paired crawl reports no broken links/anchors.
+- Browser checks cover 50 broad documentation states and five final-source rechecks of the changed Python page, plus four product Sales disclosure states, actual mobile JavaScript drawer/search navigation and no-JavaScript navigation through the section overview. Human page-by-page review and later real captures remain pending.
+
+See [local verification and limits](acceptance/named-additive-examples/verification.md), the [exact generated-file matrix](acceptance/named-additive-examples/generated-file-matrix.md) and [capture inventory](CAPTURE-INVENTORY.md). Earlier independent reviews below do not certify this corrected head. Live Fabric/Power BI and matching released-PyPI acceptance remain unclaimed; no merge, release or public publication is authorised.
+
+## Earlier item-first revision
+
+Approved plan: `weaver-docs-item-first-reorganisation-agent-plan.md` supplied by Matthias. New navigation: Getting started / Lakehouse / Warehouse / Semantic models / Reports / Coordinate your estate / Reference. This supersedes the previous taxonomy, not its technical evidence.
+
+| Package | Current state |
+|---|---|
+| Frozen evidence and retention map | Committed; 114 original pages accounted for, 35 canonical item/estate routes. See `acceptance/docs-item-first-2026-10/route-map.md`. |
+| Short entrances, sitemap and guidance | Integrated; strict build and actual two-click item entrances pass. |
+| Lakehouse and Warehouse | Integrated and parent-reviewed. Lakehouse: 7 local Check checkpoints / 12 exact fixture blocks; Warehouse: 5 checkpoints / 12 exact blocks. Expected service outcomes remain unobserved. |
+| Models and Reports | Integrated and parent-reviewed. Seven model tasks: 12 compiled Check checkpoints / 16 exact blocks. Reports: 8 command parses / 4 exact blocks / native and offline dev/prod binding gate passed. |
+| Estate and reference/link audit | Integrated; 35 canonical pages, 114 original routes, 872 old IDs and 26 direct search-excluded compatibility routes pass the rendered gate. Product links canonical. |
+| Independent reader/retention reviews | Four-pair scope finished. Five reader paths and full retention independently reviewed; four verified findings corrected/rechecked by parent. Final human acceptance remains Matthias. |
+| Technical/browser/search verification | Final locked build, four generators, item/fixture gates, paired crawl and 1,135 unique focused source tests pass. Broad integrated browser: 410 states; post-correction: 54 states plus eight hit-tested actual search selections. Original search false-negative and parent correction dispositions are recorded, not treated as human approval. |
+| Draft/private-preview delivery | Corrected preview built on existing private routes; final PR heads/readback recorded in final-verification.md. No release, merge, public publication or live service acceptance. |
+
+## Intended release copy
+
+Matthias has directed prospective PyPI-release copy, not a rollback to the older package. Product/onboarding use normal PyPI installation and runtime publication; all four item routes and the traditional left tree remain. Development procedures and exact source provenance stay in maintainer evidence. `acceptance/docs-item-first-2026-10/intended-release-copy.md` records this scope and actual checks. A matching released-wheel acceptance is still unclaimed and required before public publication.
+
+The earlier five-section and feedback iterations below are historical evidence.
+Final reader acceptance belongs to Matthias; independent agent/editor review and
+local technical checks do not replace it.
+
+## Pinned-main refresh
+
+Behaviour target: `74b4d15ee65ed2740593af1f4d459771b801b132`; documentation base: `f35c943ed0ca423b92ab53aa571c43ae2817b74e`. Publication is held for a matching package and explicit approval; these previews must not be mistaken for PyPI `0.9.0` documentation.
+
+| Work package | Integrated scope | State |
 | --- | --- | --- |
-| 1 | Navigation and ownership | Complete. Public navigation is **Getting started / Core concepts / Basics / Advanced / Reference**. Guides, Contracts and Contributing are not public sections. |
-| 2 | Getting started and Core concepts | Complete. The first-project route is self-contained, and the concept sequence covers documents, operations, catalogue state, Mirrors, Sessions, dependencies and failure. |
-| 3 | Basics | Complete. Task pages use defaults and inference first, separate Python and Spark SQL paths, distinguish logical and physical Shortcuts, and cover normal development, operation and recovery. |
-| 4 | Advanced | Complete. The section covers Build selection, the general incremental Table and bookmark contracts, portable desktop/Fabric execution, history, schema, data protection, partial failure, mirroring, bundles and execution contexts. Notebook and Capacity remain CLI Reference topics. |
-| 5 | Reference | Complete. Weaver documents, Python API, CLI, configuration, operation behaviour, catalogue schema, bundle format and machine-readable output have explicit owners. Generated CLI and Python blocks remain generator-owned. |
-| 6 | Editorial integration | Complete on this branch. The whole rendered tree was checked for reader routes, retired paths and vocabulary, duplicated explanation, assurance and agent-facing language, future-product claims, and cross-page behavioural consistency. |
+| A0 | Baseline, exclusions and claim/mode ownership | Recorded in `acceptance/docs-refresh-2026-10/baseline.md` and `claims.md` |
+| A1 | Nine reference owners, existing reference audit, four generators | Integrated; see `reference-evidence.md` for source/test evidence and unchanged owners |
+| A2 | Six complete small fixtures and explicit offline/live boundaries | Integrated; parent reran fixture checker successfully; see `fixture-evidence.md` |
+| A3 | D01–D06, Fabric-first authoring with semantic models/Reports integrated beside Lakehouse/Warehouse work | Feedback revision implemented; original URLs retained, shared lifecycle explained |
+| A4 | D07–D13, selective Load/concurrency/performance and optional native modelling | Implemented; exact syntax remains reference-owned |
+| A5 | Fabric-first homepage/Features, ordered item pages, rounded scale results and native Power BI dbt comparison | Feedback revision coordinated in the product repository; exact timings retained in maintainer evidence |
+| A6 | Navigation, contextual links, generated ownership and version notice | Integrated; final strict build and paired-site checks pass |
+| A7 | Build, rendered links, examples, browser and independent reader review | Local acceptance complete; reviewer DR-01 corrected/rechecked; live deployment/query/render/licensing not run; see `independent-acceptance.md` |
+| A8 | Draft PRs, private paired previews and release handoff | Both draft PRs and private proxy mappings verified; final heads/private addresses supplied in handoff; no merge or public publication |
 
-Final delivery verification must run again on the integrated head. A phase being complete here does not replace that integrated build and link check.
+No substantive legacy content was removed. Original routes remain reachable; retired model-specific tutorial routes now point to the shared authoring, validation and configuration owners. Exact contracts stay reference-owned. The final handoff owns integrated results, screenshot locations, precise outstanding live cases and recommended publication order.
+
+## Fabric-first editorial feedback
+
+The feedback revision restores Fabric primacy and Lakehouse → Warehouse → semantic model → Report discovery. Basics no longer contains a separate Power BI navigation bucket; Advanced uses Semantic models. Models are integrated into core concepts, development, recovery and the shared Build/Load/Test/Health CLI pages. Public benchmark copy is rounded and short; exact measurements are retained in `scale-measurements.md`.
+
+The parent reviewed the revised copy and screenshots and ran focused reader-flow checks. The earlier independent reviews apply to the earlier iteration, not this new prose. Revision evidence is in `acceptance/docs-refresh-2026-10/fabric-first-feedback.md`; live/release/publication gates remain held.
+
+## Page-ownership correction
+
+The accepted product tagline is restored verbatim: Making Fabric easier to use. Core Weaver documents explains TMDL overlays and Weaver annotations as the semantic-model counterpart to SQL/Python engineering declarations. Native model deployment introduces ordinary TMDL before optional annotations and custom handlers. Add Tests and Assumptions owns the full DAX and DAX-to-SQL examples; workspace configuration owns model/Report environment switching. Four former top-level model-specific task leaves are compatibility pointers, not duplicated tutorial owners, and are excluded from search. Incoming narrative/product links target the new owners.
+
+The private structural assessment is `docs-flow-correction.md` in the task scratch folder. Verification for this revision is recorded in `acceptance/docs-refresh-2026-10/page-ownership-feedback.md`.
 
 ## Acceptance follow-up
 
@@ -28,7 +100,8 @@ The launch surface includes:
 - the Design philosophy principles behind authoring, installation, operation and environment binding;
 - a source-backed, reproducible route for moving one project between desktop and Fabric and running installed artefacts in Fabric;
 - a complete Warehouse-only first project;
-- normal Warehouse, Lakehouse Python and Lakehouse Spark SQL task paths;
+- normal Lakehouse Python/Spark SQL and Warehouse task paths, followed by native semantic-model and Report deployment;
+- shared source/model dependency ordering, SQL/Python/DAX validation and whole-estate Health;
 - the logical/physical Shortcut ownership boundary and its effect on project dependencies;
 - general Python and SQL incremental Table staging/delete contracts, with consumer-owned bookmark state;
 - recoverability-based guidance for external physical data and `Prohibit rebuild`;
@@ -48,7 +121,7 @@ The following cross-page rules are launch-critical and reconciled:
 - Folder `Incremental` defaults to `true`, while Table `Incremental` defaults to `false`;
 - Sessions reuse execution context without changing operation semantics; Workflows run ordinary commands in order and do not add rollback;
 - `load --stale` is the normal post-Build catch-up path, while `--name` is deliberate narrow selection and does not add dependencies;
-- a published Fabric Environment is required for remote Python Load or Test work, not for Warehouse T-SQL, Spark SQL, Check or Build merely because Python documents exist;
+- local Check needs no hosted runtime; Warehouse-only SQL work has no Spark runtime requirement; Spark-backed Build admits the matching Weaver/runtime even though it does not call authored `read()`, and generated Lakehouse Load/Test needs a compatible runtime;
 - Build, Load, Test, Mirror, Wipe and Workflow retain their own failure and partial-state boundaries; and
 - current status, bookmarks and Health findings are distinct from append-oriented Log and LoadStatistic history.
 
@@ -69,7 +142,7 @@ The site does not claim:
 - stability for internal Python modules;
 - a universal authentication prerequisite beyond the implemented credential chain;
 - that every Fabric workspace exposes every Doctor probe;
-- that a Fabric Environment is required for Warehouse-only or Spark-SQL-only work;
+- that a Fabric Environment is required for Warehouse-only work, or that Spark-SQL-only work bypasses Spark-backed runtime admission;
 - that workflow files are a general orchestration language or transaction boundary;
 - universal CLI, Python and notebook parity beyond the interfaces named on the portability page;
 - that Mirror copies between workspaces; or

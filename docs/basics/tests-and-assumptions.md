@@ -1,174 +1,90 @@
+---
+search:
+  exclude: true
+---
+
 # Add Tests and Assumptions
 
-A Test compares expected rows with actual rows. An Assumption returns rows that violate a condition. Build installs both kinds of validation, Test executes them and Health reads their current recorded outcomes.
+This task is now organised by the item you are working with.
 
-> **Design background:** [Principles of Data Engineering distinguishes tests from monitored assumptions](https://principlesofdataengineering.org/docs/quality-reliability/tests-and-assumptions/): tests compare independently calculated results, while Assumptions surface monitored violating records for attention rather than automatically invalidating the whole pipeline. Weaver still records an Assumption that returns rows as a failed validation under the Test operation semantics described below.
+- [Open warehouse task](../warehouse/tests.md).
+- [Open lakehouse task](../lakehouse/tests.md).
+- [Open semantic models task](../semantic-models/validation.md).
 
-This guide adds one Test and one Assumption to a small Warehouse pipeline.
+[Continue: add tests and assumptions](../warehouse/tests.md).
 
-## Prerequisites
+<span id="choose-the-validation-form"></span>
 
-- [Install Weaver](../getting-started/installation.md) and confirm `weaver --version` works.
-- Use a Fabric workspace where you can create or modify a catalogue Warehouse and a target Warehouse.
+[Continue: choose the validation form](../reference/operation-behaviour/test.md#validation-semantics).
 
-## 1. Initialise the project
+<span id="warehouse-validations"></span>
 
-Create a project containing `Warehouse/Operations`:
+[Continue: warehouse validations](../warehouse/tests.md).
 
-```bash
-weaver initialise \
-  --workspace "Parcel Development" \
-  --project-folder ./parcel-validation \
-  --catalogue Catalogue \
-  --warehouse Operations \
-  --no-example
-cd parcel-validation
-```
+<span id="prerequisites"></span>
 
-Replace `Parcel Development` with your workspace. Weaver writes `workspace-config.yml` and an empty `Warehouse/Operations` directory. The command ends with `Weaver project ready in .../parcel-validation.`
+[Continue: prerequisites](../warehouse/tests.md).
 
-## 2. Add data to validate
+<span id="1-initialise-the-project"></span>
 
-Create `Warehouse/Operations/Parcel.Status.sql`:
+[Continue: 1 initialise the project](../warehouse/tests.md).
 
-```sql
-/*
-Table ID: Parcel.Status
+<span id="2-add-data-to-validate"></span>
 
-Description: Current parcel status in the validation example.
+[Continue: 2 add data to validate](../warehouse/tests.md).
 
-Lineage: A deterministic parcel feed represented by this example.
+<span id="3-add-a-test"></span>
 
-Primary key: Parcel ID
+[Continue: 3 add a test](../warehouse/tests.md).
 
-Schema:
-  Parcel ID: varchar(20)
-  Status: varchar(30)
-*/
-select v.[Parcel ID]
-     , v.[Status]
-from (values
-    ('P-1001', 'In transit'),
-    ('P-1002', 'Delivered')
-) as v ([Parcel ID], [Status]);
-```
+<span id="4-add-an-assumption"></span>
 
-Load will materialise two rows for the validations to read.
+[Continue: 4 add an assumption](../warehouse/tests.md).
 
-## 3. Add a Test
+<span id="5-check-build-and-load"></span>
 
-Create `Warehouse/Operations/tests/Parcel.StatusMatches.sql`:
+[Continue: 5 check build and load](../warehouse/tests.md).
 
-```sql
-/*
-Test ID: Parcel.StatusMatches
+<span id="6-run-the-validations"></span>
 
-Description: Current parcel status matches the expected rows.
+[Continue: 6 run the validations](../warehouse/tests.md).
 
-Primary key: Parcel ID
-*/
-select v.[Parcel ID]
-     , v.[Status]
-from (values
-    ('P-1001', 'In transit'),
-    ('P-1002', 'Delivered')
-) as v ([Parcel ID], [Status]);
+<span id="7-diagnose-one-deliberate-failure"></span>
 
-select [Parcel ID]
-     , [Status]
-from [Parcel].[Status];
-```
+[Continue: 7 diagnose one deliberate failure](../warehouse/tests.md).
 
-The first result is expected; the second is actual. The Test passes when both contain the same rows. A row found only in expected is missing, and a row found only in actual is unexpected. A changed row therefore produces one missing row and one unexpected row.
+<span id="semantic-model-validations"></span>
 
-`Primary key` is optional. It correlates diagnostic rows from the two sides; it does not change what counts as a discrepancy. Weaver infers the dependency on `Parcel.Status` from the actual query.
+[Continue: semantic model validations](../semantic-models/validation.md).
 
-## 4. Add an Assumption
+<span id="before-you-start"></span>
 
-Create `Warehouse/Operations/assumptions/Parcel.StatusIsKnown.sql`:
+[Continue: before you start](../semantic-models/validation.md#start-from-the-model-you-already-deployed).
 
-```sql
-/*
-Assumption ID: Parcel.StatusIsKnown
+<span id="1-deploy-and-refresh"></span>
 
-Description: Every parcel has a status recognised by this example.
-*/
-select [Parcel ID]
-     , [Status]
-from [Parcel].[Status]
-where [Status] is null
-   or [Status] not in ('Accepted', 'In transit', 'Delivered');
-```
+[Continue: 1 deploy and refresh](../semantic-models/validation.md#start-from-the-model-you-already-deployed).
 
-Every returned row violates the statement in the description. The Assumption passes when the query returns no rows. Weaver infers its dependency from the query as well.
+<span id="2-run-the-source-assumption"></span>
 
-## 5. Check, build and load
+[Continue: 2 run the source assumption](../semantic-models/validation.md#2-run-the-authored-query).
 
-Validate the complete project, install it and populate the Table:
+<span id="3-produce-a-finding"></span>
 
-```bash
-weaver check
-weaver build
-weaver load Warehouse/Operations
-```
+[Continue: 3 produce a finding](../semantic-models/validation.md#3-produce-a-finding-without-losing-your-overlay).
 
-Check prints `Project valid.` Build should report no failed actions and installs the Table, Test and Assumption; it does not execute either validation. Load should report `Parcel.Status` as succeeded with two rows.
+<span id="4-correct-it"></span>
 
-## 6. Run the validations
+[Continue: 4 correct it](../semantic-models/validation.md#4-restore-the-prior-model-and-rerun).
 
-Execute every installed validation in the item, then inspect the current state:
+<span id="compare-dax-with-source-sql"></span>
 
-```bash
-weaver test Warehouse/Operations
-weaver health --item Warehouse/Operations
-```
+[Continue: compare dax with source sql](../semantic-models/validation.md#compare-dax-with-source-sql).
 
-Test should report `Parcel.StatusMatches` and `Parcel.StatusIsKnown` as passed. The Test has `0 missing, 0 unexpected`; the Assumption has `0 violations`. Health should show Green Build, Load and Tests sections.
+<span id="produce-and-correct-a-discrepancy"></span>
 
-A failed validation did run: it found discrepancies or violating rows. A validation reported as unable to run did not produce a valid result and is not a pass.
+[Continue: produce and correct a discrepancy](../semantic-models/validation.md#produce-and-correct-a-discrepancy).
 
-## 7. Diagnose one deliberate failure
+<span id="read-the-estate-result"></span>
 
-Replace `Warehouse/Operations/tests/Parcel.StatusMatches.sql` with this complete failing version:
-
-```sql
-/*
-Test ID: Parcel.StatusMatches
-
-Description: Current parcel status matches the expected rows.
-
-Primary key: Parcel ID
-*/
-select v.[Parcel ID]
-     , v.[Status]
-from (values
-    ('P-1001', 'In transit'),
-    ('P-1002', 'In transit')
-) as v ([Parcel ID], [Status]);
-
-select [Parcel ID]
-     , [Status]
-from [Parcel].[Status];
-```
-
-Install the edited Test, then target it deliberately so the report includes diagnostic rows:
-
-```bash
-weaver check
-weaver build
-weaver test Warehouse/Operations \
-  --name Parcel.StatusMatches
-```
-
-The Test should fail for `P-1002` with one missing row (`In transit`) and one unexpected row (`Delivered`). The command exits non-zero, and Health records the Test section as Red until a later installed run passes.
-
-Restore the complete passing Test from step 3, then install and run all validations again:
-
-```bash
-weaver check
-weaver build
-weaver test Warehouse/Operations
-weaver health --item Warehouse/Operations
-```
-
-The item returns to Green. Editing the source without Build would leave Test running the previously installed definition. Exact validation and diagnostic behaviour is in the [Test operation reference](../reference/operation-behaviour/test.md).
+[Continue: read the estate result](../estate/operate.md).

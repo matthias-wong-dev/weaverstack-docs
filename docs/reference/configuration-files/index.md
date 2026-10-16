@@ -4,7 +4,7 @@ Weaver uses three independent file formats:
 
 | File | Selects or defines | Does not do |
 | --- | --- | --- |
-| [`workspace-config.yml`](workspace-config.md) | A Fabric workspace, catalogue, optional runtime, optional Mirror source, execution settings and logical-to-physical item bindings | Declare Weaver documents, publish an Environment or run Mirror |
+| [`workspace-config.yml`](workspace-config.md) | A Fabric workspace, catalogue, optional runtime, optional Mirror source, execution resource limits, shared Power BI source mappings and logical-to-physical bindings | Declare Weaver documents, publish an Environment or run Mirror |
 | [`workflow.yml`](workflow.md) | Named, ordered lists of ordinary Weaver CLI commands | Define another command language or make the commands transactional |
 | [Fabric Environment definition](fabric-environment.md) | The files and Python packages published to one Fabric Environment | Select a project estate or install Weaver documents |
 

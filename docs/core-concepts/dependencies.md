@@ -36,13 +36,21 @@ That extra step lets Build materialise the Shortcut after its source and before 
 
 A physical Shortcut or directly qualified physical relation has no managed project producer. Weaver cannot infer project ordering from that external address.
 
+## Semantic model dependencies
+
+A model’s managed source declarations connect its Tables to Lakehouse or Warehouse data. The graph reaches from source loads to the model refresh, so the model need not have a separate schedule guessing when the source has finished.
+
+Use `Weaver.Source` to declare the logical source Table. Build installs that lineage; estate-wide Load places selected source work before the model refresh. DAX validations can compare the result with source SQL, and Health uses the same edges to detect stale models or validations. See [Connect a semantic model to source data](../semantic-models/managed-sources.md).
+
+A linked Report depends on its resolved model for deployment. It has no independent data Load. An external source without a managed declaration is outside the installed dependency graph.
+
 ## Dependencies do not widen selection
 
 Dependencies order and affect work inside the requested boundary; they do not silently add another logical item to an operation.
 
 For Build, selecting an item can rebuild changed documents and affected descendants in that item, while dependent documents in an unselected item remain unchanged. Select every item whose installed state should change.
 
-For an item-wide Load, Weaver orders the selected loadable documents using the installed graph. An upstream object in an unselected item is not added to the run. Deliberately named Load selection is narrower still: it runs the named installed documents without dependency expansion or dependency ordering.
+For an item-wide Load, Weaver orders the selected loadable documents using the installed graph. An upstream object in an unselected item is not added to the run. Plain named Load is an operator override without expansion or dependency ordering. `--ancestors` and `--descendants` deliberately expand original seeds, independently, within requested items and order that selected graph. Their union does not recursively add the siblings of newly reached descendants. See [Run part of an estate](../estate/selective-runs.md).
 
 Test uses dependencies to understand what each validation reads and whether a previous result is stale. Dependencies do not turn data producers into additional Test work.
 

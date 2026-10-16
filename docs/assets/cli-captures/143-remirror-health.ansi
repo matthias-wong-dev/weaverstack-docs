@@ -1,0 +1,39 @@
+
+Health
+
+[2m⋯[0m Health                                                                                               [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    1.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    2.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    3.0s[0m                                                                                                                [0m Read catalogue                                                                                       [2m    3.7s[0m
+[2m⋯[0m Health                                                                                               [2m    3.7s[0m                                                                                                               [2m⋯[0m Read the mirrored catalogue                                                                          [2m    0.0s[0m                                                                                                               [2m⋯[0m Read the mirrored catalogue                                                                          [2m    0.4s[0m                                                                                                               [2m⋯[0m Read the mirrored catalogue                                                                          [2m    1.4s[0m                                                                                                               [2m⋯[0m Read the mirrored catalogue                                                                          [2m    2.4s[0m                                                                                                                [0m Read the mirrored catalogue                                                                          [2m    2.7s[0m
+[2m⋯[0m Health                                                                                               [2m    6.4s[0m                                                                                                               [2m⋯[0m Check installed items                                                                                [2m    0.0s[0m                                                                                                                [0m Check installed items                                                                                [2m    0.1s[0m
+[2m⋯[0m Health                                                                                               [2m    6.5s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    0.0s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    0.5s[0m                                                                                                                [0m Read installed objects                                                                               [2m    0.8s[0m
+[2m⋯[0m Health                                                                                               [2m    7.3s[0m                                                                                                               [32m✓[0m Health                                                                                               [2m    7.3s[0m
+
+Weaver Health  [33mAmber[0m
+
+Load    [32mGreen[0m
+  Last load activity   0h 3m ago
+  [32m9 succeeded[0m
+
+Tests   [33mAmber[0m
+  [32m2 succeeded[0m
+  [33mAmber  [0mWarehouse/Operations/Parcel.CurrentStatusMatches
+          Warehouse/Operations/Parcel.StatusEvent has been loaded since this validation passed
+  [33mAmber  [0mWarehouse/Operations/Parcel.StatusIsKnown
+          Warehouse/Operations/Parcel.StatusEvent has been loaded since this validation passed
+
+Build   [32mGreen[0m
+  Installed estate consistent (20 objects)
+
+Slowest loads
+  Warehouse/Operations/Parcel.LakehouseCurrentStatus  6.6s
+  Warehouse/Operations/Parcel.Daily                   4.9s
+  Warehouse/Operations/Parcel.LiveStatus              2.5s
+  Warehouse/Operations/Parcel.StatusEvent             2.5s
+  Warehouse/Operations/Reference.Depot                2.2s
+
+Largest changes
+  Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0
+  Warehouse/Operations/Parcel.Daily           read 1  +1 ~0 -1 !0
+  Warehouse/Operations/Parcel.Events          read 1  +1 ~0 -1 !0
+  Warehouse/Operations/Parcel.RawEvents       read 1  +1 ~0 -1 !0
+  Warehouse/Operations/Parcel.Summary         read 1  +1 ~0 -1 !0
+

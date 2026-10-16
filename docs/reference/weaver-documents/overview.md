@@ -4,14 +4,14 @@ This section specifies how to author files that Weaver discovers as declarations
 
 ## Document model
 
-A Weaver document has four parts:
+Data/validation declarations have four parts:
 
 1. **Path** — selects the owning logical item and, for most kinds, the declaration family.
 2. **Kind** — selected by the single ID key in object metadata, by the shortcut filename, by `schemas/`, or by `programmables/`.
 3. **Metadata** — YAML in a Python module docstring or opening SQL `/* ... */` comment; shortcut, schema and programmable forms have their own schemas.
 4. **Body** — Python class, SQL program, shortcut declarations, schema YAML or one Warehouse procedure statement.
 
-Check and Build read the complete project statically. They parse Python but do not import or execute it. Build installs selected definitions; Load and Test later use the installed definitions rather than reopening project source.
+Check and Build inspect data/validation Python structure statically without importing those authored classes. Power BI annotation files are a separate trusted-code surface loaded during project parsing; Build executes their transformations. Catalogue-backed Load/Test use installed definitions; source/file Test instead reads selected project validations.
 
 The first two path components are exactly `Lakehouse/<Item>` or `Warehouse/<Item>`. Lakehouse data documents live directly in `Tables/` or `Files/`; Warehouse Tables and Views live at the item root. Tests, Assumptions, schema metadata and Warehouse programmables live directly in their named directories, with no nested declaration directories.
 
@@ -36,7 +36,7 @@ The owning item selects the SQL dialect: Lakehouse `.sql` is Spark SQL; Warehous
 
 ## Metadata and bodies
 
-Object and validation metadata is a YAML mapping in the first module docstring or opening SQL block comment. It must contain exactly one kind-specific ID key. `Description` is required for every object and validation; data objects also require `Lineage`. See [Common metadata](common-metadata.md) for shared value syntax and each kind page for the complete accepted key set.
+Object and validation metadata is a YAML mapping in the first module docstring or opening SQL block comment. It must contain exactly one kind-specific ID key. `Description` is required for data objects and validations; data objects also require `Lineage`. See [Common metadata](common-metadata.md) for shared value syntax and each kind page for the complete accepted key set.
 
 A Python file declares exactly one class that directly inherits its metadata kind. Helper classes may coexist. The class name equals the filename stem and implements the methods named on the kind page.
 
@@ -49,6 +49,8 @@ When `Dependencies` is absent, Weaver infers document dependencies from authored
 Spark SQL **Tables and Views still require an explicit `Dependencies` key**, including `Dependencies: []`. Spark SQL Tests and Assumptions are validation documents and may omit it; Weaver then infers their SQL references.
 
 Logical Shortcuts add cross-item edges. Physical references and physical Shortcuts have no project producer to order. Descriptive `$...` metadata references and foreign-key metadata do not create execution dependencies. Document and item dependency graphs must be acyclic; explicit replacement does not permit an item cycle.
+
+Native Power BI definitions use [their own discovery/layout](../power-bi/project-layout.md), not a Table metadata header. Model-owned [DAX validations](../power-bi/validations.md) use opening comment metadata; native TMDL policy and annotations have separate rules. A Report is a native definition, not a Python/SQL data document.
 
 ## Page map
 

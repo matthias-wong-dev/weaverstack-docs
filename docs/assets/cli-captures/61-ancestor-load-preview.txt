@@ -1,0 +1,20 @@
+Load (dry run)
+
+  Read catalogue                                                                                           2.6s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+  Execute                                                                                                  0.0s
+✓ Load (dry run)                                                                                           2.6s
+
+plan succeeded: Lakehouse/Landing
+
+    validated                load:Lakehouse/Landing/Files/Parcel.Events
+    validated                load:Lakehouse/Landing/Tables/Parcel.Event
+                             after load:Lakehouse/Landing/Files/Parcel.Events
+
+Plan
+    2 selected

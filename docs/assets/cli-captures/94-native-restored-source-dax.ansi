@@ -1,0 +1,12 @@
+
+Test
+
+[2m⋯[0m Test                                                                                                 [2m    0.0s[0m                                                                                                               [2m⋯[0m Read validations                                                                                     [2m    0.0s[0m                                                                                                                [0m Read validations                                                                                     [2m    0.1s[0m
+[2m⋯[0m Test                                                                                                 [2m    0.1s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    0.0s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    0.9s[0m                                                                                                                [0m Execute                                                                                              [2m    1.0s[0m
+[2m⋯[0m Test                                                                                                 [2m    1.1s[0m                                                                                                               [32m✓[0m Test                                                                                                 [2m    1.1s[0m
+
+test [32mpassed[0m
+
+Test summary
+[32m    1 passed[0m
+[2m    0 failed[0m

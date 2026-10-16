@@ -1,0 +1,162 @@
+Workflow: verify  (workflow.yml)
+
+1. check .
+2. build . --item Lakehouse/Landing --item Warehouse/Operations --item Warehouse/Reporting
+3. load --stale
+4. test
+5. health
+
+Starting: Fabric credential, Spark session (Livy)
+
+
+[1/5] check .
+
+Project valid.
+
+[2/5] build . --item Lakehouse/Landing --item Warehouse/Operations --item Warehouse/Reporting
+
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+  Warehouse/Operations
+  Warehouse/Reporting
+
+
+Build
+
+  Check target occupancy                                                                                   0.0s
+  Resolve semantic data sources                                                                            0.0s
+  Read catalogue                                                                                           3.7s
+    Read Warehouse/Operations inventory                                                                    1.0s
+    Read Warehouse/Reporting inventory                                                                     0.9s
+    Read Warehouse/Catalogue inventory                                                                     0.1s
+    Read Lakehouse/Landing inventory  (30.6s waiting for Spark)                                           43.0s
+  Read target inventories                                                                                 45.0s
+  Resolve physical shortcut targets                                                                        0.3s
+  Read semantic sources                                                                                    0.0s
+  Prepare bundle                                                                                           0.0s
+Install selection
+  Lakehouse/Landing         up to date
+  Warehouse/Operations      up to date
+  Warehouse/Reporting       up to date
+
+  Install                                                                                                  0.0s
+✓ Build                                                                                                   51.0s
+
+Installation
+  nothing to install
+  Bundle  9340209bb002b03d7f4faf732f25a931394ca821fba2a66eefa9094a16976c31
+
+[3/5] load --stale
+
+
+Load
+
+  Read catalogue                                                                                           1.6s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+  Warehouse/Operations
+  Warehouse/Reporting
+
+  Build run graph                                                                                          0.0s
+→   Load Warehouse/Operations/Parcel.Daily
+→   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
+✓   Load Warehouse/Operations/Parcel.Daily  (read 1, +1 ~0 -1 !0)                                          4.9s
+→   Load Warehouse/Operations/Parcel.Summary
+✓   Load Warehouse/Operations/Parcel.Summary  (read 1, +1 ~0 -1 !0)                                        1.4s
+→   Load Warehouse/Reporting/Parcel.DashboardInput
+✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +0 ~0 -0 !0)                         6.6s
+✓   Load Warehouse/Reporting/Parcel.DashboardInput  (read 1, +1 ~0 -1 !0)                                  2.0s
+  Execute                                                                                                  8.4s
+  Record what the run did                                                                                  0.6s
+✓ Load                                                                                                    10.6s
+
+load succeeded: Lakehouse/Landing, Warehouse/Operations, Warehouse/Reporting
+
+Load summary
+    4 succeeded
+    0 failed
+    0 blocked
+  Rows
+    read                   5
+    inserted               3
+    updated                0
+    deleted                3
+    rejected               0
+
+  Workflow: 46e4ce6374954484aed58403c3688c6c
+
+[4/5] test
+
+
+Test
+
+  Read catalogue                                                                                           1.3s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+  Warehouse/Operations
+  Warehouse/Reporting
+
+  Build run graph                                                                                          0.0s
+→   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
+→   Test Warehouse/Operations/Parcel.StatusIsKnown
+→   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
+→   Test Warehouse/Operations/Parcel.CurrentStatusMatches
+✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         4.0s
+✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  5.8s
+✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                       9.5s
+✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    12.2s
+  Execute                                                                                                 10.4s
+  Record what the run did                                                                                  0.0s
+✓ Test                                                                                                    19.6s
+
+test passed
+
+Test summary
+    4 passed
+    0 failed
+  Workflow: 46e4ce6374954484aed58403c3688c6c
+
+[5/5] health
+
+
+Health
+
+  Read catalogue                                                                                           1.2s
+  Check installed items                                                                                    0.0s
+  Read installed objects                                                                                   3.4s
+✓ Health                                                                                                   4.6s
+
+Weaver Health  Green
+
+Load    Green
+  Last load activity   0h 0m ago
+  15 succeeded
+
+Tests   Green
+  4 succeeded
+
+Build   Green
+  Installed estate consistent (67 objects)
+
+Slowest loads
+  Lakehouse/Landing/Tables/Parcel.Event               14.4s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus       7.1s
+  Warehouse/Operations/Parcel.LakehouseCurrentStatus  6.6s
+  Warehouse/Operations/Parcel.Daily                   4.9s
+  Warehouse/Operations/Parcel.StatusEvent             3.5s
+
+Largest changes
+  Warehouse/Operations/Parcel.Daily           read 1  +1 ~0 -1 !0
+  Warehouse/Operations/Parcel.Events          read 1  +1 ~0 -1 !0
+  Warehouse/Operations/Parcel.RawEvents       read 1  +1 ~0 -1 !0
+  Warehouse/Operations/Parcel.Summary         read 1  +1 ~0 -1 !0
+  Warehouse/Reporting/Parcel.DashboardInput   read 1  +1 ~0 -1 !0
+
+
+✓ Commands completed: 5

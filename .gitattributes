@@ -1,0 +1,2 @@
+# PTY transcripts contain intentional CR redraws and ANSI controls. Preserve their bytes.
+docs/assets/cli-captures/*.ansi binary

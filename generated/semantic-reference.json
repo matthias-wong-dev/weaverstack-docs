@@ -1,0 +1,146 @@
+{
+  "classes": [
+    {
+      "members": [
+        {
+          "kind": "method",
+          "name": "apply",
+          "signature": "(self, target: TmdlObject) -> None"
+        },
+        {
+          "kind": "method",
+          "name": "boolean",
+          "signature": "(self) -> bool"
+        },
+        {
+          "kind": "method",
+          "name": "error",
+          "signature": "(self, message: str) -> NoReturn"
+        },
+        {
+          "kind": "method",
+          "name": "lines",
+          "signature": "(self) -> list[str]"
+        },
+        {
+          "default": "'post_schema'",
+          "kind": "attribute",
+          "name": "phase"
+        },
+        {
+          "default": "frozenset()",
+          "kind": "attribute",
+          "name": "scopes"
+        },
+        {
+          "kind": "property",
+          "name": "value",
+          "signature": "(self) -> str"
+        }
+      ],
+      "name": "weaver.semantic_models.annotation.Annotation"
+    },
+    {
+      "members": [
+        {
+          "kind": "method",
+          "name": "__init__",
+          "signature": "(self, parts)"
+        },
+        {
+          "kind": "property",
+          "name": "model",
+          "signature": "(self)"
+        },
+        {
+          "kind": "property",
+          "name": "parts",
+          "signature": "(self)"
+        }
+      ],
+      "name": "weaver.semantic_models.objects.TmdlDefinition"
+    },
+    {
+      "members": [
+        {
+          "kind": "method",
+          "name": "__delitem__",
+          "signature": "(self, key)"
+        },
+        {
+          "kind": "method",
+          "name": "__getitem__",
+          "signature": "(self, key)"
+        },
+        {
+          "kind": "method",
+          "name": "__setitem__",
+          "signature": "(self, key, value)"
+        },
+        {
+          "kind": "property",
+          "name": "name",
+          "signature": "(self)"
+        },
+        {
+          "kind": "method",
+          "name": "objects",
+          "signature": "(self, kind)"
+        },
+        {
+          "kind": "property",
+          "name": "parent",
+          "signature": "(self)"
+        },
+        {
+          "kind": "method",
+          "name": "remove",
+          "signature": "(self)"
+        },
+        {
+          "kind": "method",
+          "name": "set_expression",
+          "signature": "(self, key, expression)"
+        }
+      ],
+      "name": "weaver.semantic_models.objects.TmdlObject"
+    },
+    {
+      "members": [
+        {
+          "kind": "method",
+          "name": "__contains__",
+          "signature": "(self, name)"
+        },
+        {
+          "kind": "method",
+          "name": "__delitem__",
+          "signature": "(self, name)"
+        },
+        {
+          "kind": "method",
+          "name": "__getitem__",
+          "signature": "(self, name)"
+        },
+        {
+          "kind": "method",
+          "name": "__iter__",
+          "signature": "(self)"
+        },
+        {
+          "kind": "method",
+          "name": "__len__",
+          "signature": "(self)"
+        },
+        {
+          "kind": "method",
+          "name": "add",
+          "signature": "(self, name, expression=None, *, description=None, **properties)"
+        }
+      ],
+      "name": "weaver.semantic_models.objects.TmdlCollection"
+    }
+  ],
+  "owner": "docs/reference/python/semantic-models.md",
+  "schema_version": 1
+}

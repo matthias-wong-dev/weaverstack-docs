@@ -1,0 +1,21 @@
+Load
+
+  Resolve semantic models                                                                                  0.5s
+  Read catalogue                                                                                           0.0s
+Workspace  Parcel Production
+Catalogue  none
+Targets
+  SemanticModel/Parcel → SemanticModel/Parcel_Production
+
+  Build run graph                                                                                          0.0s
+→   Load SemanticModel/Parcel
+✓   Load SemanticModel/Parcel                                                                              7.7s
+  Execute                                                                                                  7.7s
+✓ Load                                                                                                     8.2s
+
+load succeeded: SemanticModel/Parcel
+
+Load summary
+    1 succeeded
+    0 failed
+    0 blocked

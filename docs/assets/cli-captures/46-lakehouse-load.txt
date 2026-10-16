@@ -1,0 +1,34 @@
+Load
+
+  Read catalogue                                                                                           3.2s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+  Wait for Spark session                                                                                  35.9s
+→   Load Lakehouse/Landing/Files/Parcel.Events
+✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +1 ~0 -0 !0)                                      3.1s
+→   Load Lakehouse/Landing/Tables/Parcel.Event
+✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +3 ~0 -0 !0)                                     12.1s
+→   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)                             11.4s
+  Execute                                                                                                 25.6s
+  Record what the run did                                                                                  0.0s
+✓ Load                                                                                                    1m14s
+
+load succeeded: Lakehouse/Landing
+
+Load summary
+    3 succeeded
+    0 failed
+    0 blocked
+  Rows
+    read                   6
+    inserted               6
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: d3e86d559e894acf8286840edd8a0bbc

@@ -1,0 +1,43 @@
+Workspace  Parcel Production
+Catalogue  none
+Targets
+  SemanticModel/Parcel → SemanticModel/Parcel_Production
+  Report/Parcel → Report/Parcel_Report_Production
+
+
+Build
+
+    Create SemanticModel/Parcel_Production                                                                20.7s
+    Create Report/Parcel_Report_Production                                                                20.7s
+  Create Power BI items                                                                                   41.4s
+  Resolve semantic data sources                                                                            0.0s
+    Resolve SemanticModel/Parcel_Production                                                                0.0s
+    Resolve Report/Parcel_Report_Production                                                                0.0s
+  Read target inventories                                                                                  0.2s
+  Read semantic sources                                                                                    0.0s
+  Prepare bundle                                                                                           0.0s
+Install selection
+  SemanticModel/Parcel
+    changed                 1
+    selected for build      1
+  Report/Parcel
+    changed                 1
+    selected for build      1
+
+→   SemanticModel/Parcel_Production · Deploy semantic definitions · 1 action
+✓   SemanticModel/Parcel_Production · Deploy semantic definitions · 1 action                              21.1s
+→   SemanticModel/Parcel_Production, Report/Parcel_Report_Production · Verify deployed semantic definitions · 1 action
+✓   SemanticModel/Parcel_Production, Report/Parcel_Report_Production · Verify deployed semantic definitions · 1 action   20.7s
+→   Report/Parcel_Report_Production · Deploy Report definitions · 1 action
+✓   Report/Parcel_Report_Production · Deploy Report definitions · 1 action                                20.4s
+→   Report/Parcel_Report_Production · Verify deployed Report definitions · 1 action
+✓   Report/Parcel_Report_Production · Verify deployed Report definitions · 1 action                       21.4s
+  Install                                                                                                 1m23s
+✓ Build                                                                                                   2m05s
+
+Installation
+    4 succeeded
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  60e0d5ff7a64ba24ad9343689bb3d21e20e64d604f85edf1fe5817076faaa6f0

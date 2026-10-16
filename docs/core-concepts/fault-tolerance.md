@@ -28,9 +28,9 @@ Build, Load and Test do not share one universal failure policy.
 
 Build does not offer Load's fault-tolerant execution mode. Installation work completed before a Build failure can remain physically applied, while unsuccessful installation is not certified as a successful generation.
 
-Test attempts the installed validations in its selection and records each result. A failed validation is a finding about the data; a validation that could not run is a different condition. One validation does not produce data needed by another, so Test does not use Load's dependency continuation policy.
+Test attempts validations in its selection. Catalogue mode records outcomes; source/file mode returns outcomes without catalogue records. A failed validation is a finding about the data; a validation that could not run is a different condition. One validation does not produce data needed by another, so Test does not use Load's dependency continuation policy.
 
-A Workflow adds another boundary. It stops at the first command that fails even when that command used fault-tolerant execution internally. Commands completed earlier in the Workflow remain applied.
+A Workflow adds another boundary. An execution failure stops subsequent commands even when the command used fault-tolerant execution internally. Test/Health findings are collected while the sequence continues, and make the completed workflow unsuccessful. Earlier effects remain applied.
 
 ## Partial state and recovery
 

@@ -1,0 +1,26 @@
+
+Health
+
+[2m⋯[0m Health                                                                                               [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    1.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    2.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    3.0s[0m                                                                                                                [0m Read catalogue                                                                                       [2m    3.7s[0m
+[2m⋯[0m Health                                                                                               [2m    3.7s[0m                                                                                                               [2m⋯[0m Check installed items                                                                                [2m    0.0s[0m                                                                                                                [0m Check installed items                                                                                [2m    0.1s[0m
+[2m⋯[0m Health                                                                                               [2m    3.9s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    0.0s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    0.2s[0m                                                                                                                [0m Read installed objects                                                                               [2m    0.6s[0m
+[2m⋯[0m Health                                                                                               [2m    4.5s[0m                                                                                                               [32m✓[0m Health                                                                                               [2m    4.5s[0m
+
+Weaver Health  [32mGreen[0m
+
+Load    [32mGreen[0m
+  Last load activity   0h 0m ago
+  [32m1 succeeded[0m
+
+Tests   [32mGreen[0m
+  [32m2 succeeded[0m
+
+Build   [32mGreen[0m
+  Installed estate consistent (10 objects)
+
+Slowest loads
+  Warehouse/Operations/Parcel.StatusEvent     4.9s
+
+Largest changes
+  Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0
+

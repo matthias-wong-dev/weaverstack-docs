@@ -1,0 +1,63 @@
+Set up a Weaver project.
+
+Lakehouse (optional)
+Use a Lakehouse for files and Python/Delta tables.
+Press Enter if this project does not need one.
+Examples: Landing, Bronze
+Lakehouse:
+
+Project
+
+  Project folder  ./parcel
+  Workspace       Parcel Development
+  Catalogue       Catalogue
+  Environment     Weaver
+  Lakehouse       None
+  Warehouse       Operations
+  Example         Parcel
+  Semantic Model  None
+
+1. Continue
+2. Change an answer
+3. Cancel
+Choose [1/2/3]: 1
+Publishing a Fabric Environment can take about 5 minutes.
+Publish the Environment now? [y/N]: n
+
+Setting up the Weaver project
+
+  Checking the workspace                                                                                   0.3s
+  Reading the Environment                                                                                  0.0s
+  Checking the project files                                                                               0.1s
+  Creating the Catalogue Catalogue                                                                        11.6s
+  Creating the Warehouse Operations                                                                        5.1s
+  Writing the project files                                                                                0.0s
+  Creating the Environment Weaver                                                                         21.2s
+✓ Setting up the Weaver project                                                                           38.4s
+
+  Catalogue    Catalogue   created
+  Environment  Weaver      created
+  Warehouse    Operations  created
+  Environment publication: deferred
+
+Weaver project ready in [local-path]/parcel.
+
+Next:
+
+  cd [local-path]/parcel
+
+Environment publication deferred.
+Publish it before the first load that runs Python.
+
+  weaver fabric environment publish --path Environment/Weaver.Environment
+  weaver workflow full
+
+Or run individually:
+  weaver build
+  weaver load
+  weaver test
+  weaver health
+
+You can set this up again with:
+
+  weaver initialise --workspace 'Parcel Development' --project-folder ./parcel --catalogue Catalogue --environment Weaver --warehouse Operations --example Parcel --non-interactive

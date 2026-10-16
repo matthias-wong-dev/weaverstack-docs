@@ -22,11 +22,11 @@ Build → Load → Test → Health
 
 Each entry keeps its normal selection, validation, state changes and failure behaviour. Workflow is not a second execution language, and it does not reinterpret the lifecycle.
 
-The sequence runs in one Session and one workspace. Weaver can prepare the combined capabilities needed by the commands before the first entry, then reuse them across the sequence. Load and Test evidence produced during the sequence also shares a workflow identifier, making related outcomes easier to correlate.
+The sequence runs in one Session and one workspace configuration. A mixed project uses a source-item Build followed by a separate Power BI Build; a Workflow can coordinate both without combining their Build selection modes. Weaver can prepare the combined capabilities needed by the commands before the first entry, then reuse them across the sequence. Load and Test evidence produced during the sequence also shares a workflow identifier, making related outcomes easier to correlate.
 
 ## Composition does not create a transaction
 
-Commands still complete one at a time. If a command fails, later commands do not run, but changes made by earlier commands remain. Partial state left by the failing command is governed by that command's own behaviour. A Workflow does not add operation-wide rollback around the sequence.
+Commands still complete one at a time. An execution error stops later commands, but changes made by earlier commands remain. Test/Health commands that return findings let the sequence continue; the completed workflow then exits unsuccessfully. A query/command exception is not a finding. Partial state left by the failing command is governed by that command's own behaviour. A Workflow does not add operation-wide rollback around the sequence.
 
 This makes a Workflow useful for recording an accepted operating sequence, not for hiding the boundaries between its steps. Diagnose and recover the operation that failed, then rerun the appropriate sequence against the state that remains.
 

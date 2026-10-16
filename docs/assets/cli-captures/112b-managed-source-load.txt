@@ -1,0 +1,29 @@
+Load
+
+  Read catalogue                                                                                           3.9s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+→   Load Warehouse/Operations/Parcel.StatusEvent
+✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +3 ~0 -0 !0)                                  4.8s
+  Execute                                                                                                  5.0s
+  Record what the run did                                                                                  0.6s
+✓ Load                                                                                                     9.6s
+
+load succeeded: Warehouse/Operations
+
+Load summary
+    1 succeeded
+    0 failed
+    0 blocked
+  Rows
+    read                   3
+    inserted               3
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: b363791ca88f44d08fc19e87f3253a63

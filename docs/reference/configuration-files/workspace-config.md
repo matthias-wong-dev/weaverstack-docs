@@ -19,17 +19,22 @@ environment: Platform Runtimes/ParcelRuntime
 mirror: Warehouse/ParcelCatalogue
 
 execution:
-  parallel_workers: 8
+  build:
+    warehouse_concurrency: 2
+    spark_concurrency: 4
+    onelake_concurrency: 8
+    shortcut_concurrency: 2
+  run:
+    spark_concurrency: 4
+    warehouse_concurrency: 4
 
 targets:
   Lakehouse/Landing: ParcelLandingDev
   Warehouse/Operations:
     name: ParcelOperationsDev
-    execution:
-      parallel_workers: 4
 ```
 
-Only the keys shown above are accepted. Unknown keys are rejected at the top level and inside `execution` or a target mapping. The retired top-level keys `lakehouses` and `warehouses` are rejected; use `targets`.
+The top-level keys listed below are accepted. Unknown keys are rejected at the top level and inside `execution` or a target mapping. The retired top-level keys `lakehouses` and `warehouses` are rejected; use `targets`.
 
 ## Top-level keys
 
@@ -39,7 +44,8 @@ Only the keys shown above are accepted. Unknown keys are rejected at the top lev
 | `catalogue` | `Warehouse/Name` | no | unset | Warehouse holding the Weaver catalogue. The kind must be the literal `Warehouse`; a workspace-qualified value is not accepted here. |
 | `environment` | `Environment` or `Workspace/Environment` | no | unset | Published Fabric Environment attached to Spark work. A qualified reference may select an Environment owned by another workspace. This key does not create or publish it. |
 | `mirror` | `Warehouse/Name` or `Workspace/Warehouse/Name` | no | unset | Source catalogue for Mirror and mirrored-state reads. Although the qualified form parses, Mirror and mirrored-state reads reject a source outside the resolved `workspace`. |
-| `execution` | mapping | no | `{}` | Workspace-level execution settings. |
+| `execution` | mapping | no | build/run defaults below | Workspace-level resource limits. |
+| `data_sources` | mapping | no | `{}` | Shared M expression name to typed `Warehouse/Name` or `Lakehouse/Name`; explicit Build mappings override the same expression. |
 | `targets` | mapping from logical item to target declaration | no | `{}` | Build and Mirror destination bindings. An operation that needs an absent binding fails when resolving that item. |
 
 `workspace`, Environment components, catalogue names and physical target names use Fabric-name validation. Leading and trailing whitespace is removed. A name must not be empty, consist only of dots, or contain `/`, `\\`, `:`, `*`, `?`, `"`, `<`, `>` or `|`. The `/` characters shown in catalogue and Environment references are separators between validated components.
@@ -48,14 +54,28 @@ Only the keys shown above are accepted. Unknown keys are rejected at the top lev
 
 ```yaml
 execution:
-  parallel_workers: 8
+  build:
+    warehouse_concurrency: 2
+    spark_concurrency: 4
+    onelake_concurrency: 8
+    shortcut_concurrency: 2
+  run:
+    spark_concurrency: 4
+    warehouse_concurrency: 4
 ```
 
-| Key | Accepted value | Default |
-| --- | --- | --- |
-| `parallel_workers` | integer greater than zero; booleans are not integers here | unset |
+These are defaults, not required project settings. Omitted groups/keys retain their defaults. Each value must be a positive integer; booleans are rejected. Only `build` and `run` groups and the keys above are accepted. Build limits also govern physical Wipe/Mirror actions. Warehouse limits apply per Warehouse; Spark limits share an application, not separately provisioned clusters. OneLake/shortcut limits concern their respective actions, not every nested HTTP request.
 
-An unset value leaves parallelism to the operation or executor. There is no configuration-level numeric default.
+Build, Load and Test also accept an invocation `--concurrency N` / Python `concurrency=N`. It caps total scheduled actions/nodes across that call while resource limits and dependency ordering still apply. Omission retains operation/configured defaults. The call does not rewrite configuration or retarget a retained bundle. Source/file Tests are serial by default and use the scheduler when an explicit concurrency is supplied. There is no `execution.test`, per-target execution mapping or `--spark-concurrency` flag. The retired `execution.parallel_workers` is rejected.
+
+### `data_sources`
+
+```yaml
+data_sources:
+  ParcelSource: Warehouse/Operations
+```
+
+Keys are exact shared M expression names, non-empty with no surrounding whitespace. Values are typed Lakehouse/Warehouse item names; unsupported types, malformed identities and duplicate explicit mappings fail. Logical items resolve through selected Build bindings or configured targets; otherwise the typed name addresses a physical source. Explicit `--data-source ParcelSource=Warehouse/Other` overrides configuration. An explicit mapping that reaches no selected model expression fails. This is supported typed source substitution, not arbitrary M replacement or credential creation. See [Power BI source mapping](../power-bi/requirements-and-compatibility.md#source-mapping-and-connections).
 
 ### `targets`
 
@@ -64,6 +84,8 @@ Each key is an exact logical item identity:
 ```text
 Lakehouse/Name
 Warehouse/Name
+SemanticModel/Name
+Report/Name
 ```
 
 Each value has one of two shapes:
@@ -75,22 +97,29 @@ Lakehouse/Landing: ParcelLandingDev
 # Long form
 Warehouse/Operations:
   name: ParcelOperationsDev
-  execution:
-    parallel_workers: 4
 ```
 
-The short-form string and long-form `name` are physical Fabric item names, not typed target references. The logical key supplies the physical kind: a `Lakehouse/...` key binds a Lakehouse and a `Warehouse/...` key binds a Warehouse.
+The short-form string and long-form `name` are physical Fabric item names, not typed target references. The logical key supplies the Lakehouse, Warehouse, SemanticModel or Report kind. The long form accepts only required `name`; nested execution settings are rejected.
 
-The long form accepts only `name` and `execution`. `name` is required. Its `execution` mapping has the same single `parallel_workers` key as the top-level mapping. A target-level value overrides the workspace-level value for that item; otherwise the workspace-level setting applies.
+For example:
 
-`targets` may be absent or empty. Two logical items may parse with the same physical name, but one Build or Mirror cannot install two ordinary items of the same kind into one destination. A valid configuration therefore does not prove that all its bindings can be used together.
+```yaml
+workspace: Parcel BI Development
+targets:
+  SemanticModel/Parcel: Parcel_Dev
+  Report/Parcel: Parcel_Report_Dev
+```
+
+No catalogue or Environment is required for this Power BI deployment configuration. Explicit catalogue-free model refresh and source/file Tests resolve configured names or fall back to the logical model/item name. Build uses configured/explicit destinations and requires a binding for each selected item; do not infer missing Build bindings from refresh fallback. Reports have no Load/Test.
+
+`targets` may be absent or empty. Two logical items may parse with the same physical name, but one Build or Mirror cannot install two ordinary items of the same kind into one destination.
 
 ## What each binding controls
 
 - `workspace` chooses the Fabric workspace context.
 - `catalogue` is a separate Warehouse binding for installed definitions and operational state. It is never an implicit target for a logical Warehouse.
 - `targets` supplies physical destinations to Build and Mirror. Build records the settled bindings in the catalogue.
-- Load, Test and Health read installed bindings from the selected catalogue; they do not retarget installed work from the current `targets` mapping.
+- Catalogue-backed Load, Test and Health read installed bindings, not replacement targets from configuration. Catalogue-free refresh and source/file Test instead use configured target resolution.
 - `environment` selects a published runtime for Spark work. It is neither a target nor a publication instruction.
 - `mirror` identifies a source catalogue. Loading the configuration neither reads that catalogue nor runs Mirror.
 
@@ -159,7 +188,7 @@ The development example above is valid because its source catalogue, destination
 
 ## Validation boundary
 
-Configuration loading validates YAML shape, accepted keys, logical item syntax, reference syntax, Fabric names and positive worker counts. It does not contact Fabric. Existence, item kind, permissions, Environment publication state and catalogue compatibility are checked only by operations that use those references.
+Configuration loading validates YAML shape, accepted keys, logical item syntax, reference syntax, Fabric names and positive concurrency values. It does not contact Fabric. Existence, item kind, permissions, Environment publication state and catalogue compatibility are checked only by operations that use those references.
 
 Operation-specific requirements remain separate:
 

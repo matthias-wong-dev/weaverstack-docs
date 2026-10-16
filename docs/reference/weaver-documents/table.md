@@ -32,6 +32,8 @@ A Table accepts the [shared keys](common-metadata.md#shared-metadata-keys) plus 
 | `Delete percentage threshold` | No | Whole integer from `0` through `100` | `5`. |
 | `Update percentage threshold` | No | Whole integer from `0` through `100` | `20`. |
 | `Stability row threshold` | No | Whole integer of at least `0` | `1000000`. |
+| `Delta minReaderVersion` | Lakehouse only, optional | integer from `1` through `3`, not Boolean | creation default `3`; required Table features may raise it |
+| `Delta minWriterVersion` | Lakehouse only, optional | integer from `1` through `7`, not Boolean | creation default `7`; required Table features may raise it |
 
 A `Schema` declaration is authoritative. A SQL query must return every declared business column, no extra business column and the exact declared spelling; query order may differ. Without `Schema`, Spark SQL and T-SQL take business names and types from the staging query during Build. Key, nullability, comparison and note references are then checked against that inferred shape with exact case. Type strings are passed to the target representation; Check does not establish that the engine accepts them. A business column is nullable unless it is in `Primary key` or `Not null`.
 
@@ -50,6 +52,8 @@ The stability percentages are strict upper bounds checked before writes on keyed
 - A non-incremental body or Python return that supplies explicit deletes.
 
 When `Schema` is declared, all locally named columns in keys, `Not null`, `Comparison columns` and `Column notes` must exist. With an inferred SQL shape, Build performs the same check. Duplicate or case-only query columns are invalid.
+
+Explicit Delta minima participate in declaration signatures. Omitted minima use creation defaults frozen into the plan; a default-only Weaver upgrade does not rebuild unchanged Tables solely to raise their protocol. Existing data and destructive replacement still follow Build protection. These keys do not apply to Warehouse Tables.
 
 ## Body and return contract
 

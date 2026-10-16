@@ -1,0 +1,63 @@
+Workspace  Parcel Development
+Catalogue  none
+Targets
+  SemanticModel/ParcelOperations
+  Report/ParcelOperations
+  SemanticModel/ParcelExecutive
+  Report/ParcelExecutive
+
+
+Build
+
+    Create SemanticModel/ParcelExecutive                                                                  20.7s
+    Create SemanticModel/ParcelOperations                                                                 20.6s
+    Create Report/ParcelExecutive                                                                         20.6s
+    Create Report/ParcelOperations                                                                        20.6s
+  Create Power BI items                                                                                   1m22s
+  Resolve semantic data sources                                                                            0.0s
+    Resolve SemanticModel/ParcelOperations                                                                 0.0s
+    Resolve Report/ParcelOperations                                                                        0.0s
+    Resolve SemanticModel/ParcelExecutive                                                                  0.0s
+    Resolve Report/ParcelExecutive                                                                         0.0s
+  Read target inventories                                                                                  0.3s
+  Read semantic sources                                                                                    0.0s
+  Prepare bundle                                                                                           0.0s
+Install selection
+  SemanticModel/ParcelOperations
+    changed                 1
+    selected for build      1
+  Report/ParcelOperations
+    changed                 1
+    selected for build      1
+  SemanticModel/ParcelExecutive
+    changed                 1
+    selected for build      1
+  Report/ParcelExecutive
+    changed                 1
+    selected for build      1
+
+→   SemanticModel/ParcelExecutive · Deploy semantic definitions · 1 action
+→   SemanticModel/ParcelOperations · Deploy semantic definitions · 1 action
+✓   SemanticModel/ParcelOperations · Deploy semantic definitions · 1 action                               21.0s
+→   SemanticModel/ParcelOperations, Report/ParcelExecutive · Verify deployed semantic definitions · 1 action
+✓   SemanticModel/ParcelExecutive · Deploy semantic definitions · 1 action                                21.1s
+→   SemanticModel/ParcelExecutive · Verify deployed semantic definitions · 1 action
+✓   SemanticModel/ParcelOperations, Report/ParcelExecutive · Verify deployed semantic definitions · 1 action   20.5s
+→   Report/ParcelOperations · Deploy Report definitions · 1 action
+✓   SemanticModel/ParcelExecutive · Verify deployed semantic definitions · 1 action                       20.4s
+→   Report/ParcelExecutive · Deploy Report definitions · 1 action
+✓   Report/ParcelOperations · Deploy Report definitions · 1 action                                        20.3s
+→   Report/ParcelOperations · Verify deployed Report definitions · 1 action
+✓   Report/ParcelExecutive · Deploy Report definitions · 1 action                                         20.3s
+→   Report/ParcelExecutive · Verify deployed Report definitions · 1 action
+✓   Report/ParcelExecutive · Verify deployed Report definitions · 1 action                                20.8s
+✓   Report/ParcelOperations · Verify deployed Report definitions · 1 action                               20.8s
+  Install                                                                                                 1m22s
+✓ Build                                                                                                   2m45s
+
+Installation
+    8 succeeded
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  b0841a33f1dc2109ba3070f63cbb77ad57afc5341b2a86fc50cfa98f3ab31ad9

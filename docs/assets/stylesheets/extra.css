@@ -1,6 +1,6 @@
 /*
  * Weaver documentation theme.
- * Brand values and the four-stroke mark follow weaverstack.dev/assets/site.css.
+ * Brand values follow weaverstack.dev/assets/site.css; the mark uses the approved PNG artwork.
  * Overrides stay under Material's classes so reference-page structure remains intact.
  */
 :root {
@@ -125,6 +125,13 @@ input {
   backdrop-filter: blur(14px);
 }
 
+/* Material's fixed mobile search must remain viewport-sized. */
+@media screen and (max-width: 59.984375em) {
+  .md-header {
+    backdrop-filter: none;
+  }
+}
+
 .md-header__inner {
   min-height: 3.3rem;
 }
@@ -138,34 +145,49 @@ input {
   opacity: 1;
 }
 
-.md-header__button.md-logo {
-  width: 1.7rem;
-  height: 1.5rem;
-  margin: 0 0.55rem 0 0;
-  padding: 0;
+.md-header__title.weaver-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 0;
+  min-width: 0;
+}
+
+.weaver-header-brand .weaver-mark {
+  flex: 0 0 30px;
+}
+
+.weaver-header-brand .md-header__ellipsis {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .weaver-mark {
-  position: relative;
   display: block;
-  width: 1.3rem;
-  height: 1.2rem;
+  width: 30px;
+  max-width: 30px;
 }
 
-.weaver-mark i {
-  position: absolute;
-  top: 0.05rem;
-  width: 0.225rem;
-  height: 1.1rem;
-  background: var(--weaver-ink);
-  border-radius: 0.45rem;
-  transform: rotate(-22deg);
+.md-logo .weaver-mark img,
+.md-nav__title .md-logo .weaver-mark img {
+  display: block;
+  width: 100%;
+  max-width: 30px;
+  height: auto;
 }
 
-.weaver-mark i:nth-child(1) { left: 0.1rem; }
-.weaver-mark i:nth-child(2) { left: 0.4rem; transform: rotate(22deg); background: var(--weaver-blue); }
-.weaver-mark i:nth-child(3) { left: 0.7rem; }
-.weaver-mark i:nth-child(4) { left: 1rem; transform: rotate(22deg); background: var(--weaver-blue); }
+.md-logo .weaver-mark img.weaver-mark-dark {
+  display: none;
+}
+
+[data-md-color-scheme="slate"] .md-logo .weaver-mark img.weaver-mark-light {
+  display: none;
+}
+
+[data-md-color-scheme="slate"] .md-logo .weaver-mark img.weaver-mark-dark {
+  display: block;
+}
 
 .md-header__title {
   color: var(--weaver-ink);
@@ -185,6 +207,12 @@ input {
 
 .weaver-home-link:hover {
   color: var(--weaver-blue);
+}
+
+@media screen and (max-width: 37.5em) {
+  .weaver-home-link {
+    display: none;
+  }
 }
 
 /* Navigation uses weight and a blue keyline rather than marketing-card treatments. */
@@ -427,6 +455,18 @@ input {
   color: var(--weaver-syntax-keyword);
 }
 
+.md-typeset .highlight .filename {
+  color: var(--weaver-code-text);
+}
+
+.md-typeset .highlight :is(.nn, .nc, .nf, .fm, .nd, .ne) {
+  color: var(--weaver-syntax-operator);
+}
+
+.md-typeset .highlight :is(.nb, .bp) {
+  color: var(--weaver-syntax-keyword);
+}
+
 .md-typeset .highlight :is(.m, .mb, .mf, .mh, .mi, .mo, .il) {
   color: var(--weaver-syntax-number);
 }
@@ -450,12 +490,15 @@ input {
   background: #0b1624;
 }
 
-.md-clipboard {
+.md-clipboard,
+.md-code__button {
   color: #b9c7da;
 }
 
 .md-clipboard:hover,
-.md-clipboard:focus {
+.md-clipboard:focus,
+.md-code__button:hover,
+.md-code__button:focus {
   color: #ffffff;
 }
 
@@ -569,6 +612,13 @@ input {
   .md-typeset table:not([class]) {
     min-width: 32rem;
   }
+
+  /* Without Material's JS scroll wrapper, the table must own its scroll. */
+  .no-js .md-typeset table:not([class]) {
+    display: block;
+    min-width: 0;
+    overflow-x: auto;
+  }
 }
 
 @media screen and (max-width: 29.984375em) {
@@ -593,4 +643,219 @@ input {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Material sets attribution colours separately from the footer links. */
+html .md-footer-meta.md-typeset .md-copyright,
+html .md-footer-meta.md-typeset .md-copyright__highlight,
+html .md-footer-meta.md-typeset .md-copyright a {
+  color: var(--weaver-muted);
+}
+html .md-footer-meta.md-typeset .md-copyright a:hover {
+  color: var(--weaver-blue);
+}
+.md-dialog {
+  color: var(--weaver-code-text);
+  background: var(--weaver-code);
+}
+
+/* Real CLI captures: the text and status glyphs carry meaning without colour. */
+.md-typeset .weaver-terminal {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  margin: 1.25rem 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid var(--weaver-line-strong);
+  border-radius: 0.65rem;
+  color: var(--weaver-code-text);
+  background: var(--weaver-code);
+  text-align: left;
+}
+.md-typeset .weaver-terminal figcaption {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.4rem 1rem;
+  margin: 0;
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid rgba(223, 231, 247, 0.18);
+  color: var(--weaver-code-text);
+  font: 600 0.7rem/1.5 var(--weaver-mono);
+}
+.md-typeset .weaver-terminal .terminal-exit {
+  color: #b8c4d6;
+  font-weight: 400;
+}
+.md-typeset .weaver-terminal pre {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0.9rem;
+  max-height: min(28rem, 60vh);
+  overflow: auto;
+  background: transparent;
+  border-radius: 0;
+  color: var(--weaver-code-text);
+  font: 0.7rem/1.55 var(--weaver-mono);
+  white-space: pre;
+  scrollbar-width: thin;
+  scrollbar-color: #71829a transparent;
+  scrollbar-gutter: stable;
+}
+.md-typeset .weaver-terminal pre code {
+  display: block;
+  min-width: 100%;
+  width: max-content;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  white-space: pre;
+}
+.md-typeset .weaver-terminal pre:focus-visible {
+  outline: 2px solid #9dccff;
+  outline-offset: -3px;
+}
+.md-typeset .weaver-terminal .terminal-status-green { color: #88d6aa; }
+.md-typeset .weaver-terminal .terminal-status-amber { color: #f2cc82; }
+.md-typeset .weaver-terminal .terminal-status-red { color: #ffaaa4; }
+
+/* Shell prompts are presentation only: clipboard targets remain authored code. */
+.md-typeset .language-bash.highlight {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 1.25rem 0;
+  overflow: hidden;
+  border: 1px solid var(--weaver-line-strong);
+  border-radius: 0.65rem;
+  color: var(--weaver-code-text);
+  background: var(--weaver-code);
+}
+.md-typeset .language-bash.highlight::before {
+  content: "Terminal";
+  display: block;
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid rgba(223, 231, 247, 0.18);
+  color: var(--weaver-code-text);
+  font: 600 0.7rem/1.5 var(--weaver-mono);
+}
+.md-typeset .language-bash.highlight pre {
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.md-typeset .language-bash.highlight pre > code {
+  padding: 0.9rem;
+  border-radius: 0;
+  background: transparent;
+  font: 0.7rem/1.55 var(--weaver-mono);
+}
+.md-typeset .language-bash.highlight pre > code > span[data-terminal-prompt]::before {
+  content: attr(data-terminal-prompt) " ";
+  color: #88d6aa;
+  font-weight: 600;
+}
+.md-typeset .language-bash.highlight pre > code > span[data-terminal-prompt=">"]::before {
+  color: #b8c4d6;
+}
+.md-typeset .terminal-intro {
+  margin: 0.9rem 0 0.5rem;
+}
+.md-typeset .terminal-intro + .weaver-terminal {
+  margin-top: 0;
+}
+
+/* Homepage project overview: source files and a left-to-right item graph. */
+.md-typeset .project-overview {
+  --pv-paper: var(--weaver-paper);
+  --pv-band: var(--weaver-surface);
+  --pv-surface: var(--weaver-surface);
+  --pv-ink: var(--weaver-ink);
+  --pv-muted: var(--weaver-muted);
+  --pv-line: var(--weaver-line);
+  --pv-blue: var(--weaver-blue);
+  --pv-blue-soft: var(--weaver-blue-soft);
+  --pv-green: #07793d;
+  --pv-green-soft: #e2f4ea;
+  --pv-amber: #8a5300;
+  --pv-amber-soft: #fbf0d8;
+  --pv-sans: var(--weaver-sans);
+  display: grid;
+  gap: 1.2rem;
+  margin: 1.1rem 0;
+}
+.md-typeset .project-overview-files {
+  width: min(100%, 24rem);
+  margin-inline: auto;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--weaver-line);
+  border-radius: 0.5rem;
+  background: var(--weaver-surface);
+}
+[data-md-color-scheme="slate"] .project-overview {
+  --pv-green: #88d6aa;
+  --pv-green-soft: #133429;
+  --pv-amber: #f2cc82;
+  --pv-amber-soft: #352c1c;
+}
+.md-typeset .project-overview-files,
+.md-typeset .project-overview-dag { min-width: 0; }
+.md-typeset .project-overview .project-overview-label {
+  margin: 0 0 0.7rem;
+  padding: 0.4rem 0 0;
+  border-top: 2px solid var(--weaver-blue);
+  color: var(--weaver-blue-dark);
+  font: 600 0.75rem/1.4 var(--weaver-sans);
+  text-align: left;
+  max-width: none;
+}
+.md-typeset .project-overview pre.project-overview-tree { margin: 0; overflow: auto; background: transparent; }
+.md-typeset .project-overview-tree code {
+  display: block;
+  width: max-content;
+  min-width: 100%;
+  padding: 0;
+  color: var(--weaver-ink-soft);
+  background: transparent;
+  font: 0.6rem/1.65 var(--weaver-mono);
+  white-space: pre;
+}
+.md-typeset figure.project-overview-dag {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0.8rem;
+  border: 1px solid var(--weaver-line);
+  border-radius: 0.5rem;
+  background: var(--weaver-surface);
+  text-align: left;
+}
+.md-typeset .project-diagram-scroll { overflow-x: auto; scrollbar-color: var(--weaver-line-strong) transparent; }
+.parcel-diagram { display: block; width: 100%; min-width: 700px; height: auto; font-family: var(--pv-sans); }
+.parcel-diagram .parcel-band rect { fill: var(--pv-band); stroke: var(--pv-line); stroke-width: 1; }
+.parcel-diagram .band-1 rect, .parcel-diagram .band-3 rect { fill: var(--pv-paper); }
+.parcel-diagram .parcel-band-title { fill: var(--pv-ink); font-size: 19px; font-weight: 650; }
+.parcel-diagram .parcel-band-sub { fill: var(--pv-muted); font-size: 15px; }
+.parcel-diagram .parcel-node rect { fill: var(--pv-surface); stroke: var(--pv-blue); stroke-width: 1.2; }
+.parcel-diagram .parcel-file rect { fill: var(--pv-green-soft); stroke: var(--pv-green); }
+.parcel-diagram .parcel-shortcut rect { fill: var(--pv-amber-soft); stroke: var(--pv-amber); }
+.parcel-diagram .parcel-model rect, .parcel-diagram .parcel-report rect { fill: var(--pv-blue-soft); }
+.parcel-diagram .parcel-node-title { fill: var(--pv-ink); text-anchor: middle; font-weight: 600; }
+.parcel-diagram .parcel-node-sub { fill: var(--pv-muted); text-anchor: middle; font-size: 17px; }
+.parcel-diagram .parcel-edge { fill: none; stroke: var(--pv-blue); stroke-width: 1.5; }
+.parcel-diagram .parcel-binding { stroke-dasharray: 4 3; }
+.parcel-diagram .parcel-binding-label { fill: var(--pv-muted); text-anchor: middle; font-size: 12px; }
+@media (min-width: 76em) {
+  .md-typeset .parcel-diagram { min-width: 0; }
+}
+@media (max-width: 47.99em) {
+  .md-typeset .project-overview-files { padding: 0.8rem; }
 }

@@ -1,0 +1,19 @@
+{
+  "source_revision": "74b4d15ee65ed2740593af1f4d459771b801b132",
+  "models": [
+    "Parcel"
+  ],
+  "reports": {
+    "Parcel": "Parcel"
+  },
+  "delivery_count": 2,
+  "live_service": "not run; requires separately authorised disposable workspace",
+  "hidden": [
+    "Delivery[DepotId]"
+  ],
+  "policy_format": "#,##0",
+  "overlay_format": "0 \"deliveries\"",
+  "custom_display_folder": "Parcel metrics",
+  "calculation_group": "Display",
+  "calculation_item": "Current"
+}

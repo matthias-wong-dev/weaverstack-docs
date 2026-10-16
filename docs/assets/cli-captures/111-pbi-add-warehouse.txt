@@ -1,0 +1,33 @@
+Setting up the Weaver project
+
+  Checking the workspace                                                                                   0.7s
+  Reading the Environment                                                                                 21.3s
+  Checking the project files                                                                               0.1s
+  Creating the Catalogue Catalogue                                                                       7.5s
+  Creating the Warehouse Operations                                                                      5.1s
+  Writing the project files                                                                                0.0s
+✓ Setting up the Weaver project                                                                           34.7s
+
+  Catalogue    Catalogue   created
+  Environment  Weaver        already exists
+  Warehouse    Operations  created
+  Environment publication: deferred
+
+Weaver project ready in [local-path]/parcel.
+
+Next:
+
+  cd [local-path]/parcel
+
+Environment publication deferred.
+Publish it before the first load that runs Python.
+
+  weaver fabric environment publish --path Environment/Weaver.Environment
+  weaver workflow full
+
+Or run individually:
+  weaver build --item Warehouse
+  weaver build --item PowerBI
+  weaver load
+  weaver test
+  weaver health

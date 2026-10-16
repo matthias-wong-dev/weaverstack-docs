@@ -1,0 +1,31 @@
+Workspace  Parcel Development
+Catalogue  none
+Targets
+  SemanticModel/Parcel
+
+
+Build
+
+  Resolve semantic data sources                                                                            0.0s
+    Resolve SemanticModel/Parcel                                                                           0.0s
+  Read target inventories                                                                                  0.1s
+  Read semantic sources                                                                                    0.0s
+  Prepare bundle                                                                                           0.0s
+Install selection
+  SemanticModel/Parcel
+    changed                 1
+    selected for build      1
+
+→   SemanticModel/Parcel · Deploy semantic definitions · 1 action
+✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.8s
+→   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action
+✓   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action                                20.5s
+  Install                                                                                                 41.4s
+✓ Build                                                                                                   41.7s
+
+Installation
+    2 succeeded
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  c12834f2415a23a6f9563e52fdd349f315874111a1413c36013ad132145c572e

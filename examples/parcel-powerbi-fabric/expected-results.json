@@ -1,0 +1,25 @@
+{
+  "validation_node_outcomes": ["passed", "failed", "invalid", "passed"],
+  "cli_exit_codes": {"passed": 0, "failed": 1, "invalid": 1},
+  "source_revision": "74b4d15ee65ed2740593af1f4d459771b801b132",
+  "models": [
+    "Parcel"
+  ],
+  "reports": {
+    "Parcel": "Parcel"
+  },
+  "delivery_count": 2,
+  "live_service": "not run; requires separately authorised disposable workspace",
+  "source": "Warehouse/Operations/Parcel.Delivery",
+  "test": "SemanticModel/Parcel/Parcel.DeliveryReconciles",
+  "expected_rows": [
+    {
+      "DeliveryCount": 2
+    }
+  ],
+  "discrepancy_rows": [
+    {
+      "[DeliveryCount]": 3
+    }
+  ]
+}

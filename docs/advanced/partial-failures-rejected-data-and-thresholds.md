@@ -35,11 +35,21 @@ A tolerated reject does not block a downstream node. An intolerant reject is a n
 
 A keyed Table can declare limits for the percentage of established target rows that one load would delete or update, together with the target size at which those limits begin to apply. Weaver calculates the proposed change before target mutation. A change over an active limit is refused without applying the proposed target change through that path.
 
-Stability checks are not row-rejection rules. Fault tolerance does not waive them, and an incremental change that would leave a declared unique key invalid is also refused regardless of the fault-tolerance setting. The Table API has a separate, explicit one-run stability waiver for an intended large change; it applies only to that Table load.
+Stability checks are not row-rejection rules. Fault tolerance does not waive them, and an incremental change that would leave a declared unique key invalid is also refused regardless of the fault-tolerance setting. A one-run stability waiver can permit an intended large update/deletion. At the invocation level, `--ignore-stability-threshold` reaches only the selected Load work and waives its declared update/delete percentage limits; it does not change the stored declarations, key checks, selection, bookmarks or fault-tolerance policy.
 
 > **Design background:** [Load mechanics](https://principlesofdataengineering.org/docs/efficient-stable-pipeline/load-mechanics/) frames staging, comparison with the current target, rejects and stability thresholds as separate controls over proposed change. Weaver applies those ideas through the reject and threshold behaviours described here; the reference pages define its exact mechanics.
 
 Keep thresholds aligned with the scale and expected churn of each Table. A threshold low enough to catch an accidental replacement may also stop a legitimate backfill, while a high threshold may add no useful guard. Review the proposed change and use the explicit waiver only when the large update or deletion is the intended operation. See the [Table reference](../reference/weaver-documents/table.md) and [Python API](../reference/python/index.md) for exact metadata keys, defaults and API arguments.
+
+## Waive a threshold only for a reviewed large change
+
+After confirming that the selected change is intended, a narrow invocation can use:
+
+```bash
+weaver load Warehouse/Operations --name 'Parcel[.]Status' --ignore-stability-threshold --workspace-config workspace-development.yml
+```
+
+This example is not a default recovery recipe. It permits a change that the Table's update/delete limits would otherwise refuse. Whole-name selection and any requested expansion still define the reached scope. Null/unique-key checks are not waived, and partial-state consequences remain. Use the [Load reference](../reference/operation-behaviour/load.md) for its exact boundary.
 
 ## Read the estate as partial state
 

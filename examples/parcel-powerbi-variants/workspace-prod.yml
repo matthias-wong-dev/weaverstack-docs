@@ -1,0 +1,6 @@
+workspace: Parcel BI Production
+targets:
+  SemanticModel/ParcelOperations: ParcelOperations
+  Report/ParcelOperations: ParcelOperations_Report
+  SemanticModel/ParcelExecutive: ParcelExecutive
+  Report/ParcelExecutive: ParcelExecutive_Report

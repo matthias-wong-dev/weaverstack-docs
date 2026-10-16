@@ -30,7 +30,7 @@ Use a physical Shortcut when no repeatable process can reconstruct the source. T
 
 Weaver manages the Shortcut destination in the local item: it may create, replace or remove that pointer as its declaration changes. Weaver does **not** manage the underlying physical source named by the Shortcut. This is the strongest ownership boundary because Build and Load do not treat the source contents as a Weaver-owned Table or Folder.
 
-For example, a Lakehouse physical Folder Shortcut can expose an archive held in another workspace without making that archive part of the local estate's managed data. Follow [Connect data with Shortcuts](../basics/shortcuts.md) for the authoring workflow, and use the [Shortcut reference](../reference/weaver-documents/shortcut.md) for exact physical target forms and workspace rules.
+For example, a Lakehouse physical Folder Shortcut can expose an archive held in another workspace without making that archive part of the local estate's managed data. Follow [Connect data with Shortcuts](../lakehouse/shortcuts.md) for the authoring workflow, and use the [Shortcut reference](../reference/weaver-documents/shortcut.md) for exact physical target forms and workspace rules.
 
 ## Retain an existing Weaver-owned object
 
@@ -52,6 +52,12 @@ This is appropriate for Weaver-owned data such as:
 When planning finds an existing protected object that would otherwise be rebuilt, it records that object as prohibited and omits its physical drop and build actions. The existing object is retained; Build does not fail merely because the changed object is protected. Other work in the plan can continue, including installation of new objects. Catalogue metadata, certification and separately generated load work can still reconcile when the change does not require replacing the protected physical object.
 
 A source change that requires a different physical shape does not update that shape in place. The old object remains. Review the plan and resulting physical shape rather than assuming the edited declaration has been materialised. [Build behaviour](../reference/operation-behaviour/build.md) owns the exact planning, certification and installation semantics; [Common metadata](../reference/weaver-documents/common-metadata.md) owns the accepted field and default.
+
+## A protected borrowed object can become local without resetting its contents
+
+For selected changed/impacted protected Tables and Folders in a Mirror, Build uses a preserving materialisation path rather than dropping the borrowed data and starting empty. Warehouse Tables use native CTAS after removing the destination wrapper View. Lakehouse Tables use a Delta shallow clone after removing the shortcut; Folders use native recursive copy. The retained bookmark is not reset for that materialisation. Ordinary unprotected reconstruction has a different boundary.
+
+Inspect the Build preview: removing the destination pointer is still a destructive destination change. The source is retained, but a failed copy/clone can leave incomplete destination state; there is no whole-operation rollback. A Delta shallow clone still depends on retained source files, so this is not independent backup storage. A Folder copy is not a guaranteed atomic snapshot while its source changes. Preserve/migrate data deliberately when that stronger guarantee is required.
 
 ## Know what `Prohibit rebuild` does not do
 

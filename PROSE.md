@@ -10,7 +10,7 @@ Write for an engineer trying to complete a task, understand Weaver or look up an
 
 1. **State the current model.** Describe implemented behaviour directly. Do not document the cleaner product you wish existed.
 2. **Use plain, public vocabulary.** Name Weaver documents, logical and physical items, the catalogue, operations and Fabric surfaces as users encounter them. Do not derive public categories from modules or classes.
-3. **Give each page one job.** Getting started teaches one first path; Core concepts establishes the mental model; Basics teaches normal work; Advanced explains deeper mechanisms; Reference owns exact interfaces and behaviour.
+3. **Give each page one job.** Getting started offers setup; item tasks produce one useful result; estate tasks coordinate working items; Reference owns exact interfaces and behaviour. Retained concept/deep-dive pages explain decisions at the point of use.
 4. **Lead with actions and outcomes.** In task pages, state the prerequisite, action and observable result before mechanism detail.
 5. **Put precision with its owner.** Link to Reference for syntax, defaults, selection, state transitions, outcomes and failure boundaries instead of repeating partial contracts.
 6. **Separate fact types.** Say when behaviour is host-specific, an example is illustrative, a format is merely current output or a guarantee is intentionally absent.
@@ -27,23 +27,63 @@ Do not use “current versions of Weaver” unless a real version distinction ma
 
 Use `Weaver document` for authored Tables, Folders, Views, Tests, Assumptions, Shortcuts, Warehouse programmables and schema metadata. Do not introduce `resource` or `artefact` as a user-facing umbrella term.
 
+## Reader model and motivation
+
+Begin from Lakehouse, Warehouse, Semantic models or Reports. Within each item,
+let one working outcome create the need for the next page. Tests are taught in
+that item's context; exact common semantics remain in Reference. Shared mappings,
+dependencies, state, recovery and tuning belong under Coordinate your estate.
+Do not mistake placing existing pages in new groups for a connected journey.
+
+Introduce normal TMDL first, then one useful built-in annotation in the native
+model task. Shared policy follows naturally; custom Python and composition are
+later model tasks. Overlays and annotations remain the model counterpart to SQL/
+Python engineering declarations, explained in the retained document concept.
+
+Weaver is Fabric-first. Present authoring tasks in the order Lakehouse, Warehouse,
+semantic model, Report. Use Fabric before Power BI when naming the platforms.
+Standalone Power BI deployment is a supported setup detail, not a separate
+first-class product or the first numbered route.
+
+Integrate semantic models and Reports into the ordinary project, Build, Load,
+Test, Health, development and recovery flow. Each item has its own first-success route. Semantic-model extensions stay in
+that item group rather than an unrelated Advanced hub. Native Power BI filenames,
+selectors and format details retain their exact technical names in Reference.
+
+Explain the reason for each capability in the task that benefits from it: one
+configuration switches environments, one dependency graph orders source loads
+and model refreshes, one Health report covers the managed estate. Let that
+practical consequence carry the motivation. Do not add promotional adjectives,
+repeated slogans or a paragraph about why the reader should be impressed.
+
+Keep setup differences and consequential limits beside the relevant action.
+Keep exhaustive exceptions and compatibility detail in Reference. Do not make
+the opening of every task defend against hypothetical misunderstandings.
+
 ## Page types
 
 ### Getting started
 
 Use one ordered route with complete commands or files and an expected result at each step. Keep theory, alternatives and exhaustive options out of the path.
 
-### Core concepts
+### Item entrances and tasks
 
-Explain what users author, bind, run and inspect, and how those parts affect their decisions. Do not mirror the source architecture.
+Keep overviews short: familiar work, effort removed, first useful task. Full
+execution belongs to task pages, not duplicated miniature manuals in indexes.
+A task has one start state, one useful result and one natural next task. Use
+complete runnable source, then explain what Weaver handled. Do not hide all
+interesting depth behind setup or force every item to display every command.
 
-### Basics
+### Coordinate your estate
 
-Teach normal workflows with defaults and inference first. Include prerequisites, actions, observable results and links to recovery where work can leave partial state.
+Start with two working items and the practical need to connect, map or inspect
+these together. Teach ordinary development before optional Mirror; keep destructive
+scope beside the action. Link exact execution and failure rules to Reference.
 
-### Advanced
+### Retained concepts and deeper mechanisms
 
-Explain a deeper mechanism or non-basic operating pattern. State prerequisites and consequential boundaries; do not repeat the complete basic workflow.
+Keep complete explanations searchable and link them from the task that creates
+the question. Stable URLs are useful; relocating everything is not a goal.
 
 ### Reference
 
@@ -54,6 +94,14 @@ Be terse, complete and searchable. Specify accepted syntax, defaults, precedence
 Code must be complete enough to run in the stated context. Give fenced blocks a language. Keep metadata inside complete SQL or Python source when that is how users author it.
 
 Descriptive metadata remains descriptive; do not imply that a metadata reference creates an execution dependency. Use explicit `Dependencies` as an override where inference is supported, but preserve explicit declarations where current product rules require them.
+
+## First success and progressive depth
+
+Keep the current architecture. Lead with familiar Python, SQL or native Power BI work, give one working result, then explain the engineering handled around it and the next useful capability. A senior voice is approachable and precise, not dry or exhaustive. Keep full contracts in Reference rather than making them an admission requirement.
+
+State the project, required files and active configuration. Leave checkpoint maps, fixture variants, testing oracles and why examples are different in maintenance evidence; name a real source change plainly when the next task needs it. Keep actual permissions, trusted-code warnings and destructive scope at the action that depends on them.
+
+Make passing validation the ordinary path. Put deliberate failures, diagnostic selectors and restoration exercises behind clearly optional exploration; retain safe restoration and operation-specific failure boundaries. Judge flow through complete rendered reader routes, not sentence/page counts or exact-sentence assertions.
 
 ## Review
 

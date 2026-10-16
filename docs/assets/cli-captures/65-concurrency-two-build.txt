@@ -1,0 +1,26 @@
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+
+Build
+
+  Check target occupancy                                                                                   0.0s
+  Resolve semantic data sources                                                                            0.0s
+  Read catalogue                                                                                           3.0s
+    Read Warehouse/Catalogue inventory                                                                     0.1s
+    Read Lakehouse/Landing inventory  (38.9s waiting for Spark)                                           44.6s
+  Read target inventories                                                                                 44.7s
+  Resolve physical shortcut targets                                                                        0.2s
+  Read semantic sources                                                                                    0.0s
+  Prepare bundle                                                                                           0.0s
+Install selection
+  Lakehouse/Landing         up to date
+
+  Install                                                                                                  0.0s
+✓ Build                                                                                                   50.0s
+
+Installation
+  nothing to install
+  Bundle  a0fed59fd161d33340b117aad01ad312eddb54a01863815f093ed839218c55eb

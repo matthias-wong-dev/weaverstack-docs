@@ -19,23 +19,27 @@ Source and tests outrank design prose. Maintained projects are realism checks, n
 
 | Section | Reader need | Page responsibility |
 | --- | --- | --- |
-| Getting started | Complete a first successful lifecycle | One shallow, ordered path with only the context needed for the next step. |
-| Core concepts | Reason about Weaver | The public mental model and its consequences. |
-| Basics | Complete normal work | Prerequisites, actions, observable results and recovery routes using defaults first. |
-| Advanced | Understand or apply a deeper mechanism | A bounded explanation or operating pattern with explicit prerequisites and boundaries. |
-| Reference | Look up an interface or specified behaviour | Exact syntax, fields, defaults, selection, state changes, outcomes and failure boundaries. |
+| Getting started | Install and choose a route | Setup with an optional small Warehouse starter, not an admission requirement. |
+| Lakehouse / Warehouse / Semantic models / Reports | Use a familiar item | One start state, one useful result and a connected next task. |
+| Coordinate your estate | Work with connected items | Dependencies, environment mappings, state, development, operation, recovery and tuning. |
+| Reference | Look up precise behaviour | Syntax, defaults, selection, state changes, failures and API signatures. |
 
-If a page starts doing several jobs, keep the task in Basics and link to the owning concept, advanced explanation or reference entry.
+Retained concept and deep-dive URLs stay searchable and are linked contextually.
+Before moving material, extend `acceptance/docs-item-first-2026-10/route-map.md`.
+Record prior/next example checkpoints, direct-entry fixture and any intentional
+source-mode change. Retired routes preserve meaningful fragments as direct links,
+never chains. Human reader acceptance is separate from compiler/browser checks.
 
 ## Write and connect the page
 
-- Use public terms such as project, Weaver document, logical item, physical Fabric item, catalogue, Build, Load and Test.
+- Use public terms such as project, Weaver document, logical item, physical Fabric item, catalogue, Build, Load, Test and Health.
+- Present Fabric first, with Lakehouse, Warehouse, semantic model and Report tasks in that order. Explain the practical benefit where it changes the work; keep exhaustive exceptions in Reference.
 - Keep implementation classes, planner structures and module ownership out of user-facing explanations unless an identifier is part of the interface.
 - Distinguish current machine formats from compatibility guarantees.
 - Use relative links for pages in this site.
 - Give code blocks a language and make commands runnable as written.
 - Use neutral parcel or logistics examples; remove private project, workspace, tenant and item names.
-- Keep each example focused instead of extending one site-wide sample estate.
+- Keep the initial example small; later tasks add declarations without replacing working item-owned sources.
 
 Add contextual links from the reader's likely entry page and onward to the next task or authoritative detail. Search `docs/` for retired paths and vocabulary after a move.
 
@@ -58,7 +62,77 @@ uv run --project "$WEAVER_CHECKOUT" python tools/generate_python_reference.py \
   --check --weaver-checkout "$WEAVER_CHECKOUT"
 ```
 
+Generated semantic-extension and catalogue inventories have explicit owners as well. Run these with the same checkout:
+
+```bash
+uv run python tools/test_generate_semantic_reference.py
+uv run python tools/test_generate_catalogue_reference.py
+uv run --project "$WEAVER_CHECKOUT" python tools/generate_semantic_reference.py --write --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/generate_semantic_reference.py --check --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/generate_catalogue_reference.py --write --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/generate_catalogue_reference.py --check --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/check_reference_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/check_docs_refresh_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
+uv run --project "$WEAVER_CHECKOUT" python tools/check_journey_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
+```
+
+For coordinated product/documentation revisions, also check the reader flow:
+
+```bash
+uv run --project "$WEAVER_CHECKOUT" python tools/check_fabric_first_story.py --product-site "$PRODUCT_SITE" --weaver-checkout "$WEAVER_CHECKOUT"
+```
+
+`PRODUCT_SITE` is the static product source or build directory. This checks Fabric-first discovery, rounded scale copy, the native Power BI comparison and shared CLI examples. It is an editorial/parser guard, not live acceptance.
+
+The fixture checker uses the pinned source's small offline test helpers and explicit network-blocked boundaries. It does not deploy, query DAX/SQL or prove licence eligibility. Optional `--check-pbir-schemas` uses `jsonschema` and public Microsoft schemas, not a Fabric tenant.
+
 Inspect the manifest and every changed owning page. A clean generator check proves that generated facts match the selected checkout, not that surrounding explanations are correct.
+
+## Generated tutorial files
+
+The installed Weaver package owns the Parcel and Sales starting examples. Tutorials use named `weaver initialise --example Parcel` selections and extend the same project; they do not distribute separate project snapshots. Displayed generated files use `initialise` markers. After changing an example, synchronise and check these blocks against the coordinated source checkout:
+
+```bash
+python tools/sync_initialise_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
+python tools/sync_initialise_examples.py --check --weaver-checkout "$WEAVER_CHECKOUT"
+```
+
+Keep technical preservation and compilation assertions in automated tests. Introductory tasks use ordinary queries, field lists and service lineage for observation, not acceptance scripts.
+
+The continuing-project gates use the product interpreter and explicit offline inventory/column inputs:
+
+```bash
+PYTHONPATH="$WEAVER_CHECKOUT/src" "$PRODUCT_PYTHON" tools/check_lakehouse_examples.py --docs . --product "$WEAVER_CHECKOUT"
+PYTHONPATH="$WEAVER_CHECKOUT/src" "$PRODUCT_PYTHON" tools/check_estate_examples.py --weaver-checkout "$WEAVER_CHECKOUT"
+WEAVER_CHECKOUT="$WEAVER_CHECKOUT" PYTHONPATH="$WEAVER_CHECKOUT/src" "$PRODUCT_PYTHON" tools/check_semantic_examples.py
+```
+
+`PRODUCT_PYTHON` must have the selected runtime's dependencies. Keep that environment separate from the locked MkDocs environment. The fixture gate accepts an explicitly reviewed `--runtime-revision` when integration moves beyond its original provenance; a passing stale fixture is not acceptance of a new generator.
+
+For an installed-wheel check, build a wheel, install it into an isolated target directory with its dependencies available to the test interpreter, then run from an empty scratch directory:
+
+```bash
+"$PRODUCT_PYTHON" -I /absolute/path/to/weaverstack-docs/tools/check_installed_examples.py \
+  /absolute/path/to/isolated-install /absolute/path/to/results.json
+```
+
+This checks all named selections, subset preservation and extension orders through the public API with network connections refused. Fabric inventory/creation is an explicit test boundary; it does not prove deployment, SQL execution, refresh or Report rendering.
+
+## Captured terminal output
+
+`docs/assets/cli-captures/manifest.json` records the actual commands, installed development-package version, runtime revision, workspace, exit status and capture context. Sanitised ANSI and plain-text transcripts live beside it. `readbacks.json` contains separately labelled live SQL/API observations, not simulated CLI output. Keep original captures, credentials and full service definitions outside this repository.
+
+Pages display complete output through `cli-capture` markers. Their `id` resolves a manifest entry; `title` supplies accessible context without replacing the visible Terminal output label. Every panel includes the whole plain-text capture, not a selected summary or a second disclosure. Long output scrolls within a height-limited box. Never edit the generated HTML or transcript values to make a result look better. Record retries, interruptions, actual failures and documented-order disagreements in the capture ledger.
+
+```bash
+python tools/render_cli_captures.py --write
+python tools/render_cli_captures.py --check
+"$PRODUCT_PYTHON" -m pytest -q tools/test_cli_captures.py tools/test_terminal_presentation.py
+```
+
+The renderer derives plain text from the retained sanitised ANSI streams before generating panels. Read streams as bytes and decode UTF-8 without universal-newline conversion: `\r` redraws the same row, while `\n` advances to the next. Retain actual internal blank lines. Keep ANSI evidence unchanged and verify every nonblank line when correcting text normalisation.
+
+The renderer escapes text and adds presentation classes. Generic Terminal/Terminal output labels are presentation, not invented terminal lines. The build hook in `tools/terminal_presentation.py` marks each independent shell command with `$` and continuation lines with `>`; CSS displays these outside clipboard-target text. Keep command/output widths aligned and place each TODO at the exact pending result or inspection step. Do not add transcript footers, raw-file links or JSON provenance links to tutorials; evidence remains available through the maintainer ledger. Compare every panel's complete text with its source, then review copied command bytes, mobile/local scrolling, both themes and no-JavaScript readability after regeneration. Strip ANSI again during privacy checks so identifiers split by styling cannot escape the scan. [Capture inventory](CAPTURE-INVENTORY.md) records live coverage and remaining limits.
 
 ## Validate the change
 

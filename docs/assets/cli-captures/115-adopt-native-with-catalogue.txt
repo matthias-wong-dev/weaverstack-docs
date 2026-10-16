@@ -1,0 +1,51 @@
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  SemanticModel/Parcel
+  Report/Parcel
+
+
+Build
+
+  Check target occupancy                                                                                   0.0s
+  Resolve semantic data sources                                                                            0.0s
+  Read catalogue                                                                                           5.2s
+    Resolve SemanticModel/Parcel                                                                           0.0s
+    Resolve Report/Parcel                                                                                  0.0s
+    Read Warehouse/Catalogue inventory                                                                   0.1s
+  Read target inventories                                                                                  0.3s
+  Read semantic sources                                                                                    0.0s
+  Prepare bundle                                                                                           0.0s
+Install selection
+  SemanticModel/Parcel
+    changed                 1
+    selected for build      1
+  Report/Parcel
+    changed                 1
+    selected for build      1
+
+→   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
+✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                        1.4s
+→   SemanticModel/Parcel · Deploy semantic definitions · 1 action
+✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         21.3s
+→   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action
+✓   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action                                20.9s
+→   Report/Parcel · Deploy Report definitions · 1 action
+✓   Report/Parcel · Deploy Report definitions · 1 action                                                  25.9s
+→   Report/Parcel · Verify deployed Report definitions · 1 action
+✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         21.3s
+→   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action
+✓   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action                              27.5s
+→   Warehouse/Catalogue · Updating catalogue definitions · 1 action
+✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                      4.2s
+→   Warehouse/Catalogue · Finalising catalogue · 1 action
+✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                0.5s
+  Install                                                                                                 2m02s
+✓ Build                                                                                                   2m10s
+
+Installation
+    8 succeeded
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  617042865c95bf9fa00af5ee1bd4f66ddb4d29c97705c787afb34cbd9a72fa80

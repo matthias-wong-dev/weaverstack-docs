@@ -1,17 +1,19 @@
 # `weaver load`
 
+Run installed Lakehouse and Warehouse data work and refresh semantic models in the same operation. The shared dependency graph places selected source loads before their model refreshes.
+
 <!-- BEGIN GENERATED CLI -->
 
 ## Synopsis
 
 ```text
-weaver load [-h] [--item ITEM] [--name NAME] [--fault-tolerant] [--reload] [--stale] [--as-of DATETIME] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]
+weaver load [-h] [--item ITEM] [--name NAME] [--source SOURCE] [--concurrency N] [--ancestors] [--descendants] [--fault-tolerant] [--reload] [--ignore-stability-threshold] [--stale] [--as-of DATETIME] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]
 ```
 
 ## Positional arguments
 
 `ITEM`
-: Weaver items to load, as Lakehouse/Name or Warehouse/Name. Naming none loads every installed item.
+: Weaver items to load, as Lakehouse/Name, Warehouse/Name or SemanticModel/Name. PowerBI or PowerBI/<project> names the semantic models of the project folder. Naming none loads every installed item.
 
 ## Options
 
@@ -22,7 +24,19 @@ weaver load [-h] [--item ITEM] [--name NAME] [--fault-tolerant] [--reload] [--st
 : Legacy spelling for a positional Weaver item.
 
 `--name NAME`
-: Load one installed object, as Tables/Schema.Object or Files/Schema.Object in a Lakehouse and Schema.Object in a Warehouse. A bare Schema.Object is accepted where it names one object. Repeat to select more than one.
+: Select installed objects whose whole name matches this regular expression: Tables/Schema.Object or Files/Schema.Object in a Lakehouse, Schema.Object in a Warehouse. A bare Schema.Object is accepted where it names one object. Repeat to select more.
+
+`--source SOURCE`
+: Project folder, or an abfss location inside a Fabric session. Defaults to the current directory or Notebook Resources.
+
+`--concurrency N`
+: Limit total simultaneous execution for this invocation; retain resource limits.
+
+`--ancestors`
+: Include recursive upstream loads within the selected items.
+
+`--descendants`
+: Include recursive downstream loads within the selected items.
 
 `--fault-tolerant`
 : Continue independent branches after a failure.
@@ -30,8 +44,11 @@ weaver load [-h] [--item ITEM] [--name NAME] [--fault-tolerant] [--reload] [--st
 `--reload`
 : Rebuild each selected table: reset its bookmark, empty it, then load. Does not affect unselected tables.
 
+`--ignore-stability-threshold`
+: Waive the declared delete and update limits for this load. Row checks, fault tolerance and selection are unchanged.
+
 `--stale`
-: Load only the objects whose load health is not green.
+: Select the objects whose load health is not green.
 
 `--as-of DATETIME`
 : ISO-8601 instant with a zone, used as the health freshness threshold when selecting objects. Defaults to 24 hours ago. Only valid with --stale.
@@ -61,52 +78,43 @@ weaver load [-h] [--item ITEM] [--name NAME] [--fault-tolerant] [--reload] [--st
 
 ## Responsibility and selection
 
-Run installed loadable objects for selected logical items. Positional items use `Lakehouse/Name` or `Warehouse/Name`; naming none selects every installed item. The repeatable `--item` spelling is retained for existing invocations, and its values follow positional values in the request.
+Load runs installed Table/Folder work or refreshes semantic models. Reports do not Load. Positional items and repeatable legacy `--item` define a hard scope. With a catalogue omission selects installed items except Reports; without a catalogue name semantic models explicitly or use `PowerBI[/project]` with source context.
 
-Repeat `--name` to bypass graph selection and run exact installed objects. In a Lakehouse use `Tables/Schema.Object` or `Files/Schema.Object`; a bare `Schema.Object` is accepted when it identifies one object. Warehouse names use `Schema.Object`.
+Repeat `--name` for case-insensitive whole-name regular expressions, not globs/substrings; every pattern must match. Use `[.]` for literal dots. In Lakehouses qualify ambiguous names with `Tables/` or `Files/`. Plain named selection is an unordered operator override without inferred dependency/barrier edges.
 
-`--stale` selects objects whose load health is not Green. `--as-of` must be an ISO-8601 instant with a time zone, is valid only with `--stale`, and defaults to 24 hours before the run. `--reload` and `--stale` cannot be combined.
+`--ancestors`/`--descendants` recursively expand original seeds separately inside requested installed items; the union restores dependency ordering and required barriers. Newly reached descendants do not add all their other ancestors. Select both items explicitly for cross-item expansion. These are Load options, not Build/Test options.
 
-## Execution
+`--stale` selects non-Green work; `--as-of` requires it and a zoned ISO-8601 cutoff (default 24 hours before the run). `--reload` and `--stale` conflict. Catalogue-free refresh offers no installed name/stale/reload/recursive selection and records no Weaver history. `--source` supplies project context for Power BI group selectors, not changed source Load code.
 
-The normal run resolves installed bindings from the catalogue, plans dependency order, and executes selected load nodes. `--fault-tolerant` allows independent branches to continue after a failure; the final report still fails if any selected work fails.
+## Execution and warnings
 
-`--reload` resets the bookmark and empties each selected table before loading it. It does not affect unselected tables. `--dry-run` returns the selected plan without executing it.
+`--dry-run` resolves the plan without dispatch, endpoint refresh or catalogue writes. `--reload` empties each reached selected Table and resets progress before loading. It is destructive; expansion can enlarge its scope. Folders cannot reload. Static Tables run again after reload. A reached failed reconstruction is not rolled back.
 
-## Interaction
+`--fault-tolerant` continues independent work under the Load policy; final failures still fail the run. `--ignore-stability-threshold` waives only declared delete/update gates for that invocation, not null/unique checks, selection or failure policy. Use it only when the large change is intended. `--concurrency N` caps total simultaneous scheduled nodes alongside per-resource limits.
 
-After a load error in an interactive terminal, Weaver can offer to retry while keeping the Session open. `--non-interactive` and `--json` return after one attempt without prompting. Non-interactive mode also prevents browser sign-in.
+## Interaction and outcomes
 
-## Output and exit behaviour
-
-Human output lists each node, its status and available row counts, then totals load statuses and row movement. Dry-run output reports the selected plan. An intolerant failure prints its partial report when one is available.
-
-`--json` emits the current report as one document. On an intolerant failure with a partial report, the document includes the error and report. These fields are not presented here as a compatibility contract.
-
-The command exits `0` when the report succeeds, including an empty successful plan, and `1` when the report or operation fails. Argument errors exit through `argparse`.
+Supported interactive load failures can offer retry. JSON/non-interactive invocations make one attempt; non-interactive also disables browser sign-in. Human output lists nodes/status/counts; JSON emits the report or error with available partial report. Exit is `0` for succeeded/succeeded-with-rejects, `1` for partial/failed/invalid or command failures, `2` for parser usage errors. Model refresh has no invented row counts.
 
 ## Examples
 
 ```bash
-weaver load Lakehouse/Landing Warehouse/Operations \
-  --workspace-config workspace-config.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --descendants --dry-run --workspace-config workspace-dev.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --descendants --concurrency 2 --workspace-config workspace-dev.yml
+weaver load Warehouse/Operations --stale --workspace-config workspace-dev.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
 ```
 
-Preview stale selection at a fixed instant:
+These commands assume the relevant definitions/targets already exist. See [Load behaviour](../operation-behaviour/load.md) for exact selection/failure state and [shared selection](../operation-behaviour/shared-selection-and-identity.md).
+
+## Refresh a model with its source work
+
+With both source items and their model installed:
 
 ```bash
-weaver load Lakehouse/Landing \
-  --stale \
-  --as-of 2026-09-05T00:00:00Z \
-  --dry-run \
-  --workspace-config workspace-config.yml
+weaver load --workspace-config workspace-config.yml
 ```
 
-Reload one installed table:
+Naming no item selects the installed estate, including registered semantic-model refresh roots. Selected source work precedes its selected model refresh through managed dependencies. For deliberate targeting, `weaver load SemanticModel/Parcel` refreshes only that model; it does not add unselected source items. Reports use model data and have no separate Load.
 
-```bash
-weaver load Lakehouse/Landing \
-  --name Tables/Parcel.CurrentStatus \
-  --reload \
-  --workspace-config workspace-config.yml
-```
+See [Connect a semantic model to source data](../../semantic-models/managed-sources.md).

@@ -8,6 +8,8 @@ Weaver records state at three different levels:
 
 These surfaces answer different questions. Row audit columns do not replace operation history, and the latest Load status is not a list of every earlier Load.
 
+Catalogue timestamps and successful-processing bookmarks use UTC. A bookmark belongs to its consuming object, not to a shared source/query watermark: two consumers may have different clean-processing boundaries for the same upstream data.
+
 ## Row audit columns describe current rows
 
 Weaver adds three managed audit timestamps to Tables: when a row was inserted, when it was last updated and its delete-lifecycle value. A live row carries a non-null maximum-date sentinel in the delete field. These columns are outside the authored business schema and cannot be used as authored business columns.
@@ -32,7 +34,7 @@ A Table and Folder with the same `Schema.Object` name remain distinct because th
 
 ## Load and Test status answer “what is true now?”
 
-`_.LoadStatus` holds the latest recorded Load state for each managed Table, Folder or View. `_.TestStatus` holds the latest recorded outcome for each installed Test or Assumption. A later settled attempt replaces that object's current row.
+`_.LoadStatus` holds recorded Load state for managed source subjects and registered semantic-model refreshes. Reports have installation/binding claims but no independent data refresh. `_.TestStatus` holds the latest recorded outcome for each installed Test or Assumption. A later settled attempt replaces that object's current row.
 
 A partial run updates only the objects it reaches. Current estate state can therefore contain rows produced by several workflow identifiers. Read these tables, or Health, when the question is whether the installed estate is pending, current, failed, rejected, blocked or stale now.
 
@@ -71,9 +73,11 @@ Build starts a new current-state incarnation for work it rebuilds:
 - rebuilding a Test or Assumption resets its current Test state; and
 - unaffected objects retain their current rows.
 
-`_.Log` and `_.LoadStatistic` remain as evidence of earlier generations. An unchanged Build changes neither current state nor history. An item-scoped Build leaves unselected items outside the reset boundary.
+`_.Log` and `_.LoadStatistic` remain as evidence of earlier generations. An unchanged source-item Build changes neither current state nor history. Selected semantic models still deploy; catalogue-backed unchanged Report-only builds and catalogue-free redeployment have different rules. An item-scoped Build leaves unselected items outside the reset boundary.
 
 Reload is a different boundary. For each selected Table that execution reaches, Reload resets its bookmark and Load status before emptying and rereading the target. If that execution fails, the earlier bookmark and contents are not restored.
+
+Preserving materialisation of a protected borrowed Table or Folder is not ordinary empty reconstruction: its retained bookmark survives. Wipe/Unbind and re-mirroring have their own claim/content/history boundaries, specified in [Operation behaviour](../reference/operation-behaviour/index.md). A Build guard is not retention protection against those operations.
 
 ## Mirror starts destination history at the boundary
 

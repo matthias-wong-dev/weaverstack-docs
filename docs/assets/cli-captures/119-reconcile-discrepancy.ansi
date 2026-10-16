@@ -1,0 +1,28 @@
+
+Test
+
+[2m⋯[0m Test                                                                                                 [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    1.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    2.0s[0m                                                                                                                [0m Read catalogue                                                                                       [2m    2.8s[0m
+[2m⋯[0m Test                                                                                                 [2m    2.8s[0m                                                                                                               Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  SemanticModel/ParcelWarehouse
+
+[2m⋯[0m Test                                                                                                 [2m    2.8s[0m                                                                                                               [2m⋯[0m Build run graph                                                                                      [2m    0.0s[0m                                                                                                                [0m Build run graph                                                                                      [2m    0.0s[0m
+[2m⋯[0m Test                                                                                                 [2m    2.8s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    0.0s[0m                                                                                                               [2m→[0m   Test SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles
+[2m⋯[0m Execute                                                                                              [2m    0.2s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    0.2s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    1.2s[0m                                                                                                               [31m✗[0m   Test SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles  (1 missing, 1 unexpected)       [2m    1.1s[0m
+[2m⋯[0m Execute                                                                                              [2m    1.3s[0m                                                                                                                [0m Execute                                                                                              [2m    1.3s[0m
+[2m⋯[0m Test                                                                                                 [2m    4.1s[0m                                                                                                               [2m⋯[0m Record what the run did                                                                              [2m    0.0s[0m                                                                                                                [0m Record what the run did                                                                              [2m    0.7s[0m
+[2m⋯[0m Test                                                                                                 [2m    4.8s[0m                                                                                                               [31m✗[0m Test                                                                                                 [2m    4.8s[0m
+
+test [31mfailed[0m
+
+  [31mfailed    [0m Test        SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles  (1 missing, 1 unexpected)
+
+Test summary
+[2m    0 passed[0m
+[31m    1 failed[0m
+  Workflow: [2mc6cca9bede6b49db8cbb20e63f27d9a4[0m
+
+  SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles:
+    {'_weaver_side': 'expected', '_weaver_sk': 1, 'ParcelCount': 2}
+    {'_weaver_side': 'actual', '_weaver_sk': 2, 'ParcelCount': 3}

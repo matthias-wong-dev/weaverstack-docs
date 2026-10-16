@@ -1,0 +1,42 @@
+Set up a Weaver project.
+
+Project
+
+  Project folder  ./parcel
+  Workspace       Parcel Development
+  Catalogue       None
+  Environment     None
+  Lakehouse       None
+  Warehouse       None
+  Example         Parcel
+  Semantic Model  Parcel
+
+1. Continue
+2. Change an answer
+3. Cancel
+Choose [1/2/3]: 1
+
+Setting up the Weaver project
+
+  Checking the workspace                                                                                   0.6s
+  Reading the native project                                                                               0.0s
+  Checking the project files                                                                               0.2s
+  Writing the project files                                                                                0.0s
+✓ Setting up the Weaver project                                                                            0.7s
+
+  Environment publication: not applicable
+
+Weaver project ready in [local-path]/parcel.
+
+Next:
+
+  cd [local-path]/parcel
+  weaver workflow full
+
+Or run individually:
+  weaver build --item PowerBI
+  weaver load
+
+You can set this up again with:
+
+  weaver initialise --workspace 'Parcel Development' --project-folder ./parcel --semantic-model Parcel --example Parcel --non-interactive

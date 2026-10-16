@@ -5,8 +5,8 @@
 ## Synopsis
 
 ```text
-weaver initialise [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]
-weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--example] [--no-example] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]
+weaver initialise [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--semantic-model NAME] [--example NAME] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]
+weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalogue CATALOGUE] [--environment ENVIRONMENT] [--lakehouse LAKEHOUSE] [--warehouse WAREHOUSE] [--semantic-model NAME] [--example NAME] [--interactive] [--non-interactive] [--dry-run] [--json] [--publish-environment]
 ```
 
 ## Options
@@ -21,10 +21,10 @@ weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalo
 : Project folder to create or reuse. Required for unattended setup.
 
 `--catalogue CATALOGUE`
-: Catalogue Warehouse. Defaults to Catalogue.
+: Catalogue Warehouse. Defaults to Catalogue for data projects; omitted for native-only projects.
 
 `--environment ENVIRONMENT`
-: Fabric Environment for the project. It may already exist. Defaults to Weaver.
+: Fabric Environment for Python work. Defaults to Weaver for data projects; omitted for native-only projects.
 
 `--lakehouse LAKEHOUSE`
 : Lakehouse for Delta tables and files.
@@ -32,11 +32,11 @@ weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalo
 `--warehouse WAREHOUSE`
 : Warehouse for SQL tables and views.
 
-`--example`
-: Add Sales example source files.
+`--semantic-model NAME`
+: Add PowerBI/NAME/NAME.tmdl, or name the example's Power BI project. Build creates the SemanticModel.
 
-`--no-example`
-: Do not add example source files.
+`--example NAME`
+: Add the Parcel or Sales example for the selected items.
 
 `--interactive`
 : Ask setup questions even when input is not a terminal.
@@ -57,19 +57,19 @@ weaver initialize [-h] [--workspace WORKSPACE] [--project-folder PATH] [--catalo
 
 ## Responsibility and selection
 
-Create or reuse a project folder, catalogue Warehouse, Fabric Environment, and optional Lakehouse and Warehouse. `initialize` is an accepted alias.
+Create or extend a project folder for selected Lakehouse, Warehouse and native Power BI items. Data projects also create or reuse a catalogue Warehouse and Fabric Environment. `initialize` is an accepted alias.
 
-Without explicit values, terminal use starts a wizard. Unattended use requires `--workspace` and `--project-folder`; omitted catalogue and Environment names default to `Catalogue` and `Weaver`. Lakehouse and Warehouse are optional.
+Without explicit values, terminal use starts a wizard. Unattended use requires `--workspace` and `--project-folder`. Data projects default catalogue and Environment names to `Catalogue` and `Weaver`. A native-only `--semantic-model` selection needs neither supporting item; explicit catalogue or Environment requests remain available. Adding a Lakehouse or Warehouse later supplies missing supporting configuration without changing existing bindings.
 
 ## Execution
 
-Initialisation creates missing Fabric items and writes the project files. Existing compatible items and generated files are reused. `--example` adds the Sales example; `--no-example` leaves it out. `--publish-environment` publishes the Environment after setup.
+Initialisation creates missing Fabric items and writes the project files. Existing items, edited source files and physical bindings are preserved. Rerunning with another item extends the configuration; omitting an existing item does not remove it. New file or identity collisions are refused before project writes or item creation. An unchanged selection is idempotent. `--example Parcel` or `--example Sales` adds the named example for the selected items; omitting the option adds no example content. `--publish-environment` publishes the Environment after setup.
 
 `--dry-run` resolves the requested setup and reports planned items and files without creating or writing them.
 
 ## Interaction
 
-The wizard reviews all choices before making changes and permits cancellation. `--interactive` allows questions when input is not a terminal. `--non-interactive` forbids questions and requires the unattended inputs. The two options cannot be combined.
+The wizard offers None, Parcel or Sales and reviews all choices before making changes and permits cancellation. `--interactive` allows questions when input is not a terminal. `--non-interactive` forbids questions and requires the unattended inputs. The two options cannot be combined.
 
 `--json` also runs without questions. It does not imply `--publish-environment`.
 
@@ -99,7 +99,6 @@ weaver initialise \
   --environment Weaver \
   --lakehouse Landing \
   --warehouse Operations \
-  --no-example \
   --non-interactive
 ```
 
@@ -113,3 +112,12 @@ weaver initialise \
   --dry-run \
   --non-interactive
 ```
+
+
+Extend the same project with a Warehouse, retaining its Lakehouse and edited sources:
+
+```bash
+weaver initialise --workspace "Parcel Development" --project-folder ./parcel --warehouse Operations --example Parcel
+```
+
+`--semantic-model Parcel --example Parcel` adds the native inline model and linked Report. When source items exist, separately named source-backed models are additional definitions, not replacements for native partitions. Source-backed refresh needs an existing supported service connection and SQL permissions. Initialise itself neither loads nor wipes data.
