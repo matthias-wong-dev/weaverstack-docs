@@ -765,9 +765,13 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   --pv-amber-soft: #fbf0d8;
   --pv-sans: var(--weaver-sans);
   display: grid;
-  gap: 1rem;
-  margin: 1rem 0;
-  padding: 1rem;
+  gap: 1.2rem;
+  margin: 1.1rem 0;
+}
+.md-typeset .project-overview-files {
+  width: min(100%, 24rem);
+  margin-inline: auto;
+  padding: 0.9rem 1rem;
   border: 1px solid var(--weaver-line);
   border-radius: 0.5rem;
   background: var(--weaver-surface);
@@ -800,9 +804,17 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   font: 0.6rem/1.65 var(--weaver-mono);
   white-space: pre;
 }
-.md-typeset figure.project-overview-dag { display: block; width: auto; margin: 0; text-align: left; }
+.md-typeset figure.project-overview-dag {
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0.8rem;
+  border: 1px solid var(--weaver-line);
+  border-radius: 0.5rem;
+  background: var(--weaver-surface);
+  text-align: left;
+}
 .md-typeset .project-diagram-scroll { overflow-x: auto; scrollbar-color: var(--weaver-line-strong) transparent; }
-.md-typeset .project-overview .project-diagram-note { margin: 0.5rem 0 0; color: var(--weaver-muted); font-size: 0.65rem; }
 .parcel-diagram { display: block; width: 100%; min-width: 700px; height: auto; font-family: var(--pv-sans); }
 .parcel-diagram .parcel-band rect { fill: var(--pv-band); stroke: var(--pv-line); stroke-width: 1; }
 .parcel-diagram .band-1 rect, .parcel-diagram .band-3 rect { fill: var(--pv-paper); }
@@ -821,5 +833,5 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   .md-typeset .parcel-diagram { min-width: 0; }
 }
 @media (max-width: 47.99em) {
-  .md-typeset .project-overview { padding: 0.7rem; }
+  .md-typeset .project-overview-files { padding: 0.8rem; }
 }

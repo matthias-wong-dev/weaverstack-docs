@@ -10,7 +10,7 @@ A PBIP project contains the model’s native TMDL and its Report definitions. Yo
 
 [Install Weaver](../getting-started/installation.md). This exercise begins in [Power BI-only mode, without a Catalogue](index.md#power-bi-only-without-a-catalogue). Use an existing disposable Power BI service workspace with licensing and permissions to deploy, read and refresh Import Semantic Models, and to edit the linked Report for the field-list check. Use existing permissions; this exercise does not require changing tenant settings. [Service requirements](../reference/power-bi/requirements-and-compatibility.md#runtime-and-service-access) cover the licensing and API boundaries.
 
-Parcel has three inline sample rows, two depots, a relationship and a Delivery Count measure. Its model needs no Lakehouse or source Warehouse workload. If you already have a Parcel project, extend that same folder rather than starting again.
+Parcel includes Delivery and Depot tables, a relationship and a Delivery Count measure. Its ParcelStatus table has the same `Parcel ID`, `Status` and `Depot` columns as the Warehouse data, with two sample rows to start. The model needs no Lakehouse or source Warehouse workload. If you already have a Parcel project, extend that same folder rather than starting again.
 
 ## 1. Choose the destination
 
@@ -56,6 +56,8 @@ table Delivery
 			    Source
 ```
 <!-- /initialise -->
+
+`ParcelStatus.tmdl`, in the same native tables folder, carries the Warehouse-shaped sample. Later, [add `Weaver.Source`](managed-sources.md#connect-the-existing-native-model) to connect that table to the Warehouse without changing its columns or the linked Report.
 
 `workspace-config.yml` already binds `SemanticModel/Parcel` and `Report/Parcel` to their physical names. Keep any existing source bindings. [Environment mappings](../estate/environments.md) covers choosing other physical destinations without changing the source.
 

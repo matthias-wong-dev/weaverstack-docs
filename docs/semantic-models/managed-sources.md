@@ -1,6 +1,6 @@
 # Connect a managed Fabric source
 
-Extend the existing Parcel project from [Power BI-only operation into a Catalogue-managed Fabric estate](index.md#two-ways-to-use-weaver-with-power-bi). Keep its inline Delivery/Depot model and linked Report, then add a Warehouse and a separate model over its data. The original Delivery Count still works without a source connection.
+Extend the existing Parcel project from [Power BI-only operation into a Catalogue-managed Fabric estate](index.md#two-ways-to-use-weaver-with-power-bi). Add a Warehouse, then use `Weaver.Source` to connect its data to a model. The walkthrough below creates a separate model; you can also [connect the existing native model](#connect-the-existing-native-model) and keep its linked Report.
 
 ## Before you start
 
@@ -220,8 +220,38 @@ EVALUATE
 CurrentStatus
 ```
 
-The model should expose the same two current-status rows. The original **Parcel** model still returns Delivery Count = 2 and its Report still uses that model. Opening Parcel rather than ParcelWarehouse would query the independent inline sample, not this managed source.
+The model should expose the same two current-status rows.
 
 Adding a Lakehouse works the same way: Initialise retains both pipelines and adds `ParcelLakehouse` over Landing’s CurrentStatus Table. With Lakehouse and Warehouse selected, separately named Warehouse integration objects also connect the Lakehouse Event Table without replacing StatusEvent or changing the original View. [Connect items and dependencies](../estate/connected-items.md) follows that path.
 
-[Compare DAX with source SQL](validation.md#compare-dax-with-source-sql) to validate this source-backed model in the same project. [Run and inspect the estate](../estate/operate.md) combines source Load, model refresh, Test and Health.
+## Connect the existing native model
+
+The native Parcel model already has a ParcelStatus table with the same `Parcel ID`, `Status` and `Depot` columns. To connect that model instead of creating a separate variant:
+
+1. In `PowerBI/Parcel/Parcel.SemanticModel/definition/tables/ParcelStatus.tmdl`, remove only the `partition ParcelStatus = m` block and its sample rows. Retain the table and its columns.
+2. Add this declaration to the existing `PowerBI/Parcel/Parcel.tmdl` overlay. Keep the modelling rules already there.
+
+<!-- parcel-native-source -->
+```tmdl
+table ParcelStatus
+	annotation 'Weaver.Source' = Warehouse/Operations/Parcel.CurrentStatus
+```
+<!-- /parcel-native-source -->
+
+If you followed [Connect items and dependencies](../estate/connected-items.md), use `Warehouse/Operations/Parcel.LakehouseCurrentStatus` here to continue the Lakehouse-to-Warehouse flow. Both sources have the same columns.
+
+After building and loading the source, build the changed model and refresh it:
+
+```bash
+weaver build --item SemanticModel/Parcel --bind-data-sources
+weaver load Warehouse/Operations SemanticModel/Parcel
+```
+
+<!-- review-todo: parcel-native-source-refresh -->
+!!! warning "TODO — capture the connected Parcel model's refresh"
+    The same-schema source replacement is checked offline. The original-model Build and refresh shown here still need live capture with an approved Operations connection, just as the ParcelWarehouse refresh above does.
+<!-- /review-todo -->
+
+With the sample partition removed, `Weaver.Source` supplies the Warehouse partition at Build. The columns and the Report's binding to **Parcel** stay the same. Query ParcelStatus through the deployed model to inspect the connected data.
+
+[Compare DAX with source SQL](validation.md#compare-dax-with-source-sql) to validate a source-backed model in the same project. [Run and inspect the estate](../estate/operate.md) combines source Load, model refresh, Test and Health.

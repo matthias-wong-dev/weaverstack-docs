@@ -40,7 +40,7 @@ A Weaver project is ordinary Python, SQL, TMDL and configuration files organised
 <div class="project-diagram-scroll" tabindex="0" role="region" aria-label="Parcel dependency diagram; scroll horizontally on narrow screens">
 <svg class="parcel-diagram" viewBox="0 0 960 340" role="img" aria-labelledby="parcel-docs-title parcel-docs-desc">
 <title id="parcel-docs-title">A Parcel project across Fabric items</title>
-<desc id="parcel-docs-desc">Parcel.Events feeds Parcel.Event. Event branches to Lakehouse CurrentStatus and a Warehouse logical Shortcut, which feeds LakehouseCurrentStatus. The native Parcel semantic model has independent inline data and binds to the Parcel Report.</desc>
+<desc id="parcel-docs-desc">Parcel.Events feeds Parcel.Event. Event branches to Lakehouse CurrentStatus and a Warehouse logical Shortcut, which feeds LakehouseCurrentStatus. The Warehouse source connects to the Parcel semantic model through Weaver.Source, and the model binds to the Parcel Report.</desc>
 <defs><marker id="parcel-docs-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--pv-blue)"/></marker></defs>
 <g data-project-band="Lakehouse" class="parcel-band band-0">
 <rect x="1" y="1" width="358" height="332" rx="10"/>
@@ -66,7 +66,8 @@ A Weaver project is ordinary Python, SQL, TMDL and configuration files organised
 <path class="parcel-edge" data-project-edge="event|current" d="M232 164 H240 V108 H248" marker-end="url(#parcel-docs-arrow)"/>
 <path class="parcel-edge" data-project-edge="event|shortcut" d="M232 164 H386" marker-end="url(#parcel-docs-arrow)"/>
 <path class="parcel-edge" data-project-edge="shortcut|consumer" d="M498 164 H514" marker-end="url(#parcel-docs-arrow)"/>
-<path class="parcel-edge parcel-binding" data-project-binding="model|report" d="M778 268 H821" marker-end="url(#parcel-docs-arrow)"/>
+<path class="parcel-edge" data-project-source="consumer|model" d="M626 164 H666" marker-end="url(#parcel-docs-arrow)"/>
+<path class="parcel-edge parcel-binding" data-project-binding="model|report" d="M778 164 H821" marker-end="url(#parcel-docs-arrow)"/>
 <g class="parcel-node parcel-file" data-project-node="folder" data-logical-id="Lakehouse/Landing/Files/Parcel.Events">
 <rect x="16" y="132" width="100" height="76" rx="8"/>
 <text class="parcel-node-title" style="font-size:18px" x="66.0" y="156">Events</text>
@@ -99,20 +100,19 @@ A Weaver project is ordinary Python, SQL, TMDL and configuration files organised
 <text class="parcel-node-sub" x="570.0" y="201">T-SQL</text>
 </g>
 <g class="parcel-node parcel-model" data-project-node="model" data-logical-id="SemanticModel/Parcel">
-<rect x="666" y="236" width="112" height="76" rx="8"/>
-<text class="parcel-node-title" style="font-size:18px" x="722.0" y="267">Parcel</text>
-<text class="parcel-node-sub" x="722.0" y="299">Inline data</text>
+<rect x="666" y="132" width="112" height="76" rx="8"/>
+<text class="parcel-node-title" style="font-size:18px" x="722.0" y="156">Parcel</text>
+<text class="parcel-node-sub" x="722.0" y="179">Native</text>
+<text class="parcel-node-sub" x="722.0" y="197">TMDL</text>
 </g>
 <g class="parcel-node parcel-report" data-project-node="report" data-logical-id="Report/Parcel">
-<rect x="821" y="236" width="112" height="76" rx="8"/>
-<text class="parcel-node-title" style="font-size:18px" x="877.0" y="260">Parcel</text>
-<text class="parcel-node-sub" x="877.0" y="283">Native</text>
-<text class="parcel-node-sub" x="877.0" y="301">Report</text>
+<rect x="821" y="132" width="112" height="76" rx="8"/>
+<text class="parcel-node-title" style="font-size:18px" x="877.0" y="156">Parcel</text>
+<text class="parcel-node-sub" x="877.0" y="179">Native</text>
+<text class="parcel-node-sub" x="877.0" y="197">Report</text>
 </g>
-<text class="parcel-binding-label" x="800" y="256">binds</text>
 </svg>
 </div>
-<p class="project-diagram-note">The native Power BI pair uses its own inline sample data.</p>
 </figure>
 </div>
 

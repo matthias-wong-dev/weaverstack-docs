@@ -19,6 +19,7 @@ class Illustration(HTMLParser):
         self.edges = set()
         self.bands = []
         self.bindings = set()
+        self.sources = set()
 
     def handle_starttag(self, tag, attrs):
         attrs = {key: value for key, value in attrs if value is not None}
@@ -32,6 +33,8 @@ class Illustration(HTMLParser):
             self.bands.append(attrs["data-project-band"])
         if "data-project-binding" in attrs:
             self.bindings.add(tuple(attrs["data-project-binding"].split("|")))
+        if "data-project-source" in attrs:
+            self.sources.add(tuple(attrs["data-project-source"].split("|")))
 
     def handle_endtag(self, tag):
         if tag == "pre":
@@ -55,9 +58,10 @@ def main():
     import weaver
     from check_docs_refresh_examples import parse, refuse_network
     from factories import installed_catalogue, item_bindings
-    from named_journey_support import OfflineInitialiser
+    from named_journey_support import OfflineInitialiser, compiled
     from weaver.declaration.model import WeaverItemId
     from weaver.load_plan import LoadDag
+    from weaver.semantic_models import TmdlDefinition
 
     assert Path(weaver.__file__).resolve().is_relative_to(source / "src")
     socket.socket.connect = refuse_network
@@ -71,6 +75,8 @@ def main():
     assert html.bands == ["Lakehouse", "Warehouse", "Semantic Model", "Report"]
     assert len(html.nodes) == 7 and len(html.edges) == 4
     assert html.bindings == {("model", "report")}
+    assert html.sources == {("consumer", "model")}
+    assert "inline" not in page.read_text().lower()
     with (
         tempfile.TemporaryDirectory(prefix="homepage-parcel-") as temp,
         OfflineInitialiser() as initialise,
@@ -126,6 +132,61 @@ def main():
         report_id = WeaverItemId.parse(html.nodes["report"])
         assert not repository.semantic_models[model_id].source_references
         assert repository.reports[report_id].model == model_id
+        native = TmdlDefinition(repository.semantic_models[model_id].parts)
+        expected_columns = {"Parcel ID", "Status", "Depot"}
+        assert {
+            c.name for c in native.model.tables["ParcelStatus"].columns
+        } == expected_columns
+        assert (
+            "#table"
+            in native.model.tables["ParcelStatus"].partitions["ParcelStatus"].source
+        )
+        guide = page.parent / "semantic-models/managed-sources.md"
+        guide_text = guide.read_text()
+        snippet = re.search(
+            r"<!-- parcel-native-source -->\s*```tmdl\n(.*?)```", guide_text, re.DOTALL
+        )[1]
+        assert html.nodes["consumer"] in guide_text
+        native_files = {
+            p: p.read_bytes()
+            for p in (root / "PowerBI/Parcel/Parcel.SemanticModel").rglob("*")
+            if p.is_file()
+        }
+        sample_path = (
+            root
+            / "PowerBI/Parcel/Parcel.SemanticModel/definition/tables/ParcelStatus.tmdl"
+        )
+        declaration = sample_path.read_text().split("\tpartition ParcelStatus = m")[0]
+        sample_path.write_text(declaration)
+        for reference in (
+            "Warehouse/Operations/Parcel.CurrentStatus",
+            html.nodes["consumer"],
+        ):
+            overlay = (
+                "model Model\n\tannotation 'Weaver.AutoHideForeignKeys' = true\n\n"
+                + snippet.replace(
+                    "Warehouse/Operations/Parcel.CurrentStatus", reference
+                )
+            )
+            (root / "PowerBI/Parcel/Parcel.tmdl").write_text(overlay)
+            connected = parse(root)
+            assert (
+                reference
+                in connected.semantic_models[model_id].source_references.values()
+            )
+            effective = compiled(root)
+            table = TmdlDefinition(
+                effective.semantic_models[model_id].parts
+            ).model.tables["ParcelStatus"]
+            assert {c.name for c in table.columns} == expected_columns
+            assert "Warehouse/Operations" in table.partitions["ParcelStatus"].source
+            assert "#table" not in table.partitions["ParcelStatus"].source
+            assert effective.reports[report_id].model == model_id
+            assert all(
+                p == sample_path or p.read_bytes() == content
+                for p, content in native_files.items()
+            )
+            assert sample_path.read_text() == declaration
         plan = LoadDag.from_catalogue(
             catalogue,
             items=[
@@ -138,7 +199,7 @@ def main():
             if a in order and b in order:
                 assert order.index(a) < order.index(b)
         print(
-            f"PASS: {len(lines)} tree lines, four item bands, {len(html.nodes)} nodes, {len(actual)} exact data edges and native Report binding; production LoadDag ordering verified offline"
+            f"PASS: {len(lines)} tree lines, four item bands, {len(html.nodes)} nodes; data edges, same-schema native start, both Weaver.Source transitions and retained Report binding verified offline"
         )
         for upstream, downstream in sorted(actual):
             print(f"  {upstream} -> {downstream}")
