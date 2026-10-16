@@ -2,6 +2,10 @@
 
 This maintainer-only ledger records the item-first revision and earlier delivery evidence. It is not rendered.
 
+## Notebook equivalence — accepted delivery requirement
+
+[The notebook-equivalence plan and output/API findings](NOTEBOOK-EQUIVALENCE.md) govern the next delivery. Every terminal CLI block needs a matching Notebook cell, with close parameter parity and an explicit workspace for workspace-scoped calls. Missing public calls and parameter mismatches are product fixes, not exemptions. Audit each call's output, reuse sensible existing output, and track deficient output separately. Earlier CLI-only walkthrough completion does not satisfy this requirement.
+
 ## Full walkthrough and capture refresh — 17 October 2026
 
 Every tutorial and estate page was followed in reader order from an empty Weaver Example workspace. All 78 terminal panels were recaptured and all 18 TODO markers were resolved (the two rendered-card checks by binding and DAX value, not a viewed card); flow fixes landed across Getting started, Warehouse, Lakehouse, estate, semantic-model and Report pages. Three Initialise runtime fixes and one TMDL example fix were required. Runtime basis, fixes and observations: [capture inventory](CAPTURE-INVENTORY.md). Entries below are historical.
