@@ -1,5 +1,10 @@
 # Development and production Reports
 
+<!-- review-todo: report-workspaces -->
+!!! warning "TODO — two-workspace and viewing checks pending"
+    Both configuration-specific bindings and model query results were verified within Weaver Example. Repeat in two authorised workspaces and inspect the rendered Reports; actual cross-workspace access and service rendering remain unverified.
+<!-- /review-todo -->
+
 Use the same native Report and model in both workspaces. The selected workspace configuration changes their physical names and the Report's deployed model binding; it does not change their logical names or authored files.
 
 Continue from [Deploy a native Report](deploy.md) in the same `parcel` project. If you are starting here, that page generates and deploys the pair. Keep your model overlays and source bindings.

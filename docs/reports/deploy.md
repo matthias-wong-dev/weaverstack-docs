@@ -128,6 +128,11 @@ Without a catalogue, a linked Report must include its local model in the same Bu
 
 ## Inspect the Report
 
+<!-- review-todo: report-rendering -->
+!!! warning "TODO — Report viewing check pending"
+    Deployment and the actual model binding were verified by API readback. Opening the service Report and checking its rendered card are still pending.
+<!-- /review-todo -->
+
 In the service workspace, find the Parcel Report and check that its linked model is `Parcel` in **Parcel Development**. Open the workspace’s **lineage view** and follow the Report’s model link. Confirm it points to the Parcel semantic model in this workspace, not a similarly named model in another destination.
 
 To view the generated Report’s card after loading its inline data, refresh the **model** with an identity allowed to refresh it:

@@ -153,6 +153,11 @@ To install this Assumption in a catalogue-backed project, Build the changed mode
 
 ## Compare DAX with source SQL
 
+<!-- review-todo: dax-sql -->
+!!! warning "TODO — DAX-to-SQL comparison pending"
+    The native DAX pass, deliberate failure and restoration are verified. This managed-source comparison and its optional discrepancy/recovery exercise are not: refresh is blocked by the missing credentialled connection.
+<!-- /review-todo -->
+
 Use the already loaded [managed-source model](managed-sources.md) in this same project. **ParcelWarehouse** reads Operations’ CurrentStatus View; the native **Parcel** model remains inline. Do not compare the inline Delivery data with an unrelated Warehouse result.
 
 Add a measure to the existing `CurrentStatus` declaration in `PowerBI/Parcel/ParcelWarehouse.tmdl`. Its complete contents become:

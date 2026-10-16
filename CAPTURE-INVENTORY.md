@@ -40,6 +40,8 @@ Final scoped Lakehouse/Warehouse Test and Health (127–128) passed: four valida
 
 ## Presentation and verification
 
+Temporary yellow **TODO** review banners identify the outstanding checks at their relevant pages/steps, including optional live walkthroughs, UI checks, destructive scope and released-package acceptance. They are review markers requested by Matthias, not missing product features; remove them before publication.
+
 The existing pages now contain **51 authentic output panels across 17 pages**, backed by 81 recorded command attempts and 27 selected SQL/API observations. Attempt totals include deliberate failures and the two qualified harness attempts above; they are not a success count.
 
 `tools/render_cli_captures.py` generates static escaped, selectable HTML from complete transcript lines. Shared `.weaver-terminal` CSS adds Weaver status colours, preserved glyphs, keyboard-focusable local scrolling and native full-transcript disclosures. Excerpts and redactions are labelled. Rendering needs no JavaScript or external service. Existing navigation, pages and runtime source are unchanged.

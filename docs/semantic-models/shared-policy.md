@@ -1,5 +1,10 @@
 # Share native modelling standards
 
+<!-- review-todo: shared-policy -->
+!!! warning "TODO — shared-policy live check pending"
+    The policy and effective model definition pass offline checks. Deploy and refresh this extended example, then inspect its formats and calculation group in the service; no live transcript has been captured for this walkthrough.
+<!-- /review-todo -->
+
 Apply the same formatting and calculation structure to several models without copying the convention into each native project. Shared policy is TMDL; custom Python is not required.
 
 Continue the [native Parcel model](native-tmdl.md#hide-relationship-foreign-keys): Delivery, Depot, the relationship and the same-name foreign-key overlay are already working. Add only the policy and format override below, keeping your workspace configuration. For direct entry, complete the [native model task](native-tmdl.md) first; then add the policy below.

@@ -158,6 +158,11 @@ Check the installed names and item scope. In an interactive terminal, Esc leaves
 
 ## Explore a larger branching selection
 
+<!-- review-todo: branching -->
+!!! warning "TODO — optional branching example pending"
+    The leading Landing named, ancestor and descendant runs above are verified. This optional larger Warehouse/Reporting branch has passed offline checks but has not been exercised live.
+<!-- /review-todo -->
+
 <details markdown="1">
 <summary>Optional: sibling prerequisites and a second Warehouse</summary>
 

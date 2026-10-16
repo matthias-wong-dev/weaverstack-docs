@@ -320,6 +320,11 @@ Load summary
 </figure>
 <!-- /cli-capture -->
 
+<!-- review-todo: native-field-list -->
+!!! warning "TODO — service field-list check pending"
+    Deployed definition readback verified the foreign-key visibility change, and live DAX still returned 2. Confirm the service Data pane and the rendered Report card visually.
+<!-- /review-todo -->
+
 In the Power BI service, open the generated **Parcel** Report in **Edit** mode. Expand Delivery and Depot in its **Data** pane (field list), with hidden fields excluded, and inspect the existing Delivery Count card.
 
 The deployed model definition and DAX readback showed:

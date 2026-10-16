@@ -1,5 +1,10 @@
 # Develop using Mirror
 
+<!-- review-todo: mirror -->
+!!! warning "TODO — Mirror live capture pending"
+    The plan, reset and resulting Health have not been captured live. Agree the disposable destination and full reset/re-mirror scope before running this task.
+<!-- /review-todo -->
+
 Borrow an installed estate’s data for development, then materialise only the objects your changes need. Keep the same project documents and logical identities while the development configuration selects different physical targets.
 
 Use Mirror only after the [ordinary development loop](development-cycle.md) is understood. **It empties and reconstructs the destination catalogue and every selected destination target**, including local materialisations there. Source items remain untouched. It is a baseline reset, not an iteration command.

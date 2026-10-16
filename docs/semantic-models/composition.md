@@ -1,5 +1,10 @@
 # Compose two model variants
 
+<!-- review-todo: composition -->
+!!! warning "TODO — model-variant live check pending"
+    Composition and preservation pass offline checks. Deploy both variants and their Reports, refresh and run their DAX validations, then capture the service results.
+<!-- /review-todo -->
+
 Reuse a source foundation without deploying it as a physical base model. Give each output its own additions, Report and validations.
 
 ## Before you start

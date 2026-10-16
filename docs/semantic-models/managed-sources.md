@@ -1,5 +1,10 @@
 # Connect a managed Fabric source
 
+<!-- review-todo: managed-refresh -->
+!!! warning "TODO — managed model refresh blocked"
+    Model Build and certification passed, but refresh needs an explicit cloud or gateway connection with credentials for Operations. Bind an approved connection, rerun refresh, then capture the managed-model query result.
+<!-- /review-todo -->
+
 Extend the existing Parcel project from [Power BI-only operation into a Catalogue-managed Fabric estate](index.md#two-ways-to-use-weaver-with-power-bi). Keep its inline Delivery/Depot model and linked Report, then add a Warehouse and a separate model over its data. The original Delivery Count still works without a source connection.
 
 ## Before you start

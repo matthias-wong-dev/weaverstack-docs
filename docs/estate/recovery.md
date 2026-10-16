@@ -64,6 +64,11 @@ Remove only `--dry-run` if the selection is correct. This is a whole-name regex,
 
 ## Reconstruct a Table
 
+<!-- review-todo: destructive-recovery -->
+!!! warning "TODO — destructive recovery checks pending"
+    Corrective Builds and validation restoration were verified. Reload, Wipe and Mirror/reset recovery were not executed live; approve their exact disposable scope before testing them.
+<!-- /review-todo -->
+
 Reload **empties each reached selected Table and resets its bookmark/progress before loading it**. Use it only when reconstruction from empty is intended:
 
 ```bash

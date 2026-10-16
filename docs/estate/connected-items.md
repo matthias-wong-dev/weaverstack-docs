@@ -19,8 +19,10 @@ cd parcel
 
 If already inside `parcel`, use `--project-folder .` instead. Initialise reads Landing’s existing binding, retains its files and adds Operations. The catalogue and published runtime stay in place. Use disposable managed targets: Build may prune undeclared co-located content; keep irreplaceable external sources outside them.
 
-!!! note "If you already authored Warehouse shortcuts"
-    Initialise refuses to overwrite a `Warehouse/Operations/shortcuts.yml` it did not generate. Save and set aside only that local file before extension, then merge its saved mappings into the generated file **before Check or Build**. Keep the incremental example’s `physical` Source.Parcel mapping alongside the new `logical` entry; do not replace either. The capture continued that project using this explicit merge, without changing the existing Table/View definitions or data.
+<!-- review-todo: shortcut-extension -->
+!!! warning "TODO — authored Shortcut extension edge case"
+    Initialise refuses to overwrite a `Warehouse/Operations/shortcuts.yml` it did not generate. Save and set aside only that local file before extension, then merge its saved mappings into the generated file **before Check or Build**. Keep the incremental example’s `physical` Source.Parcel mapping alongside the new `logical` entry; do not replace either. The capture continued that project using this explicit merge, without changing the existing Table/View definitions or data. The workaround is verified; a generator fix remains pending.
+<!-- /review-todo -->
 
 Operations keeps its own seeded `Parcel.StatusEvent` Table, CurrentStatus View and validations. The cross-item additions have distinct names. Open `Warehouse/Operations/shortcuts.yml`:
 

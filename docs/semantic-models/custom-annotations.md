@@ -1,5 +1,10 @@
 # Add a custom model annotation
 
+<!-- review-todo: custom-annotation -->
+!!! warning "TODO — custom-annotation live check pending"
+    The handler and failure/restoration fixture pass offline checks. Capture the deployed display folder and the located failure from a live run of this extended walkthrough.
+<!-- /review-todo -->
+
 Set a native measure's display folder with one small Python handler. Use a custom annotation when declarative TMDL and built-ins do not express the convention you need.
 
 ## Before you start

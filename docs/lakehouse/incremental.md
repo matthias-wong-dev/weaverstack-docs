@@ -169,6 +169,11 @@ weaver check
 weaver build --item Lakehouse/Landing
 ```
 
+<!-- review-todo: notebook-ui -->
+!!! warning "TODO — notebook UI check pending"
+    File mutations and the incremental pipeline were executed through real DFS/Spark APIs. The notebook attachment, Shortcut visibility cell and manual notebook interaction below still need a UI check.
+<!-- /review-todo -->
+
 After Build, attach `Landing` as the default Lakehouse of a **Fabric notebook** and verify the installed Shortcut before Load:
 
 ```python
