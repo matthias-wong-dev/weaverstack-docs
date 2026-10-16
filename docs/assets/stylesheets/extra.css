@@ -1,6 +1,6 @@
 /*
  * Weaver documentation theme.
- * Brand values and the four-stroke mark follow weaverstack.dev/assets/site.css.
+ * Brand values follow weaverstack.dev/assets/site.css; artwork uses the supplied Weaver SVG kit.
  * Overrides stay under Material's classes so reference-page structure remains intact.
  */
 :root {
@@ -146,33 +146,42 @@ input {
 }
 
 .md-header__button.md-logo {
-  width: 1.7rem;
+  width: 2.05rem;
   height: 1.5rem;
   margin: 0 0.55rem 0 0;
   padding: 0;
 }
 
+@media screen and (min-width: 76.25em) {
+  .md-header__button.md-logo {
+    display: flex;
+    align-items: center;
+  }
+}
+
 .weaver-mark {
-  position: relative;
   display: block;
-  width: 1.3rem;
-  height: 1.2rem;
+  width: 1.8rem;
 }
 
-.weaver-mark i {
-  position: absolute;
-  top: 0.05rem;
-  width: 0.225rem;
-  height: 1.1rem;
-  background: var(--weaver-ink);
-  border-radius: 0.45rem;
-  transform: rotate(-22deg);
+.md-logo .weaver-mark img,
+.md-nav__title .md-logo .weaver-mark img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
-.weaver-mark i:nth-child(1) { left: 0.1rem; }
-.weaver-mark i:nth-child(2) { left: 0.4rem; transform: rotate(22deg); background: var(--weaver-blue); }
-.weaver-mark i:nth-child(3) { left: 0.7rem; }
-.weaver-mark i:nth-child(4) { left: 1rem; transform: rotate(22deg); background: var(--weaver-blue); }
+.md-logo .weaver-mark img.weaver-mark-dark {
+  display: none;
+}
+
+[data-md-color-scheme="slate"] .md-logo .weaver-mark img.weaver-mark-light {
+  display: none;
+}
+
+[data-md-color-scheme="slate"] .md-logo .weaver-mark img.weaver-mark-dark {
+  display: block;
+}
 
 .md-header__title {
   color: var(--weaver-ink);

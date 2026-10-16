@@ -2,7 +2,7 @@
 meta_title: Microsoft Fabric automation | Weaver docs
 description: Automate Weaver build, load, test and health operations across Microsoft Fabric from desktop runners or Fabric-hosted processes.
 social_title: Microsoft Fabric automation with Weaver
-image_alt: Weaver documentation for Microsoft Fabric data engineering.
+image_alt: Weaver logo. Making Fabric easier to use.
 schema_type: TechArticle
 breadcrumbs:
   - name: Weaver documentation

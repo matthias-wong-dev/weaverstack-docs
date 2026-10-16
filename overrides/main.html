@@ -14,7 +14,7 @@
   {% set social_title = page.meta.social_title if page.meta and page.meta.social_title else page.title %}
   {% set social_description = page.meta.description if page.meta and page.meta.description else config.site_description %}
   {% set social_image = page.meta.image if page.meta and page.meta.image else "https://docs.weaverstack.dev/assets/images/og.png" %}
-  {% set social_image_alt = page.meta.image_alt if page.meta and page.meta.image_alt else "Weaver documentation for Microsoft Fabric data engineering." %}
+  {% set social_image_alt = page.meta.image_alt if page.meta and page.meta.image_alt else "Weaver logo. Making Fabric easier to use." %}
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta property="og:type" content="{{ 'website' if page.is_homepage else 'article' }}">
   <meta property="og:url" content="{{ page.canonical_url }}">
