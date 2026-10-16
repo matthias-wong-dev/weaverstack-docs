@@ -1,40 +1,25 @@
 Load
 
   Read catalogue                                                                                           3.4s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  40.6s
-
 →   Load Lakehouse/Landing/Files/Parcel.Events
-
 →   Load Lakehouse/Landing/Files/Parcel.StatusFiles
-
 ✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.2s
-
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-
 ✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~0 -0 !0)                                 2.2s
-
 →   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
-
 ✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.3s
-
 ✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     12.0s
-
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
 ✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.5s
-
   Execute                                                                                                 18.9s
-
   Record what the run did                                                                                  0.0s
-
 ✓ Load                                                                                                    1m14s
 
 load succeeded: Lakehouse/Landing

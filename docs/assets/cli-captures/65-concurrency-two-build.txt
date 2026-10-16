@@ -3,29 +3,21 @@ Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
+
 Build
 
   Check target occupancy                                                                                   0.0s
-
   Resolve semantic data sources                                                                            0.0s
-
   Read catalogue                                                                                           1.5s
-
     Read Warehouse/Catalogue inventory                                                                     0.0s
-
     Read Lakehouse/Landing inventory  (31.8s waiting for Spark)                                           39.1s
-
   Read target inventories                                                                                 39.2s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.1s
-
 Install selection
   Lakehouse/Landing         up to date
 
   Install                                                                                                  0.0s
-
 ✓ Build                                                                                                   42.4s
 
 Installation

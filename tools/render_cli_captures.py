@@ -8,6 +8,41 @@ import re
 from html import escape
 from pathlib import Path
 
+ANSI = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
+
+
+def terminal_text(raw: str) -> str:
+    """Resolve carriage-return redraws without inventing newline events."""
+    controls = ANSI.findall(raw)
+    assert all(control.endswith("m") for control in controls), (
+        "Unsupported cursor control in capture; do not silently discard it"
+    )
+    raw = ANSI.sub("", raw)
+    assert "\x1b" not in raw, "Unsupported terminal escape in capture"
+    rows = []
+    row = []
+    column = 0
+    for character in raw:
+        if character == "\r":
+            column = 0
+        elif character == "\n":
+            rows.append("".join(row).rstrip())
+            row, column = [], 0
+        elif character == "\b":
+            column = max(0, column - 1)
+        else:
+            characters = " " * (8 - column % 8) if character == "\t" else character
+            for value in characters:
+                if column < len(row):
+                    row[column] = value
+                else:
+                    row.append(value)
+                column += 1
+    if row:
+        rows.append("".join(row).rstrip())
+    rows = [line for line in rows if not line.lstrip().startswith("⋯")]
+    return "\n".join(rows).strip("\n") + "\n"
+
 
 def _line(line: str) -> str:
     colour = None
@@ -55,6 +90,27 @@ def main():
     assets = docs / "assets/cli-captures"
     manifest = json.loads((assets / "manifest.json").read_text())
     captures = {entry["label"]: entry for entry in manifest["captures"]}
+    assert len(captures) == len(manifest["captures"]), "Duplicate capture labels"
+    for record in captures.values():
+        raw = (assets / record["raw_ansi"]).read_bytes().decode("utf-8")
+        expected = terminal_text(raw)
+        target = assets / record["text"]
+        if args.write:
+            if target.read_text() != expected:
+                target.write_text(expected)
+        else:
+            assert target.read_text() == expected, (
+                f"{target}: terminal normalisation drift; run with --write"
+            )
+    if args.write:
+        manifest["normalisation"] = (
+            "UTF-8; SGR colour controls removed in text view; carriage returns "
+            "return to column zero and redraw the same row, not new lines; "
+            "transient spinner rows omitted; actual internal blank lines, "
+            "completed events, line order, alignment, values and glyphs retained; "
+            "sanitised original ANSI streams retained unchanged"
+        )
+        (assets / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     count = 0
     for page in sorted(docs.rglob("*.md")):
         original = page.read_text()

@@ -17,16 +17,13 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --dry-run --workspa
 <pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
 
   Read catalogue                                                                                           2.8s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Execute                                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Load (dry run)                                                                                           2.8s</span>
 
 <span class="terminal-status-green">plan succeeded: Lakehouse/Landing</span>
@@ -54,16 +51,13 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --ancestors --dry-r
 <pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
 
   Read catalogue                                                                                           2.0s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Execute                                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Load (dry run)                                                                                           2.0s</span>
 
 <span class="terminal-status-green">plan succeeded: Lakehouse/Landing</span>
@@ -89,16 +83,13 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry
 <pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
 
   Read catalogue                                                                                           2.1s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Execute                                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Load (dry run)                                                                                           2.1s</span>
 
 <span class="terminal-status-green">plan succeeded: Lakehouse/Landing</span>
@@ -136,28 +127,19 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --wor
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.0s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  32.0s
-
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     16.0s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.9s</span>
-
   Execute                                                                                                 23.4s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Load                                                                                                    1m08s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
@@ -195,16 +177,13 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]DoesNotExist' --dry-run --
 <pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
 
   Read catalogue                                                                                           2.2s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
 <span class="terminal-status-red">✗ Execute                                                                                                  0.0s</span>
-
 <span class="terminal-status-red">✗ Load (dry run)                                                                                           2.2s</span>
 
 <span class="terminal-status-red">error: no installed loadable object in the requested items matches &#x27;Tables/Parcel[.]DoesNotExist&#x27;. Installed: Files/Parcel.Events, Tables/Parcel.CurrentStatus, Tables/Parcel.Event</span>

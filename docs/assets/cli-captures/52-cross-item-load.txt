@@ -1,7 +1,6 @@
 Load
 
   Read catalogue                                                                                           2.3s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
@@ -9,41 +8,23 @@ Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  35.4s
-
 →   Load Lakehouse/Landing/Files/Parcel.Events
-
 →   Load Warehouse/Operations/Parcel.LiveStatus
-
 →   Load Warehouse/Operations/Parcel.StatusEvent
-
 ✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      3.1s
-
 ✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     3.1s
-
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-
 ✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    5.5s
-
 ✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     14.5s
-
 →   Refresh Lakehouse/Landing SQL endpoint
-
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
 ✓   Refresh Lakehouse/Landing SQL endpoint                                                                 0.8s
-
 →   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
-
 ✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +2 ~0 -0 !0)                         2.5s
-
 ✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              8.4s
-
   Execute                                                                                                 23.9s
-
   Record what the run did                                                                                  0.0s
-
 ✓ Load                                                                                                    1m11s
 
 load succeeded: Lakehouse/Landing, Warehouse/Operations

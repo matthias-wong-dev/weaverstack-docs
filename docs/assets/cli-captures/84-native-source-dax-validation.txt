@@ -1,9 +1,7 @@
 Test
 
   Read validations                                                                                         0.5s
-
   Execute                                                                                                  0.7s
-
 ✓ Test                                                                                                     1.3s
 
 test passed

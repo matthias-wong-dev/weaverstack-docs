@@ -25,11 +25,8 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-c
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
   Read catalogue                                                                                           2.5s
-
   Check installed items                                                                                    0.2s
-
   Read installed objects                                                                                   2.5s
-
 <span class="terminal-status-green">✓ Health                                                                                                   5.1s</span>
 
 <span class="terminal-status-green">Weaver Health  Green</span>
@@ -81,11 +78,8 @@ For example, after loading the connected Parcel items but before rerunning Test,
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
   Read catalogue                                                                                           2.3s
-
   Check installed items                                                                                    0.2s
-
   Read installed objects                                                                                   3.0s
-
 <span class="terminal-status-green">✓ Health                                                                                                   5.5s</span>
 
 <span class="terminal-status-amber">Weaver Health  Amber</span>
@@ -133,11 +127,8 @@ The [Warehouse failure exercise](../warehouse/tests.md#optional-make-one-discrep
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
   Read catalogue                                                                                           2.2s
-
   Check installed items                                                                                    0.2s
-
   Read installed objects                                                                                   0.3s
-
 <span class="terminal-status-green">✓ Health                                                                                                   2.6s</span>
 
 <span class="terminal-status-red">Weaver Health  Red</span>

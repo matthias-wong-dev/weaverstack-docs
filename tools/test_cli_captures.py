@@ -35,6 +35,27 @@ class CodeText(HTMLParser):
             self.parts.append(data)
 
 
+def test_carriage_return_redraw_does_not_become_a_blank_output_line():
+    raw = "\x1b[2m⋯ Work\x1b[0m\r        \rRead catalogue  1.0s\r\nDone\r\n"
+    assert renderer().terminal_text(raw) == "Read catalogue  1.0s\nDone\n"
+
+
+def test_actual_blank_output_lines_and_overwritten_columns_are_preserved():
+    raw = "Build\r\n\r\nabcdef\rXY\r\n\r\n\r\nSummary\r\n"
+    assert renderer().terminal_text(raw) == "Build\n\nXYcdef\n\n\nSummary\n"
+
+
+def test_every_plain_capture_is_derived_from_its_original_terminal_stream():
+    module = renderer()
+    assets = ROOT / "docs/assets/cli-captures"
+    manifest = json.loads((assets / "manifest.json").read_text())
+    for record in manifest["captures"]:
+        raw = (assets / record["raw_ansi"]).read_bytes().decode("utf-8")
+        assert module.terminal_text(raw) == (assets / record["text"]).read_text(), (
+            record["label"]
+        )
+
+
 def test_every_tutorial_panel_shows_the_whole_capture_without_evidence_chrome():
     module = renderer()
     assets = ROOT / "docs/assets/cli-captures"

@@ -3,24 +3,17 @@ Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
+
 Build
 
   Check target occupancy                                                                                   0.0s
-
   Resolve semantic data sources                                                                            0.0s
-
   Read catalogue                                                                                           1.5s
-
     Read Warehouse/Operations inventory                                                                    0.3s
-
     Read Warehouse/Catalogue inventory                                                                     0.0s
-
   Read target inventories                                                                                  0.4s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.1s
-
 Install selection
   Warehouse/Operations
     changed                 1
@@ -28,27 +21,16 @@ Install selection
     selected for removal    1
 
 →   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
-
 ✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                                 0.3s
-
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-
 ✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          0.6s
-
 →   Warehouse/Operations · Installing load and test artefacts · 1 action
-
 ✓   Warehouse/Operations · Installing load and test artefacts · 1 action                                   0.0s
-
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-
 ✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        1.7s
-
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-
 ✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s
-
   Install                                                                                                  3.2s
-
 ✓ Build                                                                                                    7.0s
 
 Installation

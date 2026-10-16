@@ -48,26 +48,18 @@ Targets
   SemanticModel/Parcel → SemanticModel/Parcel_Dev
   Report/Parcel → Report/Parcel_Report_Dev
 
+
 Build
 
     Create SemanticModel/Parcel_Dev                                                                       20.6s
-
     Create Report/Parcel_Report_Dev                                                                       20.6s
-
   Create Power BI items                                                                                   41.2s
-
   Resolve semantic data sources                                                                            0.0s
-
     Resolve SemanticModel/Parcel_Dev                                                                       0.0s
-
     Resolve Report/Parcel_Report_Dev                                                                       0.0s
-
   Read target inventories                                                                                  0.2s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.1s
-
 Install selection
   SemanticModel/Parcel
     changed                 1
@@ -77,23 +69,14 @@ Install selection
     selected for build      1
 
 →   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action                                     20.8s</span>
-
 →   SemanticModel/Parcel_Dev, Report/Parcel_Report_Dev · Verify deployed semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/Parcel_Dev, Report/Parcel_Report_Dev · Verify deployed semantic definitions · 1 action   20.5s</span>
-
 →   Report/Parcel_Report_Dev · Deploy Report definitions · 1 action
-
 <span class="terminal-status-green">✓   Report/Parcel_Report_Dev · Deploy Report definitions · 1 action                                       20.4s</span>
-
 →   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action
-
 <span class="terminal-status-green">✓   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action                              20.6s</span>
-
   Install                                                                                                 1m22s
-
 <span class="terminal-status-green">✓ Build                                                                                                   2m03s</span>
 
 Installation
@@ -120,24 +103,17 @@ Targets
   SemanticModel/Parcel
   Report/Parcel → Report/Parcel_Report
 
+
 Build
 
     Create Report/Parcel_Report                                                                           21.1s
-
   Create Power BI items                                                                                   21.1s
-
   Resolve semantic data sources                                                                            0.0s
-
     Resolve SemanticModel/Parcel                                                                           0.0s
-
     Resolve Report/Parcel_Report                                                                           0.0s
-
   Read target inventories                                                                                  0.2s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.1s
-
 Install selection
   SemanticModel/Parcel
     changed                 1
@@ -147,23 +123,14 @@ Install selection
     selected for build      1
 
 →   SemanticModel/Parcel · Deploy semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.6s</span>
-
 →   SemanticModel/Parcel, Report/Parcel_Report · Verify deployed semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/Parcel, Report/Parcel_Report · Verify deployed semantic definitions · 1 action          20.4s</span>
-
 →   Report/Parcel_Report · Deploy Report definitions · 1 action
-
 <span class="terminal-status-green">✓   Report/Parcel_Report · Deploy Report definitions · 1 action                                           20.3s</span>
-
 →   Report/Parcel_Report · Verify deployed Report definitions · 1 action
-
 <span class="terminal-status-green">✓   Report/Parcel_Report · Verify deployed Report definitions · 1 action                                  20.7s</span>
-
   Install                                                                                                 1m22s
-
 <span class="terminal-status-green">✓ Build                                                                                                   1m43s</span>
 
 Installation
@@ -203,22 +170,16 @@ weaver load SemanticModel/Parcel --workspace-config workspace-prod.yml
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Resolve semantic models                                                                                  0.5s
-
   Read catalogue                                                                                           0.0s
-
 Workspace  Weaver Example
 Catalogue  none
 Targets
   SemanticModel/Parcel
 
   Build run graph                                                                                          0.0s
-
 →   Load SemanticModel/Parcel
-
 <span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              4.8s</span>
-
   Execute                                                                                                  4.9s
-
 <span class="terminal-status-green">✓ Load                                                                                                     5.4s</span>
 
 <span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>

@@ -3,33 +3,24 @@ Catalogue  none
 Targets
   SemanticModel/Parcel
 
+
 Build
 
   Resolve semantic data sources                                                                            0.0s
-
     Resolve SemanticModel/Parcel                                                                           0.0s
-
   Read target inventories                                                                                  0.2s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.1s
-
 Install selection
   SemanticModel/Parcel
     changed                 1
     selected for build      1
 
 →   SemanticModel/Parcel · Deploy semantic definitions · 1 action
-
 ✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.7s
-
 →   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action
-
 ✓   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action                                20.4s
-
   Install                                                                                                 41.2s
-
 ✓ Build                                                                                                   41.5s
 
 Installation

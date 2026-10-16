@@ -44,6 +44,9 @@ plugins:
   - search:
       lang: en
 
+hooks:
+  - tools/terminal_presentation.py
+
 markdown_extensions:
   - abbr
   - admonition

@@ -201,40 +201,25 @@ weaver load Lakehouse/Landing
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.3s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  32.0s
-
 →   Load Lakehouse/Landing/Files/Parcel.Events
-
 →   Load Lakehouse/Landing/Files/Parcel.StatusFiles
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.4s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 2, +2 ~0 -0 !0)                                 4.3s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                10.8s</span>
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     13.4s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.7s</span>
-
   Execute                                                                                                 23.4s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Load                                                                                                    1m07s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
@@ -308,40 +293,25 @@ weaver load Lakehouse/Landing
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.1s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  35.2s
-
 →   Load Lakehouse/Landing/Files/Parcel.Events
-
 →   Load Lakehouse/Landing/Files/Parcel.StatusFiles
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.3s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~1 -1 !0)                                 3.6s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     15.2s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                             12.9s</span>
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                32.4s</span>
-
   Execute                                                                                                 33.9s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Load                                                                                                    1m21s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
@@ -385,40 +355,25 @@ weaver load Lakehouse/Landing
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           3.4s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  40.6s
-
 →   Load Lakehouse/Landing/Files/Parcel.Events
-
 →   Load Lakehouse/Landing/Files/Parcel.StatusFiles
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.2s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~0 -0 !0)                                 2.2s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.3s</span>
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     12.0s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.5s</span>
-
   Execute                                                                                                 18.9s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Load                                                                                                    1m14s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>

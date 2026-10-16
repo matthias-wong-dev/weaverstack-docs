@@ -88,26 +88,18 @@ Targets
   Lakehouse/Landing
   Warehouse/Operations
 
+
 Build
 
   Check target occupancy                                                                                   0.0s
-
   Resolve semantic data sources                                                                            0.0s
-
   Read catalogue                                                                                           1.5s
-
     Read Warehouse/Operations inventory                                                                    0.4s
-
     Read Warehouse/Catalogue inventory                                                                     0.0s
-
     Read Lakehouse/Landing inventory  (38.5s waiting for Spark)                                           46.0s
-
   Read target inventories                                                                                 46.4s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.2s
-
 Install selection
   Lakehouse/Landing         up to date
   Warehouse/Operations
@@ -115,31 +107,18 @@ Install selection
     selected for build      3
 
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          1.1s</span>
-
 →   Warehouse/Operations · Creating shortcuts · 2 actions
-
 <span class="terminal-status-green">✓   Warehouse/Operations · Creating shortcuts · 2 actions                                                  0.1s</span>
-
 →   Warehouse/Operations · Building objects · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Operations · Building objects · 1 action                                                     0.8s</span>
-
 →   Warehouse/Operations · Installing load and test artefacts · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Operations · Installing load and test artefacts · 1 action                                   0.1s</span>
-
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        2.6s</span>
-
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s</span>
-
   Install                                                                                                  5.3s
-
 <span class="terminal-status-green">✓ Build                                                                                                   55.1s</span>
 
 Installation
@@ -163,7 +142,6 @@ weaver load Lakehouse/Landing Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.3s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
@@ -171,41 +149,23 @@ Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  35.4s
-
 →   Load Lakehouse/Landing/Files/Parcel.Events
-
 →   Load Warehouse/Operations/Parcel.LiveStatus
-
 →   Load Warehouse/Operations/Parcel.StatusEvent
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      3.1s</span>
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     3.1s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    5.5s</span>
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     14.5s</span>
-
 →   Refresh Lakehouse/Landing SQL endpoint
-
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
 <span class="terminal-status-green">✓   Refresh Lakehouse/Landing SQL endpoint                                                                 0.8s</span>
-
 →   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +2 ~0 -0 !0)                         2.5s</span>
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              8.4s</span>
-
   Execute                                                                                                 23.9s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Load                                                                                                    1m11s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing, Warehouse/Operations</span>
@@ -237,11 +197,8 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
   Read catalogue                                                                                           2.3s
-
   Check installed items                                                                                    0.2s
-
   Read installed objects                                                                                   3.0s
-
 <span class="terminal-status-green">✓ Health                                                                                                   5.5s</span>
 
 <span class="terminal-status-amber">Weaver Health  Amber</span>

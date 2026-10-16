@@ -68,28 +68,19 @@ weaver test Lakehouse/Landing
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read catalogue                                                                                           2.0s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  33.0s
-
 →   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
-
 →   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
-
 <span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      13.2s</span>
-
 <span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    15.1s</span>
-
   Execute                                                                                                 13.0s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Test                                                                                                    59.1s</span>
 
 <span class="terminal-status-green">test passed</span>

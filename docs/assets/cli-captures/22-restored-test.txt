@@ -1,26 +1,18 @@
 Test
 
   Read catalogue                                                                                           2.1s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
 →   Test Warehouse/Operations/Parcel.CurrentStatusMatches
-
 →   Test Warehouse/Operations/Parcel.StatusIsKnown
-
 ✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.0s
-
 ✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  4.4s
-
   Execute                                                                                                  4.5s
-
   Record what the run did                                                                                  0.5s
-
 ✓ Test                                                                                                     7.2s
 
 test passed

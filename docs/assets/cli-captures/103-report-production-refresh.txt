@@ -1,22 +1,16 @@
 Load
 
   Resolve semantic models                                                                                  0.5s
-
   Read catalogue                                                                                           0.0s
-
 Workspace  Weaver Example
 Catalogue  none
 Targets
   SemanticModel/Parcel
 
   Build run graph                                                                                          0.0s
-
 →   Load SemanticModel/Parcel
-
 ✓   Load SemanticModel/Parcel                                                                              4.8s
-
   Execute                                                                                                  4.9s
-
 ✓ Load                                                                                                     5.4s
 
 load succeeded: SemanticModel/Parcel

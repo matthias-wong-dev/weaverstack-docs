@@ -3,79 +3,47 @@ Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
+
 Build
 
   Check target occupancy                                                                                   0.0s
-
   Resolve semantic data sources                                                                            0.0s
-
   Read catalogue                                                                                           6.1s
-
     Read Warehouse/Operations inventory                                                                    0.9s
-
     Read Warehouse/Catalogue inventory                                                                     0.2s
-
   Read target inventories                                                                                  1.1s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.2s
-
 Install selection
   Warehouse/Operations
     new                     13
     selected for build      13
 
 →   Warehouse/Catalogue · Upgrade catalogue identity and semantic keys · 1 action
-
 ✓   Warehouse/Catalogue · Upgrade catalogue identity and semantic keys · 1 action                         16.2s
-
 →   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
-
 ✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                                 3.9s
-
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-
 ✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.0s
-
 →   Warehouse/Operations · Creating schemas · 2 actions
-
 →   Warehouse/Catalogue · Removing unmanaged objects · 2 actions
-
 →   Warehouse/Operations · Building objects · 1 action
-
 ✓   Warehouse/Operations · Creating schemas · 2 actions                                                    0.5s
-
 →   Warehouse/Operations · Creating shortcuts · 1 action
-
 ✓   Warehouse/Catalogue · Removing unmanaged objects · 2 actions                                           0.5s
-
 ✓   Warehouse/Operations · Creating shortcuts · 1 action                                                   0.1s
-
 →   Warehouse/Operations · Installing load and test artefacts · 5 actions
-
 ✓   Warehouse/Operations · Building objects · 1 action                                                     1.6s
-
 →   Warehouse/Operations · Building objects · 1 action
-
 ✓   Warehouse/Operations · Building objects · 1 action                                                     0.0s
-
 ✓   Warehouse/Operations · Installing load and test artefacts · 5 actions                                  1.1s
-
 →   Warehouse/Catalogue · Recording created Views · 1 action
-
 ✓   Warehouse/Catalogue · Recording created Views · 1 action                                               0.5s
-
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-
 ✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        7.8s
-
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-
 ✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s
-
   Install                                                                                                 32.7s
-
 ✓ Build                                                                                                   52.9s
 
 Installation

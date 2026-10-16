@@ -28,15 +28,10 @@ Publish the Environment now? [y/N]: n
 Setting up the Weaver project
 
   Checking the workspace                                                                                   0.4s
-
   Reading the Environment                                                                                 21.6s
-
   Checking the project files                                                                               0.4s
-
   Creating the Warehouse Operations                                                                        8.8s
-
   Writing the project files                                                                                0.0s
-
 ✓ Setting up the Weaver project                                                                           31.2s
 
   Catalogue    Catalogue   already exists

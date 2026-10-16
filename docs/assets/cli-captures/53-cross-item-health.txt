@@ -1,11 +1,8 @@
 Health
 
   Read catalogue                                                                                           2.3s
-
   Check installed items                                                                                    0.2s
-
   Read installed objects                                                                                   3.0s
-
 ✓ Health                                                                                                   5.5s
 
 Weaver Health  Amber

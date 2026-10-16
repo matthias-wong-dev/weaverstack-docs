@@ -74,57 +74,37 @@ Catalogue  Warehouse/Catalogue
 Targets
   SemanticModel/ParcelWarehouse
 
+
 Build
 
     Create SemanticModel/ParcelWarehouse                                                                  20.7s
-
   Create Power BI items                                                                                   20.7s
-
   Check target occupancy                                                                                   0.0s
-
   Resolve semantic data sources                                                                            0.3s
-
   Read catalogue                                                                                           1.6s
-
     Resolve SemanticModel/ParcelWarehouse                                                                  0.0s
-
     Read Warehouse/Catalogue inventory                                                                     0.0s
-
   Read target inventories                                                                                  0.0s
-
   Read semantic sources                                                                                    0.6s
-
   Prepare bundle                                                                                           0.1s
-
 Install selection
   SemanticModel/ParcelWarehouse
     changed                 1
     selected for build      1
 
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          1.6s</span>
-
 →   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action                                21.0s</span>
-
 →   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action                                24.1s</span>
-
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        2.3s</span>
-
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s</span>
-
   Install                                                                                                 49.6s
 
 <span class="terminal-status-amber">warning: SemanticModel/ParcelWarehouse reads [warehouse-endpoint];operations, and no connection has that path. Create a connection for it in Fabric before refreshing.</span>
-
 <span class="terminal-status-green">✓ Build                                                                                                   1m14s</span>
 
 Installation
@@ -148,7 +128,6 @@ weaver load Warehouse/Operations SemanticModel/ParcelWarehouse
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.4s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
@@ -156,29 +135,18 @@ Targets
   SemanticModel/ParcelWarehouse
 
   Build run graph                                                                                          0.0s
-
 →   Load Warehouse/Operations/Parcel.StatusEvent
-
 →   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
-
 →   Load Warehouse/Operations/Parcel.LiveStatus
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     2.9s</span>
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.4s</span>
-
 →   Load SemanticModel/ParcelWarehouse
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +0 ~0 -0 !0)                         4.6s</span>
 
 <span class="terminal-status-amber">warning: SemanticModel/ParcelWarehouse reads [warehouse-endpoint];operations, and no connection has that path. If the refresh fails, create a connection for it.</span>
-
 <span class="terminal-status-red">✗   Load SemanticModel/ParcelWarehouse                                                                     6.0s</span>
-
   Execute                                                                                                 10.6s
-
   Record what the run did                                                                                  0.7s
-
 <span class="terminal-status-red">✗ Load                                                                                                    13.7s</span>
 
 load partially_succeeded: Warehouse/Operations, SemanticModel/ParcelWarehouse

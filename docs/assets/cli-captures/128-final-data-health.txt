@@ -1,11 +1,8 @@
 Health
 
   Read catalogue                                                                                           2.3s
-
   Check installed items                                                                                    0.1s
-
   Read installed objects                                                                                   2.7s
-
 ✓ Health                                                                                                   5.2s
 
 Weaver Health  Green

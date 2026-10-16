@@ -49,26 +49,18 @@ weaver test Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read catalogue                                                                                           2.5s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
 →   Test Warehouse/Operations/Parcel.CurrentStatusMatches
-
 →   Test Warehouse/Operations/Parcel.StatusIsKnown
-
 <span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.3s</span>
-
 <span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  7.5s</span>
-
   Execute                                                                                                  7.7s
-
   Record what the run did                                                                                  0.5s
-
 <span class="terminal-status-green">✓ Test                                                                                                    10.7s</span>
 
 <span class="terminal-status-green">test passed</span>
@@ -162,22 +154,16 @@ weaver test Warehouse/Operations --name 'Parcel[.]CurrentStatusMatches'
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read catalogue                                                                                           2.4s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
 →   Test Warehouse/Operations/Parcel.CurrentStatusMatches
-
 <span class="terminal-status-red">✗   Test Warehouse/Operations/Parcel.CurrentStatusMatches  (1 missing, 1 unexpected)                       6.8s</span>
-
   Execute                                                                                                  6.9s
-
   Record what the run did                                                                                  0.6s
-
 <span class="terminal-status-red">✗ Test                                                                                                     9.9s</span>
 
 <span class="terminal-status-red">test failed</span>
@@ -207,11 +193,8 @@ weaver health --item Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
   Read catalogue                                                                                           2.2s
-
   Check installed items                                                                                    0.2s
-
   Read installed objects                                                                                   0.3s
-
 <span class="terminal-status-green">✓ Health                                                                                                   2.6s</span>
 
 <span class="terminal-status-red">Weaver Health  Red</span>
@@ -255,11 +238,8 @@ weaver health --item Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
   Read catalogue                                                                                           2.3s
-
   Check installed items                                                                                    0.2s
-
   Read installed objects                                                                                   0.4s
-
 <span class="terminal-status-green">✓ Health                                                                                                   2.9s</span>
 
 <span class="terminal-status-green">Weaver Health  Green</span>

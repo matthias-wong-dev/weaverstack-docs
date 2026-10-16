@@ -3,7 +3,7 @@
   "weaver_version": "0.9.0.dev16746776803276843971",
   "package_status": "built development wheel, not a published PyPI release",
   "workspace": "Weaver Example (authorised disposable trial workspace)",
-  "normalisation": "UTF-8; CSI colour/cursor controls removed in text view; CR terminal redraws separated; transient spinner and erased blank rows omitted; completed events, line order, alignment, values and glyphs retained; sanitised original ANSI streams retained separately",
+  "normalisation": "UTF-8; SGR colour controls removed in text view; carriage returns return to column zero and redraw the same row, not new lines; transient spinner rows omitted; actual internal blank lines, completed events, line order, alignment, values and glyphs retained; sanitised original ANSI streams retained unchanged",
   "redactions": "client/tenant credentials and identifiers; item/run identifiers; private filesystem paths; SQL endpoint hostname. Bracketed placeholders are redactions, not CLI output values.",
   "captures": [
     {

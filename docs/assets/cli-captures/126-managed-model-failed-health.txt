@@ -1,11 +1,8 @@
 Health
 
   Read catalogue                                                                                           2.7s
-
   Check installed items                                                                                    0.1s
-
   Read installed objects                                                                                   0.0s
-
 ✓ Health                                                                                                   2.8s
 
 Weaver Health  Red

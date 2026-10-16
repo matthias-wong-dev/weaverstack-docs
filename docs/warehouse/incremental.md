@@ -148,26 +148,18 @@ weaver load Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.4s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
 →   Load Warehouse/Operations/Parcel.LiveStatus
-
 →   Load Warehouse/Operations/Parcel.StatusEvent
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                     3.8s</span>
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.5s</span>
-
   Execute                                                                                                  4.8s
-
   Record what the run did                                                                                  0.5s
-
 <span class="terminal-status-green">✓ Load                                                                                                     7.7s</span>
 
 <span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
@@ -237,26 +229,18 @@ weaver load Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.1s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
 →   Load Warehouse/Operations/Parcel.LiveStatus
-
 →   Load Warehouse/Operations/Parcel.StatusEvent
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.5s</span>
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                     6.7s</span>
-
   Execute                                                                                                  6.9s
-
   Record what the run did                                                                                  0.5s
-
 <span class="terminal-status-green">✓ Load                                                                                                     9.5s</span>
 
 <span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
@@ -296,26 +280,18 @@ weaver load Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.1s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
 →   Load Warehouse/Operations/Parcel.LiveStatus
-
 →   Load Warehouse/Operations/Parcel.StatusEvent
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     1.8s</span>
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.2s</span>
-
   Execute                                                                                                  4.4s
-
   Record what the run did                                                                                  0.6s
-
 <span class="terminal-status-green">✓ Load                                                                                                     7.1s</span>
 
 <span class="terminal-status-green">load succeeded: Warehouse/Operations</span>

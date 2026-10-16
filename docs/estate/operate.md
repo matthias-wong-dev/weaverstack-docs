@@ -66,7 +66,6 @@ weaver test Lakehouse/Landing Warehouse/Operations --workspace-config workspace-
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read catalogue                                                                                           2.2s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
@@ -74,29 +73,17 @@ Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  38.3s
-
 →   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
-
 →   Test Warehouse/Operations/Parcel.StatusIsKnown
-
 →   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
-
 →   Test Warehouse/Operations/Parcel.CurrentStatusMatches
-
 <span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.9s</span>
-
 <span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  5.4s</span>
-
 <span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      10.0s</span>
-
 <span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    12.4s</span>
-
   Execute                                                                                                 10.6s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Test                                                                                                    1m11s</span>
 
 <span class="terminal-status-green">test passed</span>
@@ -120,11 +107,8 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-c
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
   Read catalogue                                                                                           2.5s
-
   Check installed items                                                                                    0.2s
-
   Read installed objects                                                                                   2.5s
-
 <span class="terminal-status-green">✓ Health                                                                                                   5.1s</span>
 
 <span class="terminal-status-green">Weaver Health  Green</span>

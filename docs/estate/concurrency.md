@@ -17,32 +17,21 @@ weaver load Lakehouse/Landing --concurrency 2 --workspace-config workspace-devel
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.1s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  38.2s
-
 →   Load Lakehouse/Landing/Files/Parcel.Events
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.7s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     14.2s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.8s</span>
-
   Execute                                                                                                 23.3s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Load                                                                                                    1m15s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
@@ -79,28 +68,19 @@ weaver test Lakehouse/Landing --concurrency 2 --workspace-config workspace-devel
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read catalogue                                                                                           2.1s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  38.1s
-
 →   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
-
 →   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
-
 <span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      12.4s</span>
-
 <span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    14.8s</span>
-
   Execute                                                                                                 15.1s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Test                                                                                                    1m04s</span>
 
 <span class="terminal-status-green">test passed</span>

@@ -3,29 +3,21 @@ Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
+
 Build
 
   Check target occupancy                                                                                   0.0s
-
   Resolve semantic data sources                                                                            0.0s
-
   Read catalogue                                                                                           6.0s
-
     Read Warehouse/Operations inventory                                                                    0.4s
-
     Read Warehouse/Catalogue inventory                                                                     0.2s
-
   Read target inventories                                                                                  0.6s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.1s
-
 Install selection
   Warehouse/Operations      up to date
 
   Install                                                                                                  0.0s
-
 ✓ Build                                                                                                   22.0s
 
 Installation

@@ -758,10 +758,13 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   background: transparent;
   font: 0.7rem/1.55 var(--weaver-mono);
 }
-.md-typeset .language-bash.highlight pre > code > span[id]:first-child::before {
-  content: "$ ";
+.md-typeset .language-bash.highlight pre > code > span[data-terminal-prompt]::before {
+  content: attr(data-terminal-prompt) " ";
   color: #88d6aa;
   font-weight: 600;
+}
+.md-typeset .language-bash.highlight pre > code > span[data-terminal-prompt=">"]::before {
+  color: #b8c4d6;
 }
 .md-typeset .terminal-intro {
   margin: 0.9rem 0 0.5rem;

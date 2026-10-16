@@ -58,24 +58,17 @@ Targets
   SemanticModel/Parcel
   Report/Parcel
 
+
 Build
 
     Create Report/Parcel                                                                                  20.9s
-
   Create Power BI items                                                                                   20.9s
-
   Resolve semantic data sources                                                                            0.0s
-
     Resolve SemanticModel/Parcel                                                                           0.0s
-
     Resolve Report/Parcel                                                                                  0.0s
-
   Read target inventories                                                                                  0.2s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.1s
-
 Install selection
   SemanticModel/Parcel
     changed                 1
@@ -85,23 +78,14 @@ Install selection
     selected for build      1
 
 →   SemanticModel/Parcel · Deploy semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.6s</span>
-
 →   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action                 20.5s</span>
-
 →   Report/Parcel · Deploy Report definitions · 1 action
-
 <span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.3s</span>
-
 →   Report/Parcel · Verify deployed Report definitions · 1 action
-
 <span class="terminal-status-green">✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         20.6s</span>
-
   Install                                                                                                 1m22s
-
 <span class="terminal-status-green">✓ Build                                                                                                   1m43s</span>
 
 Installation

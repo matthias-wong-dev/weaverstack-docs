@@ -49,9 +49,7 @@ weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/P
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read validations                                                                                         0.5s
-
   Execute                                                                                                  0.7s
-
 <span class="terminal-status-green">✓ Test                                                                                                     1.3s</span>
 
 <span class="terminal-status-green">test passed</span>
@@ -108,9 +106,7 @@ weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/P
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read validations                                                                                         0.6s
-
   Execute                                                                                                  1.0s
-
 <span class="terminal-status-red">✗ Test                                                                                                     1.6s</span>
 
 <span class="terminal-status-red">test failed</span>
@@ -152,9 +148,7 @@ weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/P
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read validations                                                                                         0.6s
-
   Execute                                                                                                  0.8s
-
 <span class="terminal-status-green">✓ Test                                                                                                     1.5s</span>
 
 <span class="terminal-status-green">test passed</span>

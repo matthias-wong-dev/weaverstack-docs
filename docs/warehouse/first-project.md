@@ -53,15 +53,10 @@ Publish the Environment now? [y/N]: n
 Setting up the Weaver project
 
   Checking the workspace                                                                                   0.4s
-
   Reading the Environment                                                                                 21.6s
-
   Checking the project files                                                                               0.4s
-
   Creating the Warehouse Operations                                                                        8.8s
-
   Writing the project files                                                                                0.0s
-
 <span class="terminal-status-green">✓ Setting up the Weaver project                                                                           31.2s</span>
 
   Catalogue    Catalogue   already exists
@@ -214,79 +209,47 @@ Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
+
 Build
 
   Check target occupancy                                                                                   0.0s
-
   Resolve semantic data sources                                                                            0.0s
-
   Read catalogue                                                                                           6.1s
-
     Read Warehouse/Operations inventory                                                                    0.9s
-
     Read Warehouse/Catalogue inventory                                                                     0.2s
-
   Read target inventories                                                                                  1.1s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.2s
-
 Install selection
   Warehouse/Operations
     new                     13
     selected for build      13
 
 →   Warehouse/Catalogue · Upgrade catalogue identity and semantic keys · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Upgrade catalogue identity and semantic keys · 1 action                         16.2s</span>
-
 →   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                                 3.9s</span>
-
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.0s</span>
-
 →   Warehouse/Operations · Creating schemas · 2 actions
-
 →   Warehouse/Catalogue · Removing unmanaged objects · 2 actions
-
 →   Warehouse/Operations · Building objects · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Operations · Creating schemas · 2 actions                                                    0.5s</span>
-
 →   Warehouse/Operations · Creating shortcuts · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Removing unmanaged objects · 2 actions                                           0.5s</span>
-
 <span class="terminal-status-green">✓   Warehouse/Operations · Creating shortcuts · 1 action                                                   0.1s</span>
-
 →   Warehouse/Operations · Installing load and test artefacts · 5 actions
-
 <span class="terminal-status-green">✓   Warehouse/Operations · Building objects · 1 action                                                     1.6s</span>
-
 →   Warehouse/Operations · Building objects · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Operations · Building objects · 1 action                                                     0.0s</span>
-
 <span class="terminal-status-green">✓   Warehouse/Operations · Installing load and test artefacts · 5 actions                                  1.1s</span>
-
 →   Warehouse/Catalogue · Recording created Views · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Recording created Views · 1 action                                               0.5s</span>
-
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        7.8s</span>
-
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s</span>
-
   Install                                                                                                 32.7s
-
 <span class="terminal-status-green">✓ Build                                                                                                   52.9s</span>
 
 Installation
@@ -312,22 +275,16 @@ weaver load Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.7s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
 →   Load Warehouse/Operations/Parcel.StatusEvent
-
 <span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +3 ~0 -0 !0)                                    3.1s</span>
-
   Execute                                                                                                  3.3s
-
   Record what the run did                                                                                  0.7s
-
 <span class="terminal-status-green">✓ Load                                                                                                     6.7s</span>
 
 <span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
@@ -361,26 +318,18 @@ weaver test Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read catalogue                                                                                           2.5s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-
 →   Test Warehouse/Operations/Parcel.CurrentStatusMatches
-
 →   Test Warehouse/Operations/Parcel.StatusIsKnown
-
 <span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.3s</span>
-
 <span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  7.5s</span>
-
   Execute                                                                                                  7.7s
-
   Record what the run did                                                                                  0.5s
-
 <span class="terminal-status-green">✓ Test                                                                                                    10.7s</span>
 
 <span class="terminal-status-green">test passed</span>
@@ -404,11 +353,8 @@ weaver health --item Warehouse/Operations
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
   Read catalogue                                                                                           2.6s
-
   Check installed items                                                                                    0.1s
-
   Read installed objects                                                                                   0.3s
-
 <span class="terminal-status-green">✓ Health                                                                                                   3.0s</span>
 
 <span class="terminal-status-green">Weaver Health  Green</span>

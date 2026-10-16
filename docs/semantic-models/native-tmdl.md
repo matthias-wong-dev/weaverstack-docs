@@ -84,37 +84,26 @@ Catalogue  none
 Targets
   SemanticModel/Parcel
 
+
 Build
 
     Create SemanticModel/Parcel                                                                           20.6s
-
   Create Power BI items                                                                                   20.6s
-
   Resolve semantic data sources                                                                            0.0s
-
     Resolve SemanticModel/Parcel                                                                           0.0s
-
   Read target inventories                                                                                  0.1s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.1s
-
 Install selection
   SemanticModel/Parcel
     changed                 1
     selected for build      1
 
 →   SemanticModel/Parcel · Deploy semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.9s</span>
-
 →   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action                                20.5s</span>
-
   Install                                                                                                 41.4s
-
 <span class="terminal-status-green">✓ Build                                                                                                   1m02s</span>
 
 Installation
@@ -142,22 +131,16 @@ weaver load SemanticModel/Parcel
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Resolve semantic models                                                                                  0.5s
-
   Read catalogue                                                                                           0.0s
-
 Workspace  Weaver Example
 Catalogue  none
 Targets
   SemanticModel/Parcel
 
   Build run graph                                                                                          0.0s
-
 →   Load SemanticModel/Parcel
-
 <span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              4.8s</span>
-
   Execute                                                                                                  4.8s
-
 <span class="terminal-status-green">✓ Load                                                                                                     5.3s</span>
 
 <span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
@@ -215,24 +198,17 @@ Targets
   SemanticModel/Parcel
   Report/Parcel
 
+
 Build
 
     Create Report/Parcel                                                                                  20.9s
-
   Create Power BI items                                                                                   20.9s
-
   Resolve semantic data sources                                                                            0.0s
-
     Resolve SemanticModel/Parcel                                                                           0.0s
-
     Resolve Report/Parcel                                                                                  0.0s
-
   Read target inventories                                                                                  0.2s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.1s
-
 Install selection
   SemanticModel/Parcel
     changed                 1
@@ -242,23 +218,14 @@ Install selection
     selected for build      1
 
 →   SemanticModel/Parcel · Deploy semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.6s</span>
-
 →   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action
-
 <span class="terminal-status-green">✓   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action                 20.5s</span>
-
 →   Report/Parcel · Deploy Report definitions · 1 action
-
 <span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.3s</span>
-
 →   Report/Parcel · Verify deployed Report definitions · 1 action
-
 <span class="terminal-status-green">✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         20.6s</span>
-
   Install                                                                                                 1m22s
-
 <span class="terminal-status-green">✓ Build                                                                                                   1m43s</span>
 
 Installation
@@ -282,22 +249,16 @@ weaver load SemanticModel/Parcel
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Resolve semantic models                                                                                  0.7s
-
   Read catalogue                                                                                           0.0s
-
 Workspace  Weaver Example
 Catalogue  none
 Targets
   SemanticModel/Parcel
 
   Build run graph                                                                                          0.0s
-
 →   Load SemanticModel/Parcel
-
 <span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              7.0s</span>
-
   Execute                                                                                                  7.0s
-
 <span class="terminal-status-green">✓ Load                                                                                                     7.7s</span>
 
 <span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>

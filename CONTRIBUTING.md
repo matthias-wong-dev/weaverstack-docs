@@ -127,10 +127,12 @@ Pages display complete output through `cli-capture` markers. Their `id` resolves
 ```bash
 python tools/render_cli_captures.py --write
 python tools/render_cli_captures.py --check
-"$PRODUCT_PYTHON" -m pytest -q tools/test_cli_captures.py
+"$PRODUCT_PYTHON" -m pytest -q tools/test_cli_captures.py tools/test_terminal_presentation.py
 ```
 
-The renderer only escapes text and adds presentation classes. Generic Terminal/Terminal output labels are presentation, not invented terminal lines. Shell prompts are CSS-only, leaving command clipboard targets unchanged. Keep command/output widths aligned and place each TODO at the exact pending result or inspection step. Do not add transcript footers, raw-file links or JSON provenance links to tutorials; evidence remains available through the maintainer ledger. Compare every panel's complete text with its source, then review copied command bytes, mobile/local scrolling, both themes and no-JavaScript readability after regeneration. Strip ANSI again during privacy checks so identifiers split by styling cannot escape the scan. [Capture inventory](CAPTURE-INVENTORY.md) records live coverage and remaining limits.
+The renderer derives plain text from the retained sanitised ANSI streams before generating panels. Read streams as bytes and decode UTF-8 without universal-newline conversion: `\r` redraws the same row, while `\n` advances to the next. Retain actual internal blank lines. Keep ANSI evidence unchanged and verify every nonblank line when correcting text normalisation.
+
+The renderer escapes text and adds presentation classes. Generic Terminal/Terminal output labels are presentation, not invented terminal lines. The build hook in `tools/terminal_presentation.py` marks each independent shell command with `$` and continuation lines with `>`; CSS displays these outside clipboard-target text. Keep command/output widths aligned and place each TODO at the exact pending result or inspection step. Do not add transcript footers, raw-file links or JSON provenance links to tutorials; evidence remains available through the maintainer ledger. Compare every panel's complete text with its source, then review copied command bytes, mobile/local scrolling, both themes and no-JavaScript readability after regeneration. Strip ANSI again during privacy checks so identifiers split by styling cannot escape the scan. [Capture inventory](CAPTURE-INVENTORY.md) records live coverage and remaining limits.
 
 ## Validate the change
 

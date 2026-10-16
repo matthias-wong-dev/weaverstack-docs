@@ -1,7 +1,6 @@
 Load
 
   Read catalogue                                                                                           2.4s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
@@ -9,29 +8,18 @@ Targets
   SemanticModel/ParcelWarehouse
 
   Build run graph                                                                                          0.0s
-
 →   Load Warehouse/Operations/Parcel.StatusEvent
-
 →   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
-
 →   Load Warehouse/Operations/Parcel.LiveStatus
-
 ✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     2.9s
-
 ✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.4s
-
 →   Load SemanticModel/ParcelWarehouse
-
 ✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +0 ~0 -0 !0)                         4.6s
 
 warning: SemanticModel/ParcelWarehouse reads [warehouse-endpoint];operations, and no connection has that path. If the refresh fails, create a connection for it.
-
 ✗   Load SemanticModel/ParcelWarehouse                                                                     6.0s
-
   Execute                                                                                                 10.6s
-
   Record what the run did                                                                                  0.7s
-
 ✗ Load                                                                                                    13.7s
 
 load partially_succeeded: Warehouse/Operations, SemanticModel/ParcelWarehouse

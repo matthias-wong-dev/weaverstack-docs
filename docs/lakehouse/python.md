@@ -141,71 +141,43 @@ Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
+
 Build
 
   Check target occupancy                                                                                   0.0s
-
   Resolve semantic data sources                                                                            0.0s
-
   Read catalogue                                                                                           1.6s
-
     Read Warehouse/Catalogue inventory                                                                     0.0s
-
     Read Lakehouse/Landing inventory  (34.3s waiting for Spark)                                           58.3s
-
   Read target inventories                                                                                 58.3s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.2s
-
 Install selection
   Lakehouse/Landing
     new                     8
     selected for build      8
 
 →   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                                 3.1s</span>
-
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.6s</span>
-
 →   Lakehouse/Landing · Creating schemas · 1 action
-
 →   Lakehouse/Landing · Building objects · 1 action
-
 →   Lakehouse/Landing · Installing load and test artefacts · 8 actions
-
 →   Lakehouse/Landing · Removing unmanaged objects · 2 actions
-
 <span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        0.2s</span>
-
 <span class="terminal-status-green">✓   Lakehouse/Landing · Creating schemas · 1 action                                                        0.5s</span>
-
 →   Lakehouse/Landing · Building objects · 1 action
-
 <span class="terminal-status-green">✓   Lakehouse/Landing · Removing unmanaged objects · 2 actions                                             0.5s</span>
-
 <span class="terminal-status-green">✓   Lakehouse/Landing · Installing load and test artefacts · 8 actions                                     1.4s</span>
-
 <span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        1.5s</span>
-
 →   Lakehouse/Landing · Building objects · 1 action
-
 <span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        3.6s</span>
-
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        5.0s</span>
-
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-
 <span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.5s</span>
-
   Install                                                                                                 24.0s
-
 <span class="terminal-status-green">✓ Build                                                                                                   1m26s</span>
 
 Installation
@@ -229,32 +201,21 @@ weaver load Lakehouse/Landing
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
   Read catalogue                                                                                           2.3s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  35.4s
-
 →   Load Lakehouse/Landing/Files/Parcel.Events
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +1 ~0 -0 !0)                                      3.6s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +3 ~0 -0 !0)                                     12.2s</span>
-
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)                             12.1s</span>
-
   Execute                                                                                                 27.8s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Load                                                                                                    1m14s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
@@ -290,28 +251,19 @@ weaver test Lakehouse/Landing
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
   Read catalogue                                                                                           2.0s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Wait for Spark session                                                                                  33.0s
-
 →   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
-
 →   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
-
 <span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      13.2s</span>
-
 <span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    15.1s</span>
-
   Execute                                                                                                 13.0s
-
   Record what the run did                                                                                  0.0s
-
 <span class="terminal-status-green">✓ Test                                                                                                    59.1s</span>
 
 <span class="terminal-status-green">test passed</span>
@@ -335,11 +287,8 @@ weaver health --item Lakehouse/Landing
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
   Read catalogue                                                                                           2.2s
-
   Check installed items                                                                                    0.1s
-
   Read installed objects                                                                                   2.6s
-
 <span class="terminal-status-green">✓ Health                                                                                                   4.9s</span>
 
 <span class="terminal-status-green">Weaver Health  Green</span>

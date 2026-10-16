@@ -3,71 +3,43 @@ Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
+
 Build
 
   Check target occupancy                                                                                   0.0s
-
   Resolve semantic data sources                                                                            0.0s
-
   Read catalogue                                                                                           1.6s
-
     Read Warehouse/Catalogue inventory                                                                     0.0s
-
     Read Lakehouse/Landing inventory  (34.3s waiting for Spark)                                           58.3s
-
   Read target inventories                                                                                 58.3s
-
   Read semantic sources                                                                                    0.0s
-
   Prepare bundle                                                                                           0.2s
-
 Install selection
   Lakehouse/Landing
     new                     8
     selected for build      8
 
 →   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
-
 ✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                                 3.1s
-
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-
 ✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.6s
-
 →   Lakehouse/Landing · Creating schemas · 1 action
-
 →   Lakehouse/Landing · Building objects · 1 action
-
 →   Lakehouse/Landing · Installing load and test artefacts · 8 actions
-
 →   Lakehouse/Landing · Removing unmanaged objects · 2 actions
-
 ✓   Lakehouse/Landing · Building objects · 1 action                                                        0.2s
-
 ✓   Lakehouse/Landing · Creating schemas · 1 action                                                        0.5s
-
 →   Lakehouse/Landing · Building objects · 1 action
-
 ✓   Lakehouse/Landing · Removing unmanaged objects · 2 actions                                             0.5s
-
 ✓   Lakehouse/Landing · Installing load and test artefacts · 8 actions                                     1.4s
-
 ✓   Lakehouse/Landing · Building objects · 1 action                                                        1.5s
-
 →   Lakehouse/Landing · Building objects · 1 action
-
 ✓   Lakehouse/Landing · Building objects · 1 action                                                        3.6s
-
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-
 ✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        5.0s
-
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-
 ✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.5s
-
   Install                                                                                                 24.0s
-
 ✓ Build                                                                                                   1m26s
 
 Installation

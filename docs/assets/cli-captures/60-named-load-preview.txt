@@ -1,16 +1,13 @@
 Load (dry run)
 
   Read catalogue                                                                                           2.8s
-
 Workspace  Weaver Example
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-
   Execute                                                                                                  0.0s
-
 ✓ Load (dry run)                                                                                           2.8s
 
 plan succeeded: Lakehouse/Landing
