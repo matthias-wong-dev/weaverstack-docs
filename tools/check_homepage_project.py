@@ -17,6 +17,8 @@ class Illustration(HTMLParser):
         self.in_tree = False
         self.nodes = {}
         self.edges = set()
+        self.bands = []
+        self.bindings = set()
 
     def handle_starttag(self, tag, attrs):
         attrs = {key: value for key, value in attrs if value is not None}
@@ -26,6 +28,10 @@ class Illustration(HTMLParser):
             self.nodes[attrs["data-project-node"]] = attrs["data-logical-id"]
         if "data-project-edge" in attrs:
             self.edges.add(tuple(attrs["data-project-edge"].split("|")))
+        if "data-project-band" in attrs:
+            self.bands.append(attrs["data-project-band"])
+        if "data-project-binding" in attrs:
+            self.bindings.add(tuple(attrs["data-project-binding"].split("|")))
 
     def handle_endtag(self, tag):
         if tag == "pre":
@@ -62,7 +68,9 @@ def main():
     lines = "".join(html.tree).strip().splitlines()
     assert 12 <= len(lines) <= 18, "Homepage needs one compact project tree"
     assert lines[0] == "parcel/"
-    assert len(html.nodes) == 5 and len(html.edges) == 4
+    assert html.bands == ["Lakehouse", "Warehouse", "Semantic Model", "Report"]
+    assert len(html.nodes) == 7 and len(html.edges) == 4
+    assert html.bindings == {("model", "report")}
     with (
         tempfile.TemporaryDirectory(prefix="homepage-parcel-") as temp,
         OfflineInitialiser() as initialise,
@@ -94,7 +102,11 @@ def main():
             ),
         )
         graph = catalogue.dag()
-        selected = set(html.nodes.values())
+        selected = {
+            identity
+            for identity in html.nodes.values()
+            if identity.startswith(("Lakehouse/", "Warehouse/"))
+        }
         assert selected <= {str(node.identity) for node in graph.nodes}
         actual = set()
         for edge in graph.edges:
@@ -110,6 +122,10 @@ def main():
             )
         drawn = {(html.nodes[a], html.nodes[b]) for a, b in html.edges}
         assert drawn == actual, {"drawn": sorted(drawn), "actual": sorted(actual)}
+        model_id = WeaverItemId.parse(html.nodes["model"])
+        report_id = WeaverItemId.parse(html.nodes["report"])
+        assert not repository.semantic_models[model_id].source_references
+        assert repository.reports[report_id].model == model_id
         plan = LoadDag.from_catalogue(
             catalogue,
             items=[
@@ -122,7 +138,7 @@ def main():
             if a in order and b in order:
                 assert order.index(a) < order.index(b)
         print(
-            f"PASS: {len(lines)} tree lines, {len(selected)} logical nodes, {len(actual)} exact dependency edges; production LoadDag ordering verified offline"
+            f"PASS: {len(lines)} tree lines, four item bands, {len(html.nodes)} nodes, {len(actual)} exact data edges and native Report binding; production LoadDag ordering verified offline"
         )
         for upstream, downstream in sorted(actual):
             print(f"  {upstream} -> {downstream}")

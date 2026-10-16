@@ -35,23 +35,84 @@ A Weaver project is ordinary Python, SQL, TMDL and configuration files organised
     ├── Parcel.SemanticModel/
     └── Parcel.Report/</code></pre>
 </div>
-<figure class="project-overview-dag" aria-labelledby="parcel-dependencies" aria-describedby="parcel-edges">
+<figure class="project-overview-dag" aria-labelledby="parcel-dependencies">
 <figcaption class="project-overview-label" id="parcel-dependencies">How the work connects</figcaption>
-<p id="parcel-edges" hidden>In Lakehouse Landing, the Parcel.Events Folder feeds the Parcel.Event Table. Event feeds Parcel.CurrentStatus in the Lakehouse and, separately, the Parcel.LakehouseEvent logical Shortcut in Warehouse Operations. That Shortcut feeds Parcel.LakehouseCurrentStatus.</p>
-<div class="project-dag-node" data-project-node="folder" data-logical-id="Lakehouse/Landing/Files/Parcel.Events"><strong>Parcel.Events</strong><small>Landing · Python Folder</small></div>
-<div class="project-dag-arrow" data-project-edge="folder|event" aria-hidden="true">↓</div>
-<div class="project-dag-node" data-project-node="event" data-logical-id="Lakehouse/Landing/Tables/Parcel.Event"><strong>Parcel.Event</strong><small>Landing · Python Table</small></div>
-<svg class="project-dag-fork" viewBox="0 0 300 28" aria-hidden="true"><path d="M150 0 V12 M75 24 V12 H225 V24"/><path d="m71 20 4 4 4-4 M221 20 l4 4 4-4"/></svg>
-<div class="project-dag-branches">
-<div data-project-edge="event|current">
-<div class="project-dag-node" data-project-node="current" data-logical-id="Lakehouse/Landing/Tables/Parcel.CurrentStatus"><strong>Parcel.<wbr>CurrentStatus</strong><small>Landing · Spark SQL Table</small></div>
+<div class="project-diagram-scroll" tabindex="0" role="region" aria-label="Parcel dependency diagram; scroll horizontally on narrow screens">
+<svg class="parcel-diagram" viewBox="0 0 960 340" role="img" aria-labelledby="parcel-docs-title parcel-docs-desc">
+<title id="parcel-docs-title">A Parcel project across Fabric items</title>
+<desc id="parcel-docs-desc">Parcel.Events feeds Parcel.Event. Event branches to Lakehouse CurrentStatus and a Warehouse logical Shortcut, which feeds LakehouseCurrentStatus. The native Parcel semantic model has independent inline data and binds to the Parcel Report.</desc>
+<defs><marker id="parcel-docs-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--pv-blue)"/></marker></defs>
+<g data-project-band="Lakehouse" class="parcel-band band-0">
+<rect x="1" y="1" width="358" height="332" rx="10"/>
+<text class="parcel-band-title" x="16" y="32">Lakehouse</text>
+<text class="parcel-band-sub" x="16" y="56">Landing · Parcel</text>
+</g>
+<g data-project-band="Warehouse" class="parcel-band band-1">
+<rect x="371" y="1" width="268" height="332" rx="10"/>
+<text class="parcel-band-title" x="386" y="32">Warehouse</text>
+<text class="parcel-band-sub" x="386" y="56">Operations · Parcel</text>
+</g>
+<g data-project-band="Semantic Model" class="parcel-band band-2">
+<rect x="651" y="1" width="143" height="332" rx="10"/>
+<text class="parcel-band-title" x="666" y="28">Semantic<tspan x="666" dy="22"> Model</tspan></text>
+<text class="parcel-band-sub" x="666" y="78">Parcel</text>
+</g>
+<g data-project-band="Report" class="parcel-band band-3">
+<rect x="806" y="1" width="143" height="332" rx="10"/>
+<text class="parcel-band-title" x="821" y="32">Report</text>
+<text class="parcel-band-sub" x="821" y="56">Parcel</text>
+</g>
+<path class="parcel-edge" data-project-edge="folder|event" d="M116 164 H132" marker-end="url(#parcel-docs-arrow)"/>
+<path class="parcel-edge" data-project-edge="event|current" d="M232 164 H240 V108 H248" marker-end="url(#parcel-docs-arrow)"/>
+<path class="parcel-edge" data-project-edge="event|shortcut" d="M232 164 H386" marker-end="url(#parcel-docs-arrow)"/>
+<path class="parcel-edge" data-project-edge="shortcut|consumer" d="M498 164 H514" marker-end="url(#parcel-docs-arrow)"/>
+<path class="parcel-edge parcel-binding" data-project-binding="model|report" d="M778 268 H821" marker-end="url(#parcel-docs-arrow)"/>
+<g class="parcel-node parcel-file" data-project-node="folder" data-logical-id="Lakehouse/Landing/Files/Parcel.Events">
+<rect x="16" y="132" width="100" height="76" rx="8"/>
+<text class="parcel-node-title" style="font-size:18px" x="66.0" y="156">Events</text>
+<text class="parcel-node-sub" x="66.0" y="179">Python</text>
+<text class="parcel-node-sub" x="66.0" y="197">Folder</text>
+</g>
+<g class="parcel-node parcel-table" data-project-node="event" data-logical-id="Lakehouse/Landing/Tables/Parcel.Event">
+<rect x="132" y="132" width="100" height="76" rx="8"/>
+<text class="parcel-node-title" style="font-size:18px" x="182.0" y="156">Event</text>
+<text class="parcel-node-sub" x="182.0" y="179">Python</text>
+<text class="parcel-node-sub" x="182.0" y="197">Table</text>
+</g>
+<g class="parcel-node parcel-table" data-project-node="current" data-logical-id="Lakehouse/Landing/Tables/Parcel.CurrentStatus">
+<rect x="248" y="76" width="96" height="76" rx="8"/>
+<text class="parcel-node-title" style="font-size:18px" x="296.0" y="101">Current</text>
+<text class="parcel-node-title" style="font-size:18px" x="296.0" y="120">Status</text>
+<text class="parcel-node-sub" x="296.0" y="139">Spark SQL</text>
+</g>
+<g class="parcel-node parcel-shortcut" data-project-node="shortcut" data-logical-id="Warehouse/Operations/Parcel.LakehouseEvent">
+<rect x="386" y="132" width="112" height="76" rx="8"/>
+<text class="parcel-node-title" style="font-size:17px" x="442.0" y="157">Lakehouse</text>
+<text class="parcel-node-title" style="font-size:18px" x="442.0" y="176">Event</text>
+<text class="parcel-node-sub" x="442.0" y="195">Shortcut</text>
+</g>
+<g class="parcel-node parcel-table" data-project-node="consumer" data-logical-id="Warehouse/Operations/Parcel.LakehouseCurrentStatus">
+<rect x="514" y="132" width="112" height="76" rx="8"/>
+<text class="parcel-node-title" style="font-size:17px" x="570.0" y="151">Lakehouse</text>
+<text class="parcel-node-title" style="font-size:18px" x="570.0" y="168">Current</text>
+<text class="parcel-node-title" style="font-size:18px" x="570.0" y="185">Status</text>
+<text class="parcel-node-sub" x="570.0" y="201">T-SQL</text>
+</g>
+<g class="parcel-node parcel-model" data-project-node="model" data-logical-id="SemanticModel/Parcel">
+<rect x="666" y="236" width="112" height="76" rx="8"/>
+<text class="parcel-node-title" style="font-size:18px" x="722.0" y="267">Parcel</text>
+<text class="parcel-node-sub" x="722.0" y="299">Inline data</text>
+</g>
+<g class="parcel-node parcel-report" data-project-node="report" data-logical-id="Report/Parcel">
+<rect x="821" y="236" width="112" height="76" rx="8"/>
+<text class="parcel-node-title" style="font-size:18px" x="877.0" y="260">Parcel</text>
+<text class="parcel-node-sub" x="877.0" y="283">Native</text>
+<text class="parcel-node-sub" x="877.0" y="301">Report</text>
+</g>
+<text class="parcel-binding-label" x="800" y="256">binds</text>
+</svg>
 </div>
-<div data-project-edge="event|shortcut">
-<div class="project-dag-node" data-project-node="shortcut" data-logical-id="Warehouse/Operations/Parcel.LakehouseEvent"><strong>Parcel.<wbr>LakehouseEvent</strong><small>Operations · Logical Shortcut</small></div>
-<div class="project-dag-arrow" data-project-edge="shortcut|consumer" aria-hidden="true">↓</div>
-<div class="project-dag-node" data-project-node="consumer" data-logical-id="Warehouse/Operations/Parcel.LakehouseCurrentStatus"><strong>Parcel.<wbr>Lakehouse<wbr>CurrentStatus</strong><small>Operations · T-SQL Table</small></div>
-</div>
-</div>
+<p class="project-diagram-note">The native Power BI pair uses its own inline sample data.</p>
 </figure>
 </div>
 
