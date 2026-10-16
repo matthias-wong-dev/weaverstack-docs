@@ -145,31 +145,35 @@ input {
   opacity: 1;
 }
 
-.md-header__button.md-logo {
-  width: 2.05rem;
-  height: 1.5rem;
-  margin: 0 0.55rem 0 0;
-  padding: 0;
+.md-header__title.weaver-header-brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 0;
+  min-width: 0;
 }
 
-@media screen and (min-width: 76.25em) {
-  .md-header__button.md-logo {
-    display: flex;
-    align-items: center;
-  }
+.weaver-header-brand .weaver-mark {
+  flex: 0 0 30px;
+}
+
+.weaver-header-brand .md-header__ellipsis {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .weaver-mark {
   display: block;
-  width: 1.8rem;
-  max-width: 36px;
+  width: 30px;
+  max-width: 30px;
 }
 
 .md-logo .weaver-mark img,
 .md-nav__title .md-logo .weaver-mark img {
   display: block;
   width: 100%;
-  max-width: 36px;
+  max-width: 30px;
   height: auto;
 }
 
@@ -203,6 +207,12 @@ input {
 
 .weaver-home-link:hover {
   color: var(--weaver-blue);
+}
+
+@media screen and (max-width: 37.5em) {
+  .weaver-home-link {
+    display: none;
+  }
 }
 
 /* Navigation uses weight and a blue keyline rather than marketing-card treatments. */
