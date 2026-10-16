@@ -46,7 +46,7 @@ Keep thresholds aligned with the scale and expected churn of each Table. A thres
 After confirming that the selected change is intended, a narrow invocation can use:
 
 ```bash
-weaver load Warehouse/Operations --name 'Parcel[.]Status' --ignore-stability-threshold --workspace-config workspace-dev.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Status' --ignore-stability-threshold --workspace-config workspace-development.yml
 ```
 
 This example is not a default recovery recipe. It permits a change that the Table's update/delete limits would otherwise refuse. Whole-name selection and any requested expansion still define the reached scope. Null/unique-key checks are not waived, and partial-state consequences remain. Use the [Load reference](../reference/operation-behaviour/load.md) for its exact boundary.

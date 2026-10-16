@@ -24,29 +24,29 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-c
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
-  Read catalogue                                                                                           2.5s
-  Check installed items                                                                                    0.2s
-  Read installed objects                                                                                   2.5s
-<span class="terminal-status-green">✓ Health                                                                                                   5.1s</span>
+  Read catalogue                                                                                           2.6s
+  Check installed items                                                                                    0.1s
+  Read installed objects                                                                                   3.0s
+<span class="terminal-status-green">✓ Health                                                                                                   5.8s</span>
 
 <span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 3m ago
-<span class="terminal-status-green">  6 succeeded</span>
+<span class="terminal-status-green">  8 succeeded</span>
 
 <span class="terminal-status-green">Tests   Green</span>
 <span class="terminal-status-green">  4 succeeded</span>
 
 <span class="terminal-status-green">Build   Green</span>
-  Installed estate consistent (26 objects)
+  Installed estate consistent (29 objects)
 
 Slowest loads
-  Lakehouse/Landing/Tables/Parcel.Event          14.5s
-  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
-  Warehouse/Operations/Parcel.StatusEvent        5.5s
-  Warehouse/Operations/Parcel.LiveStatus         3.1s
-  Lakehouse/Landing/Files/Parcel.Events          3.1s
+  Lakehouse/Landing/Tables/Parcel.Event          12.8s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  7.6s
+  Warehouse/Operations/Parcel.StatusEvent        5.0s
+  Warehouse/Operations/Parcel.LiveStatus         5.0s
+  Lakehouse/Landing/Files/Parcel.StatusFiles     2.9s
 
 Largest changes
   Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0
@@ -75,16 +75,16 @@ For example, after loading the connected Parcel items but before rerunning Test,
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
-  Read catalogue                                                                                           2.3s
+  Read catalogue                                                                                           2.8s
   Check installed items                                                                                    0.2s
-  Read installed objects                                                                                   3.0s
-<span class="terminal-status-green">✓ Health                                                                                                   5.5s</span>
+  Read installed objects                                                                                   3.2s
+<span class="terminal-status-green">✓ Health                                                                                                   6.1s</span>
 
 <span class="terminal-status-amber">Weaver Health  Amber</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 0m ago
-<span class="terminal-status-green">  6 succeeded</span>
+<span class="terminal-status-green">  8 succeeded</span>
 
 <span class="terminal-status-amber">Tests   Amber</span>
 <span class="terminal-status-green">  4 succeeded</span>
@@ -98,14 +98,14 @@ For example, after loading the connected Parcel items but before rerunning Test,
 <span class="terminal-status-green">          Warehouse/Operations/Parcel.StatusEvent has been loaded since this validation passed</span>
 
 <span class="terminal-status-green">Build   Green</span>
-  Installed estate consistent (26 objects)
+  Installed estate consistent (29 objects)
 
 Slowest loads
-  Lakehouse/Landing/Tables/Parcel.Event          14.5s
-  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
-  Warehouse/Operations/Parcel.StatusEvent        5.5s
-  Warehouse/Operations/Parcel.LiveStatus         3.1s
-  Lakehouse/Landing/Files/Parcel.Events          3.1s
+  Lakehouse/Landing/Tables/Parcel.Event          12.8s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  7.6s
+  Warehouse/Operations/Parcel.StatusEvent        5.0s
+  Warehouse/Operations/Parcel.LiveStatus         5.0s
+  Lakehouse/Landing/Files/Parcel.StatusFiles     2.9s
 
 Largest changes
   Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0
@@ -124,15 +124,15 @@ The [Warehouse failure exercise](../warehouse/tests.md#optional-make-one-discrep
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
-  Read catalogue                                                                                           2.2s
-  Check installed items                                                                                    0.2s
-  Read installed objects                                                                                   0.3s
-<span class="terminal-status-green">✓ Health                                                                                                   2.6s</span>
+  Read catalogue                                                                                           2.6s
+  Check installed items                                                                                    0.1s
+  Read installed objects                                                                                   0.7s
+<span class="terminal-status-green">✓ Health                                                                                                   3.4s</span>
 
 <span class="terminal-status-red">Weaver Health  Red</span>
 
 <span class="terminal-status-green">Load    Green</span>
-  Last load activity   0h 3m ago
+  Last load activity   0h 1m ago
 <span class="terminal-status-green">  1 succeeded</span>
 
 <span class="terminal-status-red">Tests   Red</span>
@@ -144,7 +144,7 @@ The [Warehouse failure exercise](../warehouse/tests.md#optional-make-one-discrep
   Installed estate consistent (10 objects)
 
 Slowest loads
-  Warehouse/Operations/Parcel.StatusEvent     3.1s
+  Warehouse/Operations/Parcel.StatusEvent     4.9s
 
 Largest changes
   Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0

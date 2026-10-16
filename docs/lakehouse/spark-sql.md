@@ -2,7 +2,7 @@
 
 Keep the Python event pipeline and inspect its generated SQL transformation: the latest status for each parcel. Weaver installs it as another Delta Table and orders its Load after the event Table.
 
-Use the [Python project](python.md) in `parcel`, with `Files/Parcel__Events.py` and `Tables/Parcel__Event.py` already working. Initialise has already written the SQL file below in that same Landing item.
+Use the [Python project](python.md) in `parcel`. Initialise wrote this SQL file into the same Landing item, and the first Load already ran it.
 
 ## Inspect the current-status query {#add-the-current-status-query}
 
@@ -45,67 +45,21 @@ where `Event rank` = 1;
 
 The window selects the last event by sequence. Spark SQL Tables require explicit `Dependencies`, even when the query names the managed source. Here `Parcel.Event` is the Python Table from the previous page. A Spark SQL Table without managed inputs would use `Dependencies: []`; `Lineage` remains descriptive.
 
-## Run the transformation {#install-the-addition-and-run-it}
+## It already ran {#install-the-addition-and-run-it}
 
-Use the same workspace configuration and already published matching Environment:
+You do not need to run anything new. The first pipeline Load ran CurrentStatus straight after Event, because `Dependencies` names Event:
 
-```bash
-weaver check
-weaver build --item Lakehouse/Landing
-weaver load Lakehouse/Landing
-```
-
-<!-- cli-capture: {"id": "46-lakehouse-load", "title": "CurrentStatus · step from the first pipeline Load"} -->
-<p class="terminal-intro">The command returned:</p>
-<figure class="weaver-terminal" aria-label="CurrentStatus · step from the first pipeline Load">
-<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Load
-
-  Read catalogue                                                                                           2.3s
-Workspace  Weaver Example
-Catalogue  Warehouse/Catalogue
-Targets
-  Lakehouse/Landing
-
-  Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  35.4s
-→   Load Lakehouse/Landing/Files/Parcel.Events
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +1 ~0 -0 !0)                                      3.6s</span>
-→   Load Lakehouse/Landing/Tables/Parcel.Event
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +3 ~0 -0 !0)                                     12.2s</span>
+```text
+✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +3 ~0 -0 !0)
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)                             12.1s</span>
-  Execute                                                                                                 27.8s
-  Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Load                                                                                                    1m14s</span>
-
-<span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
-
-Load summary
-<span class="terminal-status-green">    3 succeeded</span>
-    0 failed
-    0 blocked
-  Rows
-    read                   6
-    inserted               6
-    updated                0
-    deleted                0
-    rejected               0
-
-  Workflow: [run-id]
-</code></pre>
-</figure>
-<!-- /cli-capture -->
-
-The first pipeline Load already ran this generated transformation after Event and read two current-status rows. Repeating the item-wide Load keeps that dependency order. Editing this project SQL does not itself require republishing the Environment.
-
-```bash
-weaver health --item Lakehouse/Landing
+✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)
 ```
+
+When you edit this query, the loop is the same as for Python: `weaver check`, `weaver build --item Lakehouse/Landing`, then `weaver load Lakehouse/Landing --stale` to rerun what the Build changed. Editing project SQL does not require republishing the Environment.
 
 ## Read the current statuses
 
-Query the same Lakehouse SQL analytics endpoint once CurrentStatus is visible:
+Query the Landing SQL analytics endpoint:
 
 ```sql
 select [Parcel ID], [Status], [Depot]
@@ -113,7 +67,7 @@ from [Parcel].[CurrentStatus]
 order by [Parcel ID];
 ```
 
-The live SQL query returned:
+The query returns:
 
 | Parcel ID | Status | Depot |
 | --- | --- | --- |

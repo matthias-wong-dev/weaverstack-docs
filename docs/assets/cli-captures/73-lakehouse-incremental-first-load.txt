@@ -1,26 +1,26 @@
 Load
 
-  Read catalogue                                                                                           2.3s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.6s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  32.0s
+  Wait for Spark session                                                                                  38.8s
 →   Load Lakehouse/Landing/Files/Parcel.Events
 →   Load Lakehouse/Landing/Files/Parcel.StatusFiles
-✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.4s
+✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      1.9s
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 2, +2 ~0 -0 !0)                                 4.3s
+✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 2, +2 ~0 -0 !0)                                 3.1s
 →   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
-✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                10.8s
+✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                11.0s
 ✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     13.4s
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.7s
-  Execute                                                                                                 23.4s
+✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.4s
+  Execute                                                                                                 21.9s
   Record what the run did                                                                                  0.0s
-✓ Load                                                                                                    1m07s
+✓ Load                                                                                                    1m12s
 
 load succeeded: Lakehouse/Landing
 
@@ -35,4 +35,4 @@ Load summary
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: 83232592471644c3bb4f4e00e2f4b9da

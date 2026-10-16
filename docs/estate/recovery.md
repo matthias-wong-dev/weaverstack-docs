@@ -2,11 +2,9 @@
 
 Recovery is a new operation against the state that remains. Correct the cause, choose the smallest operation that expresses the intended result, and verify the estate afterward. Build, Load, Test and workflows do not roll back completed work when a later step fails.
 
-Keep the project and selected configuration from the failed run. The named commands below are worked examples for the [Warehouse checkpoint](../warehouse/tests.md), whose loadable Table is `Parcel.StatusEvent`, not its `Parcel.CurrentStatus` View. For Landing/Operations, keep that estate and choose its actual Lakehouse identities; do not run a Warehouse example against it. State-based recovery does not require changing projects.
+Use the same project and configuration as the run that failed. The examples use the Parcel estate and `workspace-development.yml`; if you only have the Warehouse project, use `workspace-config.yml` instead. Named examples use `Parcel.StatusEvent`, the Operations Table; Views have no Load of their own.
 
-The commands below use `workspace-development.yml`. If you entered directly from the Warehouse task, replace that filename with its working `workspace-config.yml`; keep the failed run’s workspace and catalogue.
-
-Start with one Health report for the managed estate, using the failed command’s workspace configuration. It combines source-data state with registered model refreshes and validations:
+Start with Health. It shows source data, model refreshes and validations together:
 
 ```bash
 weaver health --workspace-config workspace-development.yml
@@ -29,7 +27,7 @@ After correcting source or a Fabric condition:
 
 ```bash
 weaver check
-weaver build . --workspace-config workspace-development.yml
+weaver build --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml
 ```
 
@@ -67,22 +65,79 @@ Remove only `--dry-run` if the selection is correct. This is a whole-name regex,
 Reload **empties each reached selected Table and resets its bookmark/progress before loading it**. Use it only when reconstruction from empty is intended:
 
 ```bash
-weaver load Warehouse/Operations \
-  --name 'Parcel[.]StatusEvent' \
-  --reload \
-  --dry-run \
-  --workspace-config workspace-development.yml
-
-weaver load Warehouse/Operations \
-  --name 'Parcel[.]StatusEvent' \
-  --reload \
-  --workspace-config workspace-development.yml
+weaver load Warehouse/Operations --name 'Parcel[.]StatusEvent' --reload --dry-run --workspace-config workspace-development.yml
 ```
 
-<!-- review-todo: reload-result -->
-!!! warning "TODO — capture this Reload plan and reconstruction result"
-    The preview and destructive Reload commands immediately above have not been run. Approve the exact disposable scope before capturing their output and reset/bookmark result; corrective Build and Test restoration are already verified.
-<!-- /review-todo -->
+<!-- cli-capture: {"id": "130-reload-preview", "title": "Reload preview · one Table"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Reload preview · one Table">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
+
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+  Execute                                                                                                  0.0s
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.7s</span>
+
+<span class="terminal-status-green">plan (reload) succeeded: Warehouse/Operations</span>
+
+    validated                load:Warehouse/Operations/Parcel.StatusEvent
+
+Plan
+    1 selected
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+The preview names exactly the Tables that will be emptied. Then run it:
+
+```bash
+weaver load Warehouse/Operations --name 'Parcel[.]StatusEvent' --reload --workspace-config workspace-development.yml
+```
+
+<!-- cli-capture: {"id": "131-reload", "title": "Reload · reconstruct StatusEvent from empty"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Reload · reconstruct StatusEvent from empty">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Load
+
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+→   Load Warehouse/Operations/Parcel.StatusEvent
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +3 ~0 -0 !0)                                    2.5s</span>
+  Execute                                                                                                  3.2s
+  Record what the run did                                                                                  0.4s
+<span class="terminal-status-green">✓ Load                                                                                                     6.3s</span>
+
+<span class="terminal-status-green">load (reload) succeeded: Warehouse/Operations</span>
+
+Load summary
+<span class="terminal-status-green">    1 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   3
+    inserted               3
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: e0d44df3ceb54cb48ac6f0446ab371f7
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+The three events were inserted into an empty Table (`+3`), each with a new `Row insert datetime`, and the Table's bookmark restarted from that Load.
 
 Plain named Reload follows its matching selection without expansion. Ancestors/descendants can deliberately enlarge the reached set and therefore enlarge the destructive scope. Folders cannot be reloaded; stale and reload cannot be combined. If execution fails after the reset or emptying step, the previous Table contents are not restored automatically.
 
@@ -122,7 +177,7 @@ A semantic-model refresh is Load work. Fix its source, connection or refresh con
 A definition or binding change needs Build instead. Select the model and linked Report through their project, after any source-data Build:
 
 ```bash
-weaver build . --item PowerBI/Parcel --workspace-config workspace-development.yml
+weaver build --item PowerBI/Parcel --workspace-config workspace-development.yml
 weaver load SemanticModel/Parcel --workspace-config workspace-development.yml
 weaver test SemanticModel/Parcel --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml
@@ -132,20 +187,69 @@ These commands assume the Parcel model and Report are in the project and configu
 
 ## Refresh a mirrored baseline
 
-Re-mirror **empties and reconstructs the destination catalogue and every selected destination target**, replacing local materialisations in that boundary. The source items remain untouched. Use it only to replace development with a fresh source baseline, after completing the same-workspace [Mirror prerequisites](mirror.md).
+Re-mirror **empties and reconstructs the destination catalogue and every selected destination target**, replacing local materialisations in that boundary. The source items remain untouched. Use it only to replace a mirrored development estate with a fresh source baseline. Run it with the mirror configuration from [Develop using Mirror](mirror.md), not the estate's own configuration:
 
 ```bash
-weaver mirror --workspace-config workspace-development.yml
+weaver mirror --workspace-config workspace-mirror.yml
 ```
 
-<!-- review-todo: remirror-result -->
-!!! warning "TODO — capture this re-mirror plan and resulting state"
-    This re-mirror has not been executed. Approve its full disposable reset scope, then capture its plan, confirmation and resulting Health; no live output should be inferred from the instructions.
-<!-- /review-todo -->
+<!-- cli-capture: {"id": "142-remirror", "title": "Mirror · replace the development baseline"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Mirror · replace the development baseline">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Mirror
 
-Inspect the displayed source catalogue, destination catalogue and target bindings. Confirm if that boundary is correct; decline if it is not. Mirror has no dry-run mode, and declining leaves the destinations unchanged.
+Workspace              Parcel Development
+Source catalogue       Warehouse/Catalogue
+Destination catalogue  Warehouse/CatalogueDev
+Targets
+  Warehouse/Operations → Warehouse/OperationsDev
 
-Mirror reconstructs the destination catalogue and selected targets. Local materialisations in that boundary are replaced; they are not preserved as a fallback. Run Health after Mirror, then Build any project changes that should become local.
+Empty these targets? This cannot be undone. [y/N] y
+
+Mirror
+
+  Planning the mirror                                                                                      1.5s
+→   Wipe Warehouse/CatalogueDev · 1 action
+→   Wipe Warehouse/OperationsDev · 1 action
+<span class="terminal-status-green">✓   Wipe Warehouse/CatalogueDev · 1 action                                                                 1.2s</span>
+→   Warehouse/CatalogueDev · Catalogue: creating schemas · 1 action
+<span class="terminal-status-green">✓   Warehouse/CatalogueDev · Catalogue: creating schemas · 1 action                                        0.0s</span>
+→   Warehouse/CatalogueDev · Catalogue: building objects · 24 actions
+<span class="terminal-status-green">✓   Wipe Warehouse/OperationsDev · 1 action                                                                1.3s</span>
+→   Reconstruct Warehouse/OperationsDev · 2 actions
+→   Recreate views over other items in Warehouse/OperationsDev · 1 action
+<span class="terminal-status-green">✓   Reconstruct Warehouse/OperationsDev · 2 actions                                                        0.2s</span>
+<span class="terminal-status-green">✓   Recreate views over other items in Warehouse/OperationsDev · 1 action                                  0.5s</span>
+<span class="terminal-status-green">✓   Warehouse/CatalogueDev · Catalogue: building objects · 24 actions                                      5.8s</span>
+→   Warehouse/CatalogueDev · Catalogue: updating catalogue definitions · 1 action
+<span class="terminal-status-green">✓   Warehouse/CatalogueDev · Catalogue: updating catalogue definitions · 1 action                          4.4s</span>
+→   Warehouse/CatalogueDev · Catalogue: finalising catalogue · 1 action
+<span class="terminal-status-green">✓   Warehouse/CatalogueDev · Catalogue: finalising catalogue · 1 action                                    0.7s</span>
+→   Recreate catalogue views in Warehouse/OperationsDev · 1 action
+<span class="terminal-status-green">✓   Recreate catalogue views in Warehouse/OperationsDev · 1 action                                         0.1s</span>
+→   Copy procedures and functions into Warehouse/OperationsDev · 1 action
+<span class="terminal-status-green">✓   Copy procedures and functions into Warehouse/OperationsDev · 1 action                                  0.3s</span>
+→   Warehouse/CatalogueDev · Forking the catalogue and binding items · 1 action
+<span class="terminal-status-green">✓   Warehouse/CatalogueDev · Forking the catalogue and binding items · 1 action                            7.9s</span>
+  Mirroring                                                                                               20.5s
+<span class="terminal-status-green">✓ Mirror                                                                                                  23.4s</span>
+
+Mirror complete
+  Catalogue  Warehouse/Catalogue → Warehouse/CatalogueDev
+  1 item mirrored
+  2 destinations emptied
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+Mirror shows the source catalogue, destination catalogue and target bindings before it asks. Confirm only if that boundary is correct. It has no dry-run mode; declining leaves the destinations unchanged.
+
+Any object that had become local in OperationsDev is borrowed again, so its development-only changes are gone. Run Health against the mirror configuration, then Build any project changes that should become local again:
+
+```bash
+weaver health --item Warehouse/Operations --workspace-config workspace-mirror.yml
+```
 
 ## Wipe only when the desired state is empty
 
@@ -154,18 +258,73 @@ Wipe is not rollback and is not the normal response to a failed Build or Load. I
 To empty this physical target while retaining the catalogue and removing that target’s claims, request `--unbind` explicitly and inspect the full settled plan:
 
 ```bash
-weaver wipe Warehouse/Operations \
-  --unbind \
-  --dry-run \
-  --workspace-config workspace-development.yml
+weaver wipe Warehouse/Operations --unbind --dry-run --workspace-config workspace-development.yml
 ```
 
-<!-- review-todo: wipe-result -->
-!!! warning "TODO — capture this Wipe preview and verified empty state"
-    No Wipe was run. Capture the preview above first; perform and verify the destructive step only after its exact disposable boundary is approved.
-<!-- /review-todo -->
+<!-- cli-capture: {"id": "150-wipe-preview", "title": "Wipe preview · one Warehouse, catalogue kept"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Wipe preview · one Warehouse, catalogue kept">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Wipe on Parcel Development
 
-If the displayed plan is the desired empty state, rerun without `--dry-run` and confirm it. Wipe target arguments are physical Fabric items, not logical Weaver item identities. Naming no target selects the physical estate recorded by the catalogue and retains the normal catalogue-removal default; preview that full boundary before authorising it. Semantic-model-only named Wipe instead resets the selected model definitions and retains the catalogue while removing their claims; it does not empty their sources or shared connections. Wipe is not transactional: completed or independent mutations remain after failure. Inspect remaining state before retrying uncertain destructive work.
+Empty
+  Warehouse/Operations
+
+Catalogue
+  Warehouse/Catalogue   preserved; claims for Warehouse/Operations unbound
+
+Nothing was changed.
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+If the plan is the empty state you want, run it without `--dry-run` and confirm:
+
+```bash
+weaver wipe Warehouse/Operations --unbind --workspace-config workspace-development.yml
+```
+
+<!-- cli-capture: {"id": "151-wipe", "title": "Wipe · empty Operations and remove its claims"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Wipe · empty Operations and remove its claims">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Wipe on Parcel Development
+
+Empty
+  Warehouse/Operations
+
+Catalogue
+  Warehouse/Catalogue   preserved; claims for Warehouse/Operations unbound
+
+Empty 1 item(s)? This cannot be undone. [y/N] y
+
+Wipe
+
+→   Wipe Warehouse/Operations · 1 action
+<span class="terminal-status-green">✓   Wipe Warehouse/Operations · 1 action                                                                   1.6s</span>
+→   Unbind catalogue claims in Warehouse/Catalogue · 1 action
+<span class="terminal-status-green">✓   Unbind catalogue claims in Warehouse/Catalogue · 1 action                                              6.1s</span>
+  Emptying Warehouse/Operations                                                                            7.8s
+<span class="terminal-status-green">✓ Wipe                                                                                                     9.9s</span>
+
+Wipe complete
+
+  Warehouse/Operations        emptied
+  Warehouse/Catalogue         catalogue preserved, claims unbound
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+Operations is now an empty Warehouse with no Weaver claims; the catalogue still holds Landing and any other items. To bring it back, Build and Load it as on first deployment:
+
+```bash
+weaver build --item Warehouse/Operations --workspace-config workspace-development.yml
+weaver load Lakehouse/Landing Warehouse/Operations --workspace-config workspace-development.yml
+```
+
+The first Build into a just-emptied Warehouse can fail with a Fabric `Snapshot isolation transaction failed` error while the service settles its metadata. Rerun the Build; it reconciles from the state that remains.
+
+Wipe target arguments are physical Fabric items, not logical Weaver item identities. Naming no target selects the physical estate recorded by the catalogue and retains the normal catalogue-removal default; preview that full boundary before authorising it. Semantic-model-only named Wipe instead resets the selected model definitions and retains the catalogue while removing their claims; it does not empty their sources or shared connections. Wipe is not transactional: completed or independent mutations remain after failure. Inspect remaining state before retrying uncertain destructive work.
 
 Exact Wipe catalogue handling, unbinding and authorisation rules are in [Wipe operation behaviour](../reference/operation-behaviour/wipe.md).
 

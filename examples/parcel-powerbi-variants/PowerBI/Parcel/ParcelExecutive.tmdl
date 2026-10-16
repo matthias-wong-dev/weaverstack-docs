@@ -6,4 +6,4 @@ table InternalCosts
 
 table Delivery
 	measure 'Delivery Count'
-		formatString: #,##0
+		formatString: 0 "delivered"

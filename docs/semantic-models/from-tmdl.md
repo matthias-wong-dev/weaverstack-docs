@@ -42,12 +42,55 @@ Use the [ordinary service licensing and permissions](native-tmdl.md). The inline
 ## 2. Deploy and refresh
 
 ```bash
-weaver check .
-weaver build . --item SemanticModel/ParcelSummary
+weaver check
+weaver build --item SemanticModel/ParcelSummary
 weaver load SemanticModel/ParcelSummary
 ```
 
-Inspect `ParcelSummary` through a supported native model-definition tool. After refresh, expect three rows in its Delivery partition and Delivery Count = 2. Check validates local shape, not M evaluation or service eligibility. Delete only the new model for cleanup.
+<!-- cli-capture: {"id": "95a-summary-build", "title": "Build · a model authored as one TMDL file"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Build · a model authored as one TMDL file">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Parcel Development
+Catalogue  none
+Targets
+  SemanticModel/ParcelSummary
+
+
+Build
+
+    Create SemanticModel/ParcelSummary                                                                    20.6s
+  Create Power BI items                                                                                   20.6s
+  Resolve semantic data sources                                                                            0.0s
+    Resolve SemanticModel/ParcelSummary                                                                    0.0s
+  Read target inventories                                                                                  0.2s
+  Read semantic sources                                                                                    0.0s
+  Prepare bundle                                                                                           0.0s
+Install selection
+  SemanticModel/ParcelSummary
+    changed                 1
+    selected for build      1
+
+→   SemanticModel/ParcelSummary · Deploy semantic definitions · 1 action
+<span class="terminal-status-green">✓   SemanticModel/ParcelSummary · Deploy semantic definitions · 1 action                                  21.0s</span>
+→   SemanticModel/ParcelSummary · Verify deployed semantic definitions · 1 action
+<span class="terminal-status-green">✓   SemanticModel/ParcelSummary · Verify deployed semantic definitions · 1 action                         20.5s</span>
+  Install                                                                                                 41.5s
+<span class="terminal-status-green">✓ Build                                                                                                   1m02s</span>
+
+Installation
+<span class="terminal-status-green">    2 succeeded</span>
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  adfdbe93e8e0f0fafa41c2439baf189510670bd6c74ac0ae45008dd9eda4afb1
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+After refresh, the Delivery table has three rows and Delivery Count = 2. Check validates local shape, not M evaluation or service eligibility.
+
+If the project has a [shared policy](shared-policy.md), it applies here too: ParcelSummary gains the Display calculation group. The standalone file is the model's own layer, so its explicit `formatString: 0` wins over the policy's `#,##0`, just as a same-name overlay would.
 
 ## 3. Generate from a managed source only when needed
 

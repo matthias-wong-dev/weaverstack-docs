@@ -15,3 +15,5 @@ table Display
 		dataType: string
 		sourceColumn: Name
 		summarizeBy: none
+	partition Display = calculationGroup
+		mode: import

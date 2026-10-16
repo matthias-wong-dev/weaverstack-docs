@@ -1,0 +1,30 @@
+
+Load
+
+[2m⋯[0m Load                                                                                                 [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    1.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    2.0s[0m                                                                                                                [0m Read catalogue                                                                                       [2m    2.7s[0m
+[2m⋯[0m Load                                                                                                 [2m    2.7s[0m                                                                                                               Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+[2m⋯[0m Load                                                                                                 [2m    2.7s[0m                                                                                                               [2m⋯[0m Build run graph                                                                                      [2m    0.0s[0m                                                                                                                [0m Build run graph                                                                                      [2m    0.0s[0m
+[2m⋯[0m Load                                                                                                 [2m    2.7s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    0.0s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    0.4s[0m                                                                                                               [2m→[0m   Load Warehouse/Operations/Parcel.StatusEvent
+[2m⋯[0m Execute                                                                                              [2m    0.7s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    1.4s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    2.4s[0m                                                                                                               [32m✓[0m   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +3 ~0 -0 !0)                                [2m    2.5s[0m
+[2m⋯[0m Execute                                                                                              [2m    3.2s[0m                                                                                                                [0m Execute                                                                                              [2m    3.2s[0m
+[2m⋯[0m Load                                                                                                 [2m    5.9s[0m                                                                                                               [2m⋯[0m Record what the run did                                                                              [2m    0.0s[0m                                                                                                               [2m⋯[0m Record what the run did                                                                              [2m    0.2s[0m                                                                                                                [0m Record what the run did                                                                              [2m    0.4s[0m
+[2m⋯[0m Load                                                                                                 [2m    6.3s[0m                                                                                                               [32m✓[0m Load                                                                                                 [2m    6.3s[0m
+
+load (reload) [32msucceeded[0m: Warehouse/Operations
+
+Load summary
+[32m    1 succeeded[0m
+[2m    0 failed[0m
+[2m    0 blocked[0m
+  Rows
+    read                   3
+    inserted               3
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: [2me0d44df3ceb54cb48ac6f0446ab371f7[0m

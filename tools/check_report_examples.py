@@ -45,7 +45,7 @@ def main():
     from weaver.operations.build import _item_bindings
 
     workspace = parse_workspace(
-        yaml.safe_load((fixture / "workspace-dev.yml").read_text())
+        yaml.safe_load((fixture / "workspace-development.yml").read_text())
     )
     model_only = _item_bindings(
         "SemanticModel/Parcel", workspace, repository=repository
@@ -71,8 +71,8 @@ def main():
                     assert not re.match(r"weaver (?:load|test) Report/", line)
                     counts["commands"] += 1
         for language, expected in (
-            ("yaml", fixture / "workspace-dev.yml"),
-            ("yaml", fixture / "workspace-prod.yml"),
+            ("yaml", fixture / "workspace-development.yml"),
+            ("yaml", fixture / "workspace-production.yml"),
             ("json", fixture / "PowerBI/Parcel/Parcel.Report/definition.pbir"),
         ):
             blocks = re.findall(

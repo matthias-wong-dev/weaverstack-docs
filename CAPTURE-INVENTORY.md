@@ -1,49 +1,52 @@
 # Live CLI capture inventory
 
-Live execution and documentation integration pass: **16 October 2026 (Australia/Canberra)**. The earlier named-example acceptance was offline; this pass additionally exercised the authorised **Weaver Example** disposable Fabric trial workspace. No production workspace, new capacity, tenant settings or new service connections were used.
+Full live walkthrough and capture refresh: **17 October 2026 (Australia/Canberra)**. Every tutorial and estate page was followed in reader order against the disposable **Weaver Example** Fabric workspace, starting from an empty workspace. All 73 terminal panels were recaptured from that run; earlier captures from runtime `bf908f4` were removed.
 
 ## Execution provenance
 
-- Runtime revision: `bf908f4754eca4d10a56afd218e9e18d423636d7`, unchanged throughout capture.
-- Installed package: built wheel `weaverstack-0.9.0.dev16746776803276843971-py3-none-any.whl`, **not a published PyPI release**.
-- Matching development runtime published to the existing Weaver Fabric Environment before Lakehouse Build/Load.
-- One continuing additive `parcel` project: Operations, then Landing and its distinct cross-item additions, external incremental sources, then native Power BI. Existing data-source files and bindings retained during model extension. Controlled validation changes were restored.
-- Commands, working context, statuses, timing and runtime provenance: [capture manifest](docs/assets/cli-captures/manifest.json). Complete sanitised text and ANSI streams live beside it. [SQL/API readbacks](docs/assets/cli-captures/readbacks.json) are separately labelled observations, not CLI transcripts or UI screenshots. Original raw evidence remains private.
+- Runtime: scratch integration `afb5b31c36498aeb8b70927e7f723de054225d5e` = Weaver `feat/catalogue-dashboard` (`5ecccde`) + the runtime commits from weaverstack PR #222 (`80af419b`, `89e93c78`, `bf908f47`, `fb725f76`, `1521ab9b`) + three Initialise fixes found during this pass (below). The Parcel generator these docs depend on is **not in Weaver `main`**; it exists only in PR #222.
+- Installed from a checkout wheel, then an editable checkout. The Fabric Environment was published with `--dev`. The docs show the PyPI command without `--dev`.
+- Captures display the workspace as `Parcel Development`. The managed-source captures (111–117) ran against `CatalogueBI`/`OperationsBI` in a separate Power BI-first project, so they would not overwrite the estate's Operations Warehouse; they display those items as `Catalogue`/`Operations`. Identifiers, run IDs, local paths and endpoint hosts are redacted. See the [manifest](docs/assets/cli-captures/manifest.json).
+- SQL, DAX, definition and notebook observations are recorded separately in [readbacks](docs/assets/cli-captures/readbacks.json).
 
-## Coverage and observed outcomes
+## Runtime fixes made during the pass
 
-| Capture | Live result | Integrated owners |
-| --- | --- | --- |
-| Warehouse Initialise, Check, Build, Load, Test, Health | Complete, captures 10–15. Three seeded event rows and two current-status rows independently queried. | [First Warehouse](docs/warehouse/first-project.md) |
-| Warehouse validation failure and restoration | Complete. Deliberate missing/unexpected pair, non-zero Test, Red Health, restored passing Test and Green Health; source-file mode also exercised. | [Warehouse Tests](docs/warehouse/tests.md), [Health](docs/estate/catalogue-and-health.md) |
-| Lakehouse Folder → Python Table → Spark SQL, validations and Health | Complete, captures 42–48, including matching runtime publication at 44. Real Spark execution and independent SQL-endpoint row readbacks. | [Python](docs/lakehouse/python.md), [Spark SQL](docs/lakehouse/spark-sql.md), [Tests](docs/lakehouse/tests.md) |
-| Warehouse external SQL changes and consumer bookmark | Complete, captures 30–36. Initial insert, source updates becoming target update/delete, unchanged Load and increasing first/changed/no-op bookmarks. | [Warehouse incremental processing](docs/warehouse/incremental.md) |
-| Lakehouse external files and consumer bookmark | Complete, captures 70–76. Real DFS source creation/mutation, initial publication, file update/deletion, target upsert/delete, clean `return None` no-op and increasing bookmarks. | [Lakehouse incremental processing](docs/lakehouse/incremental.md) |
-| Additive preservation and connected-item execution | Complete with an explicit local Shortcut merge workaround. Cross-item Check/Build/Load succeeded; both Warehouse current-status results matched. | [Connected items](docs/estate/connected-items.md) |
-| Health, named previews, ancestors/descendants, concurrency | Complete, captures 50–68. Stale successful Tests were Amber, failed Test was Red, scoped revalidation was Green. Named scopes and dependencies visible; no-match preview refused. Two independent capped Tests started before either completed. | [Health](docs/estate/catalogue-and-health.md), [Operate](docs/estate/operate.md), [Selections](docs/estate/selective-runs.md), [Concurrency](docs/estate/concurrency.md) |
-| Native model Build, refresh, DAX and annotation | Complete, captures 80–94. Explicit Catalogue-free configuration used within the same project. Actual DAX returned 2; foreign-key visibility changed only on Delivery; deliberate -1 measure failed, prior overlay restored and Test passed again. | [Native TMDL](docs/semantic-models/native-tmdl.md), [Validation](docs/semantic-models/validation.md) |
-| Report binding in development/production configurations | Complete within authorised workspace, captures 100–103. Readbacks verified `Parcel_Report_Dev` → `Parcel_Dev` and `Parcel_Report` → `Parcel`; both models refreshed and returned 2. Both configurations used Weaver Example, not two service workspaces. | [Report deployment](docs/reports/deploy.md), [Report environments](docs/reports/environments.md) |
-| Managed-source model and DAX/SQL reconciliation | **Partial:** source Build/Load and model Build/certification succeeded (110–113). Refresh failed (114): no explicit cloud/gateway connection with credentials for Operations. Health (126) records Load Red, Test pending, Build Green. Reconciliation and its discrepancy/restoration sequence were not run against an unrefreshed model. | [Managed sources](docs/semantic-models/managed-sources.md); the successful native validation captures remain in [Validation](docs/semantic-models/validation.md) |
-| Mirror plan/reset/result | **Not executed:** no reset/re-mirror destination scope approved. No Mirror, Wipe or reset was attempted. | Existing [Mirror guide](docs/estate/mirror.md) retained unchanged |
+These are needed for the documented commands to work from a normal `pip install`. They are committed only in the scratch integration above and must land in Weaver before release:
 
-Final scoped Lakehouse/Warehouse Test and Health (127–128) passed: four validations, Green Load/Tests/Build, 29 installed objects. The separate managed model remains failed/pending until its connection is supplied. Unrelated pre-existing Catalogue installations were not repaired or removed.
+1. **Bytecode in the installed example.** `pip` compiles the bundled Parcel `.py` files into `__pycache__`; the PR #222 example reader then fails with `UnicodeDecodeError` on any Lakehouse Initialise. Fix: skip `__pycache__`/`.pyc` when reading the example tree.
+2. **Authored `shortcuts.yml` on extension.** Adding Landing to a Warehouse project that already has an authored physical Shortcut refused with "would overwrite … Choose another project folder". Fix: merge generated Shortcut mappings into the authored file when no destination conflicts (conflicts still refuse). Resolves the former connected-items TODO.
+3. **Re-asked bindings on extension.** Interactive extension asked for the Catalogue and Environment again although `workspace-config.yml` bound them. Fix: the wizard takes configured bindings and existing items as answers.
 
-## Disagreements, substitutions and limits
+## Coverage and outcomes
 
-- **Authored Shortcut collision:** extending Operations after its incremental task refused the unowned `Warehouse/Operations/shortcuts.yml` (40). The capture protected that local file, ran extension, then merged its physical Source.Parcel mapping with the generated logical LakehouseEvent mapping before Check/Build (42–43). Existing Table/View bytes and physical bindings were retained. This is a real conservative generator refusal and an explicit workaround, not an unqualified straight-line success or a runtime fix.
-- **Health scope:** cross-item Load succeeded while older validations became stale (53). Subsequent Test and scoped Health passed (54, 56). Unscoped Health also exposed unrelated older installations (55); narrowing a report does not repair them.
-- **Source mutation context:** the external Lakehouse notebook file operations were executed through the real DFS API; the generated Folder/Table code ran in Fabric Spark. Ordinary SQL endpoint queries supplied independent target readbacks. Notebook UI attachment/cell interaction was not observed.
-- **Managed source checkpoint:** the measure and reconciliation Test from the next validation task were authored before batching the managed model Build. The manifest records that context. No result is claimed for the blocked comparison.
-- **Capture-harness failures:** initial PTY Initialise required recorded wizard responses; the first unfinished attempt was retained privately. A no-match command entered an interactive retry prompt and was terminated (67); its completed unattended diagnostic is 68. An accidentally appended workspace flag was rejected by Check (88); the documented Check was correct and the corrected capture is 88b. These are not successful tutorial outcomes.
-- **Service UI and second-workspace limits:** deployed model definitions, actual query results and Report bindings were read back. Report card rendering, the service field-list UI and cross-workspace access were not observed. No mock service screenshots were created.
-- Optional larger branching fixtures, shared-policy/custom-handler/composition walkthroughs and destructive recovery were not separately exercised live in this pass. Their existing offline example gates remain distinct evidence.
+| Route | Result |
+| --- | --- |
+| Warehouse first project, Tests (failure and restore, file mode), incremental (insert, update+cancel, no-op, bookmarks) | Complete. |
+| Lakehouse Python, Spark SQL, Tests, incremental with ParcelSourceArchive, notebook checks | Complete. The three notebook cells ran as real Fabric notebooks with the stated default Lakehouse attached; a deliberate failing control notebook reported Failed. |
+| Connected items, mappings, Health, operate, selective runs including the branching Reporting graph, concurrency | Complete. |
+| Session, workflow, bundle-only Build and Install | Complete (not shown as panels). |
+| Reload, Mirror, materialisation after Mirror, re-mirror, Wipe preview and Wipe with `--unbind`, rebuild after Wipe | Complete. The first rebuild after Wipe hit a transient Fabric `Snapshot isolation transaction failed`; rerunning Build succeeded (documented on the Recovery page). |
+| Native model, AutoHideForeignKeys, DAX Assumption (pass, fail, restore), shared policy, custom annotation and diagnostic, composition, standalone TMDL | Complete. Shared policy initially failed Build readback (`/model/tables/Display/partitions`); the documented calculation group now declares its `calculationGroup` partition. |
+| Report deploy and two configurations | Bindings and DAX verified in one workspace. |
+| Power BI-first project gaining a Catalogue and Warehouse | Complete through Build; the Catalogue-backed Build adopted the previously Catalogue-free `Parcel` model. |
 
-## Presentation and verification
+## Open TODOs (still marked on pages)
 
-Temporary yellow **TODO** markers sit at the specific missing command result, field check or UI action—not in generic page-top warnings. They name the exact output/check still needed, including optional live walkthroughs, destructive scope and released-package acceptance. Remove them before publication. Commands and their following outputs use matching-width terminal boxes; visual shell prompts do not enter copied code, and real output is introduced with “The command returned:” rather than custom visible result headings.
+| Marker | Blocker |
+| --- | --- |
+| `managed-refresh`, `parcel-native-source-refresh`, `dax-sql` | Need a credentialled cloud connection to the Operations SQL endpoint. None exists in the tenant; none was created. |
+| `report-workspaces` | Needs a second disposable workspace. |
+| `report-rendering`, `report-cards` | Need someone signed in to the Power BI service; Report export returns 403 on the trial capacity. |
 
-The existing pages now contain **51 authentic output panels across 17 pages**, backed by 81 recorded command attempts and 27 selected SQL/API observations. Attempt totals include deliberate failures and the two qualified harness attempts above; they are not a success count.
+## Product observations not changed in the runtime
 
-`tools/render_cli_captures.py` generates static escaped, selectable HTML from each complete plain-text capture. Shared `.weaver-terminal` CSS adds Weaver status colours, preserved glyphs and keyboard-focusable scrolling within a maximum height of `min(28rem, 60vh)`. Panels show the whole output directly, without summary excerpts, secondary disclosures, transcript footers or raw-file/JSON links. Evidence files and provenance remain available here for maintainers. Rendering needs no JavaScript or external service. Existing navigation, pages and runtime source are unchanged.
+- Initialise's closing hint always suggests `weaver fabric environment publish` and `weaver workflow full`, even for Warehouse-only projects.
+- Errors in an interactive terminal stop at `Enter to retry, Esc to exit`; a pasted next line becomes the answer. Pages that pair an expected error with a restore command say to run them one at a time.
+- Extending a project that contains the composition example's `ParcelBase.SemanticModel` adds a `SemanticModel/ParcelBase` target, which undoes the composition page's "no base target" setup.
+- `weaver mirror --workspace-config workspace-development.yml` (no `mirror:` key) reports "mirror needs a destination catalogue", which does not point at the missing source.
+- Build progress groups one Verify step as `SemanticModel/ParcelOperations, Report/ParcelExecutive` when deploying two variants.
+- Health shows a never-run installed DAX Assumption as "the last run pending".
 
-Checks and reader review are recorded in [live capture verification](acceptance/live-cli-captures/verification.md); the complete-output presentation follow-up is recorded in [presentation verification](acceptance/live-cli-captures/complete-output-presentation.md). Publication remains held for a matching released-package check and Matthias’s explicit approval. This pass does not authorise merging or public deployment.
+## Verification
+
+`render_cli_captures.py --check` (73 panels), `sync_initialise_examples.py --check`, the four reference generators, the reference/journey/Report/estate/homepage/semantic/Lakehouse example gates, `check_item_routes.py`, `check_fabric_first_story.py` (against the PR #222 product site), the tool unit tests, and a strict MkDocs build all pass. `check_docs_refresh_examples.py` is pinned to fixture provenance `74b4d15` and refuses another checkout by design; it was not run. All 327 documented `weaver …` commands parse with the runtime's CLI parser.

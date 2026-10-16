@@ -13,13 +13,13 @@ Use normal operation reports to identify attempted, succeeded, failed and blocke
 Use a Session or workflow's Fabric access timings:
 
 ```bash
-weaver session --workspace-config workspace-dev.yml --timings
+weaver session --workspace-config workspace-development.yml --timings
 ```
 
 Inside the Session, run the operation you are investigating, then exit to see its access timings. The accepted `verify` sequence from [workflows](automation-and-deployment.md#turn-the-accepted-sequence-into-a-workflow) can report timings with:
 
 ```bash
-weaver workflow verify --workspace-config workspace-dev.yml --timings
+weaver workflow verify --workspace-config workspace-development.yml --timings
 ```
 
 Review the workflow's commands and confirmation before running it. `--timings` belongs to Session and Workflow, not an invented Load flag. For catalogue-backed work, inspect the per-node report, `_.Log` and `_.LoadStatistic` alongside current status. History is not the same as current health.

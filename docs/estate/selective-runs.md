@@ -16,15 +16,15 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --dry-run --workspa
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
 
-  Read catalogue                                                                                           2.8s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
   Execute                                                                                                  0.0s
-<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.8s</span>
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.7s</span>
 
 <span class="terminal-status-green">plan succeeded: Lakehouse/Landing</span>
 
@@ -50,15 +50,15 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --ancestors --dry-r
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
 
-  Read catalogue                                                                                           2.0s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.6s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
   Execute                                                                                                  0.0s
-<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.0s</span>
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.6s</span>
 
 <span class="terminal-status-green">plan succeeded: Lakehouse/Landing</span>
 
@@ -82,15 +82,15 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
 
-  Read catalogue                                                                                           2.1s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.6s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
   Execute                                                                                                  0.0s
-<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.1s</span>
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.6s</span>
 
 <span class="terminal-status-green">plan succeeded: Lakehouse/Landing</span>
 
@@ -126,21 +126,21 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --wor
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           2.0s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  32.0s
+  Wait for Spark session                                                                                  35.8s
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     16.0s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     14.0s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.9s</span>
-  Execute                                                                                                 23.4s
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.1s</span>
+  Execute                                                                                                 19.1s
   Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Load                                                                                                    1m08s</span>
+<span class="terminal-status-green">✓ Load                                                                                                    1m06s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
 
@@ -155,7 +155,7 @@ Load summary
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: 22718af73f53453f9d758af309a2809c
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -176,17 +176,17 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]DoesNotExist' --dry-run --
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
 
-  Read catalogue                                                                                           2.2s
-Workspace  Weaver Example
+  Read catalogue                                                                                           7.4s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
 <span class="terminal-status-red">✗ Execute                                                                                                  0.0s</span>
-<span class="terminal-status-red">✗ Load (dry run)                                                                                           2.2s</span>
+<span class="terminal-status-red">✗ Load (dry run)                                                                                           7.4s</span>
 
-<span class="terminal-status-red">error: no installed loadable object in the requested items matches &#x27;Tables/Parcel[.]DoesNotExist&#x27;. Installed: Files/Parcel.Events, Tables/Parcel.CurrentStatus, Tables/Parcel.Event</span>
+<span class="terminal-status-red">error: no installed loadable object in the requested items matches &#x27;Tables/Parcel[.]DoesNotExist&#x27;. Installed: Files/Parcel.Events, Files/Parcel.StatusFiles, Tables/Parcel.CurrentStatus, Tables/Parcel.Event, Tables/Parcel.LiveStatus</span>
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -198,13 +198,13 @@ Check the installed names and item scope. In an interactive terminal, Esc leaves
 <details markdown="1">
 <summary>Optional: sibling prerequisites and a second Warehouse</summary>
 
-Extend the same project with these additional declarations. Keep its original pipelines and validations. Create or reuse a separate disposable Reporting Warehouse in your workspace and add `Warehouse/Reporting: Reporting` under the working configuration’s `targets`. Then create the following files; their names do not replace StatusEvent, CurrentStatus or the Lakehouse integration.
+This larger graph shows how expansion treats a sibling prerequisite and a second item. In the Fabric portal, create a Warehouse called **Reporting**, add `Warehouse/Reporting: Reporting` under `targets` in `workspace-development.yml`, then add these files. Their names do not collide with the Parcel pipeline you already have.
 
 ```sql title="Warehouse/Operations/Parcel.Daily.sql"
 /*
 Table ID: Parcel.Daily
-Description: Small parcel example table.
-Lineage: $Parcel.Events
+Description: Delivered parcels per depot.
+Lineage: Parcel.Events joined to the Reference.Depot list.
 */
 SELECT e.DepotId, SUM(e.Delivered) AS DeliveryCount FROM [Parcel].[Events] AS e JOIN [Reference].[Depot] AS d ON e.DepotId = d.DepotId GROUP BY e.DepotId
 ```
@@ -212,8 +212,8 @@ SELECT e.DepotId, SUM(e.Delivered) AS DeliveryCount FROM [Parcel].[Events] AS e 
 ```sql title="Warehouse/Operations/Parcel.Events.sql"
 /*
 Table ID: Parcel.Events
-Description: Small parcel example table.
-Lineage: $Parcel.RawEvents
+Description: Delivery events used by the daily summary.
+Lineage: Copied from Parcel.RawEvents.
 */
 SELECT ParcelId, DepotId, Delivered FROM [Parcel].[RawEvents]
 ```
@@ -221,8 +221,8 @@ SELECT ParcelId, DepotId, Delivered FROM [Parcel].[RawEvents]
 ```sql title="Warehouse/Operations/Parcel.RawEvents.sql"
 /*
 Table ID: Parcel.RawEvents
-Description: Small parcel example table.
-Lineage: Constant
+Description: One constant delivery event for this selection example.
+Lineage: A constant in this file.
 Schema:
   ParcelId: int
   DepotId: int
@@ -234,8 +234,8 @@ SELECT CAST(1 AS int) AS ParcelId, CAST(10 AS int) AS DepotId, CAST(1 AS int) AS
 ```sql title="Warehouse/Operations/Parcel.Summary.sql"
 /*
 Table ID: Parcel.Summary
-Description: Small parcel example table.
-Lineage: $Parcel.Daily
+Description: Total delivered parcels.
+Lineage: Summed from Parcel.Daily.
 */
 SELECT SUM(DeliveryCount) AS DeliveryCount FROM [Parcel].[Daily]
 ```
@@ -243,8 +243,8 @@ SELECT SUM(DeliveryCount) AS DeliveryCount FROM [Parcel].[Daily]
 ```sql title="Warehouse/Operations/Reference.Depot.sql"
 /*
 Table ID: Reference.Depot
-Description: Small parcel example table.
-Lineage: Constant
+Description: Depots that deliveries are counted against.
+Lineage: A constant in this file.
 Schema:
   DepotId: int
   DepotName: varchar(20)
@@ -255,8 +255,8 @@ SELECT CAST(10 AS int) AS DepotId, CAST('Central' AS varchar(20)) AS DepotName
 ```sql title="Warehouse/Operations/Reference.Service.sql"
 /*
 Table ID: Reference.Service
-Description: Small parcel example table.
-Lineage: Constant
+Description: Service levels. Nothing in this example reads it.
+Lineage: A constant in this file.
 Schema:
   ServiceId: int
   ServiceName: varchar(20)
@@ -267,8 +267,8 @@ SELECT CAST(1 AS int) AS ServiceId, CAST('Standard' AS varchar(20)) AS ServiceNa
 ```sql title="Warehouse/Reporting/Parcel.DashboardInput.sql"
 /*
 Table ID: Parcel.DashboardInput
-Description: Small parcel example table.
-Lineage: $Parcel.Summary
+Description: Delivered total presented to reporting.
+Lineage: Operations Parcel.Summary through a logical Shortcut.
 */
 SELECT DeliveryCount FROM [Parcel].[Summary]
 ```
@@ -278,11 +278,6 @@ logical:
   Warehouse/Reporting/Parcel.Summary: Warehouse/Operations/Parcel.Summary
 ```
 
-<!-- review-todo: branching -->
-!!! warning "TODO — capture the larger Warehouse/Reporting selection results"
-    Landing selections earlier on this page are verified. This optional extended graph has only passed offline checks: capture its Build/Load and the branching previews below before filling in their terminal results.
-<!-- /review-todo -->
-
 Install and preload the extended graph using the same estate configuration:
 
 ```bash
@@ -291,7 +286,63 @@ weaver build --item Warehouse/Operations --item Warehouse/Reporting --workspace-
 weaver load Warehouse/Operations Warehouse/Reporting --workspace-config workspace-development.yml
 ```
 
-Use its installed graph below. The guide uses this installed graph in `Warehouse/Operations`:
+<!-- cli-capture: {"id": "64c-branch-load", "title": "Load · both Warehouses, in dependency order"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · both Warehouses, in dependency order">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Load
+
+  Read catalogue                                                                                           3.0s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+  Warehouse/Reporting
+
+  Build run graph                                                                                          0.0s
+→   Load Warehouse/Operations/Parcel.RawEvents
+→   Load Warehouse/Operations/Reference.Depot
+→   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
+→   Load Warehouse/Operations/Parcel.LiveStatus
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.RawEvents  (read 1, +1 ~0 -0 !0)                                      2.2s</span>
+→   Load Warehouse/Operations/Parcel.Events
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Reference.Depot  (read 1, +1 ~0 -0 !0)                                       2.2s</span>
+→   Load Warehouse/Operations/Parcel.StatusEvent
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     2.5s</span>
+→   Load Warehouse/Operations/Reference.Service
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.Events  (read 1, +1 ~0 -0 !0)                                         1.3s</span>
+→   Load Warehouse/Operations/Parcel.Daily
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Reference.Service  (read 1, +1 ~0 -0 !0)                                     1.5s</span>
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +0 ~0 -0 !0)                         4.7s</span>
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.Daily  (read 1, +1 ~0 -0 !0)                                          1.8s</span>
+→   Load Warehouse/Operations/Parcel.Summary
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    3.5s</span>
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.Summary  (read 1, +1 ~0 -0 !0)                                        1.5s</span>
+→   Load Warehouse/Reporting/Parcel.DashboardInput
+<span class="terminal-status-green">✓   Load Warehouse/Reporting/Parcel.DashboardInput  (read 1, +1 ~0 -0 !0)                                  2.5s</span>
+  Execute                                                                                                  9.4s
+  Record what the run did                                                                                  0.5s
+<span class="terminal-status-green">✓ Load                                                                                                    12.9s</span>
+
+<span class="terminal-status-green">load succeeded: Warehouse/Operations, Warehouse/Reporting</span>
+
+Load summary
+<span class="terminal-status-green">   10 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                  12
+    inserted               7
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: 8b0ae5d889cd48d3a3fd852e4f0667f4
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+The rest of this section uses this installed graph in `Warehouse/Operations`:
 
 ```text
 Parcel.RawEvents → Parcel.Events → Parcel.Daily → Parcel.Summary
@@ -334,6 +385,40 @@ weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --descenda
 | Descendants | Events, Daily, Summary |
 | Both directions | RawEvents, Events, Daily, Summary |
 
+The combined preview returned:
+
+<!-- cli-capture: {"id": "65d-branch-both", "title": "Preview · ancestors and descendants of Parcel.Events"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Preview · ancestors and descendants of Parcel.Events">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
+
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+  Execute                                                                                                  0.0s
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.7s</span>
+
+<span class="terminal-status-green">plan succeeded: Warehouse/Operations</span>
+
+    validated                load:Warehouse/Operations/Parcel.RawEvents
+    validated                load:Warehouse/Operations/Parcel.Events
+                             after load:Warehouse/Operations/Parcel.RawEvents
+    validated                load:Warehouse/Operations/Parcel.Daily
+                             after load:Warehouse/Operations/Parcel.Events
+    validated                load:Warehouse/Operations/Parcel.Summary
+                             after load:Warehouse/Operations/Parcel.Daily
+
+Plan
+    4 selected
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
 **Both directions start from the original seeds separately. Their union does not add `Reference.Depot`, even though Daily reads it.** An omitted producer is not automatically refreshed. Expanded work runs in dependency order within the selected graph, including required supported barriers; unrelated sibling prerequisites do not become selected data work.
 
 ## 5. Run the selection you inspected
@@ -344,7 +429,46 @@ Remove only the preview flag:
 weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --workspace-config workspace-development.yml
 ```
 
-The report should show RawEvents and Events as attempted, with Events ordered after RawEvents. Daily, Summary, Depot and the Reporting item were not requested by that invocation. Inspect outcomes: an attempted node is not necessarily a successful one.
+<!-- cli-capture: {"id": "65e-branch-run-ancestors", "title": "Load · Parcel.Events and its producer"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · Parcel.Events and its producer">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Load
+
+  Read catalogue                                                                                           2.6s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+→   Load Warehouse/Operations/Parcel.RawEvents
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.RawEvents  (read 1, +1 ~0 -1 !0)                                      2.1s</span>
+→   Load Warehouse/Operations/Parcel.Events
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.Events  (read 1, +1 ~0 -1 !0)                                         1.5s</span>
+  Execute                                                                                                  3.8s
+  Record what the run did                                                                                  0.5s
+<span class="terminal-status-green">✓ Load                                                                                                     6.9s</span>
+
+<span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
+
+Load summary
+<span class="terminal-status-green">    2 succeeded</span>
+    0 failed
+    0 blocked
+  Rows
+    read                   2
+    inserted               2
+    updated                0
+    deleted                2
+    rejected               0
+
+  Workflow: 539f2beac4974f1eacbb765b5a97985a
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+RawEvents ran before Events; Daily, Summary, Depot and the Reporting item were not requested. Both Tables have no primary key, so each Load replaces their contents: `+1 ~0 -1` is the old row deleted and the new one inserted.
 
 The equivalent combined Python preview is:
 
@@ -370,6 +494,39 @@ The addition above declares `Warehouse/Reporting/Parcel.DashboardInput`, which c
 weaver load Warehouse/Operations Warehouse/Reporting --name 'Parcel[.]Events' --descendants --dry-run --workspace-config workspace-development.yml
 ```
 
+<!-- cli-capture: {"id": "65f-branch-cross-item", "title": "Preview · descendants across two Warehouses"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Preview · descendants across two Warehouses">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
+
+  Read catalogue                                                                                           2.6s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+  Warehouse/Reporting
+
+  Build run graph                                                                                          0.0s
+  Execute                                                                                                  0.0s
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           2.6s</span>
+
+<span class="terminal-status-green">plan succeeded: Warehouse/Operations, Warehouse/Reporting</span>
+
+    validated                load:Warehouse/Operations/Parcel.Events
+    validated                load:Warehouse/Operations/Parcel.Daily
+                             after load:Warehouse/Operations/Parcel.Events
+    validated                load:Warehouse/Operations/Parcel.Summary
+                             after load:Warehouse/Operations/Parcel.Daily
+    validated                load:Warehouse/Reporting/Parcel.DashboardInput
+                             after load:Warehouse/Operations/Parcel.Summary
+
+Plan
+    4 selected
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
 This selects Events, Daily and Summary in Operations, then DashboardInput in Reporting. It still omits RawEvents and Depot. Keep both current before that run. A Lakehouse-to-Warehouse equivalent may also need OneLake publication and SQL endpoint readiness; these are ordered by the supported installed graph, not replaced with an arbitrary delay.
 
 ## 7. Match several names and diagnose a refusal
@@ -381,7 +538,30 @@ weaver load Warehouse/Operations --name 'Parcel[.]Events' --name 'Reference[.]De
 weaver load Warehouse/Operations --name 'Parcel[.]DoesNotExist' --dry-run --workspace-config workspace-development.yml
 ```
 
-The second command is a no-match error, not an empty successful run. Check installed spelling and item scope. `Parcel.Events` leaves its dot as a regex wildcard; `[.]` expresses the literal identity.
+The first selects Events and Depot, then Daily, which waits for both, and Summary. The second is a no-match error, not an empty successful run, and lists the installed names:
+
+<!-- cli-capture: {"id": "65h-branch-no-match", "title": "Preview · no installed name matches"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Preview · no installed name matches">
+<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
+
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+<span class="terminal-status-red">✗ Execute                                                                                                  0.0s</span>
+<span class="terminal-status-red">✗ Load (dry run)                                                                                           2.7s</span>
+
+<span class="terminal-status-red">error: no installed loadable object in the requested items matches &#x27;Parcel[.]DoesNotExist&#x27;. Installed: Parcel.Daily, Parcel.Events, Parcel.LakehouseCurrentStatus, Parcel.LiveStatus, Parcel.RawEvents, Parcel.StatusEvent, Parcel.Summary, Reference.Depot, Reference.Service</span>
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+Check installed spelling and item scope. `Parcel.Events` leaves its dot as a regex wildcard; `[.]` expresses the literal identity.
 
 Lakehouse identities can include `Tables/` or `Files/`. A bare identity can be ambiguous when both areas contain it. Use an area-qualified name, for example:
 

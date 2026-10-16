@@ -1,4 +1,0 @@
-workspace: Parcel BI Development
-targets:
-  SemanticModel/Parcel: Parcel_Dev
-  Report/Parcel: Parcel_Report_Dev

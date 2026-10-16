@@ -1,0 +1,13 @@
+Publish Environment
+
+  Build the Weaver wheel                                                                                   1.1s
+  Find the workspace                                                                                       0.3s
+  Find the Environment                                                                                     0.1s
+  Read the Environment definition                                                                         20.6s
+  Update the Environment definition                                                                       20.8s
+  Publish                                                                                                 6m03s
+✓ Publish Environment                                                                                     6m46s
+
+
+Published Weaver in Parcel Development
+  Weaver   weaverstack-0.9.0.dev2837301944677186410-py3-none-any.whl, built from this checkout

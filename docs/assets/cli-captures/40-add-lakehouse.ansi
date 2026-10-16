@@ -1,11 +1,0 @@
-
-Setting up the Weaver project
-
-[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.0s[0m                                                                                                               [2m⋯[0m Checking the workspace                                                                               [2m    0.0s[0m                                                                                                                [0m Checking the workspace                                                                               [2m    0.4s[0m
-[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.4s[0m                                                                                                               [2m⋯[0m Reading the Environment                                                                              [2m    0.0s[0m                                                                                                                [0m Reading the Environment                                                                              [2m    0.0s[0m
-[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.4s[0m                                                                                                               [2m⋯[0m Checking the project files                                                                           [2m    0.0s[0m                                                                                                               [31m✗[0m Checking the project files                                                                           [2m    0.0s[0m
-[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.4s[0m                                                                                                               [31m✗[0m Setting up the Weaver project                                                                        [2m    0.4s[0m
-
-[31merror:[0m Project setup would overwrite files in ./parcel:
-  Warehouse/Operations/shortcuts.yml
-Choose another project folder.

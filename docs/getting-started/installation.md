@@ -1,6 +1,6 @@
 # Installation
 
-Use Python 3.11 or later. Install Weaver in your Python environment and check the version:
+Weaver needs Python 3.11 or later. Install it into the Python environment you use for the project, ideally a virtual environment:
 
 <span id="install-the-documented-snapshot"></span>
 
@@ -8,32 +8,36 @@ Use Python 3.11 or later. Install Weaver in your Python environment and check th
 
 ```bash
 python -m pip install --upgrade weaverstack
+```
+
+```bash
 weaver --version
 ```
 
-The package provides the `weaver` command and Python library. `weaver --help` lists the commands.
+The package provides the `weaver` command and the `weaver` Python library. `weaver --help` lists the commands.
 
-## Configure Fabric access
+<span id="configure-fabric-access"></span>
 
-Choose the item you want to work on:
+## Sign in for the operation
 
-- [Lakehouse: a CSV file into a Delta Table](../lakehouse/python.md).
-- [Warehouse: a SQL Table and View](../warehouse/first-project.md).
-- [Semantic model: deploy native TMDL and add a modelling rule](../semantic-models/native-tmdl.md).
-- [Report: deploy a native Report with its model](../reports/deploy.md).
+The `weaver` command signs in with the first credential that works: a configured service principal, then an existing Azure CLI sign-in, then interactive browser sign-in. On a desktop, either sign in with the Azure CLI first or let the first command open a browser:
 
-Each task gives its workspace rights, capacity and setup requirements where you need them.
+```bash
+az login
+```
+
+The identity needs the workspace rights each task lists. Tasks state their own requirements, such as creating Warehouses, publishing an Environment or refreshing a semantic model, where you need them. [Unattended execution](../estate/automation-and-deployment.md) covers service principals and `--non-interactive` for jobs.
 
 ## Model and Report access
 
-Start with Semantic Models and Reports in an existing, suitably licensed Power BI service workspace without setting up a Fabric Warehouse, Lakehouse or Catalogue. This is distinct from the capacity needed for Fabric data workloads. See the [two operating modes](../semantic-models/index.md#two-ways-to-use-weaver-with-power-bi) and [model and Report requirements](../reference/power-bi/requirements-and-compatibility.md).
+Semantic models and Reports can run in an existing, suitably licensed Power BI workspace without a Fabric Warehouse, Lakehouse or Catalogue. Fabric data workloads need Fabric capacity. See the [two operating modes](../semantic-models/index.md#two-ways-to-use-weaver-with-power-bi) and [model and Report requirements](../reference/power-bi/requirements-and-compatibility.md).
 
 <span id="when-the-preview-needs-a-hosted-runtime"></span>
 
 ## Publish the Fabric runtime
 
-Lakehouse Spark work needs the same Weaver version locally and in its published Fabric Environment. The [first Python task](../lakehouse/python.md#check-build-and-load) shows that publication step before Build. Warehouse-only SQL does not need it.
+Lakehouse Python and Spark SQL run in Fabric Spark, so the Fabric Environment needs the same Weaver version you installed locally. The [first Lakehouse task](../lakehouse/python.md#check-build-and-load) publishes it with one command before its first Build. Warehouse T-SQL and Power BI-only work do not need it.
 
-## Sign in for the operation
+## Next
 
-The desktop CLI can use configured credentials, existing Azure CLI sign-in or interactive browser sign-in. Start with the normal interactive commands in the tutorials. [Unattended execution](../estate/automation-and-deployment.md) explains configured non-browser credentials and `--non-interactive` when you need a job rather than a desktop session.
+[Start with a first task](index.md). The [Warehouse Table and View](../warehouse/first-project.md) is the shortest first result.

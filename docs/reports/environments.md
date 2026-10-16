@@ -6,20 +6,20 @@ Continue from [Deploy a native Report](deploy.md) in the same `parcel` project. 
 
 ## Select the two destinations
 
-Create `workspace-dev.yml` and `workspace-prod.yml` for two existing disposable workspaces using the minimal configurations below. These inline-model destinations need no source workload. For an estate with Lakehouse or Warehouse items, copy the working configuration instead, retain its catalogue, runtime and source bindings, and change only the intended destinations. A production-labelled example is not a reason to use a real production workspace.
+Create `workspace-development.yml` and `workspace-production.yml` for two existing disposable workspaces. If you already have these files from the [estate pages](../estate/environments.md), add the two targets to each instead. These inline-model destinations need no source workload. For an estate with Lakehouse or Warehouse items, copy the working configuration instead, retain its catalogue, runtime and source bindings, and change only the intended destinations. A production-labelled example is not a reason to use a real production workspace.
 
-```yaml title="workspace-dev.yml"
-workspace: Parcel BI Development
+```yaml title="workspace-development.yml"
+workspace: Parcel Development
 targets:
   SemanticModel/Parcel: Parcel_Dev
   Report/Parcel: Parcel_Report_Dev
 ```
 
-```yaml title="workspace-prod.yml"
-workspace: Parcel BI Production
+```yaml title="workspace-production.yml"
+workspace: Parcel Production
 targets:
-  SemanticModel/Parcel: Parcel
-  Report/Parcel: Parcel_Report
+  SemanticModel/Parcel: Parcel_Production
+  Report/Parcel: Parcel_Report_Production
 ```
 
 `SemanticModel/Parcel` and `Report/Parcel` remain the logical items in both files. The Report's native `definition.pbir` still contains the [same `byPath`](deploy.md#start-with-the-linked-pair) to `../Parcel.SemanticModel`.
@@ -30,19 +30,19 @@ Use an identity with model/Report create or update and readback rights in each w
 
 <!-- review-todo: report-workspaces -->
 !!! warning "TODO — repeat these Builds in two authorised workspaces"
-    The captures below verify distinct physical pairs in Weaver Example only. Run these development and production configurations in two authorised workspaces and capture each Report’s actual workspace/model binding.
+    The captures below ran both configurations against one disposable workspace, so both show the development workspace name. Repeat them in two workspaces and capture each Report’s workspace and model binding.
 <!-- /review-todo -->
 
 ```bash
-weaver check .
-weaver build . --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-dev.yml
+weaver check
+weaver build --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-development.yml
 ```
 
 <!-- cli-capture: {"id": "100-report-development-build", "title": "Build · development pair and binding"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · development pair and binding">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Parcel Development
 Catalogue  none
 Targets
   SemanticModel/Parcel → SemanticModel/Parcel_Dev
@@ -52,14 +52,14 @@ Targets
 Build
 
     Create SemanticModel/Parcel_Dev                                                                       20.6s
-    Create Report/Parcel_Report_Dev                                                                       20.6s
-  Create Power BI items                                                                                   41.2s
+    Create Report/Parcel_Report_Dev                                                                       20.8s
+  Create Power BI items                                                                                   41.5s
   Resolve semantic data sources                                                                            0.0s
     Resolve SemanticModel/Parcel_Dev                                                                       0.0s
     Resolve Report/Parcel_Report_Dev                                                                       0.0s
   Read target inventories                                                                                  0.2s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.1s
+  Prepare bundle                                                                                           0.0s
 Install selection
   SemanticModel/Parcel
     changed                 1
@@ -69,51 +69,52 @@ Install selection
     selected for build      1
 
 →   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action
-<span class="terminal-status-green">✓   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action                                     20.8s</span>
+<span class="terminal-status-green">✓   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action                                     21.0s</span>
 →   SemanticModel/Parcel_Dev, Report/Parcel_Report_Dev · Verify deployed semantic definitions · 1 action
 <span class="terminal-status-green">✓   SemanticModel/Parcel_Dev, Report/Parcel_Report_Dev · Verify deployed semantic definitions · 1 action   20.5s</span>
 →   Report/Parcel_Report_Dev · Deploy Report definitions · 1 action
 <span class="terminal-status-green">✓   Report/Parcel_Report_Dev · Deploy Report definitions · 1 action                                       20.4s</span>
 →   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action
-<span class="terminal-status-green">✓   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action                              20.6s</span>
-  Install                                                                                                 1m22s
-<span class="terminal-status-green">✓ Build                                                                                                   2m03s</span>
+<span class="terminal-status-green">✓   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action                              21.9s</span>
+  Install                                                                                                 1m23s
+<span class="terminal-status-green">✓ Build                                                                                                   2m05s</span>
 
 Installation
 <span class="terminal-status-green">    4 succeeded</span>
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  fdca322af022d22becb26011d253df6e9d1dd198279fb3967138a4f4c26629a7
+  Bundle  d4da8e0cdf80545685fe83c06a61f3362febf0fdb2eb4bca4d3d7d46794c8e72
 </code></pre>
 </figure>
 <!-- /cli-capture -->
 
 ```bash
-weaver build . --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-prod.yml
+weaver build --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-production.yml
 ```
 
 <!-- cli-capture: {"id": "101-report-production-build", "title": "Build · production-labelled pair and binding"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · production-labelled pair and binding">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Parcel Development
 Catalogue  none
 Targets
-  SemanticModel/Parcel
-  Report/Parcel → Report/Parcel_Report
+  SemanticModel/Parcel → SemanticModel/Parcel_Production
+  Report/Parcel → Report/Parcel_Report_Production
 
 
 Build
 
-    Create Report/Parcel_Report                                                                           21.1s
-  Create Power BI items                                                                                   21.1s
+    Create SemanticModel/Parcel_Production                                                                20.7s
+    Create Report/Parcel_Report_Production                                                                20.6s
+  Create Power BI items                                                                                   41.3s
   Resolve semantic data sources                                                                            0.0s
-    Resolve SemanticModel/Parcel                                                                           0.0s
-    Resolve Report/Parcel_Report                                                                           0.0s
+    Resolve SemanticModel/Parcel_Production                                                                0.0s
+    Resolve Report/Parcel_Report_Production                                                                0.0s
   Read target inventories                                                                                  0.2s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.1s
+  Prepare bundle                                                                                           0.0s
 Install selection
   SemanticModel/Parcel
     changed                 1
@@ -122,23 +123,23 @@ Install selection
     changed                 1
     selected for build      1
 
-→   SemanticModel/Parcel · Deploy semantic definitions · 1 action
-<span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.6s</span>
-→   SemanticModel/Parcel, Report/Parcel_Report · Verify deployed semantic definitions · 1 action
-<span class="terminal-status-green">✓   SemanticModel/Parcel, Report/Parcel_Report · Verify deployed semantic definitions · 1 action          20.4s</span>
-→   Report/Parcel_Report · Deploy Report definitions · 1 action
-<span class="terminal-status-green">✓   Report/Parcel_Report · Deploy Report definitions · 1 action                                           20.3s</span>
-→   Report/Parcel_Report · Verify deployed Report definitions · 1 action
-<span class="terminal-status-green">✓   Report/Parcel_Report · Verify deployed Report definitions · 1 action                                  20.7s</span>
+→   SemanticModel/Parcel_Production · Deploy semantic definitions · 1 action
+<span class="terminal-status-green">✓   SemanticModel/Parcel_Production · Deploy semantic definitions · 1 action                              21.1s</span>
+→   SemanticModel/Parcel_Production, Report/Parcel_Report_Production · Verify deployed semantic definitions · 1 action
+<span class="terminal-status-green">✓   SemanticModel/Parcel_Production, Report/Parcel_Report_Production · Verify deployed semantic definitions · 1 action   20.5s</span>
+→   Report/Parcel_Report_Production · Deploy Report definitions · 1 action
+<span class="terminal-status-green">✓   Report/Parcel_Report_Production · Deploy Report definitions · 1 action                                20.4s</span>
+→   Report/Parcel_Report_Production · Verify deployed Report definitions · 1 action
+<span class="terminal-status-green">✓   Report/Parcel_Report_Production · Verify deployed Report definitions · 1 action                       20.9s</span>
   Install                                                                                                 1m22s
-<span class="terminal-status-green">✓ Build                                                                                                   1m43s</span>
+<span class="terminal-status-green">✓ Build                                                                                                   2m04s</span>
 
 Installation
 <span class="terminal-status-green">    4 succeeded</span>
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  2b7649788915c15a48ef067717f36925c5e9a765b6be9e6deff233c2e7c1fe7f
+  Bundle  ea59e275591475a55521dbcd19e15de9688bfcae3578803da7d2602929e2c973
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -149,16 +150,16 @@ Check each Report's actual service binding, including the workspace, not just th
 
 | Configuration | Workspace | Report | Linked semantic model |
 | --- | --- | --- | --- |
-| `workspace-dev.yml` | Parcel BI Development | `Parcel_Report_Dev` | `Parcel_Dev` |
-| `workspace-prod.yml` | Parcel BI Production | `Parcel_Report` | `Parcel` |
+| `workspace-development.yml` | Parcel Development | `Parcel_Report_Dev` | `Parcel_Dev` |
+| `workspace-production.yml` | Parcel Production | `Parcel_Report_Production` | `Parcel_Production` |
 
-In each workspace’s **lineage view**, follow the deployed Report’s semantic-model link. Confirm both its name and workspace against the table above. The production Report must link to the production model, not to the development one. The source `byPath` remains unchanged.
+In each workspace’s **lineage view**, follow the deployed Report’s semantic-model link. Confirm both its name and workspace against the table above. The production Report must link to `Parcel_Production`, not to the development model. The source `byPath` remains unchanged.
 
 For a viewing check, refresh each model with refresh permission, then open each Report with view/query permission:
 
 ```bash
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-prod.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-development.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-production.yml
 ```
 
 <!-- cli-capture: {"id": "103-report-production-refresh", "title": "Load · refresh the production-labelled model"} -->
@@ -169,16 +170,16 @@ weaver load SemanticModel/Parcel --workspace-config workspace-prod.yml
 
   Resolve semantic models                                                                                  0.5s
   Read catalogue                                                                                           0.0s
-Workspace  Weaver Example
+Workspace  Parcel Development
 Catalogue  none
 Targets
-  SemanticModel/Parcel
+  SemanticModel/Parcel → SemanticModel/Parcel_Production
 
   Build run graph                                                                                          0.0s
 →   Load SemanticModel/Parcel
-<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              4.8s</span>
-  Execute                                                                                                  4.9s
-<span class="terminal-status-green">✓ Load                                                                                                     5.4s</span>
+<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              7.1s</span>
+  Execute                                                                                                  7.1s
+<span class="terminal-status-green">✓ Load                                                                                                     7.6s</span>
 
 <span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
 
@@ -192,7 +193,7 @@ Load summary
 
 <!-- review-todo: report-cards -->
 !!! warning "TODO — check both rendered Delivery Count cards"
-    Open Parcel_Report_Dev and Parcel_Report after the refreshes above and confirm each card shows 2. DAX values and bindings are verified; the rendered cards are not.
+    Open Parcel_Report_Dev and Parcel_Report_Production after the refreshes above and confirm each card shows 2. Bindings and DAX values (2 from each model) are verified through the APIs; Report export is not available on the capture capacity and the service UI was not signed in.
 <!-- /review-todo -->
 
 DAX readback returned 2 from each refreshed model. Both Delivery Count cards should show **2**. Model refresh and Report rendering are separate checks from Build and binding; there is no Report Load or Test.
@@ -203,4 +204,4 @@ The Report now follows its model into each workspace without a source edit. When
 
 ## Remove only the example items
 
-If you created disposable pairs for this exercise, delete their Reports before their models. Keep both workspaces and any pre-existing items; if you updated an existing item, retain its original definition rather than treating deletion as cleanup.
+When you are done, delete the example Reports and models from both workspaces.

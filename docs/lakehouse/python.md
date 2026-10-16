@@ -4,20 +4,105 @@ Turn a carrier CSV export into a Delta Table using ordinary Python. Weaver manag
 
 ## Create the project
 
-[Install Weaver](../getting-started/installation.md). Use a disposable Fabric workspace on running capacity where you can create or modify a catalogue Warehouse, Lakehouse and Environment. Replace `Parcel Development` with that workspace:
+You need [Weaver installed](../getting-started/installation.md) and a disposable Fabric workspace on running capacity where you can create Warehouses, Lakehouses and Environments. The example uses `Parcel Development`; substitute your own.
 
-```bash
-weaver initialise \
-  --workspace "Parcel Development" \
-  --project-folder ./parcel \
-  --catalogue Catalogue \
-  --environment Weaver \
-  --lakehouse Landing \
-  --example Parcel
-cd parcel
-```
+=== "New project"
 
-Initialise writes the configuration, Environment definition, carrier Folder, Python Event Table, Spark SQL CurrentStatus Table and validations. Inspect the generated files below; you do not need to copy them into the project.
+    ```bash
+    weaver initialise \
+      --workspace "Parcel Development" \
+      --project-folder ./parcel \
+      --catalogue Catalogue \
+      --environment Weaver \
+      --lakehouse Landing \
+      --example Parcel
+    cd parcel
+    ```
+
+    Press Enter to skip the optional Warehouse, choose `1` to continue, and answer `n` to publishing the Environment; the next section publishes it.
+
+=== "Add to the Warehouse project"
+
+    If you already have the `parcel` project from the [Warehouse task](../warehouse/first-project.md), add Landing to it. From inside `parcel`:
+
+    ```bash
+    weaver initialise --workspace "Parcel Development" --project-folder . --lakehouse Landing --example Parcel
+    ```
+
+    Initialise reads the existing bindings, so it only asks you to confirm. Choose `1`, then answer `n` to publishing the Environment.
+
+    Your Warehouse files stay as they were. Initialise also adds a separately named Warehouse Table that reads Landing; [Connect items and dependencies](../estate/connected-items.md) uses it later.
+
+<details markdown="1">
+<summary>What adding Landing to the Warehouse project returns</summary>
+
+<!-- cli-capture: {"id": "42-add-lakehouse", "title": "Initialise · add Landing to the Warehouse project"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Initialise · add Landing to the Warehouse project">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Set up a Weaver project.
+
+Project
+
+  Project folder  .
+  Workspace       Parcel Development
+  Catalogue       Catalogue
+  Environment     Weaver
+  Lakehouse       Landing
+  Warehouse       Operations
+  Example         Parcel
+  Semantic Model  None
+
+1. Continue
+2. Change an answer
+3. Cancel
+Choose [1/2/3]: 1
+Publishing a Fabric Environment can take about 5 minutes.
+Publish the Environment now? [y/N]: n
+
+Setting up the Weaver project
+
+  Checking the workspace                                                                                   0.5s
+  Reading the Environment                                                                                  0.0s
+  Checking the project files                                                                               0.2s
+  Creating the Lakehouse Landing                                                                           2.5s
+  Writing the project files                                                                                0.0s
+<span class="terminal-status-green">✓ Setting up the Weaver project                                                                            3.1s</span>
+
+  Catalogue    Catalogue   already exists
+  Environment  Weaver      already exists
+  Lakehouse    Landing     created
+  Warehouse    Operations  already exists
+  Environment publication: deferred
+
+Weaver project ready in [local-path]/parcel.
+
+Next:
+
+  cd [local-path]/parcel
+
+Environment publication deferred.
+Publish it before the first build.
+
+  weaver fabric environment publish --path Environment/Weaver.Environment
+  weaver workflow full
+
+Or run individually:
+  weaver build
+  weaver load
+  weaver test
+  weaver health
+
+You can set this up again with:
+
+  weaver initialise --workspace &#x27;Parcel Development&#x27; --project-folder . --catalogue Catalogue --environment Weaver --lakehouse Landing --warehouse Operations --example Parcel --non-interactive
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+</details>
+
+Initialise writes the configuration, Environment definition, carrier Folder, Python Event Table, Spark SQL CurrentStatus Table and two validations. Open the generated files as you read; you do not need to copy them.
 
 ## Inspect the carrier export {#stage-the-carrier-export}
 
@@ -107,9 +192,9 @@ The Table reads the upstream Folder and casts Event sequence to the declared int
 weaver check
 ```
 
-<!-- cli-capture: {"id": "43-lakehouse-check", "title": "Check · continuing Parcel project"} -->
+<!-- cli-capture: {"id": "43-lakehouse-check", "title": "Check · Landing project"} -->
 <p class="terminal-intro">The command returned:</p>
-<figure class="weaver-terminal" aria-label="Check · continuing Parcel project">
+<figure class="weaver-terminal" aria-label="Check · Landing project">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Project valid.
 </code></pre>
@@ -118,15 +203,15 @@ weaver check
 
 Check validates the local declarations and dependency; it does not execute `read()` or deploy the project.
 
-Before the first remote Build, publish the generated Environment:
+The Folder and Table run in Fabric Spark, so publish the generated Environment once before the first Build. It adds your installed Weaver version to the Environment's libraries:
 
 ```bash
 weaver fabric environment publish --path Environment/Weaver.Environment
 ```
 
-This supplies the same Weaver version to the Spark runtime. Do it before the first Build; [runtime setup](runtime.md) explains when the packages need republishing.
+Fabric takes about five to seven minutes to publish an Environment. You only repeat this when you upgrade Weaver or change the Environment's libraries; [Running Python in Fabric](runtime.md) has the details.
 
-Then, from this project directory:
+Then install the Lakehouse definitions:
 
 ```bash
 weaver build --item Lakehouse/Landing
@@ -136,7 +221,7 @@ weaver build --item Lakehouse/Landing
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · Landing pipeline">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
@@ -146,49 +231,50 @@ Build
 
   Check target occupancy                                                                                   0.0s
   Resolve semantic data sources                                                                            0.0s
-  Read catalogue                                                                                           1.6s
-    Read Warehouse/Catalogue inventory                                                                     0.0s
-    Read Lakehouse/Landing inventory  (34.3s waiting for Spark)                                           58.3s
-  Read target inventories                                                                                 58.3s
+  Read catalogue                                                                                           6.3s
+    Read Warehouse/Catalogue inventory                                                                     0.4s
+    Read Lakehouse/Landing inventory                                                                       2.6s
+  Read target inventories                                                                                  3.3s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.2s
+  Prepare bundle                                                                                           0.1s
 Install selection
   Lakehouse/Landing
-    new                     8
-    selected for build      8
+    new                     15
+    selected for build      15
 
-→   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                                 3.1s</span>
+    Wait for Spark session                                                                                36.0s
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.6s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.5s</span>
 →   Lakehouse/Landing · Creating schemas · 1 action
+→   Lakehouse/Landing · Building objects · 2 actions
+→   Lakehouse/Landing · Creating shortcuts · 2 actions
+<span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 2 actions                                                       0.1s</span>
+→   Lakehouse/Landing · Installing load and test artefacts · 5 actions
+<span class="terminal-status-green">✓   Lakehouse/Landing · Installing load and test artefacts · 5 actions                                     0.2s</span>
+<span class="terminal-status-green">✓   Lakehouse/Landing · Creating schemas · 1 action                                                        3.9s</span>
 →   Lakehouse/Landing · Building objects · 1 action
-→   Lakehouse/Landing · Installing load and test artefacts · 8 actions
-→   Lakehouse/Landing · Removing unmanaged objects · 2 actions
-<span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        0.2s</span>
-<span class="terminal-status-green">✓   Lakehouse/Landing · Creating schemas · 1 action                                                        0.5s</span>
+<span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        1.1s</span>
 →   Lakehouse/Landing · Building objects · 1 action
-<span class="terminal-status-green">✓   Lakehouse/Landing · Removing unmanaged objects · 2 actions                                             0.5s</span>
-<span class="terminal-status-green">✓   Lakehouse/Landing · Installing load and test artefacts · 8 actions                                     1.4s</span>
-<span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        1.5s</span>
-→   Lakehouse/Landing · Building objects · 1 action
-<span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        3.6s</span>
+<span class="terminal-status-green">✓   Lakehouse/Landing · Building objects · 1 action                                                        2.7s</span>
+<span class="terminal-status-green">✓   Lakehouse/Landing · Creating shortcuts · 2 actions                                                    17.2s</span>
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        5.0s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        5.6s</span>
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.5s</span>
-  Install                                                                                                 24.0s
-<span class="terminal-status-green">✓ Build                                                                                                   1m26s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.4s</span>
+  Install                                                                                                 1m09s
+<span class="terminal-status-green">✓ Build                                                                                                   1m33s</span>
 
 Installation
-<span class="terminal-status-green">   18 succeeded</span>
+<span class="terminal-status-green">   15 succeeded</span>
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  aea0ca32e070c26bae008625e4564a7a2e7012b5fb759597dab0d2b1fa4efd66
+  Bundle  f804b536a13adf807f9923fa4b99f4b1ef4c64a9c2ac499787ac0f2c83d76685
 </code></pre>
 </figure>
 <!-- /cli-capture -->
+
+Desktop Lakehouse commands start a Fabric Spark session first; the `Wait for Spark session` line is that start-up, typically around half a minute. Load the Folder and both Tables:
 
 ```bash
 weaver load Lakehouse/Landing
@@ -200,21 +286,21 @@ weaver load Lakehouse/Landing
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           2.3s
-Workspace  Weaver Example
+  Read catalogue                                                                                           3.2s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  35.4s
+  Wait for Spark session                                                                                  35.9s
 →   Load Lakehouse/Landing/Files/Parcel.Events
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +1 ~0 -0 !0)                                      3.6s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +1 ~0 -0 !0)                                      3.1s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +3 ~0 -0 !0)                                     12.2s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +3 ~0 -0 !0)                                     12.1s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)                             12.1s</span>
-  Execute                                                                                                 27.8s
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)                             11.4s</span>
+  Execute                                                                                                 25.6s
   Record what the run did                                                                                  0.0s
 <span class="terminal-status-green">✓ Load                                                                                                    1m14s</span>
 
@@ -231,14 +317,14 @@ Load summary
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: d3e86d559e894acf8286840edd8a0bbc
 </code></pre>
 </figure>
 <!-- /cli-capture -->
 
 The item-wide run loads the carrier Folder, Event and CurrentStatus in order. Its six inserted entries comprise one CSV file, three event rows and two current-status rows.
 
-Run the generated checks before reading Health:
+Run the two generated validations, then read Health:
 
 ```bash
 weaver test Lakehouse/Landing
@@ -250,28 +336,28 @@ weaver test Lakehouse/Landing
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
-  Read catalogue                                                                                           2.0s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.9s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  33.0s
+  Wait for Spark session                                                                                  33.3s
 →   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
 →   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
-<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      13.2s</span>
-<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    15.1s</span>
-  Execute                                                                                                 13.0s
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                       9.4s</span>
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    11.1s</span>
+  Execute                                                                                                 10.7s
   Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Test                                                                                                    59.1s</span>
+<span class="terminal-status-green">✓ Test                                                                                                    54.2s</span>
 
 <span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    2 passed</span>
     0 failed
-  Workflow: [run-id]
+  Workflow: 4294ea0d4ddb47b89c1a03bf2606bc64
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -286,10 +372,10 @@ weaver health --item Lakehouse/Landing
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
-  Read catalogue                                                                                           2.2s
-  Check installed items                                                                                    0.1s
-  Read installed objects                                                                                   2.6s
-<span class="terminal-status-green">✓ Health                                                                                                   4.9s</span>
+  Read catalogue                                                                                           3.5s
+  Check installed items                                                                                    0.2s
+  Read installed objects                                                                                  13.8s
+<span class="terminal-status-green">✓ Health                                                                                                  17.5s</span>
 
 <span class="terminal-status-green">Weaver Health  Green</span>
 
@@ -304,9 +390,9 @@ weaver health --item Lakehouse/Landing
   Installed estate consistent (12 objects)
 
 Slowest loads
-  Lakehouse/Landing/Tables/Parcel.Event          12.2s
-  Lakehouse/Landing/Tables/Parcel.CurrentStatus  12.1s
-  Lakehouse/Landing/Files/Parcel.Events          3.6s
+  Lakehouse/Landing/Tables/Parcel.Event          12.1s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  11.4s
+  Lakehouse/Landing/Files/Parcel.Events          3.1s
 
 Largest changes
   Lakehouse/Landing/Tables/Parcel.Event          read 3  +3 ~0 -0 !0
@@ -316,10 +402,9 @@ Largest changes
 </figure>
 <!-- /cli-capture -->
 
-
 ## Inspect the Table
 
-Query the Landing Lakehouse SQL analytics endpoint once the Table is visible there:
+In the Fabric portal, open the Landing **SQL analytics endpoint** and query the Table:
 
 ```sql
 select [Parcel ID], [Event sequence], [Status], [Depot]

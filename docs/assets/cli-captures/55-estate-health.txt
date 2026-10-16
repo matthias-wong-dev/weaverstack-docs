@@ -1,43 +1,28 @@
 Health
 
-  Read catalogue                                                                                           2.5s
-  Check installed items                                                                                    0.2s
-  Read installed objects                                                                                   3.2s
-✓ Health                                                                                                   5.8s
+  Read catalogue                                                                                           2.7s
+  Check installed items                                                                                    0.1s
+  Read installed objects                                                                                   3.3s
+✓ Health                                                                                                   6.2s
 
-Weaver Health  Red
+Weaver Health  Green
 
-Load    Amber
+Load    Green
   Last load activity   0h 2m ago
-  11 succeeded
-  Amber  SemanticModel/Catalogue Dashboard
-          last loaded 2026-10-10T08:54:19.702883+00:00
-  Amber  SemanticModel/CatalogueProbe
-          last loaded 2026-10-10T08:54:09.252578+00:00
-  Amber  SemanticModel/Sales
-          last loaded 2026-10-10T08:54:37.168258+00:00
-  Amber  Warehouse/Curated/Sales.CustomerByRegion
-          last loaded 2026-10-10T08:54:30.104526+00:00
-  Amber  Warehouse/Curated/Sales.Region
-          last loaded 2026-10-10T08:54:07.453920+00:00
+  8 succeeded
 
-Tests   Amber
-  5 succeeded
-  Amber  Warehouse/Curated/Sales.CustomerByRegionValid
-          Warehouse/Curated/Sales.CustomerByRegion has been loaded since this validation passed
+Tests   Green
+  4 succeeded
 
-Build   Red
-  Red    SemanticModel/Catalogue Dashboard
-          SemanticModel/Catalogue Dashboard table 'Graph edge' reads Warehouse/_weaver/_.GraphEdge, which is not installed. Build Warehouse/_weaver, then build SemanticModel/Catalogue Dashboard again. If the project no longer has SemanticModel/Catalogue Dashboard, remove it with weaver unbind.
-  Red    Warehouse/Curated/Sales.CustomerByRegion
-          Warehouse/Curated/Sales.CustomerByRegion reads shortcut Sales.Customer, but its source Lakehouse/Landing/Tables/Sales.Customer is not installed. Install the source before building Warehouse/Curated again.
+Build   Green
+  Installed estate consistent (53 objects)
 
 Slowest loads
-  Lakehouse/Landing/Tables/Parcel.Event          14.5s
-  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
-  Warehouse/Operations/Parcel.StatusEvent        5.5s
-  Warehouse/Curated/Sales.Region                 5.2s
-  Warehouse/Curated/Sales.CustomerByRegion       4.2s
+  Lakehouse/Landing/Tables/Parcel.Event          12.8s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  7.6s
+  Warehouse/Operations/Parcel.StatusEvent        5.0s
+  Warehouse/Operations/Parcel.LiveStatus         5.0s
+  Lakehouse/Landing/Files/Parcel.StatusFiles     2.9s
 
 Largest changes
   Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0

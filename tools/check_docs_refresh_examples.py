@@ -151,8 +151,12 @@ def check_report_bindings(root, repository):
     from weaver.report_definition import decode_report, encode_report, verify_report
     from weaver.targets import ItemRef
 
-    for environment in ("dev", "prod"):
-        workspace = load_workspace(root / f"workspace-{environment}.yml")
+    for long, short in (("development", "dev"), ("production", "prod")):
+        # The Report fixture uses the full names the Report pages use.
+        path = root / f"workspace-{long}.yml"
+        if not path.exists():
+            path = root / f"workspace-{short}.yml"
+        workspace = load_workspace(path)
         inventory = InventoryClient(
             workspace.workspace,
             [(i.item_type, target.physical) for i, target in workspace.targets.items()],

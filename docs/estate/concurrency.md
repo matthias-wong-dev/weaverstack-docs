@@ -16,38 +16,42 @@ weaver load Lakehouse/Landing --concurrency 2 --workspace-config workspace-devel
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           2.1s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.5s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  38.2s
+  Wait for Spark session                                                                                  35.9s
 →   Load Lakehouse/Landing/Files/Parcel.Events
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.7s</span>
+→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      3.0s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     14.2s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~0 -0 !0)                                 3.1s</span>
+→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.2s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     14.4s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.8s</span>
-  Execute                                                                                                 23.3s
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.1s</span>
+  Execute                                                                                                 22.8s
   Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Load                                                                                                    1m15s</span>
+<span class="terminal-status-green">✓ Load                                                                                                    1m09s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
 
 Load summary
-<span class="terminal-status-green">    3 succeeded</span>
+<span class="terminal-status-green">    5 succeeded</span>
     0 failed
     0 blocked
   Rows
-    read                   6
+    read                   7
     inserted               0
     updated                0
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: 64a5966c5760456093c5c15975f95fe3
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -57,7 +61,7 @@ The dependency chain still ran in order. A cap of two permits two ready nodes; i
 Build and Test accept the same positive-integer option:
 
 ```bash
-weaver build . --item Lakehouse/Landing --concurrency 2 --workspace-config workspace-development.yml
+weaver build --item Lakehouse/Landing --concurrency 2 --workspace-config workspace-development.yml
 weaver test Lakehouse/Landing --concurrency 2 --workspace-config workspace-development.yml
 ```
 
@@ -67,28 +71,28 @@ weaver test Lakehouse/Landing --concurrency 2 --workspace-config workspace-devel
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
-  Read catalogue                                                                                           2.1s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.9s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  38.1s
+  Wait for Spark session                                                                                  38.9s
 →   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
 →   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
-<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      12.4s</span>
-<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    14.8s</span>
-  Execute                                                                                                 15.1s
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      11.2s</span>
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    13.8s</span>
+  Execute                                                                                                 12.7s
   Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Test                                                                                                    1m04s</span>
+<span class="terminal-status-green">✓ Test                                                                                                    1m02s</span>
 
 <span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    2 passed</span>
     0 failed
-  Workflow: [run-id]
+  Workflow: cee836b15e044193b9d0f2ed606bb84b
 </code></pre>
 </figure>
 <!-- /cli-capture -->

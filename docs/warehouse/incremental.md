@@ -6,18 +6,18 @@ Continue the [first Warehouse project](first-project.md) and [its validations](t
 
 ## Keep the changing source separate
 
-Keep the working `workspace-config.yml` and its existing targets. Create or reuse a separate disposable **ParcelSource** Warehouse in the same workspace to hold the changing source. Do not add it as a managed target: Build may prune undeclared content in targets it owns. All shell commands below run from your existing project root.
+The changing records live in a Warehouse that Weaver does not manage. In the Fabric portal, create a Warehouse called **ParcelSource** in the same workspace (**New item** → **Warehouse**). Do not add it to `targets` in `workspace-config.yml`: Build owns its targets and removes objects you did not declare there.
 
-Add this physical mapping to `Warehouse/Operations/shortcuts.yml`, creating the file if absent. Preserve any existing `logical` mappings for the Lakehouse integration:
+Point Operations at that source with a physical Shortcut. Create `Warehouse/Operations/shortcuts.yml`, or add the `physical` section if the file already exists:
 
-```yaml
+```yaml title="Warehouse/Operations/shortcuts.yml"
 physical:
   "Warehouse/Operations/Source.Parcel": "Warehouse/ParcelSource/Source.Parcel"
 ```
 
 Build installs `[Source].[Parcel]` as an item-local View without taking ownership of the physical source. Warehouse physical Shortcuts stay within the configured workspace; [Shortcut reference](../reference/weaver-documents/shortcut.md) owns the exact target forms.
 
-In a **SQL query connected to ParcelSource**, create the external table with:
+Open a **New SQL query** on ParcelSource and create the source table:
 
 ```sql
 if schema_id(N'Source') is null
@@ -34,7 +34,7 @@ begin
 end;
 ```
 
-Then seed it in the same query editor. This deletes existing source rows, so use the disposable example source:
+Seed it in the same query editor. The `delete` clears any earlier rows, so the script can be rerun:
 
 ```sql
 delete from [Source].[Parcel];
@@ -134,10 +134,42 @@ from [Source].[Parcel]
 order by [Parcel ID];
 ```
 
-Both seeded rows should be visible. Back at the project root, load the installed Table:
+Both seeded rows should be visible. Back at the project root, preview the Load. `--dry-run` resolves what would run, in order, without reading or writing data:
 
 ```bash
 weaver load Warehouse/Operations --dry-run
+```
+
+<!-- cli-capture: {"id": "32-incremental-preview", "title": "Load preview · both Operations Tables"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load preview · both Operations Tables">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
+
+  Read catalogue                                                                                           3.0s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+  Execute                                                                                                  0.0s
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           3.0s</span>
+
+<span class="terminal-status-green">plan succeeded: Warehouse/Operations</span>
+
+    validated                load:Warehouse/Operations/Parcel.LiveStatus
+    validated                load:Warehouse/Operations/Parcel.StatusEvent
+
+Plan
+    2 selected
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+Then load:
+
+```bash
 weaver load Warehouse/Operations
 ```
 
@@ -147,8 +179,8 @@ weaver load Warehouse/Operations
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           2.4s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
@@ -156,11 +188,11 @@ Targets
   Build run graph                                                                                          0.0s
 →   Load Warehouse/Operations/Parcel.LiveStatus
 →   Load Warehouse/Operations/Parcel.StatusEvent
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                     3.8s</span>
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.5s</span>
-  Execute                                                                                                  4.8s
-  Record what the run did                                                                                  0.5s
-<span class="terminal-status-green">✓ Load                                                                                                     7.7s</span>
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                     4.1s</span>
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.4s</span>
+  Execute                                                                                                  4.6s
+  Record what the run did                                                                                  0.9s
+<span class="terminal-status-green">✓ Load                                                                                                     8.3s</span>
 
 <span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
 
@@ -175,7 +207,7 @@ Load summary
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: fe3d0764a39b477e8033cd3504286ea8
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -228,8 +260,8 @@ weaver load Warehouse/Operations
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           2.1s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
@@ -237,11 +269,11 @@ Targets
   Build run graph                                                                                          0.0s
 →   Load Warehouse/Operations/Parcel.LiveStatus
 →   Load Warehouse/Operations/Parcel.StatusEvent
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.5s</span>
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                     6.7s</span>
-  Execute                                                                                                  6.9s
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    3.9s</span>
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                     5.6s</span>
+  Execute                                                                                                  5.8s
   Record what the run did                                                                                  0.5s
-<span class="terminal-status-green">✓ Load                                                                                                     9.5s</span>
+<span class="terminal-status-green">✓ Load                                                                                                     9.0s</span>
 
 <span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
 
@@ -256,7 +288,7 @@ Load summary
     deleted                1
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: e5ed7acd1ad247088be988754106a80e
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -279,8 +311,8 @@ weaver load Warehouse/Operations
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           2.1s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.8s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
@@ -288,11 +320,11 @@ Targets
   Build run graph                                                                                          0.0s
 →   Load Warehouse/Operations/Parcel.LiveStatus
 →   Load Warehouse/Operations/Parcel.StatusEvent
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     1.8s</span>
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.2s</span>
-  Execute                                                                                                  4.4s
-  Record what the run did                                                                                  0.6s
-<span class="terminal-status-green">✓ Load                                                                                                     7.1s</span>
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     2.1s</span>
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.0s</span>
+  Execute                                                                                                  4.1s
+  Record what the run did                                                                                  0.5s
+<span class="terminal-status-green">✓ Load                                                                                                     7.4s</span>
 
 <span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
 
@@ -307,7 +339,7 @@ Load summary
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: 41d581bc61e148288b38dead41dfb140
 </code></pre>
 </figure>
 <!-- /cli-capture -->

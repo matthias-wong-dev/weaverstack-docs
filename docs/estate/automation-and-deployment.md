@@ -13,9 +13,9 @@ weaver session --workspace-config workspace-development.yml --timings
 At the `weaver>` prompt, run the normal installed-project sequence:
 
 ```text
-weaver> check .
-weaver> build . --item Lakehouse/Landing --item Warehouse/Operations
-weaver> build . --item PowerBI/Parcel --bind-data-sources
+weaver> check
+weaver> build --item Lakehouse/Landing --item Warehouse/Operations
+weaver> build --item PowerBI/Parcel --bind-data-sources
 weaver> load
 weaver> test
 weaver> health
@@ -33,9 +33,9 @@ Add `verify` under the existing `workflow.yml` workflows, keeping your other wor
 ```yaml
 workflows:
   verify:
-    - check .
-    - build . --item Lakehouse/Landing --item Warehouse/Operations
-    - build . --item PowerBI/Parcel --bind-data-sources
+    - check
+    - build --item Lakehouse/Landing --item Warehouse/Operations
+    - build --item PowerBI/Parcel --bind-data-sources
     - load
     - test
     - health

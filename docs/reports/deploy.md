@@ -44,15 +44,15 @@ Build can create missing selected models and Reports or update existing ones. Ch
 Run from the example directory:
 
 ```bash
-weaver check .
-weaver build . --item SemanticModel/Parcel --item Report/Parcel
+weaver check
+weaver build --item SemanticModel/Parcel --item Report/Parcel
 ```
 
 <!-- cli-capture: {"id": "85-native-annotation-and-report-build", "title": "Build · deploy and verify the linked pair"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · deploy and verify the linked pair">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Parcel Development
 Catalogue  none
 Targets
   SemanticModel/Parcel
@@ -61,14 +61,14 @@ Targets
 
 Build
 
-    Create Report/Parcel                                                                                  20.9s
-  Create Power BI items                                                                                   20.9s
+    Create Report/Parcel                                                                                  20.6s
+  Create Power BI items                                                                                   20.6s
   Resolve semantic data sources                                                                            0.0s
     Resolve SemanticModel/Parcel                                                                           0.0s
     Resolve Report/Parcel                                                                                  0.0s
   Read target inventories                                                                                  0.2s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.1s
+  Prepare bundle                                                                                           0.0s
 Install selection
   SemanticModel/Parcel
     changed                 1
@@ -78,13 +78,13 @@ Install selection
     selected for build      1
 
 →   SemanticModel/Parcel · Deploy semantic definitions · 1 action
-<span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.6s</span>
+<span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         21.0s</span>
 →   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action
 <span class="terminal-status-green">✓   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action                 20.5s</span>
 →   Report/Parcel · Deploy Report definitions · 1 action
-<span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.3s</span>
+<span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.4s</span>
 →   Report/Parcel · Verify deployed Report definitions · 1 action
-<span class="terminal-status-green">✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         20.6s</span>
+<span class="terminal-status-green">✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         20.9s</span>
   Install                                                                                                 1m22s
 <span class="terminal-status-green">✓ Build                                                                                                   1m43s</span>
 
@@ -93,7 +93,7 @@ Installation
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  492f2106fc8b073d07249ff8e01ca42c9f6af3df84fb3918dcc7fe30cc0c5712
+  Bundle  ca0aeddd18fafaf4a715693285d9d933b0dd6b057bb7feb7588e13780e3e8f21
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -114,7 +114,7 @@ weaver load SemanticModel/Parcel
 
 <!-- review-todo: report-rendering -->
 !!! warning "TODO — check the rendered Parcel Delivery Count card"
-    Open this deployed Report after the model Load above and confirm its card shows 2. Deployment, binding and model queries passed; the service viewing result is still unobserved.
+    Open the deployed Report after the model Load and confirm its card shows 2. Deployment, the Report-to-model binding and the DAX value (2) are verified through the APIs; Report export is not available on the capture capacity and the service UI was not signed in.
 <!-- /review-todo -->
 
 With permission to view the Report and query its model, open the card: **Delivery Count should be 2**. Reports have no separate Load, Test or refresh operation; data refresh and validation belong to the model.

@@ -1,43 +1,47 @@
 Load
 
-  Read catalogue                                                                                           2.3s
-Workspace  Weaver Example
+  Read catalogue                                                                                           3.1s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  35.4s
+  Wait for Spark session                                                                                  39.5s
 →   Load Lakehouse/Landing/Files/Parcel.Events
 →   Load Warehouse/Operations/Parcel.LiveStatus
 →   Load Warehouse/Operations/Parcel.StatusEvent
-✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      3.1s
-✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     3.1s
+→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
+✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.8s
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    5.5s
-✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     14.5s
-→   Refresh Lakehouse/Landing SQL endpoint
+✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~0 -0 !0)                                 2.9s
+→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
+✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.2s
+✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     5.0s
+✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    5.0s
+✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     12.8s
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+→   Refresh Lakehouse/Landing SQL endpoint
 ✓   Refresh Lakehouse/Landing SQL endpoint                                                                 0.8s
 →   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
-✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +2 ~0 -0 !0)                         2.5s
-✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              8.4s
-  Execute                                                                                                 23.9s
+✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +2 ~0 -0 !0)                         2.0s
+✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.6s
+  Execute                                                                                                 21.3s
   Record what the run did                                                                                  0.0s
-✓ Load                                                                                                    1m11s
+✓ Load                                                                                                    1m13s
 
 load succeeded: Lakehouse/Landing, Warehouse/Operations
 
 Load summary
-    6 succeeded
+    8 succeeded
     0 failed
     0 blocked
   Rows
-    read                  11
+    read                  12
     inserted               2
     updated                0
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: 46cba535cdd3454fadece85ceefbaf3c

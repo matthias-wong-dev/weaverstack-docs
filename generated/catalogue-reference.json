@@ -694,6 +694,278 @@
     {
       "columns": [
         {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Downstream node ID",
+          "notes": "The node that reads.",
+          "required": true,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Upstream node ID",
+          "notes": "The node read. For an External edge, the reference as its author wrote it.",
+          "required": true,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Edge kind",
+          "notes": "Dependency, Shortcut, Validation or External.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "dependency": "Dependency",
+            "external": "External",
+            "shortcut": "Shortcut",
+            "validation": "Validation"
+          }
+        },
+        {
+          "name": "Through node ID",
+          "notes": "The shortcut the read passed through, if any.",
+          "required": false,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Downstream node key",
+          "notes": "The downstream node's key.",
+          "required": true,
+          "type": "varchar(12)",
+          "vocabulary": null
+        },
+        {
+          "name": "Upstream node key",
+          "notes": "The upstream node's key, or the hash of an External reference.",
+          "required": true,
+          "type": "varchar(12)",
+          "vocabulary": null
+        },
+        {
+          "name": "Through node key",
+          "notes": "The key of the shortcut the read passed through, if any.",
+          "required": false,
+          "type": "varchar(12)",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the edge's row, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "One row per edge of the installed graph, scoped to the downstream node's item, with both ends as LineageNode IDs.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Downstream node ID",
+        "Upstream node ID",
+        "Edge kind"
+      ],
+      "name": "_.LineageEdge",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
+          "name": "Item type",
+          "notes": "Logical Weaver item type.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item name",
+          "notes": "Logical Weaver item name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Schema name",
+          "notes": "The object's schema.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Object name",
+          "notes": "The object's name.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Node ID",
+          "notes": "The node's installed identity, as LineageEdge names it.",
+          "required": true,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Node key",
+          "notes": "A short hash of the node ID, as LineageEdge's keys name it.",
+          "required": true,
+          "type": "varchar(12)",
+          "vocabulary": null
+        },
+        {
+          "name": "Node kind",
+          "notes": "What the node is.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": {
+            "assumption": "Assumption",
+            "folder": "Folder",
+            "report": "Report",
+            "semantic_model": "Semantic model",
+            "shortcut": "Shortcut",
+            "table": "Table",
+            "test": "Test",
+            "view": "View"
+          }
+        },
+        {
+          "name": "Label",
+          "notes": "The node's display name.",
+          "required": true,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Item label",
+          "notes": "The node's item, as Type/Name.",
+          "required": true,
+          "type": "varchar(1000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Description",
+          "notes": "The declared description, if any.",
+          "required": false,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Search text",
+          "notes": "Label, item and description in lower case, for search.",
+          "required": true,
+          "type": "varchar(4000)",
+          "vocabulary": null
+        },
+        {
+          "name": "Is internal",
+          "notes": "Whether the node is part of the Weaver catalogue.",
+          "required": true,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Can load",
+          "notes": "Whether Weaver loads the node in this estate.",
+          "required": true,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Is static",
+          "notes": "Whether the node is loaded once rather than refreshed.",
+          "required": true,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Is mirrored",
+          "notes": "Whether another catalogue's estate supplies the node's data.",
+          "required": true,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Is installed",
+          "notes": "Whether the node's runnable artefact or definition is installed.",
+          "required": true,
+          "type": "bit",
+          "vocabulary": null
+        },
+        {
+          "name": "Signature",
+          "notes": "Content hash of the node's row, so a change can be detected.",
+          "required": true,
+          "type": "varchar(128)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row insert datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row update datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        },
+        {
+          "name": "Row delete datetime",
+          "notes": "UTC row audit timestamp",
+          "required": true,
+          "type": "datetime2(6)",
+          "vocabulary": null
+        }
+      ],
+      "description": "One row per node of the installed graph, scoped to its item, so a report can draw lineage without resolving references.",
+      "key": [
+        "Item type",
+        "Item name",
+        "Schema name",
+        "Object name"
+      ],
+      "name": "_.LineageNode",
+      "source": "src/weaver/catalogue/tables.py"
+    },
+    {
+      "columns": [
+        {
           "name": "Load statistic SK",
           "notes": "An immutable surrogate generated by the writer. Fabric Warehouse tables have no identity columns, and sessions may append concurrently.",
           "required": true,

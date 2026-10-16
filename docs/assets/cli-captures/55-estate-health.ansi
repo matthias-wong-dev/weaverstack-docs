@@ -1,44 +1,29 @@
 
 Health
 
-[2m⋯[0m Health                                                                                               [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    1.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    2.0s[0m                                                                                                                [0m Read catalogue                                                                                       [2m    2.5s[0m
-[2m⋯[0m Health                                                                                               [2m    2.5s[0m                                                                                                               [2m⋯[0m Check installed items                                                                                [2m    0.0s[0m                                                                                                                [0m Check installed items                                                                                [2m    0.2s[0m
-[2m⋯[0m Health                                                                                               [2m    2.6s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    0.0s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    0.4s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    1.4s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    2.4s[0m                                                                                                                [0m Read installed objects                                                                               [2m    3.2s[0m
-[2m⋯[0m Health                                                                                               [2m    5.8s[0m                                                                                                               [32m✓[0m Health                                                                                               [2m    5.8s[0m
+[2m⋯[0m Health                                                                                               [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    1.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    2.0s[0m                                                                                                                [0m Read catalogue                                                                                       [2m    2.7s[0m
+[2m⋯[0m Health                                                                                               [2m    2.7s[0m                                                                                                               [2m⋯[0m Check installed items                                                                                [2m    0.0s[0m                                                                                                                [0m Check installed items                                                                                [2m    0.1s[0m
+[2m⋯[0m Health                                                                                               [2m    2.9s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    0.0s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    0.1s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    1.2s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    2.2s[0m                                                                                                               [2m⋯[0m Read installed objects                                                                               [2m    3.2s[0m                                                                                                                [0m Read installed objects                                                                               [2m    3.3s[0m
+[2m⋯[0m Health                                                                                               [2m    6.2s[0m                                                                                                               [32m✓[0m Health                                                                                               [2m    6.2s[0m
 
-Weaver Health  [31mRed[0m
+Weaver Health  [32mGreen[0m
 
-Load    [33mAmber[0m
+Load    [32mGreen[0m
   Last load activity   0h 2m ago
-  [32m11 succeeded[0m
-  [33mAmber  [0mSemanticModel/Catalogue Dashboard
-          last loaded 2026-10-10T08:54:19.702883+00:00
-  [33mAmber  [0mSemanticModel/CatalogueProbe
-          last loaded 2026-10-10T08:54:09.252578+00:00
-  [33mAmber  [0mSemanticModel/Sales
-          last loaded 2026-10-10T08:54:37.168258+00:00
-  [33mAmber  [0mWarehouse/Curated/Sales.CustomerByRegion
-          last loaded 2026-10-10T08:54:30.104526+00:00
-  [33mAmber  [0mWarehouse/Curated/Sales.Region
-          last loaded 2026-10-10T08:54:07.453920+00:00
+  [32m8 succeeded[0m
 
-Tests   [33mAmber[0m
-  [32m5 succeeded[0m
-  [33mAmber  [0mWarehouse/Curated/Sales.CustomerByRegionValid
-          Warehouse/Curated/Sales.CustomerByRegion has been loaded since this validation passed
+Tests   [32mGreen[0m
+  [32m4 succeeded[0m
 
-Build   [31mRed[0m
-  [31mRed    [0mSemanticModel/Catalogue Dashboard
-          SemanticModel/Catalogue Dashboard table 'Graph edge' reads Warehouse/_weaver/_.GraphEdge, which is not installed. Build Warehouse/_weaver, then build SemanticModel/Catalogue Dashboard again. If the project no longer has SemanticModel/Catalogue Dashboard, remove it with weaver unbind.
-  [31mRed    [0mWarehouse/Curated/Sales.CustomerByRegion
-          Warehouse/Curated/Sales.CustomerByRegion reads shortcut Sales.Customer, but its source Lakehouse/Landing/Tables/Sales.Customer is not installed. Install the source before building Warehouse/Curated again.
+Build   [32mGreen[0m
+  Installed estate consistent (53 objects)
 
 Slowest loads
-  Lakehouse/Landing/Tables/Parcel.Event          14.5s
-  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
-  Warehouse/Operations/Parcel.StatusEvent        5.5s
-  Warehouse/Curated/Sales.Region                 5.2s
-  Warehouse/Curated/Sales.CustomerByRegion       4.2s
+  Lakehouse/Landing/Tables/Parcel.Event          12.8s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  7.6s
+  Warehouse/Operations/Parcel.StatusEvent        5.0s
+  Warehouse/Operations/Parcel.LiveStatus         5.0s
+  Lakehouse/Landing/Files/Parcel.StatusFiles     2.9s
 
 Largest changes
   Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0

@@ -182,6 +182,53 @@ The generated inventory includes every physical column, including audit columns.
 | `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 | `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
 
+### `_.LineageEdge`
+
+**Key:** `Item type`, `Item name`, `Downstream node ID`, `Upstream node ID`, `Edge kind`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Downstream node ID` | `varchar(1000)` | required | The node that reads. |
+| `Upstream node ID` | `varchar(1000)` | required | The node read. For an External edge, the reference as its author wrote it. |
+| `Edge kind` | `varchar(128)` | required | Dependency, Shortcut, Validation or External. |
+| `Through node ID` | `varchar(1000)` | nullable | The shortcut the read passed through, if any. |
+| `Downstream node key` | `varchar(12)` | required | The downstream node's key. |
+| `Upstream node key` | `varchar(12)` | required | The upstream node's key, or the hash of an External reference. |
+| `Through node key` | `varchar(12)` | nullable | The key of the shortcut the read passed through, if any. |
+| `Signature` | `varchar(128)` | required | Content hash of the edge's row, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
+### `_.LineageNode`
+
+**Key:** `Item type`, `Item name`, `Schema name`, `Object name`
+
+| Column | Type | Null | Meaning |
+| --- | --- | --- | --- |
+| `Item type` | `varchar(128)` | required | Logical Weaver item type. |
+| `Item name` | `varchar(128)` | required | Logical Weaver item name. |
+| `Schema name` | `varchar(128)` | required | The object's schema. |
+| `Object name` | `varchar(128)` | required | The object's name. |
+| `Node ID` | `varchar(1000)` | required | The node's installed identity, as LineageEdge names it. |
+| `Node key` | `varchar(12)` | required | A short hash of the node ID, as LineageEdge's keys name it. |
+| `Node kind` | `varchar(128)` | required | What the node is. |
+| `Label` | `varchar(1000)` | required | The node's display name. |
+| `Item label` | `varchar(1000)` | required | The node's item, as Type/Name. |
+| `Description` | `varchar(4000)` | nullable | The declared description, if any. |
+| `Search text` | `varchar(4000)` | required | Label, item and description in lower case, for search. |
+| `Is internal` | `bit` | required | Whether the node is part of the Weaver catalogue. |
+| `Can load` | `bit` | required | Whether Weaver loads the node in this estate. |
+| `Is static` | `bit` | required | Whether the node is loaded once rather than refreshed. |
+| `Is mirrored` | `bit` | required | Whether another catalogue's estate supplies the node's data. |
+| `Is installed` | `bit` | required | Whether the node's runnable artefact or definition is installed. |
+| `Signature` | `varchar(128)` | required | Content hash of the node's row, so a change can be detected. |
+| `Row insert datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row update datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+| `Row delete datetime` | `datetime2(6)` | required | UTC row audit timestamp |
+
 ### `_.LoadStatistic`
 
 **Key:** `Load statistic SK`

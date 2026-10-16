@@ -4,7 +4,7 @@ Install Weaver from PyPI using the [installation guide](../../docs/getting-start
 
 ## Before you run
 
-Use existing disposable development and production-labelled workspaces, with the names in `workspace-dev.yml` and `workspace-prod.yml`, or edit those two files to your own disposable names. The production-labelled file is not permission to use a production workspace. You need the appropriate Power BI service licence, item creation/update rights, model refresh rights and permission to view the Report. Sign in through Weaver's supported authentication route. No catalogue, Lakehouse, Spark session, Fabric Environment or external data credentials are needed for these inline Import partitions.
+Use existing disposable development and production-labelled workspaces, with the names in `workspace-development.yml` and `workspace-production.yml`, or edit those two files to your own disposable names. The production-labelled file is not permission to use a production workspace. You need the appropriate Power BI service licence, item creation/update rights, model refresh rights and permission to view the Report. Sign in through Weaver's supported authentication route. No catalogue, Lakehouse, Spark session, Fabric Environment or external data credentials are needed for these inline Import partitions.
 
 `PowerBI/Parcel/Parcel.pbip` opens the native project. Its model contains three parcel rows, two depots and a many-to-one relationship. The Report has a visible Delivery Count card. Refresh should show **2**.
 
@@ -16,8 +16,8 @@ For the native-model tutorial, select just the model:
 
 ```bash
 weaver check .
-weaver build . --item SemanticModel/Parcel --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver build . --item SemanticModel/Parcel --workspace-config workspace-development.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-development.yml
 ```
 
 The Report stays local. Continue below when you want to deploy the linked pair.
@@ -28,8 +28,8 @@ Run from this example directory, not its parent:
 
 ```bash
 weaver check .
-weaver build . --item PowerBI/Parcel --workspace-config workspace-dev.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-dev.yml
+weaver build . --item PowerBI/Parcel --workspace-config workspace-development.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-development.yml
 ```
 
 Check validates project discovery and definitions locally. Build and Load contact the service. In the development workspace, verify `Parcel_Dev` and `Parcel_Report_Dev` exist, the Report is connected to that model, and the card displays 2 after refresh. A zero exit status is not a visual or binding check.
@@ -45,12 +45,12 @@ python -c 'import hashlib,json; from pathlib import Path; r=Path("PowerBI"); Pat
 After the development Build/refresh above, deploy with the second configuration:
 
 ```bash
-weaver build . --item PowerBI/Parcel --workspace-config workspace-prod.yml
-weaver load SemanticModel/Parcel --workspace-config workspace-prod.yml
+weaver build . --item PowerBI/Parcel --workspace-config workspace-production.yml
+weaver load SemanticModel/Parcel --workspace-config workspace-production.yml
 python -c 'import hashlib,json; from pathlib import Path; r=Path("PowerBI"); before=json.loads(Path("authored-hashes-before.json").read_text()); after={str(p):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(r.rglob("*")) if p.is_file()}; assert before==after; print("Authored PowerBI bytes unchanged")'
 ```
 
-Verify `Parcel` and `Parcel_Report` in the second disposable workspace, with that Report bound to `Parcel`, not `Parcel_Dev`. These mappings change destination names and Report binding; they do not configure source credentials. Both partitions use inline data, so there is no source connection to change.
+Verify `Parcel_Production` and `Parcel_Report_Production` in the second disposable workspace, with that Report bound to `Parcel_Production`, not `Parcel_Dev`. These mappings change destination names and Report binding; they do not configure source credentials. Both partitions use inline data, so there is no source connection to change.
 
 `expected-results.json` records the logical models, Report association and expected count. Local parsing does not prove service acceptance, refresh, licence eligibility or Report rendering.
 

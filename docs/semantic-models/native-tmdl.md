@@ -10,7 +10,7 @@ A PBIP project contains the model’s native TMDL and its Report definitions. Yo
 
 [Install Weaver](../getting-started/installation.md). This exercise begins in [Power BI-only mode, without a Catalogue](index.md#power-bi-only-without-a-catalogue). Use an existing disposable Power BI service workspace with licensing and permissions to deploy, read and refresh Import Semantic Models, and to edit the linked Report for the field-list check. Use existing permissions; this exercise does not require changing tenant settings. [Service requirements](../reference/power-bi/requirements-and-compatibility.md#runtime-and-service-access) cover the licensing and API boundaries.
 
-Parcel includes Delivery and Depot tables, a relationship and a Delivery Count measure. Its ParcelStatus table has the same `Parcel ID`, `Status` and `Depot` columns as the Warehouse data, with two sample rows to start. The model needs no Lakehouse or source Warehouse workload. If you already have a Parcel project, extend that same folder rather than starting again.
+Parcel includes Delivery and Depot tables, a relationship and a Delivery Count measure. Its ParcelStatus table has the same `Parcel ID`, `Status` and `Depot` columns as the Warehouse data, with two sample rows to start. The model needs no Lakehouse or source Warehouse workload. If you already have a `parcel` project from the Fabric tasks, run the command from inside it with `--project-folder .` instead; Initialise keeps your data items and adds the models.
 
 ## 1. Choose the destination
 
@@ -23,7 +23,7 @@ weaver initialise \
 cd parcel
 ```
 
-Initialise writes the native model and linked Report under `PowerBI/Parcel/`, workspace configuration and supporting local project files. It does not create a Catalogue Warehouse or Fabric Environment by default. Build creates the Power BI items; building and refreshing this inline model do not require Spark. You can later [add Fabric data workloads and a Catalogue](managed-sources.md) to this same project without replacing its native definitions or existing bindings.
+Initialise asks you to confirm (choose `1`), then writes the native model and linked Report under `PowerBI/Parcel/`, a workspace configuration and supporting project files. It creates no Catalogue Warehouse or Fabric Environment. Build creates the Power BI items; building and refreshing this inline model do not require Spark. You can later [add Fabric data workloads and a Catalogue](managed-sources.md) to this same project without replacing its native definitions or existing bindings.
 
 Open `PowerBI/Parcel/Parcel.pbip` in Desktop to inspect the native project. Open `PowerBI/Parcel/Parcel.SemanticModel/definition/tables/Delivery.tmdl` in your editor. The generated table includes the sample partition and measure:
 
@@ -79,7 +79,7 @@ weaver build --item SemanticModel/Parcel
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · native model without a Catalogue">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Parcel Development
 Catalogue  none
 Targets
   SemanticModel/Parcel
@@ -87,23 +87,23 @@ Targets
 
 Build
 
-    Create SemanticModel/Parcel                                                                           20.6s
-  Create Power BI items                                                                                   20.6s
+    Create SemanticModel/Parcel                                                                           20.7s
+  Create Power BI items                                                                                   20.7s
   Resolve semantic data sources                                                                            0.0s
     Resolve SemanticModel/Parcel                                                                           0.0s
-  Read target inventories                                                                                  0.1s
+  Read target inventories                                                                                  0.2s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.1s
+  Prepare bundle                                                                                           0.0s
 Install selection
   SemanticModel/Parcel
     changed                 1
     selected for build      1
 
 →   SemanticModel/Parcel · Deploy semantic definitions · 1 action
-<span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.9s</span>
+<span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         21.3s</span>
 →   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action
 <span class="terminal-status-green">✓   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action                                20.5s</span>
-  Install                                                                                                 41.4s
+  Install                                                                                                 41.8s
 <span class="terminal-status-green">✓ Build                                                                                                   1m02s</span>
 
 Installation
@@ -111,7 +111,7 @@ Installation
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  a8ab22d2285b5b2ef3cae58135c2db97216bca04d09ebfb46bb8556544dec410
+  Bundle  01a374b67d8eb3b7035bf9ecbd1bb768e263e59c19cbf07741169e18d6b83a5f
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -132,16 +132,16 @@ weaver load SemanticModel/Parcel
 
   Resolve semantic models                                                                                  0.5s
   Read catalogue                                                                                           0.0s
-Workspace  Weaver Example
+Workspace  Parcel Development
 Catalogue  none
 Targets
   SemanticModel/Parcel
 
   Build run graph                                                                                          0.0s
 →   Load SemanticModel/Parcel
-<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              4.8s</span>
-  Execute                                                                                                  4.8s
-<span class="terminal-status-green">✓ Load                                                                                                     5.3s</span>
+<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              5.0s</span>
+  Execute                                                                                                  5.0s
+<span class="terminal-status-green">✓ Load                                                                                                     5.6s</span>
 
 <span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
 
@@ -192,7 +192,7 @@ weaver build --item SemanticModel/Parcel --item Report/Parcel
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · apply the rule and bind the linked Report">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Parcel Development
 Catalogue  none
 Targets
   SemanticModel/Parcel
@@ -201,14 +201,14 @@ Targets
 
 Build
 
-    Create Report/Parcel                                                                                  20.9s
-  Create Power BI items                                                                                   20.9s
+    Create Report/Parcel                                                                                  20.6s
+  Create Power BI items                                                                                   20.6s
   Resolve semantic data sources                                                                            0.0s
     Resolve SemanticModel/Parcel                                                                           0.0s
     Resolve Report/Parcel                                                                                  0.0s
   Read target inventories                                                                                  0.2s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.1s
+  Prepare bundle                                                                                           0.0s
 Install selection
   SemanticModel/Parcel
     changed                 1
@@ -218,13 +218,13 @@ Install selection
     selected for build      1
 
 →   SemanticModel/Parcel · Deploy semantic definitions · 1 action
-<span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.6s</span>
+<span class="terminal-status-green">✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         21.0s</span>
 →   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action
 <span class="terminal-status-green">✓   SemanticModel/Parcel, Report/Parcel · Verify deployed semantic definitions · 1 action                 20.5s</span>
 →   Report/Parcel · Deploy Report definitions · 1 action
-<span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.3s</span>
+<span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.4s</span>
 →   Report/Parcel · Verify deployed Report definitions · 1 action
-<span class="terminal-status-green">✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         20.6s</span>
+<span class="terminal-status-green">✓   Report/Parcel · Verify deployed Report definitions · 1 action                                         20.9s</span>
   Install                                                                                                 1m22s
 <span class="terminal-status-green">✓ Build                                                                                                   1m43s</span>
 
@@ -233,7 +233,7 @@ Installation
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  492f2106fc8b073d07249ff8e01ca42c9f6af3df84fb3918dcc7fe30cc0c5712
+  Bundle  ca0aeddd18fafaf4a715693285d9d933b0dd6b057bb7feb7588e13780e3e8f21
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -248,18 +248,18 @@ weaver load SemanticModel/Parcel
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Resolve semantic models                                                                                  0.7s
+  Resolve semantic models                                                                                  0.5s
   Read catalogue                                                                                           0.0s
-Workspace  Weaver Example
+Workspace  Parcel Development
 Catalogue  none
 Targets
   SemanticModel/Parcel
 
   Build run graph                                                                                          0.0s
 →   Load SemanticModel/Parcel
-<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              7.0s</span>
-  Execute                                                                                                  7.0s
-<span class="terminal-status-green">✓ Load                                                                                                     7.7s</span>
+<span class="terminal-status-green">✓   Load SemanticModel/Parcel                                                                              7.3s</span>
+  Execute                                                                                                  7.3s
+<span class="terminal-status-green">✓ Load                                                                                                     7.8s</span>
 
 <span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
 
@@ -271,14 +271,7 @@ Load summary
 </figure>
 <!-- /cli-capture -->
 
-<!-- review-todo: native-field-list -->
-!!! warning "TODO — inspect Delivery[DepotId] in the Report Data pane"
-    Deployed definition readback verified the foreign-key visibility change, and live DAX still returned 2. Confirm the service Data pane and the rendered Report card visually.
-<!-- /review-todo -->
-
-In the Power BI service, open the generated **Parcel** Report in **Edit** mode. Expand Delivery and Depot in its **Data** pane (field list), with hidden fields excluded, and inspect the existing Delivery Count card.
-
-The deployed model definition and DAX readback showed:
+In the Power BI service, open the generated **Parcel** Report in **Edit** mode and expand Delivery and Depot in the **Data** pane. `Delivery[DepotId]` is gone from the field list; `Depot[DepotId]` is still there. Reading the deployed definition back confirms the change:
 
 | Check | Before the rule | After the rule |
 | --- | --- | --- |

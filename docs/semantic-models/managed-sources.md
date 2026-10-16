@@ -19,7 +19,7 @@ weaver initialise \
 cd parcel
 ```
 
-If your shell is already in the project, use `--project-folder .` and stay there. Omitted existing items are retained. If Operations is already present, this is an idempotent rerun, not a request to replace it.
+If your shell is already in the project, use `--project-folder .` and stay there. A Power BI-only project has no Environment yet, so Initialise asks for one: choose an existing Environment or let it create `Weaver`. Press Enter to skip the optional Lakehouse, then confirm. If Operations is already in the project, this is a rerun that changes nothing.
 
 Initialise adds the Operations Warehouse with its independent [Table and View](../warehouse/first-project.md), their validations, and a **separate** `ParcelWarehouse` model. It introduces the required Catalogue and Environment support for the data project. It retains `Parcel.SemanticModel`, the Report and previously authored files, including any same-name Parcel overlay. New target bindings are added to `workspace-config.yml` without changing existing physical bindings. This extends the same installation; it does not replace the inline Delivery partition or change the original model’s meaning.
 
@@ -65,11 +65,11 @@ Expect P-1001 / In transit / Central and P-1002 / Delivered / South. The Warehou
 weaver build --item SemanticModel/ParcelWarehouse --bind-data-sources
 ```
 
-<!-- cli-capture: {"id": "113-managed-model-bind-build", "title": "Build · install and verify the managed model"} -->
+<!-- cli-capture: {"id": "113-managed-model-bind-build", "title": "Build · install the managed model"} -->
 <p class="terminal-intro">The command returned:</p>
-<figure class="weaver-terminal" aria-label="Build · install and verify the managed model">
+<figure class="weaver-terminal" aria-label="Build · install the managed model">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   SemanticModel/ParcelWarehouse
@@ -77,109 +77,60 @@ Targets
 
 Build
 
-    Create SemanticModel/ParcelWarehouse                                                                  20.7s
-  Create Power BI items                                                                                   20.7s
+    Create SemanticModel/ParcelWarehouse                                                                  20.8s
+  Create Power BI items                                                                                   20.8s
   Check target occupancy                                                                                   0.0s
   Resolve semantic data sources                                                                            0.3s
-  Read catalogue                                                                                           1.6s
+  Read catalogue                                                                                           7.2s
     Resolve SemanticModel/ParcelWarehouse                                                                  0.0s
-    Read Warehouse/Catalogue inventory                                                                     0.0s
-  Read target inventories                                                                                  0.0s
-  Read semantic sources                                                                                    0.6s
-  Prepare bundle                                                                                           0.1s
+    Read Warehouse/Catalogue inventory                                                                   0.1s
+  Read target inventories                                                                                  0.1s
+  Read semantic sources                                                                                    0.7s
+  Prepare bundle                                                                                           0.0s
 Install selection
   SemanticModel/ParcelWarehouse
     changed                 1
     selected for build      1
 
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          1.6s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                        1.5s</span>
 →   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action
-<span class="terminal-status-green">✓   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action                                21.0s</span>
+<span class="terminal-status-green">✓   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action                                42.0s</span>
 →   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action                                24.1s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action                              25.7s</span>
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        2.3s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                      6.0s</span>
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s</span>
-  Install                                                                                                 49.6s
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                1.0s</span>
+  Install                                                                                                 1m16s
 
 <span class="terminal-status-amber">warning: SemanticModel/ParcelWarehouse reads [warehouse-endpoint];operations, and no connection has that path. Create a connection for it in Fabric before refreshing.</span>
-<span class="terminal-status-green">✓ Build                                                                                                   1m14s</span>
+<span class="terminal-status-green">✓ Build                                                                                                   1m47s</span>
 
 Installation
 <span class="terminal-status-green">    5 succeeded</span>
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  f804e31e3ca885c39ee691d2a4f205f8992398b1d8ed70bf550c8f6a10e81385
+  Bundle  aa9c8873588d6107cb5e82c3476c56a6275b94a37da5037814f8862ab4298451
 </code></pre>
 </figure>
 <!-- /cli-capture -->
+
+Build generated CurrentStatus from the Warehouse View, deployed the model and recorded it in the catalogue. The warning matters: an Import model over a Fabric Warehouse refreshes through a cloud connection with credentials, and `--bind-data-sources` only binds one that already exists. If you see it, create a connection to the Operations SQL endpoint in Fabric (**Settings** → **Manage connections and gateways**), or ask its owner for access, then Build again to bind it.
+
+With the connection bound, refresh the source and model together:
 
 ```bash
 weaver load Warehouse/Operations SemanticModel/ParcelWarehouse
 ```
 
-<!-- cli-capture: {"id": "114-managed-source-and-model-load", "title": "Load · source succeeded, model refresh failed"} -->
-<p class="terminal-intro">The command returned:</p>
-<figure class="weaver-terminal" aria-label="Load · source succeeded, model refresh failed">
-<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Load
-
-  Read catalogue                                                                                           2.4s
-Workspace  Weaver Example
-Catalogue  Warehouse/Catalogue
-Targets
-  Warehouse/Operations
-  SemanticModel/ParcelWarehouse
-
-  Build run graph                                                                                          0.0s
-→   Load Warehouse/Operations/Parcel.StatusEvent
-→   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
-→   Load Warehouse/Operations/Parcel.LiveStatus
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     2.9s</span>
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    4.4s</span>
-→   Load SemanticModel/ParcelWarehouse
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +0 ~0 -0 !0)                         4.6s</span>
-
-<span class="terminal-status-amber">warning: SemanticModel/ParcelWarehouse reads [warehouse-endpoint];operations, and no connection has that path. If the refresh fails, create a connection for it.</span>
-<span class="terminal-status-red">✗   Load SemanticModel/ParcelWarehouse                                                                     6.0s</span>
-  Execute                                                                                                 10.6s
-  Record what the run did                                                                                  0.7s
-<span class="terminal-status-red">✗ Load                                                                                                    13.7s</span>
-
-load partially_succeeded: Warehouse/Operations, SemanticModel/ParcelWarehouse
-
-<span class="terminal-status-red">  ✗ failed                   load:SemanticModel/ParcelWarehouse</span>
-<span class="terminal-status-red">      error: load:SemanticModel/ParcelWarehouse failed: Semantic model refresh [item-id] ended with status &#x27;Failed&#x27;: We cannot refresh this semantic model because this semantic model uses a default data connection without explicit connection credentials. Please replace the default data connection in the semantic model settings with an explicit cloud or gateway data connection.; (Premium_ASWL_Error, ModelRefresh_ShortMessage_ProcessingError, ModelRefresh_DataSourceErrorLabel) No connection has the path [warehouse-endpoint];operations. Create a connection for it in Fabric, then load again.</span>
-
-Load summary
-<span class="terminal-status-green">    3 succeeded</span>
-<span class="terminal-status-red">    1 failed</span>
-    0 blocked
-  Rows
-    read                   5
-    inserted               0
-    updated                0
-    deleted                0
-    rejected               0
-
-  Workflow: [run-id]
-<span class="terminal-status-red">error: REST reported: Load failed for SemanticModel/ParcelWarehouse: load:SemanticModel/ParcelWarehouse failed: Semantic model refresh [item-id] ended with status &#x27;Failed&#x27;: We cannot refresh this semantic model because this semantic model uses a default data connection without explicit connection credentials. Please replace the default data connection in the semantic model settings with an explicit cloud or gateway data connection.; (Premium_ASWL_Error, ModelRefresh_ShortMessage_ProcessingError, ModelRefresh_DataSourceErrorLabel) No connection has the path [warehouse-endpoint];operations. Create a connection for it in Fabric, then load again.; Load summary: 3 succeeded, 1 failed</span>
-  Workflow: [run-id]
-</code></pre>
-</figure>
-<!-- /cli-capture -->
-
 <!-- review-todo: managed-refresh -->
 !!! warning "TODO — capture a successful ParcelWarehouse refresh"
-    The Load above failed because Operations has no explicit cloud or gateway connection with credentials. Bind an approved connection, rerun this Load and replace this TODO with its successful terminal result.
+    Needs a credentialled cloud connection to the Operations SQL endpoint in the capture workspace. Without one, this Load fails with "uses a default data connection without explicit connection credentials"; the Build above already warns about it.
 <!-- /review-todo -->
 
-Refreshing ParcelWarehouse requires a cloud or gateway connection with credentials for Operations. Select an existing connection with its owner, then rerun Load.
-
-Build the source and model in separate requests. `--bind-data-sources` uses an existing matching supported connection. Resolve missing or ambiguous connections with the connection’s owner; do not change tenant settings to make the example run.
+Build the source and model in separate requests. If more than one connection reaches the same endpoint, Build refuses and names them; keep one.
 
 The selected Warehouse work precedes the additional model’s refresh. After refresh succeeds, open **ParcelWarehouse** in the service, choose Write DAX queries (or use the [Desktop live-connection route](native-tmdl.md#4-refresh-and-inspect-the-model)), and run:
 

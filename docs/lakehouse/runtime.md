@@ -8,10 +8,10 @@ The [first Python task](python.md) creates `Environment/Weaver.Environment` and 
 
 A complete configuration for the Landing journey is:
 
-```yaml
+```yaml title="workspace-config.yml"
 workspace: Parcel Development
-catalogue: Warehouse/Catalogue
 environment: Weaver
+catalogue: Warehouse/Catalogue
 
 targets:
   Lakehouse/Landing: Landing
@@ -31,7 +31,7 @@ weaver fabric environment publish \
   --workspace-config workspace-config.yml
 ```
 
-Publication creates or updates the selected Environment, adds the installed Weaver release to its package requirements and waits for Fabric's terminal publication result. An unchanged successful definition is reported without another publication. No source checkout is needed.
+Publication creates or updates the selected Environment, adds the installed Weaver release to its package requirements and waits for Fabric to finish publishing, which typically takes five to seven minutes. An unchanged definition that is already published is reported without publishing again.
 
 If an Environment was created in the Fabric portal and has no local definition, publication can instead use that existing Environment as its authority:
 

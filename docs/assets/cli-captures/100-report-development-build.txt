@@ -1,4 +1,4 @@
-Workspace  Weaver Example
+Workspace  Parcel Development
 Catalogue  none
 Targets
   SemanticModel/Parcel → SemanticModel/Parcel_Dev
@@ -8,14 +8,14 @@ Targets
 Build
 
     Create SemanticModel/Parcel_Dev                                                                       20.6s
-    Create Report/Parcel_Report_Dev                                                                       20.6s
-  Create Power BI items                                                                                   41.2s
+    Create Report/Parcel_Report_Dev                                                                       20.8s
+  Create Power BI items                                                                                   41.5s
   Resolve semantic data sources                                                                            0.0s
     Resolve SemanticModel/Parcel_Dev                                                                       0.0s
     Resolve Report/Parcel_Report_Dev                                                                       0.0s
   Read target inventories                                                                                  0.2s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.1s
+  Prepare bundle                                                                                           0.0s
 Install selection
   SemanticModel/Parcel
     changed                 1
@@ -25,19 +25,19 @@ Install selection
     selected for build      1
 
 →   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action
-✓   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action                                     20.8s
+✓   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action                                     21.0s
 →   SemanticModel/Parcel_Dev, Report/Parcel_Report_Dev · Verify deployed semantic definitions · 1 action
 ✓   SemanticModel/Parcel_Dev, Report/Parcel_Report_Dev · Verify deployed semantic definitions · 1 action   20.5s
 →   Report/Parcel_Report_Dev · Deploy Report definitions · 1 action
 ✓   Report/Parcel_Report_Dev · Deploy Report definitions · 1 action                                       20.4s
 →   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action
-✓   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action                              20.6s
-  Install                                                                                                 1m22s
-✓ Build                                                                                                   2m03s
+✓   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action                              21.9s
+  Install                                                                                                 1m23s
+✓ Build                                                                                                   2m05s
 
 Installation
     4 succeeded
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  fdca322af022d22becb26011d253df6e9d1dd198279fb3967138a4f4c26629a7
+  Bundle  d4da8e0cdf80545685fe83c06a61f3362febf0fdb2eb4bca4d3d7d46794c8e72

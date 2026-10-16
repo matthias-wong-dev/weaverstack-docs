@@ -322,37 +322,40 @@ def main():
             assert (
                 path.read_bytes() == prior if prior is not None else not path.exists()
             )
-            # Exercise the page's exact backup/restoration shell branches in one shell.
-            backup = next(
-                b for b in blocks("validation", "bash") if "had_overlay=false" in b
-            )
-            restore = next(
-                b for b in blocks("validation", "bash") if 'test "$had_overlay"' in b
-            )
-            restore = "\n".join(
-                line for line in restore.splitlines() if not line.startswith("weaver ")
-            )
-            candidate = direct / "candidate.tmdl"
-            candidate.write_text(
-                (prior.decode() if prior else "")
-                + "\n"
-                + blocks("validation", "tmdl")[0]
-            )
-            subprocess.run(
-                [
-                    "bash",
-                    "-c",
-                    backup
-                    + "\ncp candidate.tmdl PowerBI/Parcel/Parcel.tmdl\n"
-                    + restore,
-                ],
-                cwd=direct,
-                check=True,
-            )
-            assert (
-                path.read_bytes() == prior if prior is not None else not path.exists()
-            )
-            assert not (direct / "Parcel.tmdl.saved").exists()
+            # Exercise the page's exact backup and restoration commands in one shell.
+            if prior is not None:
+                backup = next(
+                    b
+                    for b in blocks("validation", "bash")
+                    if b.startswith("cp PowerBI/Parcel/Parcel.tmdl Parcel.tmdl.saved")
+                )
+                restore = next(
+                    b
+                    for b in blocks("validation", "bash")
+                    if b.startswith("mv Parcel.tmdl.saved PowerBI/Parcel/Parcel.tmdl")
+                )
+                restore = "\n".join(
+                    line
+                    for line in restore.splitlines()
+                    if not line.startswith("weaver ")
+                )
+                candidate = direct / "candidate.tmdl"
+                candidate.write_text(
+                    prior.decode() + "\n" + blocks("validation", "tmdl")[0]
+                )
+                subprocess.run(
+                    [
+                        "bash",
+                        "-c",
+                        backup
+                        + "\ncp candidate.tmdl PowerBI/Parcel/Parcel.tmdl\n"
+                        + restore,
+                    ],
+                    cwd=direct,
+                    check=True,
+                )
+                assert path.read_bytes() == prior
+                assert not (direct / "Parcel.tmdl.saved").exists()
         for name, text in zip(
             ("ParcelSummary", "ParcelSourceSummary"), blocks("from-tmdl", "tmdl")
         ):

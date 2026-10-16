@@ -2,7 +2,7 @@
 
 Keep the transformation as a T-SQL SELECT. A metadata comment tells Weaver which Table to maintain; Build generates its load work, and Load applies the rows and records the result. Here, three parcel events feed a View showing each parcel's latest status.
 
-Use the [documented Weaver installation](../getting-started/installation.md) and a Fabric workspace where you can create or modify Warehouses. The example uses `Parcel Development`; substitute your workspace name. All shell commands after setup run from the project root.
+You need [Weaver installed](../getting-started/installation.md) and a Fabric workspace on running capacity where you can create Warehouses. The example uses a workspace called `Parcel Development`; substitute your own. Use a disposable workspace for the tutorials: Build owns the Warehouses it manages and removes objects you did not declare there.
 
 ## Give the SQL a home
 
@@ -28,14 +28,13 @@ cd parcel
 Lakehouse (optional)
 Use a Lakehouse for files and Python/Delta tables.
 Press Enter if this project does not need one.
-Existing: Landing
 Examples: Landing, Bronze
 Lakehouse:
 
 Project
 
   Project folder  ./parcel
-  Workspace       Weaver Example
+  Workspace       Parcel Development
   Catalogue       Catalogue
   Environment     Weaver
   Lakehouse       None
@@ -52,23 +51,25 @@ Publish the Environment now? [y/N]: n
 
 Setting up the Weaver project
 
-  Checking the workspace                                                                                   0.4s
-  Reading the Environment                                                                                 21.6s
-  Checking the project files                                                                               0.4s
-  Creating the Warehouse Operations                                                                        8.8s
+  Checking the workspace                                                                                   0.3s
+  Reading the Environment                                                                                  0.0s
+  Checking the project files                                                                               0.1s
+  Creating the Catalogue Catalogue                                                                        11.6s
+  Creating the Warehouse Operations                                                                        5.1s
   Writing the project files                                                                                0.0s
-<span class="terminal-status-green">✓ Setting up the Weaver project                                                                           31.2s</span>
+  Creating the Environment Weaver                                                                         21.2s
+<span class="terminal-status-green">✓ Setting up the Weaver project                                                                           38.4s</span>
 
-  Catalogue    Catalogue   already exists
-  Environment  Weaver      already exists
+  Catalogue    Catalogue   created
+  Environment  Weaver      created
   Warehouse    Operations  created
   Environment publication: deferred
 
-Weaver project ready in ./parcel.
+Weaver project ready in [local-path]/parcel.
 
 Next:
 
-  cd ./parcel
+  cd [local-path]/parcel
 
 Environment publication deferred.
 Publish it before the first load that runs Python.
@@ -84,26 +85,28 @@ Or run individually:
 
 You can set this up again with:
 
-  weaver initialise --workspace &#x27;Weaver Example&#x27; --project-folder ./parcel --catalogue Catalogue --environment Weaver --warehouse Operations --example Parcel --non-interactive
+  weaver initialise --workspace &#x27;Parcel Development&#x27; --project-folder ./parcel --catalogue Catalogue --environment Weaver --warehouse Operations --example Parcel --non-interactive
 </code></pre>
 </figure>
 <!-- /cli-capture -->
 
-Initialise creates or reuses the named items and writes the SQL Table, View and validations below. This Warehouse-only project needs no Spark runtime or Environment publication. Open the generated files rather than copying these declarations.
+Initialise asks one question you did not answer on the command line: press Enter to skip the Lakehouse, choose `1` to continue, and answer `n` to publishing the Environment. A Warehouse-only project runs no Python in Fabric, so it needs no published Environment yet, even though the closing hint mentions one.
+
+Initialise created the Catalogue and Operations Warehouses and wrote the SQL Table, View and validations below. Run every later command from the `parcel` folder. Open the generated files as you read; you do not need to copy them.
 
 <details markdown="1">
 <summary>See the generated workspace bindings</summary>
 
-```yaml
+```yaml title="workspace-config.yml"
 workspace: Parcel Development
-catalogue: Warehouse/Catalogue
 environment: Weaver
+catalogue: Warehouse/Catalogue
 
 targets:
   Warehouse/Operations: Operations
 ```
 
-`Warehouse/Operations` is the logical item; `Operations` is its physical Warehouse. Use your actual workspace name.
+`Warehouse/Operations` is the logical item your project names; `Operations` is the physical Warehouse it deploys to. `catalogue` is the Warehouse where Weaver records what it installed and ran.
 
 </details>
 
@@ -177,7 +180,7 @@ The View reads the event Table and keeps the most recent row for each parcel.
 
 ## Install the definitions, then load the rows
 
-**Use disposable targets.** Build manages the selected item and may prune undeclared co-located content. Keep irreplaceable sources in a separate physical item; [target ownership](schema-and-protection.md#keep-the-source-outside-the-managed-target) explains the boundary.
+Check the project locally first. It reads the declarations and their dependencies without contacting Fabric:
 
 ```bash
 weaver check
@@ -192,7 +195,7 @@ weaver check
 </figure>
 <!-- /cli-capture -->
 
-Install the definitions:
+Build installs the definitions. Because Build owns `Operations`, keep data you cannot recreate in a separate item; [target ownership](schema-and-protection.md#keep-the-source-outside-the-managed-target) explains why.
 
 ```bash
 weaver build --item Warehouse/Operations
@@ -202,7 +205,7 @@ weaver build --item Warehouse/Operations
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · first Warehouse installation">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
@@ -212,50 +215,46 @@ Build
 
   Check target occupancy                                                                                   0.0s
   Resolve semantic data sources                                                                            0.0s
-  Read catalogue                                                                                           6.1s
-    Read Warehouse/Operations inventory                                                                    0.9s
+  Read catalogue                                                                                           0.0s
+    Read Warehouse/Operations inventory                                                                    0.8s
     Read Warehouse/Catalogue inventory                                                                     0.2s
   Read target inventories                                                                                  1.1s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.2s
+  Prepare bundle                                                                                           0.5s
 Install selection
   Warehouse/Operations
     new                     13
     selected for build      13
 
-→   Warehouse/Catalogue · Upgrade catalogue identity and semantic keys · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Upgrade catalogue identity and semantic keys · 1 action                         16.2s</span>
-→   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                                 3.9s</span>
-→   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.0s</span>
+→   Warehouse/Catalogue · Creating schemas · 1 action
 →   Warehouse/Operations · Creating schemas · 2 actions
-→   Warehouse/Catalogue · Removing unmanaged objects · 2 actions
 →   Warehouse/Operations · Building objects · 1 action
-<span class="terminal-status-green">✓   Warehouse/Operations · Creating schemas · 2 actions                                                    0.5s</span>
-→   Warehouse/Operations · Creating shortcuts · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Removing unmanaged objects · 2 actions                                           0.5s</span>
-<span class="terminal-status-green">✓   Warehouse/Operations · Creating shortcuts · 1 action                                                   0.1s</span>
-→   Warehouse/Operations · Installing load and test artefacts · 5 actions
-<span class="terminal-status-green">✓   Warehouse/Operations · Building objects · 1 action                                                     1.6s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Creating schemas · 1 action                                                      0.0s</span>
+→   Warehouse/Catalogue · Building objects · 24 actions
+<span class="terminal-status-green">✓   Warehouse/Operations · Creating schemas · 2 actions                                                    0.7s</span>
+<span class="terminal-status-green">✓   Warehouse/Operations · Building objects · 1 action                                                     4.9s</span>
 →   Warehouse/Operations · Building objects · 1 action
 <span class="terminal-status-green">✓   Warehouse/Operations · Building objects · 1 action                                                     0.0s</span>
-<span class="terminal-status-green">✓   Warehouse/Operations · Installing load and test artefacts · 5 actions                                  1.1s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Building objects · 24 actions                                                   10.9s</span>
+→   Warehouse/Operations · Creating shortcuts · 1 action
+<span class="terminal-status-green">✓   Warehouse/Operations · Creating shortcuts · 1 action                                                   0.2s</span>
+→   Warehouse/Operations · Installing load and test artefacts · 5 actions
+<span class="terminal-status-green">✓   Warehouse/Operations · Installing load and test artefacts · 5 actions                                  0.3s</span>
 →   Warehouse/Catalogue · Recording created Views · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Recording created Views · 1 action                                               0.5s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Recording created Views · 1 action                                               3.5s</span>
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        7.8s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        8.3s</span>
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s</span>
-  Install                                                                                                 32.7s
-<span class="terminal-status-green">✓ Build                                                                                                   52.9s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.7s</span>
+  Install                                                                                                 24.1s
+<span class="terminal-status-green">✓ Build                                                                                                   28.9s</span>
 
 Installation
-<span class="terminal-status-green">   18 succeeded</span>
+<span class="terminal-status-green">   38 succeeded</span>
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  9b8429565c5101b39fdec126ffe26eb858fc30d94f6c2e0af1a0d80bad9055c9
+  Bundle  6be8993fb78d73585788794aaf4c7638d5811b025da54dbc0df9df3117975d19
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -272,18 +271,18 @@ weaver load Warehouse/Operations
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           2.7s
-Workspace  Weaver Example
+  Read catalogue                                                                                           3.5s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
 →   Load Warehouse/Operations/Parcel.StatusEvent
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +3 ~0 -0 !0)                                    3.1s</span>
-  Execute                                                                                                  3.3s
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +3 ~0 -0 !0)                                    4.9s</span>
+  Execute                                                                                                  5.0s
   Record what the run did                                                                                  0.7s
-<span class="terminal-status-green">✓ Load                                                                                                     6.7s</span>
+<span class="terminal-status-green">✓ Load                                                                                                     9.2s</span>
 
 <span class="terminal-status-green">load succeeded: Warehouse/Operations</span>
 
@@ -298,12 +297,12 @@ Load summary
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: 117a9e4b54d34e759857595f1a0ac3a8
 </code></pre>
 </figure>
 <!-- /cli-capture -->
 
-Run the generated validations, then inspect the installed result:
+Run the two generated validations, then read Health, Weaver's summary of what is installed and what ran:
 
 ```bash
 weaver test Warehouse/Operations
@@ -315,8 +314,8 @@ weaver test Warehouse/Operations
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
-  Read catalogue                                                                                           2.5s
-Workspace  Weaver Example
+  Read catalogue                                                                                           3.0s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
@@ -324,18 +323,18 @@ Targets
   Build run graph                                                                                          0.0s
 →   Test Warehouse/Operations/Parcel.CurrentStatusMatches
 →   Test Warehouse/Operations/Parcel.StatusIsKnown
-<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.3s</span>
-<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  7.5s</span>
-  Execute                                                                                                  7.7s
-  Record what the run did                                                                                  0.5s
-<span class="terminal-status-green">✓ Test                                                                                                    10.7s</span>
+<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.7s</span>
+<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  7.7s</span>
+  Execute                                                                                                  7.9s
+  Record what the run did                                                                                  0.9s
+<span class="terminal-status-green">✓ Test                                                                                                    11.8s</span>
 
 <span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    2 passed</span>
     0 failed
-  Workflow: [run-id]
+  Workflow: 487b69ed9b984916b74bdc7e3243fcd7
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -350,10 +349,10 @@ weaver health --item Warehouse/Operations
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
-  Read catalogue                                                                                           2.6s
+  Read catalogue                                                                                           3.7s
   Check installed items                                                                                    0.1s
-  Read installed objects                                                                                   0.3s
-<span class="terminal-status-green">✓ Health                                                                                                   3.0s</span>
+  Read installed objects                                                                                   0.6s
+<span class="terminal-status-green">✓ Health                                                                                                   4.5s</span>
 
 <span class="terminal-status-green">Weaver Health  Green</span>
 
@@ -368,7 +367,7 @@ weaver health --item Warehouse/Operations
   Installed estate consistent (10 objects)
 
 Slowest loads
-  Warehouse/Operations/Parcel.StatusEvent     3.1s
+  Warehouse/Operations/Parcel.StatusEvent     4.9s
 
 Largest changes
   Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0
@@ -377,7 +376,7 @@ Largest changes
 <!-- /cli-capture -->
 
 
-In a SQL query connected to **Operations**, read the View:
+In the Fabric portal, open the **Operations** Warehouse, choose **New SQL query** and read the View:
 
 ```sql
 select [Parcel ID], [Status], [Depot]
@@ -390,10 +389,12 @@ order by [Parcel ID];
 | P-1001 | In transit | Central |
 | P-1002 | Delivered | South |
 
+P-1001 has two events; the View keeps the later one.
+
 ## What happened around the SELECT
 
 Build created the physical Table, generated its loading procedure and installed the dependent View. The SQL reference supplied the dependency; `Lineage` is descriptive. Load staged the query result, matched keys and reconciled changed values according to the Table’s policy. It also recorded the row changes and processing state for Health. You wrote neither an INSERT/MERGE procedure nor a second load-order definition.
 
-The View now gives you one row per parcel. [Testing Warehouse data](tests.md) runs the generated independent expected result and check for unknown statuses against this same project.
+The View now gives you one row per parcel. [Testing Warehouse data](tests.md) explains the two validations you just ran and shows what a failing one looks like.
 
 If you edit either SQL document, Check and Build install the changed definition before another Load. [The development cycle](../estate/development-cycle.md) covers that loop; [Table reference](../reference/weaver-documents/table.md) owns the exact authoring and load contract.

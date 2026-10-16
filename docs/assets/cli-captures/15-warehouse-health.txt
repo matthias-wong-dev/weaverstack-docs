@@ -1,9 +1,9 @@
 Health
 
-  Read catalogue                                                                                           2.6s
+  Read catalogue                                                                                           3.7s
   Check installed items                                                                                    0.1s
-  Read installed objects                                                                                   0.3s
-✓ Health                                                                                                   3.0s
+  Read installed objects                                                                                   0.6s
+✓ Health                                                                                                   4.5s
 
 Weaver Health  Green
 
@@ -18,7 +18,7 @@ Build   Green
   Installed estate consistent (10 objects)
 
 Slowest loads
-  Warehouse/Operations/Parcel.StatusEvent     3.1s
+  Warehouse/Operations/Parcel.StatusEvent     4.9s
 
 Largest changes
   Warehouse/Operations/Parcel.StatusEvent     read 3  +3 ~0 -0 !0

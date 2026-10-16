@@ -1,0 +1,23 @@
+Wipe on Parcel Development
+
+Empty
+  Warehouse/Operations
+
+Catalogue
+  Warehouse/Catalogue   preserved; claims for Warehouse/Operations unbound
+
+Empty 1 item(s)? This cannot be undone. [y/N] y
+
+Wipe
+
+→   Wipe Warehouse/Operations · 1 action
+✓   Wipe Warehouse/Operations · 1 action                                                                   1.6s
+→   Unbind catalogue claims in Warehouse/Catalogue · 1 action
+✓   Unbind catalogue claims in Warehouse/Catalogue · 1 action                                              6.1s
+  Emptying Warehouse/Operations                                                                            7.8s
+✓ Wipe                                                                                                     9.9s
+
+Wipe complete
+
+  Warehouse/Operations        emptied
+  Warehouse/Catalogue         catalogue preserved, claims unbound

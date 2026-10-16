@@ -3,14 +3,13 @@ Set up a Weaver project.
 Lakehouse (optional)
 Use a Lakehouse for files and Python/Delta tables.
 Press Enter if this project does not need one.
-Existing: Landing
 Examples: Landing, Bronze
 Lakehouse:
 
 Project
 
   Project folder  ./parcel
-  Workspace       Weaver Example
+  Workspace       Parcel Development
   Catalogue       Catalogue
   Environment     Weaver
   Lakehouse       None
@@ -27,23 +26,25 @@ Publish the Environment now? [y/N]: n
 
 Setting up the Weaver project
 
-  Checking the workspace                                                                                   0.4s
-  Reading the Environment                                                                                 21.6s
-  Checking the project files                                                                               0.4s
-  Creating the Warehouse Operations                                                                        8.8s
+  Checking the workspace                                                                                   0.3s
+  Reading the Environment                                                                                  0.0s
+  Checking the project files                                                                               0.1s
+  Creating the Catalogue Catalogue                                                                        11.6s
+  Creating the Warehouse Operations                                                                        5.1s
   Writing the project files                                                                                0.0s
-✓ Setting up the Weaver project                                                                           31.2s
+  Creating the Environment Weaver                                                                         21.2s
+✓ Setting up the Weaver project                                                                           38.4s
 
-  Catalogue    Catalogue   already exists
-  Environment  Weaver      already exists
+  Catalogue    Catalogue   created
+  Environment  Weaver      created
   Warehouse    Operations  created
   Environment publication: deferred
 
-Weaver project ready in ./parcel.
+Weaver project ready in [local-path]/parcel.
 
 Next:
 
-  cd ./parcel
+  cd [local-path]/parcel
 
 Environment publication deferred.
 Publish it before the first load that runs Python.
@@ -59,4 +60,4 @@ Or run individually:
 
 You can set this up again with:
 
-  weaver initialise --workspace 'Weaver Example' --project-folder ./parcel --catalogue Catalogue --environment Weaver --warehouse Operations --example Parcel --non-interactive
+  weaver initialise --workspace 'Parcel Development' --project-folder ./parcel --catalogue Catalogue --environment Weaver --warehouse Operations --example Parcel --non-interactive

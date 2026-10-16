@@ -1,4 +1,4 @@
-Workspace  Weaver Example
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
@@ -8,43 +8,42 @@ Build
 
   Check target occupancy                                                                                   0.0s
   Resolve semantic data sources                                                                            0.0s
-  Read catalogue                                                                                           1.6s
-    Read Warehouse/Catalogue inventory                                                                     0.0s
-    Read Lakehouse/Landing inventory  (34.3s waiting for Spark)                                           58.3s
-  Read target inventories                                                                                 58.3s
+  Read catalogue                                                                                           6.3s
+    Read Warehouse/Catalogue inventory                                                                     0.4s
+    Read Lakehouse/Landing inventory                                                                       2.6s
+  Read target inventories                                                                                  3.3s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.2s
+  Prepare bundle                                                                                           0.1s
 Install selection
   Lakehouse/Landing
-    new                     8
-    selected for build      8
+    new                     15
+    selected for build      15
 
-→   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
-✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                                 3.1s
+    Wait for Spark session                                                                                36.0s
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.6s
+✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          2.5s
 →   Lakehouse/Landing · Creating schemas · 1 action
+→   Lakehouse/Landing · Building objects · 2 actions
+→   Lakehouse/Landing · Creating shortcuts · 2 actions
+✓   Lakehouse/Landing · Building objects · 2 actions                                                       0.1s
+→   Lakehouse/Landing · Installing load and test artefacts · 5 actions
+✓   Lakehouse/Landing · Installing load and test artefacts · 5 actions                                     0.2s
+✓   Lakehouse/Landing · Creating schemas · 1 action                                                        3.9s
 →   Lakehouse/Landing · Building objects · 1 action
-→   Lakehouse/Landing · Installing load and test artefacts · 8 actions
-→   Lakehouse/Landing · Removing unmanaged objects · 2 actions
-✓   Lakehouse/Landing · Building objects · 1 action                                                        0.2s
-✓   Lakehouse/Landing · Creating schemas · 1 action                                                        0.5s
+✓   Lakehouse/Landing · Building objects · 1 action                                                        1.1s
 →   Lakehouse/Landing · Building objects · 1 action
-✓   Lakehouse/Landing · Removing unmanaged objects · 2 actions                                             0.5s
-✓   Lakehouse/Landing · Installing load and test artefacts · 8 actions                                     1.4s
-✓   Lakehouse/Landing · Building objects · 1 action                                                        1.5s
-→   Lakehouse/Landing · Building objects · 1 action
-✓   Lakehouse/Landing · Building objects · 1 action                                                        3.6s
+✓   Lakehouse/Landing · Building objects · 1 action                                                        2.7s
+✓   Lakehouse/Landing · Creating shortcuts · 2 actions                                                    17.2s
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        5.0s
+✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        5.6s
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.5s
-  Install                                                                                                 24.0s
-✓ Build                                                                                                   1m26s
+✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.4s
+  Install                                                                                                 1m09s
+✓ Build                                                                                                   1m33s
 
 Installation
-   18 succeeded
+   15 succeeded
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  aea0ca32e070c26bae008625e4564a7a2e7012b5fb759597dab0d2b1fa4efd66
+  Bundle  f804b536a13adf807f9923fa4b99f4b1ef4c64a9c2ac499787ac0f2c83d76685

@@ -1,0 +1,42 @@
+Mirror
+
+Workspace              Parcel Development
+Source catalogue       Warehouse/Catalogue
+Destination catalogue  Warehouse/CatalogueDev
+Targets
+  Warehouse/Operations → Warehouse/OperationsDev
+
+Empty these targets? This cannot be undone. [y/N] y
+
+Mirror
+
+  Planning the mirror                                                                                      1.8s
+→   Wipe Warehouse/CatalogueDev · 1 action
+→   Wipe Warehouse/OperationsDev · 1 action
+✓   Wipe Warehouse/CatalogueDev · 1 action                                                                 0.7s
+→   Warehouse/CatalogueDev · Catalogue: creating schemas · 1 action
+✓   Wipe Warehouse/OperationsDev · 1 action                                                                0.7s
+✓   Warehouse/CatalogueDev · Catalogue: creating schemas · 1 action                                        0.0s
+→   Warehouse/CatalogueDev · Catalogue: building objects · 24 actions
+→   Reconstruct Warehouse/OperationsDev · 2 actions
+→   Recreate views over other items in Warehouse/OperationsDev · 1 action
+✓   Reconstruct Warehouse/OperationsDev · 2 actions                                                        0.2s
+✓   Recreate views over other items in Warehouse/OperationsDev · 1 action                                  0.4s
+✓   Warehouse/CatalogueDev · Catalogue: building objects · 24 actions                                      6.9s
+→   Warehouse/CatalogueDev · Catalogue: updating catalogue definitions · 1 action
+✓   Warehouse/CatalogueDev · Catalogue: updating catalogue definitions · 1 action                          4.4s
+→   Warehouse/CatalogueDev · Catalogue: finalising catalogue · 1 action
+✓   Warehouse/CatalogueDev · Catalogue: finalising catalogue · 1 action                                    0.7s
+→   Recreate catalogue views in Warehouse/OperationsDev · 1 action
+✓   Recreate catalogue views in Warehouse/OperationsDev · 1 action                                         0.1s
+→   Copy procedures and functions into Warehouse/OperationsDev · 1 action
+✓   Copy procedures and functions into Warehouse/OperationsDev · 1 action                                  0.3s
+→   Warehouse/CatalogueDev · Forking the catalogue and binding items · 1 action
+✓   Warehouse/CatalogueDev · Forking the catalogue and binding items · 1 action                            7.8s
+  Mirroring                                                                                               20.9s
+✓ Mirror                                                                                                  24.4s
+
+Mirror complete
+  Catalogue  Warehouse/Catalogue → Warehouse/CatalogueDev
+  1 item mirrored
+  2 destinations emptied

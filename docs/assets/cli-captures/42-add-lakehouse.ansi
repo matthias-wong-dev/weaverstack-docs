@@ -1,0 +1,56 @@
+Set up a Weaver project.
+
+Project
+
+  Project folder  .
+  Workspace       Parcel Development
+  Catalogue       Catalogue
+  Environment     Weaver
+  Lakehouse       Landing
+  Warehouse       Operations
+  Example         Parcel
+  Semantic Model  None
+
+1. Continue
+2. Change an answer
+3. Cancel
+Choose [1/2/3]: 1
+Publishing a Fabric Environment can take about 5 minutes.
+Publish the Environment now? [y/N]: n
+
+Setting up the Weaver project
+
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.0s[0m                                                                                                               [2m⋯[0m Checking the workspace                                                                               [2m    0.0s[0m                                                                                                                [0m Checking the workspace                                                                               [2m    0.5s[0m
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.5s[0m                                                                                                               [2m⋯[0m Reading the Environment                                                                              [2m    0.0s[0m                                                                                                                [0m Reading the Environment                                                                              [2m    0.0s[0m
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.5s[0m                                                                                                               [2m⋯[0m Checking the project files                                                                           [2m    0.0s[0m                                                                                                                [0m Checking the project files                                                                           [2m    0.2s[0m
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    0.6s[0m                                                                                                               [2m⋯[0m Creating the Lakehouse Landing                                                                       [2m    0.0s[0m                                                                                                               [2m⋯[0m Creating the Lakehouse Landing                                                                       [2m    0.4s[0m                                                                                                               [2m⋯[0m Creating the Lakehouse Landing                                                                       [2m    1.4s[0m                                                                                                               [2m⋯[0m Creating the Lakehouse Landing                                                                       [2m    2.4s[0m                                                                                                                [0m Creating the Lakehouse Landing                                                                       [2m    2.5s[0m
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    3.1s[0m                                                                                                               [2m⋯[0m Writing the project files                                                                            [2m    0.0s[0m                                                                                                                [0m Writing the project files                                                                            [2m    0.0s[0m
+[2m⋯[0m Setting up the Weaver project                                                                        [2m    3.1s[0m                                                                                                               [32m✓[0m Setting up the Weaver project                                                                        [2m    3.1s[0m
+
+  Catalogue    Catalogue   already exists
+  Environment  Weaver      already exists
+  Lakehouse    Landing     created
+  Warehouse    Operations  already exists
+  Environment publication: deferred
+
+Weaver project ready in [local-path]/parcel.
+
+Next:
+
+  cd [local-path]/parcel
+
+Environment publication deferred.
+Publish it before the first build.
+
+  weaver fabric environment publish --path Environment/Weaver.Environment
+  weaver workflow full
+
+Or run individually:
+  weaver build
+  weaver load
+  weaver test
+  weaver health
+
+You can set this up again with:
+
+  weaver initialise --workspace 'Parcel Development' --project-folder . --catalogue Catalogue --environment Weaver --lakehouse Landing --warehouse Operations --example Parcel --non-interactive

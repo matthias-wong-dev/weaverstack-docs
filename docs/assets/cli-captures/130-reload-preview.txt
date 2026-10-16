@@ -1,0 +1,18 @@
+Load (dry run)
+
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+  Execute                                                                                                  0.0s
+✓ Load (dry run)                                                                                           2.7s
+
+plan (reload) succeeded: Warehouse/Operations
+
+    validated                load:Warehouse/Operations/Parcel.StatusEvent
+
+Plan
+    1 selected

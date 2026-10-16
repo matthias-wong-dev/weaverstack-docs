@@ -12,7 +12,7 @@ The bookmark belongs to the consumer, not the source. It is the UTC instant imme
 
 ## Provision the external Lakehouse
 
-Keep your working `workspace-config.yml`, catalogue, Landing target and published Environment. Create or reuse a separate external **ParcelSourceArchive** Lakehouse in the same workspace for the mutable carrier data. Do not add it to `targets`: Build owns the managed target and may prune undeclared co-located content; the external archive must remain outside that scope.
+Keep your working `workspace-config.yml`, catalogue, Landing target and published Environment. In the Fabric portal, create a Lakehouse called **ParcelSourceArchive** in the same workspace for the changing carrier data. Do not add it to `targets`: Build owns the managed target and may prune undeclared co-located content; the external archive must remain outside that scope.
 
 In the Fabric portal, open `ParcelSourceArchive`, create `Files/parcel-status`, and upload two CSV files with the contents below:
 
@@ -162,17 +162,12 @@ The bookmark belongs to `Parcel.LiveStatus`, not to the source Folder. `files_si
 
 ## Establish the first boundary
 
-Use the [matching Fabric runtime](runtime.md) already published for Landing. If you changed its package requirements, republish; otherwise these added project files do not require another Environment publication. From the **same project root**, check and install the additions:
+New project files do not need another Environment publication. From the project root, check and install the additions:
 
 ```bash
 weaver check
 weaver build --item Lakehouse/Landing
 ```
-
-<!-- review-todo: notebook-ui -->
-!!! warning "TODO — verify Files/Parcel/StatusSource in the attached notebook"
-    File mutations and the incremental pipeline were executed through real DFS/Spark APIs. The notebook attachment, Shortcut visibility cell and manual notebook interaction below still need a UI check.
-<!-- /review-todo -->
 
 After Build, attach `Landing` as the default Lakehouse of a **Fabric notebook** and verify the installed Shortcut before Load:
 
@@ -187,10 +182,48 @@ assert sorted(path.name for path in shortcut_root.glob("*.csv")) == [
 ]
 ```
 
-Then, from the **example project root**, run the first Load:
+Then, from the project root, preview the first Load. The plan shows `Parcel.LiveStatus` waiting for `Parcel.StatusFiles`, the dependency taken from the Python import:
 
 ```bash
 weaver load Lakehouse/Landing --dry-run
+```
+
+<!-- cli-capture: {"id": "72-lakehouse-incremental-preview", "title": "Load preview · the snapshot Folder before its Table"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load preview · the snapshot Folder before its Table">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Load (dry run)
+
+  Read catalogue                                                                                           3.2s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+
+  Build run graph                                                                                          0.0s
+  Execute                                                                                                  0.0s
+<span class="terminal-status-green">✓ Load (dry run)                                                                                           3.2s</span>
+
+<span class="terminal-status-green">plan succeeded: Lakehouse/Landing</span>
+
+    validated                load:Lakehouse/Landing/Files/Parcel.Events
+    validated                load:Lakehouse/Landing/Files/Parcel.StatusFiles
+    validated                load:Lakehouse/Landing/Tables/Parcel.Event
+                             after load:Lakehouse/Landing/Files/Parcel.Events
+    validated                load:Lakehouse/Landing/Tables/Parcel.CurrentStatus
+                             after load:Lakehouse/Landing/Tables/Parcel.Event
+    validated                load:Lakehouse/Landing/Tables/Parcel.LiveStatus
+                             after load:Lakehouse/Landing/Files/Parcel.StatusFiles
+
+Plan
+    5 selected
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+Run it:
+
+```bash
 weaver load Lakehouse/Landing
 ```
 
@@ -200,27 +233,27 @@ weaver load Lakehouse/Landing
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           2.3s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.6s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  32.0s
+  Wait for Spark session                                                                                  38.8s
 →   Load Lakehouse/Landing/Files/Parcel.Events
 →   Load Lakehouse/Landing/Files/Parcel.StatusFiles
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.4s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      1.9s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 2, +2 ~0 -0 !0)                                 4.3s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 2, +2 ~0 -0 !0)                                 3.1s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                10.8s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 2, +2 ~0 -0 !0)                                11.0s</span>
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     13.4s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.7s</span>
-  Execute                                                                                                 23.4s
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.4s</span>
+  Execute                                                                                                 21.9s
   Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Load                                                                                                    1m07s</span>
+<span class="terminal-status-green">✓ Load                                                                                                    1m12s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
 
@@ -235,7 +268,7 @@ Load summary
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: 83232592471644c3bb4f4e00e2f4b9da
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -279,7 +312,7 @@ assert source_root.is_dir(), f"Source directory not found: {source_root}"
 assert sorted(path.name for path in source_root.glob("*.csv")) == ["P-1001.csv"]
 ```
 
-From the **example project root**, run Load against the already installed definitions:
+From the project root, run Load against the already installed definitions:
 
 ```bash
 weaver load Lakehouse/Landing --dry-run
@@ -292,27 +325,27 @@ weaver load Lakehouse/Landing
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           2.1s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  35.2s
+  Wait for Spark session                                                                                  39.0s
 →   Load Lakehouse/Landing/Files/Parcel.Events
 →   Load Lakehouse/Landing/Files/Parcel.StatusFiles
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.3s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.2s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~1 -1 !0)                                 3.6s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~1 -1 !0)                                 3.0s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     15.2s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     14.7s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                             12.9s</span>
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                32.4s</span>
-  Execute                                                                                                 33.9s
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                             12.0s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 1, +0 ~1 -1 !0)                                31.3s</span>
+  Execute                                                                                                 33.3s
   Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Load                                                                                                    1m21s</span>
+<span class="terminal-status-green">✓ Load                                                                                                    1m22s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
 
@@ -327,7 +360,7 @@ Load summary
     deleted                2
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: 757806a05e6140dcbe7d29be4b21301b
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -354,27 +387,27 @@ weaver load Lakehouse/Landing
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           3.4s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  40.6s
+  Wait for Spark session                                                                                  32.4s
 →   Load Lakehouse/Landing/Files/Parcel.Events
 →   Load Lakehouse/Landing/Files/Parcel.StatusFiles
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.2s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      3.2s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~0 -0 !0)                                 2.2s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~0 -0 !0)                                 3.4s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.3s</span>
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     12.0s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.1s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     13.6s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.5s</span>
-  Execute                                                                                                 18.9s
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.1s</span>
+  Execute                                                                                                 23.2s
   Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Load                                                                                                    1m14s</span>
+<span class="terminal-status-green">✓ Load                                                                                                    1m06s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing</span>
 
@@ -389,7 +422,7 @@ Load summary
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: d8ee98a1b01b4495b58f8996fd51bc7c
 </code></pre>
 </figure>
 <!-- /cli-capture -->

@@ -2,6 +2,10 @@
 
 This maintainer-only ledger records the item-first revision and earlier delivery evidence. It is not rendered.
 
+## Full walkthrough and capture refresh — 17 October 2026
+
+Every tutorial and estate page was followed in reader order from an empty Weaver Example workspace. All 73 terminal panels were recaptured; 12 of 18 TODO markers were resolved with live evidence; flow fixes landed across Getting started, Warehouse, Lakehouse, estate, semantic-model and Report pages. Three Initialise runtime fixes and one TMDL example fix were required. Remaining blockers: a credentialled SQL connection (three markers), a second workspace (one), and a signed-in service UI (two). Runtime basis, fixes and observations: [capture inventory](CAPTURE-INVENTORY.md). Entries below are historical.
+
 ## Live CLI demonstrations — 16 October 2026
 
 The live pass now adds 51 authentic terminal panels to 17 existing tutorial/estate pages, with shared static terminal styling, sanitised ANSI/text/provenance and separately labelled SQL/API readbacks. Warehouse and Lakehouse execution, controlled validation failure/restoration, both incremental pipelines, scoped Health, selection, scheduling, native Power BI DAX/annotations and two disposable Report configurations were exercised. See [capture coverage, deviations and exact remaining limits](CAPTURE-INVENTORY.md) and [verification](acceptance/live-cli-captures/verification.md).

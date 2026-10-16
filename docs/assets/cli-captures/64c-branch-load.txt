@@ -1,0 +1,48 @@
+Load
+
+  Read catalogue                                                                                           3.0s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+  Warehouse/Reporting
+
+  Build run graph                                                                                          0.0s
+→   Load Warehouse/Operations/Parcel.RawEvents
+→   Load Warehouse/Operations/Reference.Depot
+→   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
+→   Load Warehouse/Operations/Parcel.LiveStatus
+✓   Load Warehouse/Operations/Parcel.RawEvents  (read 1, +1 ~0 -0 !0)                                      2.2s
+→   Load Warehouse/Operations/Parcel.Events
+✓   Load Warehouse/Operations/Reference.Depot  (read 1, +1 ~0 -0 !0)                                       2.2s
+→   Load Warehouse/Operations/Parcel.StatusEvent
+✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     2.5s
+→   Load Warehouse/Operations/Reference.Service
+✓   Load Warehouse/Operations/Parcel.Events  (read 1, +1 ~0 -0 !0)                                         1.3s
+→   Load Warehouse/Operations/Parcel.Daily
+✓   Load Warehouse/Operations/Reference.Service  (read 1, +1 ~0 -0 !0)                                     1.5s
+✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +0 ~0 -0 !0)                         4.7s
+✓   Load Warehouse/Operations/Parcel.Daily  (read 1, +1 ~0 -0 !0)                                          1.8s
+→   Load Warehouse/Operations/Parcel.Summary
+✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    3.5s
+✓   Load Warehouse/Operations/Parcel.Summary  (read 1, +1 ~0 -0 !0)                                        1.5s
+→   Load Warehouse/Reporting/Parcel.DashboardInput
+✓   Load Warehouse/Reporting/Parcel.DashboardInput  (read 1, +1 ~0 -0 !0)                                  2.5s
+  Execute                                                                                                  9.4s
+  Record what the run did                                                                                  0.5s
+✓ Load                                                                                                    12.9s
+
+load succeeded: Warehouse/Operations, Warehouse/Reporting
+
+Load summary
+   10 succeeded
+    0 failed
+    0 blocked
+  Rows
+    read                  12
+    inserted               7
+    updated                0
+    deleted                0
+    rejected               0
+
+  Workflow: 8b0ae5d889cd48d3a3fd852e4f0667f4

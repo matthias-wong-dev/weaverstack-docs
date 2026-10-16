@@ -33,12 +33,12 @@ Description: The delivery count is positive.
 EVALUATE FILTER(ROW("DeliveryCount", [Delivery Count]), [DeliveryCount] <= 0)
 ```
 
-The filename, metadata ID and `assumptions` directory agree. `Parcel` in the directory is the local logical model name, not the physical `Parcel_Dev`. An Assumption returns violating rows; zero rows passes. [DAX validation reference](../reference/power-bi/validations.md) owns the complete metadata rules.
+The filename, metadata ID and `assumptions` directory agree. `Parcel` in the directory is the logical model name, whatever the physical model is called in a given workspace. An Assumption returns violating rows; zero rows passes. [DAX validation reference](../reference/power-bi/validations.md) owns the complete metadata rules.
 
 ## 2. Run the authored query
 
 ```bash
-weaver check .
+weaver check
 weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
 
@@ -48,9 +48,9 @@ weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/P
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
-  Read validations                                                                                         0.5s
-  Execute                                                                                                  0.7s
-<span class="terminal-status-green">✓ Test                                                                                                     1.3s</span>
+  Read validations                                                                                         0.1s
+  Execute                                                                                                  1.1s
+<span class="terminal-status-green">✓ Test                                                                                                     1.2s</span>
 
 <span class="terminal-status-green">test passed</span>
 
@@ -77,24 +77,19 @@ table Delivery
 	measure 'Delivery Count' = -1
 ```
 
-Back up the existing same-name overlay first; it may contain the foreign-key rule, policy overrides or your own conventions. Use an unused `Parcel.tmdl.saved` filename and keep the same shell for correction:
+Save a copy of the overlay so you can put it back:
 
 ```bash
-test ! -e Parcel.tmdl.saved || exit 1
-had_overlay=false
-if test -f PowerBI/Parcel/Parcel.tmdl; then
-  had_overlay=true
-  cp PowerBI/Parcel/Parcel.tmdl Parcel.tmdl.saved
-fi
+cp PowerBI/Parcel/Parcel.tmdl Parcel.tmdl.saved
 ```
 
-Edit `PowerBI/Parcel/Parcel.tmdl` to set Delivery Count to `-1`, using the failure declaration above. Keep every other declaration in the overlay. If `table Delivery` or its measure already exists, edit that declaration rather than pasting a second one: duplicate declarations are refused. In the native rule-only checkpoint, add the Delivery section beneath the existing `model Model` annotation. If you have no overlay, create the file with the complete failure declaration.
+Then add the failure declaration to the end of `PowerBI/Parcel/Parcel.tmdl`, below the existing `model Model` section. If the overlay already has a `table Delivery` section, for example from [shared policy](shared-policy.md), change the measure there instead; a second declaration of the same table is refused. If you have no `Parcel.tmdl` yet, create it with just the failure declaration and delete it afterwards instead of restoring.
 
 Deploy that changed measure and run the same source Assumption:
 
 ```bash
-weaver check .
-weaver build . --item SemanticModel/Parcel
+weaver check
+weaver build --item SemanticModel/Parcel
 weaver load SemanticModel/Parcel
 weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
@@ -105,9 +100,9 @@ weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/P
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
-  Read validations                                                                                         0.6s
+  Read validations                                                                                         0.1s
   Execute                                                                                                  1.0s
-<span class="terminal-status-red">✗ Test                                                                                                     1.6s</span>
+<span class="terminal-status-red">✗ Test                                                                                                     1.1s</span>
 
 <span class="terminal-status-red">test failed</span>
 
@@ -123,20 +118,16 @@ Test summary
 </figure>
 <!-- /cli-capture -->
 
-Test returned one violating row, `DeliveryCount = -1`, and exit 1. This is a finding, not a query failure. A permission or execution failure produces an `invalid` node and also exits 1. Python returns the validation report: inspect `succeeded`, node `status` and diagnostics rather than using a retired `strict=` argument.
+Test returned one violating row, `DeliveryCount = -1`, and exit 1. This is a finding, not a query failure. A permission or execution failure produces an `invalid` node and also exits 1.
 
 ## 4. Restore the prior model and rerun
 
-Run the restoration even if Check, Build, Load or Test failed. A deliberate failed Test exits 1, so do not put restoration behind `&&` or a shell’s automatic exit-on-error:
+Put the saved overlay back, then deploy and rerun:
 
 ```bash
-if test "$had_overlay" = true; then
-  mv Parcel.tmdl.saved PowerBI/Parcel/Parcel.tmdl
-else
-  rm PowerBI/Parcel/Parcel.tmdl
-fi
-weaver check .
-weaver build . --item SemanticModel/Parcel
+mv Parcel.tmdl.saved PowerBI/Parcel/Parcel.tmdl
+weaver check
+weaver build --item SemanticModel/Parcel
 weaver load SemanticModel/Parcel
 weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/Parcel/Parcel.PositiveDeliveryCount.dax'
 ```
@@ -147,9 +138,9 @@ weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/P
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
-  Read validations                                                                                         0.6s
-  Execute                                                                                                  0.8s
-<span class="terminal-status-green">✓ Test                                                                                                     1.5s</span>
+  Read validations                                                                                         0.1s
+  Execute                                                                                                  1.0s
+<span class="terminal-status-green">✓ Test                                                                                                     1.1s</span>
 
 <span class="terminal-status-green">test passed</span>
 
@@ -160,12 +151,45 @@ Test summary
 </figure>
 <!-- /cli-capture -->
 
-The Assumption passed again. The existing overlay is restored byte for byte, including its foreign-key convention. Only the direct-entry case that had no overlay removes the file created by this exercise. If the shell was interrupted, restore `Parcel.tmdl.saved` manually before deploying again.
-
+The Assumption passed again, and the overlay is back as it was, including its foreign-key rule.
 
 `--file` explicitly selects source/file mode even when the configuration contains a catalogue. `--source .` identifies the project; it does not force file mode by itself. Without a configured catalogue, `--source .` alone uses source mode. Source/file mode records no installed `_.TestStatus` or Test history. Repeat `--file` for paths/directories/globs and `--name` for case-insensitive whole-validation regex seeds; each supplied name pattern must match.
 
-To install this Assumption in a catalogue-backed project, Build the changed model declarations, then run Test without `--file`. Installed mode reads the catalogue’s validation definition and records results. Do not assume an edited local DAX file changed that installed definition.
+To install this Assumption in a catalogue-backed project, Build the model, then run Test without `--file`. Installed mode reads the validation definition Build recorded in the catalogue and records its result for Health; an edited local DAX file changes nothing until the next Build.
+
+```bash
+weaver build --item SemanticModel/Parcel
+weaver test SemanticModel/Parcel
+```
+
+<!-- cli-capture: {"id": "117-installed-dax-test", "title": "Test · installed DAX Assumption with a Catalogue"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · installed DAX Assumption with a Catalogue">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
+
+  Read catalogue                                                                                           2.6s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  SemanticModel/Parcel
+
+  Build run graph                                                                                          0.0s
+→   Test SemanticModel/Parcel/Parcel.PositiveDeliveryCount
+<span class="terminal-status-green">✓   Test SemanticModel/Parcel/Parcel.PositiveDeliveryCount                                                 0.5s</span>
+  Execute                                                                                                  0.7s
+  Record what the run did                                                                                  0.7s
+<span class="terminal-status-green">✓ Test                                                                                                     4.0s</span>
+
+<span class="terminal-status-green">test passed</span>
+
+Test summary
+<span class="terminal-status-green">    1 passed</span>
+    0 failed
+  Workflow: 49d590fc6481430fa5e513ee217a93c3
+</code></pre>
+</figure>
+<!-- /cli-capture -->
 
 </details>
 
@@ -248,5 +272,3 @@ This edits the additional model’s measure, not Warehouse data or the native Pa
 ## Read the estate result
 
 In a catalogue-backed project, `weaver test` without item selectors runs installed Lakehouse, Warehouse and model validations. [Run and inspect the estate](../estate/operate.md) combines those outcomes with source loads and model refreshes. Exact diagnostics and recording boundaries belong in [Test behaviour](../reference/operation-behaviour/test.md).
-
-For cleanup, delete only example-created Reports/models, Reports first. Retire the example’s Operations Warehouse only through a scoped approved procedure; retain shared catalogues, workspaces and connections. Do not use unscoped Wipe.

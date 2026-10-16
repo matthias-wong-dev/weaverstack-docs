@@ -2,7 +2,7 @@
 
 Check that CurrentStatus returns the expected parcels, and that every event uses a recognised status. These validations live beside the same Folder and Tables; Build installs them, and Test runs them separately from Load.
 
-Continue the [Spark SQL project](spark-sql.md), with Event and CurrentStatus loaded. Keep its workspace configuration and published runtime. If you are starting here, initialise and run the [Python project](python.md) first.
+Continue the same `parcel` project, with Event and CurrentStatus loaded. If you are starting here, run the [Python project](python.md) first.
 
 ## Compare CurrentStatus with an independent result
 
@@ -52,12 +52,9 @@ An Assumption returns the rows that contradict its statement. This one passes on
 
 ## Run both validations
 
-From the same project root:
+Initialise wrote both validations and the first Build installed them, so run them directly:
 
 ```bash
-weaver check
-weaver build --item Lakehouse/Landing
-weaver load Lakehouse/Landing --stale
 weaver test Lakehouse/Landing
 ```
 
@@ -67,28 +64,28 @@ weaver test Lakehouse/Landing
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
-  Read catalogue                                                                                           2.0s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.9s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  33.0s
+  Wait for Spark session                                                                                  33.3s
 →   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
 →   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
-<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      13.2s</span>
-<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    15.1s</span>
-  Execute                                                                                                 13.0s
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                       9.4s</span>
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    11.1s</span>
+  Execute                                                                                                 10.7s
   Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Test                                                                                                    59.1s</span>
+<span class="terminal-status-green">✓ Test                                                                                                    54.2s</span>
 
 <span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    2 passed</span>
     0 failed
-  Workflow: [run-id]
+  Workflow: 4294ea0d4ddb47b89c1a03bf2606bc64
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -97,7 +94,7 @@ Test summary
 weaver health --item Lakehouse/Landing
 ```
 
-Build installs validations but does not evaluate them. The stale Load catches up changed data work; Test does not load its dependencies for you. Both validations passed against the original export. Read the Test section of Health separately from Load.
+Both validations passed against the original export. Build installs validations but does not run them, and Test does not load their inputs for you. When you add or edit a validation, Check and Build install it before Test.
 
 To run these source files before installing a validation edit:
 
@@ -111,12 +108,12 @@ File mode reads the deployed Tables but records no catalogue Test state. Use the
 
 ## Optional: diagnose one mismatch
 
-In the Test's expected query only, change P-1001's status from `In transit` to `Delivered`. Leave the Folder, Event and CurrentStatus unchanged. Check and Build the validation edit, then select that installed Test with a whole-name regex:
+In the Test's expected query only, change P-1001's status from `In transit` to `Delivered`. Leave the Folder, Event and CurrentStatus unchanged. Check and Build the validation edit, then select that installed Test. `--name` is a whole-name regular expression, so `[.]` matches the literal dot:
 
 ```bash
 weaver check
 weaver build --item Lakehouse/Landing
-weaver test Lakehouse/Landing --name '^Parcel\.CurrentStatusMatches$'
+weaver test Lakehouse/Landing --name 'Parcel[.]CurrentStatusMatches'
 weaver health --item Lakehouse/Landing
 ```
 

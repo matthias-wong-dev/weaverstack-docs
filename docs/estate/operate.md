@@ -65,33 +65,33 @@ weaver test Lakehouse/Landing Warehouse/Operations --workspace-config workspace-
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Test
 
-  Read catalogue                                                                                           2.2s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  38.3s
+  Wait for Spark session                                                                                  35.8s
 →   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
-→   Test Warehouse/Operations/Parcel.StatusIsKnown
 →   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
 →   Test Warehouse/Operations/Parcel.CurrentStatusMatches
+→   Test Warehouse/Operations/Parcel.StatusIsKnown
 <span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.9s</span>
-<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  5.4s</span>
-<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      10.0s</span>
-<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    12.4s</span>
-  Execute                                                                                                 10.6s
+<span class="terminal-status-green">✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  5.5s</span>
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      12.7s</span>
+<span class="terminal-status-green">✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    14.7s</span>
+  Execute                                                                                                 12.8s
   Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Test                                                                                                    1m11s</span>
+<span class="terminal-status-green">✓ Test                                                                                                    59.9s</span>
 
 <span class="terminal-status-green">test passed</span>
 
 Test summary
 <span class="terminal-status-green">    4 passed</span>
     0 failed
-  Workflow: [run-id]
+  Workflow: 05dc2c23a84c45899e318715a6a41a54
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -106,29 +106,29 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-c
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
-  Read catalogue                                                                                           2.5s
-  Check installed items                                                                                    0.2s
-  Read installed objects                                                                                   2.5s
-<span class="terminal-status-green">✓ Health                                                                                                   5.1s</span>
+  Read catalogue                                                                                           2.6s
+  Check installed items                                                                                    0.1s
+  Read installed objects                                                                                   3.0s
+<span class="terminal-status-green">✓ Health                                                                                                   5.8s</span>
 
 <span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 3m ago
-<span class="terminal-status-green">  6 succeeded</span>
+<span class="terminal-status-green">  8 succeeded</span>
 
 <span class="terminal-status-green">Tests   Green</span>
 <span class="terminal-status-green">  4 succeeded</span>
 
 <span class="terminal-status-green">Build   Green</span>
-  Installed estate consistent (26 objects)
+  Installed estate consistent (29 objects)
 
 Slowest loads
-  Lakehouse/Landing/Tables/Parcel.Event          14.5s
-  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
-  Warehouse/Operations/Parcel.StatusEvent        5.5s
-  Warehouse/Operations/Parcel.LiveStatus         3.1s
-  Lakehouse/Landing/Files/Parcel.Events          3.1s
+  Lakehouse/Landing/Tables/Parcel.Event          12.8s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  7.6s
+  Warehouse/Operations/Parcel.StatusEvent        5.0s
+  Warehouse/Operations/Parcel.LiveStatus         5.0s
+  Lakehouse/Landing/Files/Parcel.StatusFiles     2.9s
 
 Largest changes
   Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0

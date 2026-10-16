@@ -15,8 +15,8 @@ For another source-data estate, select its actual changed items in the same loop
 After editing the source, check it locally and preview the intended installed change:
 
 ```bash
-weaver check .
-weaver build . --item Lakehouse/Landing --item Warehouse/Operations --dry-run --workspace-config workspace-development.yml
+weaver check
+weaver build --item Lakehouse/Landing --item Warehouse/Operations --dry-run --workspace-config workspace-development.yml
 ```
 
 Check catches declaration errors without contacting Fabric. Build preview reads existing targets and shows selected work and destructive consequences without changing the estate. Use ordinary Build for first deployment; previews require existing targets.
@@ -24,7 +24,7 @@ Check catches declaration errors without contacting Fabric. Build preview reads 
 If the preview is the intended change, install and operate that selection:
 
 ```bash
-weaver build . --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
+weaver build --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
 weaver load --stale --workspace-config workspace-development.yml
 weaver test --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml
@@ -43,11 +43,11 @@ For the [managed-source Parcel extension](../semantic-models/managed-sources.md)
 Build source-data definitions first, then changed model/Report definitions separately:
 
 ```bash
-weaver check .
-weaver build . --item Lakehouse/Landing --item Warehouse/Operations --dry-run --workspace-config workspace-development.yml
-weaver build . --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
-weaver build . --item PowerBI/Parcel --dry-run --workspace-config workspace-development.yml
-weaver build . --item PowerBI/Parcel --bind-data-sources --workspace-config workspace-development.yml
+weaver check
+weaver build --item Lakehouse/Landing --item Warehouse/Operations --dry-run --workspace-config workspace-development.yml
+weaver build --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
+weaver build --item PowerBI/Parcel --dry-run --workspace-config workspace-development.yml
+weaver build --item PowerBI/Parcel --bind-data-sources --workspace-config workspace-development.yml
 weaver load --stale --workspace-config workspace-development.yml
 weaver test --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml

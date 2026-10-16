@@ -32,7 +32,7 @@ This fragment changes the policy and one existing measure property. It does not 
 
 ## Policy and local precedence
 
-For a model without bases, merge native definition, shared `PowerBI/policy.tmdl`, then the same-name local TMDL file. Later explicit values win; omitted values remain. A local `false` can disable a shared Boolean annotation before handlers execute. All final annotations then act on the composed definition, not separately on every source layer.
+For a model without bases, merge native definition, shared `PowerBI/policy.tmdl`, then the same-name local TMDL file. A standalone named TMDL file, with no native directory, takes the local position: policy merges first and the file's explicit values win. Later explicit values win; omitted values remain. A local `false` can disable a shared Boolean annotation before handlers execute. All final annotations then act on the composed definition, not separately on every source layer.
 
 ## Compose named models
 

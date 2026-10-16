@@ -6,7 +6,7 @@ Three controls do different jobs: the configuration binds the estate, the select
 
 ## Bind the project to Fabric
 
-Continue the [Landing → Operations connection](connected-items.md). Keep its Folder, Event and CurrentStatus Tables, and the independent and cross-item Operations work in the same project. Save the existing bindings as `workspace-development.yml`; keep the workspace and physical names from that connection:
+Continue the [Landing → Operations connection](connected-items.md). Copy its `workspace-config.yml` to `workspace-development.yml`; it should look like this:
 
 ```yaml title="workspace-development.yml"
 workspace: Parcel Development
@@ -17,11 +17,11 @@ targets:
   Warehouse/Operations: Operations
 ```
 
-Use the workspace, catalogue, published runtime and physical names from your working configuration. `Lakehouse/Landing` and `Warehouse/Operations` remain logical identities in the source. Selecting this named file is explicit on each command:
+`Lakehouse/Landing` and `Warehouse/Operations` are the logical identities your source uses. Name the file on each command:
 
 ```bash
-weaver check .
-weaver build . --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
+weaver check
+weaver build --item Lakehouse/Landing --item Warehouse/Operations --workspace-config workspace-development.yml
 weaver load --workspace-config workspace-development.yml
 weaver test --workspace-config workspace-development.yml
 weaver health --workspace-config workspace-development.yml

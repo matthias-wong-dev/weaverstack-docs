@@ -1,7 +1,7 @@
 Test
 
-  Read catalogue                                                                                           2.1s
-Workspace  Weaver Example
+  Read catalogue                                                                                           2.6s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
@@ -9,15 +9,15 @@ Targets
   Build run graph                                                                                          0.0s
 →   Test Warehouse/Operations/Parcel.CurrentStatusMatches
 →   Test Warehouse/Operations/Parcel.StatusIsKnown
-✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.0s
-✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  4.4s
-  Execute                                                                                                  4.5s
-  Record what the run did                                                                                  0.5s
-✓ Test                                                                                                     7.2s
+✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.2s
+✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  3.9s
+  Execute                                                                                                  4.0s
+  Record what the run did                                                                                  0.4s
+✓ Test                                                                                                     7.1s
 
 test passed
 
 Test summary
     2 passed
     0 failed
-  Workflow: [run-id]
+  Workflow: 029aaa36e3d14f3dbf6a77fc824f14db

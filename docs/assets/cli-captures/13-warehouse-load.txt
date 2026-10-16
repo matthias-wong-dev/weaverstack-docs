@@ -1,17 +1,17 @@
 Load
 
-  Read catalogue                                                                                           2.7s
-Workspace  Weaver Example
+  Read catalogue                                                                                           3.5s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
 →   Load Warehouse/Operations/Parcel.StatusEvent
-✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +3 ~0 -0 !0)                                    3.1s
-  Execute                                                                                                  3.3s
+✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +3 ~0 -0 !0)                                    4.9s
+  Execute                                                                                                  5.0s
   Record what the run did                                                                                  0.7s
-✓ Load                                                                                                     6.7s
+✓ Load                                                                                                     9.2s
 
 load succeeded: Warehouse/Operations
 
@@ -26,4 +26,4 @@ Load summary
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: 117a9e4b54d34e759857595f1a0ac3a8

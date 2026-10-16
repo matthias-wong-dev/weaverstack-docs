@@ -1,13 +1,13 @@
 Load (dry run)
 
-  Read catalogue                                                                                           2.2s
-Workspace  Weaver Example
+  Read catalogue                                                                                           7.4s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
 
   Build run graph                                                                                          0.0s
 ✗ Execute                                                                                                  0.0s
-✗ Load (dry run)                                                                                           2.2s
+✗ Load (dry run)                                                                                           7.4s
 
-error: no installed loadable object in the requested items matches 'Tables/Parcel[.]DoesNotExist'. Installed: Files/Parcel.Events, Tables/Parcel.CurrentStatus, Tables/Parcel.Event
+error: no installed loadable object in the requested items matches 'Tables/Parcel[.]DoesNotExist'. Installed: Files/Parcel.Events, Files/Parcel.StatusFiles, Tables/Parcel.CurrentStatus, Tables/Parcel.Event, Tables/Parcel.LiveStatus

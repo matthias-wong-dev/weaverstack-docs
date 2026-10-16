@@ -1,4 +1,4 @@
-Workspace  Weaver Example
+Workspace  Parcel Development
 Catalogue  none
 Targets
   SemanticModel/Parcel
@@ -6,23 +6,23 @@ Targets
 
 Build
 
-    Create SemanticModel/Parcel                                                                           20.6s
-  Create Power BI items                                                                                   20.6s
+    Create SemanticModel/Parcel                                                                           20.7s
+  Create Power BI items                                                                                   20.7s
   Resolve semantic data sources                                                                            0.0s
     Resolve SemanticModel/Parcel                                                                           0.0s
-  Read target inventories                                                                                  0.1s
+  Read target inventories                                                                                  0.2s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.1s
+  Prepare bundle                                                                                           0.0s
 Install selection
   SemanticModel/Parcel
     changed                 1
     selected for build      1
 
 →   SemanticModel/Parcel · Deploy semantic definitions · 1 action
-✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         20.9s
+✓   SemanticModel/Parcel · Deploy semantic definitions · 1 action                                         21.3s
 →   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action
 ✓   SemanticModel/Parcel · Verify deployed semantic definitions · 1 action                                20.5s
-  Install                                                                                                 41.4s
+  Install                                                                                                 41.8s
 ✓ Build                                                                                                   1m02s
 
 Installation
@@ -30,4 +30,4 @@ Installation
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  a8ab22d2285b5b2ef3cae58135c2db97216bca04d09ebfb46bb8556544dec410
+  Bundle  01a374b67d8eb3b7035bf9ecbd1bb768e263e59c19cbf07741169e18d6b83a5f

@@ -2,27 +2,23 @@
 
 What should a Warehouse read when the data comes from a Lakehouse? Name the existing producer in a logical Shortcut. Weaver installs the connection in order and keeps its dependency with the project.
 
-Continue [Landing’s working Parcel pipeline](../lakehouse/python.md) in the same `parcel` project. Its Folder feeds Event and CurrentStatus. Add a Warehouse without replacing those sources or their configuration.
+You need both items in the same `parcel` project. If you followed the Warehouse and Lakehouse tasks in order, you already have them: [adding Landing](../lakehouse/python.md#create-the-project) also generated the Warehouse files below. Otherwise, add the item you are missing from inside `parcel`:
 
-## Present Landing’s Event in Operations {#present-landings-event-in-dispatch}
+=== "Started with the Lakehouse"
 
-From the directory containing the project, run:
+    ```bash
+    weaver initialise --workspace "Parcel Development" --project-folder . --warehouse Operations --example Parcel
+    ```
 
-```bash
-weaver initialise \
-  --workspace "Parcel Development" \
-  --project-folder ./parcel \
-  --warehouse Operations \
-  --example Parcel
-cd parcel
-```
+=== "Started with the Warehouse"
 
-If already inside `parcel`, use `--project-folder .` instead. Initialise reads Landing’s existing binding, retains its files and adds Operations. The catalogue and published runtime stay in place. Use disposable managed targets: Build may prune undeclared co-located content; keep irreplaceable external sources outside them.
+    ```bash
+    weaver initialise --workspace "Parcel Development" --project-folder . --lakehouse Landing --example Parcel
+    ```
 
-<!-- review-todo: shortcut-extension -->
-!!! warning "TODO — resolve Initialise’s refusal of authored shortcuts.yml"
-    Initialise refuses to overwrite a `Warehouse/Operations/shortcuts.yml` it did not generate. Save and set aside only that local file before extension, then merge its saved mappings into the generated file **before Check or Build**. Keep the incremental example’s `physical` Source.Parcel mapping alongside the new `logical` entry; do not replace either. The capture continued that project using this explicit merge, without changing the existing Table/View definitions or data. The workaround is verified; a generator fix remains pending.
-<!-- /review-todo -->
+    Then publish the Environment and Build Landing as in the [first Lakehouse task](../lakehouse/python.md#check-build-and-load).
+
+Initialise reads the existing bindings and keeps every file you already have. If you have authored a `shortcuts.yml`, such as the [incremental task's](../warehouse/incremental.md) physical mapping, Initialise adds its logical mapping beside yours.
 
 Operations keeps its own seeded `Parcel.StatusEvent` Table, CurrentStatus View and validations. The cross-item additions have distinct names. Open `Warehouse/Operations/shortcuts.yml`:
 
@@ -82,7 +78,7 @@ weaver build --item Lakehouse/Landing --item Warehouse/Operations
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Build · connect the two managed items">
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
-<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Weaver Example
+<pre tabindex="0" aria-label="Terminal output"><code>Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
@@ -93,13 +89,14 @@ Build
 
   Check target occupancy                                                                                   0.0s
   Resolve semantic data sources                                                                            0.0s
-  Read catalogue                                                                                           1.5s
-    Read Warehouse/Operations inventory                                                                    0.4s
-    Read Warehouse/Catalogue inventory                                                                     0.0s
-    Read Lakehouse/Landing inventory  (38.5s waiting for Spark)                                           46.0s
-  Read target inventories                                                                                 46.4s
+  Read catalogue                                                                                           2.9s
+    Read Warehouse/Operations inventory                                                                    0.8s
+    Read Warehouse/Catalogue inventory                                                                     0.1s
+    Read Lakehouse/Landing inventory  (32.4s waiting for Spark)                                           40.1s
+  Read target inventories                                                                                 41.0s
+  Resolve physical shortcut targets                                                                        0.2s
   Read semantic sources                                                                                    0.0s
-  Prepare bundle                                                                                           0.2s
+  Prepare bundle                                                                                           0.1s
 Install selection
   Lakehouse/Landing         up to date
   Warehouse/Operations
@@ -107,26 +104,26 @@ Install selection
     selected for build      3
 
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          1.1s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          1.0s</span>
 →   Warehouse/Operations · Creating shortcuts · 2 actions
-<span class="terminal-status-green">✓   Warehouse/Operations · Creating shortcuts · 2 actions                                                  0.1s</span>
+<span class="terminal-status-green">✓   Warehouse/Operations · Creating shortcuts · 2 actions                                                  0.2s</span>
 →   Warehouse/Operations · Building objects · 1 action
-<span class="terminal-status-green">✓   Warehouse/Operations · Building objects · 1 action                                                     0.8s</span>
+<span class="terminal-status-green">✓   Warehouse/Operations · Building objects · 1 action                                                     1.1s</span>
 →   Warehouse/Operations · Installing load and test artefacts · 1 action
 <span class="terminal-status-green">✓   Warehouse/Operations · Installing load and test artefacts · 1 action                                   0.1s</span>
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        2.6s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        3.8s</span>
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.6s</span>
-  Install                                                                                                  5.3s
-<span class="terminal-status-green">✓ Build                                                                                                   55.1s</span>
+<span class="terminal-status-green">✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.5s</span>
+  Install                                                                                                  6.6s
+<span class="terminal-status-green">✓ Build                                                                                                   52.6s</span>
 
 Installation
 <span class="terminal-status-green">    7 succeeded</span>
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  4336a4562544b0ef721d2a9af60b5449b30a87ac245ba979db01c626fb788312
+  Bundle  e55d88243fcd6225d6ab1d0b3d670524b56c5aee49e04210edcf4cfb1ed51255
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -141,47 +138,51 @@ weaver load Lakehouse/Landing Warehouse/Operations
 <figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Load
 
-  Read catalogue                                                                                           2.3s
-Workspace  Weaver Example
+  Read catalogue                                                                                           3.1s
+Workspace  Parcel Development
 Catalogue  Warehouse/Catalogue
 Targets
   Lakehouse/Landing
   Warehouse/Operations
 
   Build run graph                                                                                          0.0s
-  Wait for Spark session                                                                                  35.4s
+  Wait for Spark session                                                                                  39.5s
 →   Load Lakehouse/Landing/Files/Parcel.Events
 →   Load Warehouse/Operations/Parcel.LiveStatus
 →   Load Warehouse/Operations/Parcel.StatusEvent
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      3.1s</span>
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     3.1s</span>
+→   Load Lakehouse/Landing/Files/Parcel.StatusFiles
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.Events  (read 1, +0 ~0 -0 !0)                                      2.8s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.Event
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    5.5s</span>
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     14.5s</span>
-→   Refresh Lakehouse/Landing SQL endpoint
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Files/Parcel.StatusFiles  (read 1, +0 ~0 -0 !0)                                 2.9s</span>
+→   Load Lakehouse/Landing/Tables/Parcel.LiveStatus
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.2s</span>
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                     5.0s</span>
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.StatusEvent  (read 3, +0 ~0 -0 !0)                                    5.0s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     12.8s</span>
 →   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus
+→   Refresh Lakehouse/Landing SQL endpoint
 <span class="terminal-status-green">✓   Refresh Lakehouse/Landing SQL endpoint                                                                 0.8s</span>
 →   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus
-<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +2 ~0 -0 !0)                         2.5s</span>
-<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              8.4s</span>
-  Execute                                                                                                 23.9s
+<span class="terminal-status-green">✓   Load Warehouse/Operations/Parcel.LakehouseCurrentStatus  (read 2, +2 ~0 -0 !0)                         2.0s</span>
+<span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +0 ~0 -0 !0)                              7.6s</span>
+  Execute                                                                                                 21.3s
   Record what the run did                                                                                  0.0s
-<span class="terminal-status-green">✓ Load                                                                                                    1m11s</span>
+<span class="terminal-status-green">✓ Load                                                                                                    1m13s</span>
 
 <span class="terminal-status-green">load succeeded: Lakehouse/Landing, Warehouse/Operations</span>
 
 Load summary
-<span class="terminal-status-green">    6 succeeded</span>
+<span class="terminal-status-green">    8 succeeded</span>
     0 failed
     0 blocked
   Rows
-    read                  11
+    read                  12
     inserted               2
     updated                0
     deleted                0
     rejected               0
 
-  Workflow: [run-id]
+  Workflow: 46cba535cdd3454fadece85ceefbaf3c
 </code></pre>
 </figure>
 <!-- /cli-capture -->
@@ -196,16 +197,16 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations
 <figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Terminal output"><code>Health
 
-  Read catalogue                                                                                           2.3s
+  Read catalogue                                                                                           2.8s
   Check installed items                                                                                    0.2s
-  Read installed objects                                                                                   3.0s
-<span class="terminal-status-green">✓ Health                                                                                                   5.5s</span>
+  Read installed objects                                                                                   3.2s
+<span class="terminal-status-green">✓ Health                                                                                                   6.1s</span>
 
 <span class="terminal-status-amber">Weaver Health  Amber</span>
 
 <span class="terminal-status-green">Load    Green</span>
   Last load activity   0h 0m ago
-<span class="terminal-status-green">  6 succeeded</span>
+<span class="terminal-status-green">  8 succeeded</span>
 
 <span class="terminal-status-amber">Tests   Amber</span>
 <span class="terminal-status-green">  4 succeeded</span>
@@ -219,14 +220,14 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations
 <span class="terminal-status-green">          Warehouse/Operations/Parcel.StatusEvent has been loaded since this validation passed</span>
 
 <span class="terminal-status-green">Build   Green</span>
-  Installed estate consistent (26 objects)
+  Installed estate consistent (29 objects)
 
 Slowest loads
-  Lakehouse/Landing/Tables/Parcel.Event          14.5s
-  Lakehouse/Landing/Tables/Parcel.CurrentStatus  8.4s
-  Warehouse/Operations/Parcel.StatusEvent        5.5s
-  Warehouse/Operations/Parcel.LiveStatus         3.1s
-  Lakehouse/Landing/Files/Parcel.Events          3.1s
+  Lakehouse/Landing/Tables/Parcel.Event          12.8s
+  Lakehouse/Landing/Tables/Parcel.CurrentStatus  7.6s
+  Warehouse/Operations/Parcel.StatusEvent        5.0s
+  Warehouse/Operations/Parcel.LiveStatus         5.0s
+  Lakehouse/Landing/Files/Parcel.StatusFiles     2.9s
 
 Largest changes
   Warehouse/Operations/Parcel.LakehouseCurrentStatus  read 2  +2 ~0 -0 !0

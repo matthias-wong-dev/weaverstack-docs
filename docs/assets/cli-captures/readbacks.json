@@ -1,444 +1,208 @@
 {
-  "evidence": "Real SQL, Fabric definition and Power BI query readbacks; not CLI output and not screenshots",
-  "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7",
-  "weaver_version": "0.9.0.dev16746776803276843971",
-  "workspace": "Weaver Example, authorised disposable trial workspace",
+  "evidence": "Real SQL endpoint, DAX executeQueries, Fabric getDefinition, Power BI REST and Fabric notebook observations from the 17 October 2026 walkthrough; not CLI output and not screenshots",
+  "runtime_revision": "afb5b31c36498aeb8b70927e7f723de054225d5e",
+  "workspace": "Weaver Example (disposable), shown in docs as Parcel Development",
   "observations": {
     "warehouse-current-status": {
+      "kind": "SQL",
+      "target": "Operations",
       "sql": "select [Parcel ID], [Status], [Depot] from [Parcel].[CurrentStatus] order by [Parcel ID];",
-      "target": "Warehouse/Operations",
       "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "In transit",
-          "Depot": "Central"
-        },
-        {
-          "Parcel ID": "P-1002",
-          "Status": "Delivered",
-          "Depot": "South"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "incremental-target-initial": {
-      "sql": "select [Parcel ID], [Status], [Depot]\nfrom [Parcel].[LiveStatus]\norder by [Parcel ID];\n",
-      "target": "Warehouse/Operations",
-      "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "In transit",
-          "Depot": "Central"
-        },
-        {
-          "Parcel ID": "P-1002",
-          "Status": "Delivered",
-          "Depot": "South"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "incremental-target-changed": {
-      "sql": "select [Parcel ID], [Status], [Depot]\nfrom [Parcel].[LiveStatus]\norder by [Parcel ID];\n",
-      "target": "Warehouse/Operations",
-      "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "Delivered",
-          "Depot": "Central"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "incremental-target-noop": {
-      "sql": "select [Parcel ID], [Status], [Depot]\nfrom [Parcel].[LiveStatus]\norder by [Parcel ID];\n",
-      "target": "Warehouse/Operations",
-      "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "Delivered",
-          "Depot": "Central"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "incremental-bookmark-first": {
-      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Warehouse'\n  and [Item name] = N'Operations'\n  and [Schema name] = N'Parcel'\n  and [Object name] = N'LiveStatus';\n",
-      "target": "Warehouse/Catalogue",
-      "rows": [
-        {
-          "Bookmark datetime": "2026-10-15 23:07:21.144843"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "incremental-bookmark-changed": {
-      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Warehouse'\n  and [Item name] = N'Operations'\n  and [Schema name] = N'Parcel'\n  and [Object name] = N'LiveStatus';\n",
-      "target": "Warehouse/Catalogue",
-      "rows": [
-        {
-          "Bookmark datetime": "2026-10-15 23:08:25.251306"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "incremental-bookmark-noop": {
-      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Warehouse'\n  and [Item name] = N'Operations'\n  and [Schema name] = N'Parcel'\n  and [Object name] = N'LiveStatus';\n",
-      "target": "Warehouse/Catalogue",
-      "rows": [
-        {
-          "Bookmark datetime": "2026-10-15 23:08:38.511204"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "cross-item-original-current-status": {
-      "sql": "SELECT [Parcel ID], [Status], [Depot] FROM Parcel.CurrentStatus ORDER BY [Parcel ID];",
-      "target": "Warehouse/Operations",
-      "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "In transit",
-          "Depot": "Central"
-        },
-        {
-          "Parcel ID": "P-1002",
-          "Status": "Delivered",
-          "Depot": "South"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "cross-item-warehouse-current-status": {
-      "sql": "SELECT [Parcel ID], [Status], [Depot] FROM Parcel.LakehouseCurrentStatus ORDER BY [Parcel ID];",
-      "target": "Warehouse/Operations",
-      "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "In transit",
-          "Depot": "Central"
-        },
-        {
-          "Parcel ID": "P-1002",
-          "Status": "Delivered",
-          "Depot": "South"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "lakehouse-current-status-query": {
-      "sql": "select [Parcel ID], [Status], [Depot] from [Parcel].[CurrentStatus] order by [Parcel ID];",
-      "target": "Lakehouse/Landing SQL analytics endpoint",
-      "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "In transit",
-          "Depot": "Central"
-        },
-        {
-          "Parcel ID": "P-1002",
-          "Status": "Delivered",
-          "Depot": "South"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL readback, not CLI transcript"
-    },
-    "lakehouse-event-query": {
-      "sql": "select [Parcel ID], [Event sequence], [Status], [Depot] from [Parcel].[Event] order by [Parcel ID], [Event sequence];",
-      "target": "Lakehouse/Landing SQL analytics endpoint",
-      "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Event sequence": 1,
-          "Status": "Accepted",
-          "Depot": "North"
-        },
-        {
-          "Parcel ID": "P-1001",
-          "Event sequence": 2,
-          "Status": "In transit",
-          "Depot": "Central"
-        },
-        {
-          "Parcel ID": "P-1002",
-          "Event sequence": 1,
-          "Status": "Delivered",
-          "Depot": "South"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL readback, not CLI transcript"
-    },
-    "lakehouse-incremental-target-first": {
-      "sql": "SELECT [Parcel ID], [Status], [Depot] FROM Parcel.LiveStatus ORDER BY [Parcel ID];",
-      "target": "Lakehouse/Landing SQL analytics endpoint",
-      "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "In transit",
-          "Depot": "Central"
-        },
-        {
-          "Parcel ID": "P-1002",
-          "Status": "Delivered",
-          "Depot": "South"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL readback, not CLI transcript"
-    },
-    "lakehouse-incremental-target-changed": {
-      "sql": "SELECT [Parcel ID], [Status], [Depot] FROM Parcel.LiveStatus ORDER BY [Parcel ID];",
-      "target": "Lakehouse/Landing SQL analytics endpoint",
-      "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "Delivered",
-          "Depot": "Central"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL readback, not CLI transcript"
-    },
-    "lakehouse-incremental-target-noop": {
-      "sql": "SELECT [Parcel ID], [Status], [Depot] FROM Parcel.LiveStatus ORDER BY [Parcel ID];",
-      "target": "Lakehouse/Landing SQL analytics endpoint",
-      "rows": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "Delivered",
-          "Depot": "Central"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL readback, not CLI transcript"
-    },
-    "lakehouse-bookmark-first": {
-      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Lakehouse'\n  and [Item name] = N'Landing'\n  and [Schema name] = N'Tables/Parcel'\n  and [Object name] = N'LiveStatus';\n",
-      "target": "Warehouse/Catalogue",
-      "rows": [
-        {
-          "Bookmark datetime": "2026-10-15 23:44:44.149369"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "lakehouse-bookmark-changed": {
-      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Lakehouse'\n  and [Item name] = N'Landing'\n  and [Schema name] = N'Tables/Parcel'\n  and [Object name] = N'LiveStatus';\n",
-      "target": "Warehouse/Catalogue",
-      "rows": [
-        {
-          "Bookmark datetime": "2026-10-15 23:47:15.276935"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "lakehouse-bookmark-noop": {
-      "sql": "select [Bookmark datetime]\nfrom [_].[Bookmark]\nwhere [Item type] = N'Lakehouse'\n  and [Item name] = N'Landing'\n  and [Schema name] = N'Tables/Parcel'\n  and [Object name] = N'LiveStatus';\n",
-      "target": "Warehouse/Catalogue",
-      "rows": [
-        {
-          "Bookmark datetime": "2026-10-15 23:49:03.357835"
-        }
-      ],
-      "executed_live": true,
-      "kind": "SQL execution/readback, not CLI transcript",
-      "runtime_revision": "bf908f4754eca4d10a56afd218e9e18d423636d7"
-    },
-    "lakehouse-bookmark-progression-observed": {
-      "bookmarks": [
         [
-          {
-            "Bookmark datetime": "2026-10-15 23:44:44.149369"
-          }
+          "P-1001",
+          "In transit",
+          "Central"
         ],
         [
-          {
-            "Bookmark datetime": "2026-10-15 23:47:15.276935"
-          }
+          "P-1002",
+          "Delivered",
+          "South"
+        ]
+      ]
+    },
+    "warehouse-live-status-initial": {
+      "kind": "SQL",
+      "target": "Operations",
+      "rows": [
+        [
+          "P-1001",
+          "In transit",
+          "Central"
         ],
         [
-          {
-            "Bookmark datetime": "2026-10-15 23:49:03.357835"
-          }
+          "P-1002",
+          "Delivered",
+          "South"
+        ]
+      ]
+    },
+    "warehouse-live-status-after-change": {
+      "kind": "SQL",
+      "target": "Operations",
+      "rows": [
+        [
+          "P-1001",
+          "Delivered",
+          "Central"
         ]
       ],
-      "changed_advanced": true,
-      "noop_advanced": true,
-      "final_target": [
-        {
-          "Parcel ID": "P-1001",
-          "Status": "Delivered",
-          "Depot": "Central"
-        }
+      "bookmarks_increasing": [
+        "2026-10-16 14:11:55.783387",
+        "2026-10-16 14:12:20.271420",
+        "2026-10-16 14:12:37.929827"
       ]
     },
-    "native-before-annotation": {
-      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
-      "model": "Parcel",
-      "fields": [
-        {
-          "table": "Delivery",
-          "column": "DepotId",
-          "hidden": false
-        },
-        {
-          "table": "Depot",
-          "column": "DepotId",
-          "hidden": false
-        }
+    "lakehouse-event": {
+      "kind": "SQL",
+      "target": "Landing SQL endpoint",
+      "rows": [
+        [
+          "P-1001",
+          1,
+          "Accepted",
+          "North"
+        ],
+        [
+          "P-1001",
+          2,
+          "In transit",
+          "Central"
+        ],
+        [
+          "P-1002",
+          1,
+          "Delivered",
+          "South"
+        ]
+      ]
+    },
+    "lakehouse-live-status-after-change": {
+      "kind": "SQL",
+      "target": "Landing SQL endpoint",
+      "rows": [
+        [
+          "P-1001",
+          "Delivered",
+          "Central"
+        ]
       ],
-      "dax_rows": [
-        {
-          "[DeliveryCount]": 2
-        }
+      "managed_files": [
+        "Files/Parcel/StatusFiles/P-1001.csv"
       ]
     },
-    "native-after-annotation": {
-      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
+    "notebooks": {
+      "kind": "Fabric notebook run",
+      "VerifyParcelSource (ParcelSourceArchive)": "Completed",
+      "VerifyStatusShortcut (Landing)": "Completed",
+      "ReadLiveStatus (Landing)": "Completed",
+      "MutateParcelSource (ParcelSourceArchive)": "Completed",
+      "NegativeControl assert False": "Failed"
+    },
+    "cross-item-lakehouse-current-status": {
+      "kind": "SQL",
+      "target": "Operations",
+      "rows": [
+        [
+          "P-1001",
+          "In transit",
+          "Central"
+        ],
+        [
+          "P-1002",
+          "Delivered",
+          "South"
+        ]
+      ]
+    },
+    "native-delivery-count": {
+      "kind": "DAX",
       "model": "Parcel",
-      "fields": [
-        {
-          "table": "Delivery",
-          "column": "DepotId",
-          "hidden": true
-        },
-        {
-          "table": "Depot",
-          "column": "DepotId",
-          "hidden": false
-        }
+      "result": 2
+    },
+    "native-foreign-key-visibility": {
+      "kind": "getDefinition",
+      "Delivery[DepotId]": "isHidden",
+      "Depot[DepotId]": "visible"
+    },
+    "shared-policy-definition": {
+      "kind": "getDefinition",
+      "Delivery Count": "0 \"deliveries\"",
+      "InternalCost": "#,##0.00",
+      "Display": "calculationGroup with Current",
+      "discourageImplicitMeasures": true
+    },
+    "custom-annotation-definition": {
+      "kind": "getDefinition",
+      "Delivery Count displayFolder": "Parcel metrics"
+    },
+    "variants": {
+      "kind": "DAX + getDefinition + REST",
+      "ParcelOperations": {
+        "DeliveryCount": 2,
+        "has": [
+          "Delivery Rate",
+          "InternalCosts"
+        ]
+      },
+      "ParcelExecutive": {
+        "DeliveryCount": 2,
+        "InternalCosts": "absent",
+        "Delivery Count format": "0 \"delivered\""
+      },
+      "ParcelBase deployed": false
+    },
+    "parcel-summary": {
+      "kind": "DAX",
+      "DeliveryCount": 2,
+      "Delivery rows": 3
+    },
+    "report-bindings": {
+      "kind": "Power BI REST",
+      "Parcel_Report_Dev": "Parcel_Dev",
+      "Parcel_Report_Production": "Parcel_Production",
+      "ParcelOperations": "ParcelOperations",
+      "ParcelExecutive": "ParcelExecutive",
+      "DeliveryCount": {
+        "Parcel_Dev": 2,
+        "Parcel_Production": 2
+      }
+    },
+    "report-export": {
+      "kind": "Power BI REST ExportTo PNG",
+      "result": "403 Forbidden on the trial capacity"
+    },
+    "mirror": {
+      "kind": "SQL",
+      "OperationsDev CurrentStatus": [
+        [
+          "P-1001",
+          "In transit"
+        ],
+        [
+          "P-1002",
+          "Delivered"
+        ]
       ],
-      "dax_rows": [
-        {
-          "[DeliveryCount]": 2
-        }
+      "_.Mirror rows after Mirror": 10,
+      "after local Build of Reference.Service": "Service left _.Mirror; Depot remained; source kept Express",
+      "after re-mirror": "Service borrowed again (Express)"
+    },
+    "reload": {
+      "kind": "SQL",
+      "Parcel.StatusEvent": "3 rows reinserted with new Row insert datetime; bookmark restarted"
+    },
+    "wipe": {
+      "kind": "SQL",
+      "Operations user objects after Wipe": 0,
+      "_.Installation after Wipe": [
+        "Warehouse/Reporting",
+        "Lakehouse/Landing",
+        "Warehouse/_weaver"
       ]
     },
-    "native-failed-measure": {
-      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
-      "model": "Parcel",
-      "fields": [
-        {
-          "table": "Delivery",
-          "column": "DepotId",
-          "hidden": true
-        },
-        {
-          "table": "Depot",
-          "column": "DepotId",
-          "hidden": false
-        }
-      ],
-      "dax_rows": [
-        {
-          "[DeliveryCount]": -1
-        }
-      ]
-    },
-    "native-report-binding": {
-      "kind": "Live Report definition readback, not UI rendering",
-      "model": "Parcel",
-      "report": "Parcel",
-      "binding_matches_actual_model": true
-    },
-    "report-development-binding": {
-      "kind": "Live Report definition readback, not UI rendering",
-      "model": "Parcel_Dev",
-      "report": "Parcel_Report_Dev",
-      "binding_matches_actual_model": true
-    },
-    "report-production-binding": {
-      "kind": "Live Report definition readback, not UI rendering",
-      "model": "Parcel",
-      "report": "Parcel_Report",
-      "binding_matches_actual_model": true
-    },
-    "102-report-development-refresh-dax": {
-      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
-      "model": "Parcel_Dev",
-      "fields": [
-        {
-          "table": "Delivery",
-          "column": "DepotId",
-          "hidden": true
-        },
-        {
-          "table": "Depot",
-          "column": "DepotId",
-          "hidden": false
-        }
-      ],
-      "dax_rows": [
-        {
-          "[DeliveryCount]": 2
-        }
-      ]
-    },
-    "103-report-production-refresh-dax": {
-      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
-      "model": "Parcel",
-      "fields": [
-        {
-          "table": "Delivery",
-          "column": "DepotId",
-          "hidden": true
-        },
-        {
-          "table": "Depot",
-          "column": "DepotId",
-          "hidden": false
-        }
-      ],
-      "dax_rows": [
-        {
-          "[DeliveryCount]": 2
-        }
-      ]
-    },
-    "native-after-managed-model": {
-      "kind": "Live Fabric definition and Power BI ExecuteQueries readback, not CLI transcript",
-      "model": "Parcel",
-      "fields": [
-        {
-          "table": "Delivery",
-          "column": "DepotId",
-          "hidden": true
-        },
-        {
-          "table": "Depot",
-          "column": "DepotId",
-          "hidden": false
-        }
-      ],
-      "dax_rows": [
-        {
-          "[DeliveryCount]": 2
-        }
-      ]
+    "managed-refresh": {
+      "kind": "CLI error text",
+      "result": "default data connection without explicit connection credentials; no connection has the endpoint path"
     }
   }
 }
