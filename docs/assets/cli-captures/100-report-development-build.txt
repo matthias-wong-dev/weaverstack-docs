@@ -7,9 +7,6 @@ Targets
 
 Build
 
-    Create SemanticModel/Parcel_Dev                                                                       20.6s
-    Create Report/Parcel_Report_Dev                                                                       20.8s
-  Create Power BI items                                                                                   41.5s
   Resolve semantic data sources                                                                            0.0s
     Resolve SemanticModel/Parcel_Dev                                                                       0.0s
     Resolve Report/Parcel_Report_Dev                                                                       0.0s
@@ -25,15 +22,15 @@ Install selection
     selected for build      1
 
 →   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action
-✓   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action                                     21.0s
+✓   SemanticModel/Parcel_Dev · Deploy semantic definitions · 1 action                                     21.5s
 →   SemanticModel/Parcel_Dev, Report/Parcel_Report_Dev · Verify deployed semantic definitions · 1 action
 ✓   SemanticModel/Parcel_Dev, Report/Parcel_Report_Dev · Verify deployed semantic definitions · 1 action   20.5s
 →   Report/Parcel_Report_Dev · Deploy Report definitions · 1 action
 ✓   Report/Parcel_Report_Dev · Deploy Report definitions · 1 action                                       20.4s
 →   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action
-✓   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action                              21.9s
+✓   Report/Parcel_Report_Dev · Verify deployed Report definitions · 1 action                              21.2s
   Install                                                                                                 1m23s
-✓ Build                                                                                                   2m05s
+✓ Build                                                                                                   1m23s
 
 Installation
     4 succeeded

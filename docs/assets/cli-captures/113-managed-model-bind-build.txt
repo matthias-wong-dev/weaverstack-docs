@@ -6,39 +6,39 @@ Targets
 
 Build
 
-    Create SemanticModel/ParcelWarehouse                                                                  20.8s
-  Create Power BI items                                                                                   20.8s
   Check target occupancy                                                                                   0.0s
-  Resolve semantic data sources                                                                            0.3s
-  Read catalogue                                                                                           7.2s
+  Resolve semantic data sources                                                                            0.6s
+  Read catalogue                                                                                           9.8s
     Resolve SemanticModel/ParcelWarehouse                                                                  0.0s
-    Read Warehouse/Catalogue inventory                                                                   0.1s
-  Read target inventories                                                                                  0.1s
-  Read semantic sources                                                                                    0.7s
+    Read Warehouse/Catalogue inventory                                                                   0.3s
+  Read target inventories                                                                                  0.3s
+  Read semantic sources                                                                                    1.2s
   Prepare bundle                                                                                           0.0s
 Install selection
   SemanticModel/ParcelWarehouse
-    changed                 1
+    dependency impacts      1
     selected for build      1
 
+→   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
+✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                               3.4s
 →   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
-✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                        1.5s
+✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                        0.6s
 →   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action
-✓   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action                                42.0s
+✓   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action                                23.3s
 →   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action
-✓   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action                              25.7s
+✓   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action                              24.6s
 →   Warehouse/Catalogue · Updating catalogue definitions · 1 action
-✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                      6.0s
+✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                      0.5s
 →   Warehouse/Catalogue · Finalising catalogue · 1 action
-✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                1.0s
-  Install                                                                                                 1m16s
+✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                0.5s
+  Install                                                                                                 52.9s
+SemanticModel/ParcelWarehouse data sources bound: [warehouse-endpoint];operations
 
-warning: SemanticModel/ParcelWarehouse reads [warehouse-endpoint];operations, and no connection has that path. Create a connection for it in Fabric before refreshing.
-✓ Build                                                                                                   1m47s
+✓ Build                                                                                                   1m20s
 
 Installation
-    5 succeeded
+    6 succeeded
     0 failed
     0 skipped
   Report  [local-path]
-  Bundle  aa9c8873588d6107cb5e82c3476c56a6275b94a37da5037814f8862ab4298451
+  Bundle  891699408c263599e0ee16d53f9416f22760f53e9b3089fffe84c7ebf1716f53

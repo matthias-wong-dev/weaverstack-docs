@@ -4,7 +4,7 @@ This maintainer-only ledger records the item-first revision and earlier delivery
 
 ## Full walkthrough and capture refresh — 17 October 2026
 
-Every tutorial and estate page was followed in reader order from an empty Weaver Example workspace. All 73 terminal panels were recaptured; 12 of 18 TODO markers were resolved with live evidence; flow fixes landed across Getting started, Warehouse, Lakehouse, estate, semantic-model and Report pages. Three Initialise runtime fixes and one TMDL example fix were required. Remaining blockers: a credentialled SQL connection (three markers), a second workspace (one), and a signed-in service UI (two). Runtime basis, fixes and observations: [capture inventory](CAPTURE-INVENTORY.md). Entries below are historical.
+Every tutorial and estate page was followed in reader order from an empty Weaver Example workspace. All 78 terminal panels were recaptured and all 18 TODO markers were resolved (the two rendered-card checks by binding and DAX value, not a viewed card); flow fixes landed across Getting started, Warehouse, Lakehouse, estate, semantic-model and Report pages. Three Initialise runtime fixes and one TMDL example fix were required. Runtime basis, fixes and observations: [capture inventory](CAPTURE-INVENTORY.md). Entries below are historical.
 
 ## Live CLI demonstrations — 16 October 2026
 

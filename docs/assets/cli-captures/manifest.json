@@ -4,7 +4,7 @@
   "package_status": "checkout wheel and editable checkout; Environment published with --dev; not a published PyPI release",
   "workspace": "Weaver Example (disposable trial workspace), displayed as Parcel Development",
   "normalisation": "UTF-8; SGR colour controls removed in text view; carriage returns return to column zero and redraw the same row, not new lines; transient spinner rows omitted; actual internal blank lines, completed events, line order, alignment, values and glyphs retained; sanitised original ANSI streams retained unchanged",
-  "redactions": "workspace name shown as Parcel Development; item, run and job identifiers; local filesystem paths; SQL endpoint hostnames; the managed-source captures (111-117) used CatalogueBI/OperationsBI and show them as Catalogue/Operations. Bracketed placeholders are redactions, not CLI output values.",
+  "redactions": "workspace names shown as Parcel Development and Parcel Production; item, run and job identifiers; local filesystem paths; SQL endpoint hostnames; the managed-source captures (111-121) used CatalogueBI/OperationsBI and show them as Catalogue/Operations. Bracketed placeholders are redactions, not CLI output values.",
   "captures": [
     {
       "label": "10-warehouse-initialise",
@@ -18,35 +18,35 @@
       "workspace": "Parcel Development",
       "raw_ansi": "10-warehouse-initialise.ansi",
       "text": "10-warehouse-initialise.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "100-report-development-build",
-      "command": "weaver build . --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-development.yml",
+      "command": "weaver build --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-development.yml",
       "exit_code": 0,
       "timed_out": false,
       "page": "reports/environments",
-      "elapsed_seconds": 126.947,
-      "started_at": "2026-10-16T15:50:39.725831+00:00",
+      "elapsed_seconds": 85.113,
+      "started_at": "2026-10-16T20:39:20.439127+00:00",
       "cwd": "[project-root]",
       "workspace": "Parcel Development",
       "raw_ansi": "100-report-development-build.ansi",
       "text": "100-report-development-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "101-report-production-build",
-      "command": "weaver build . --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-production.yml",
+      "command": "weaver build --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-production.yml",
       "exit_code": 0,
       "timed_out": false,
       "page": "reports/environments",
-      "elapsed_seconds": 125.644,
-      "started_at": "2026-10-16T15:52:46.711692+00:00",
+      "elapsed_seconds": 126.583,
+      "started_at": "2026-10-16T20:40:45.633599+00:00",
       "cwd": "[project-root]",
-      "workspace": "Parcel Development",
+      "workspace": "Parcel Production",
       "raw_ansi": "101-report-production-build.ansi",
       "text": "101-report-production-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "102-report-development-refresh",
@@ -54,13 +54,13 @@
       "exit_code": 0,
       "timed_out": false,
       "page": "reports/environments",
-      "elapsed_seconds": 8.401,
-      "started_at": "2026-10-16T15:54:52.384368+00:00",
+      "elapsed_seconds": 8.637,
+      "started_at": "2026-10-16T20:42:52.296203+00:00",
       "cwd": "[project-root]",
       "workspace": "Parcel Development",
       "raw_ansi": "102-report-development-refresh.ansi",
       "text": "102-report-development-refresh.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "103-report-production-refresh",
@@ -68,13 +68,13 @@
       "exit_code": 0,
       "timed_out": false,
       "page": "reports/environments",
-      "elapsed_seconds": 7.98,
-      "started_at": "2026-10-16T15:55:00.816318+00:00",
+      "elapsed_seconds": 8.641,
+      "started_at": "2026-10-16T20:43:00.969128+00:00",
       "cwd": "[project-root]",
-      "workspace": "Parcel Development",
+      "workspace": "Parcel Production",
       "raw_ansi": "103-report-production-refresh.ansi",
       "text": "103-report-production-refresh.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "11-warehouse-check",
@@ -88,7 +88,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "11-warehouse-check.ansi",
       "text": "11-warehouse-check.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "110-add-models",
@@ -102,7 +102,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "110-add-models.ansi",
       "text": "110-add-models.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "111-pbi-add-warehouse",
@@ -116,7 +116,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "111-pbi-add-warehouse.ansi",
       "text": "111-pbi-add-warehouse.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "112a-managed-source-build",
@@ -130,7 +130,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "112a-managed-source-build.ansi",
       "text": "112a-managed-source-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "112b-managed-source-load",
@@ -144,7 +144,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "112b-managed-source-load.ansi",
       "text": "112b-managed-source-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "113-managed-model-bind-build",
@@ -152,13 +152,27 @@
       "exit_code": 0,
       "timed_out": false,
       "page": "semantic-models/managed-sources",
-      "elapsed_seconds": 108.693,
-      "started_at": "2026-10-16T16:17:38.259886+00:00",
+      "elapsed_seconds": 81.361,
+      "started_at": "2026-10-16T20:29:24.784298+00:00",
       "cwd": "[project-root]",
       "workspace": "Parcel Development",
       "raw_ansi": "113-managed-model-bind-build.ansi",
       "text": "113-managed-model-bind-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
+    },
+    {
+      "label": "114-managed-source-and-model-load",
+      "command": "weaver load Warehouse/Operations SemanticModel/ParcelWarehouse",
+      "exit_code": 0,
+      "timed_out": false,
+      "page": "semantic-models/managed-sources",
+      "elapsed_seconds": 16.272,
+      "started_at": "2026-10-16T20:32:23.373100+00:00",
+      "cwd": "[project-root]",
+      "workspace": "Parcel Development",
+      "raw_ansi": "114-managed-source-and-model-load.ansi",
+      "text": "114-managed-source-and-model-load.txt",
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "115-adopt-native-with-catalogue",
@@ -172,7 +186,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "115-adopt-native-with-catalogue.ansi",
       "text": "115-adopt-native-with-catalogue.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "116-catalogue-load-test",
@@ -186,7 +200,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "116-catalogue-load-test.ansi",
       "text": "116-catalogue-load-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "117-installed-dax-test",
@@ -200,7 +214,35 @@
       "workspace": "Parcel Development",
       "raw_ansi": "117-installed-dax-test.ansi",
       "text": "117-installed-dax-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
+    },
+    {
+      "label": "118-reconcile-test",
+      "command": "weaver test SemanticModel/ParcelWarehouse --name 'Parcel[.]CurrentStatusReconciles'",
+      "exit_code": 0,
+      "timed_out": false,
+      "page": "semantic-models/validation",
+      "elapsed_seconds": 6.269,
+      "started_at": "2026-10-16T20:33:58.250334+00:00",
+      "cwd": "[project-root]",
+      "workspace": "Parcel Development",
+      "raw_ansi": "118-reconcile-test.ansi",
+      "text": "118-reconcile-test.txt",
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
+    },
+    {
+      "label": "119-reconcile-discrepancy",
+      "command": "weaver test SemanticModel/ParcelWarehouse --name 'Parcel[.]CurrentStatusReconciles'",
+      "exit_code": 1,
+      "timed_out": false,
+      "page": "semantic-models/validation",
+      "elapsed_seconds": 5.492,
+      "started_at": "2026-10-16T20:35:51.379432+00:00",
+      "cwd": "[project-root]",
+      "workspace": "Parcel Development",
+      "raw_ansi": "119-reconcile-discrepancy.ansi",
+      "text": "119-reconcile-discrepancy.txt",
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "12-warehouse-build",
@@ -214,7 +256,35 @@
       "workspace": "Parcel Development",
       "raw_ansi": "12-warehouse-build.ansi",
       "text": "12-warehouse-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
+    },
+    {
+      "label": "120-native-source-build",
+      "command": "weaver build --item SemanticModel/Parcel --bind-data-sources",
+      "exit_code": 0,
+      "timed_out": false,
+      "page": "semantic-models/managed-sources",
+      "elapsed_seconds": 57.083,
+      "started_at": "2026-10-16T20:37:21.299343+00:00",
+      "cwd": "[project-root]",
+      "workspace": "Parcel Development",
+      "raw_ansi": "120-native-source-build.ansi",
+      "text": "120-native-source-build.txt",
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
+    },
+    {
+      "label": "121-native-source-load",
+      "command": "weaver load Warehouse/Operations SemanticModel/Parcel",
+      "exit_code": 0,
+      "timed_out": false,
+      "page": "semantic-models/managed-sources",
+      "elapsed_seconds": 15.528,
+      "started_at": "2026-10-16T20:38:18.465215+00:00",
+      "cwd": "[project-root]",
+      "workspace": "Parcel Development",
+      "raw_ansi": "121-native-source-load.ansi",
+      "text": "121-native-source-load.txt",
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "121-workflow-verify",
@@ -228,7 +298,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "121-workflow-verify.ansi",
       "text": "121-workflow-verify.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "13-warehouse-load",
@@ -242,7 +312,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "13-warehouse-load.ansi",
       "text": "13-warehouse-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "130-reload-preview",
@@ -256,7 +326,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "130-reload-preview.ansi",
       "text": "130-reload-preview.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "131-reload",
@@ -270,7 +340,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "131-reload.ansi",
       "text": "131-reload.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "14-warehouse-test",
@@ -284,7 +354,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "14-warehouse-test.ansi",
       "text": "14-warehouse-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "140-mirror",
@@ -298,7 +368,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "140-mirror.ansi",
       "text": "140-mirror.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "141-mirror-health",
@@ -312,7 +382,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "141-mirror-health.ansi",
       "text": "141-mirror-health.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "142-remirror",
@@ -326,7 +396,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "142-remirror.ansi",
       "text": "142-remirror.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "143-remirror-health",
@@ -340,7 +410,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "143-remirror-health.ansi",
       "text": "143-remirror-health.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "15-warehouse-health",
@@ -354,7 +424,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "15-warehouse-health.ansi",
       "text": "15-warehouse-health.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "150-wipe-preview",
@@ -368,7 +438,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "150-wipe-preview.ansi",
       "text": "150-wipe-preview.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "151-wipe",
@@ -382,7 +452,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "151-wipe.ansi",
       "text": "151-wipe.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "19-failed-warehouse-test",
@@ -396,7 +466,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "19-failed-warehouse-test.ansi",
       "text": "19-failed-warehouse-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "20-health-failed-test",
@@ -410,7 +480,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "20-health-failed-test.ansi",
       "text": "20-health-failed-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "22-restored-test",
@@ -424,7 +494,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "22-restored-test.ansi",
       "text": "22-restored-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "23-health-restored",
@@ -438,7 +508,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "23-health-restored.ansi",
       "text": "23-health-restored.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "24-source-file-test",
@@ -452,7 +522,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "24-source-file-test.ansi",
       "text": "24-source-file-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "30-incremental-check",
@@ -466,7 +536,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "30-incremental-check.ansi",
       "text": "30-incremental-check.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "31-incremental-build",
@@ -480,7 +550,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "31-incremental-build.ansi",
       "text": "31-incremental-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "32-incremental-preview",
@@ -494,7 +564,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "32-incremental-preview.ansi",
       "text": "32-incremental-preview.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "33-incremental-first-load",
@@ -508,7 +578,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "33-incremental-first-load.ansi",
       "text": "33-incremental-first-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "34-incremental-changed-preview",
@@ -522,7 +592,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "34-incremental-changed-preview.ansi",
       "text": "34-incremental-changed-preview.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "35-incremental-changed-load",
@@ -536,7 +606,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "35-incremental-changed-load.ansi",
       "text": "35-incremental-changed-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "36-incremental-noop-load",
@@ -550,7 +620,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "36-incremental-noop-load.ansi",
       "text": "36-incremental-noop-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "42-add-lakehouse",
@@ -564,7 +634,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "42-add-lakehouse.ansi",
       "text": "42-add-lakehouse.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "43-lakehouse-check",
@@ -578,7 +648,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "43-lakehouse-check.ansi",
       "text": "43-lakehouse-check.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "44-publish-runtime",
@@ -592,7 +662,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "44-publish-runtime.ansi",
       "text": "44-publish-runtime.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "45-lakehouse-build",
@@ -606,7 +676,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "45-lakehouse-build.ansi",
       "text": "45-lakehouse-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "46-lakehouse-load",
@@ -620,7 +690,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "46-lakehouse-load.ansi",
       "text": "46-lakehouse-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "47-lakehouse-test",
@@ -634,7 +704,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "47-lakehouse-test.ansi",
       "text": "47-lakehouse-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "48-lakehouse-health",
@@ -648,7 +718,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "48-lakehouse-health.ansi",
       "text": "48-lakehouse-health.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "50-cross-item-check",
@@ -662,7 +732,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "50-cross-item-check.ansi",
       "text": "50-cross-item-check.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "51-cross-item-build",
@@ -676,7 +746,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "51-cross-item-build.ansi",
       "text": "51-cross-item-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "52-cross-item-load",
@@ -690,7 +760,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "52-cross-item-load.ansi",
       "text": "52-cross-item-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "53-cross-item-health",
@@ -704,7 +774,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "53-cross-item-health.ansi",
       "text": "53-cross-item-health.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "54-estate-test",
@@ -718,7 +788,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "54-estate-test.ansi",
       "text": "54-estate-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "55-estate-health",
@@ -732,7 +802,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "55-estate-health.ansi",
       "text": "55-estate-health.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "56-scoped-estate-health",
@@ -746,7 +816,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "56-scoped-estate-health.ansi",
       "text": "56-scoped-estate-health.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "60-named-load-preview",
@@ -760,7 +830,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "60-named-load-preview.ansi",
       "text": "60-named-load-preview.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "61-ancestor-load-preview",
@@ -774,7 +844,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "61-ancestor-load-preview.ansi",
       "text": "61-ancestor-load-preview.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "62-descendant-load-preview",
@@ -788,7 +858,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "62-descendant-load-preview.ansi",
       "text": "62-descendant-load-preview.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "63-descendant-load",
@@ -802,7 +872,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "63-descendant-load.ansi",
       "text": "63-descendant-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "64-concurrency-two-load",
@@ -816,7 +886,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "64-concurrency-two-load.ansi",
       "text": "64-concurrency-two-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "64b-branch-build",
@@ -830,7 +900,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "64b-branch-build.ansi",
       "text": "64b-branch-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "64c-branch-load",
@@ -844,7 +914,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "64c-branch-load.ansi",
       "text": "64c-branch-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "65-concurrency-two-build",
@@ -858,7 +928,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "65-concurrency-two-build.ansi",
       "text": "65-concurrency-two-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "65a-branch-seed",
@@ -872,7 +942,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "65a-branch-seed.ansi",
       "text": "65a-branch-seed.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "65b-branch-ancestors",
@@ -886,7 +956,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "65b-branch-ancestors.ansi",
       "text": "65b-branch-ancestors.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "65c-branch-descendants",
@@ -900,7 +970,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "65c-branch-descendants.ansi",
       "text": "65c-branch-descendants.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "65d-branch-both",
@@ -914,7 +984,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "65d-branch-both.ansi",
       "text": "65d-branch-both.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "65e-branch-run-ancestors",
@@ -928,7 +998,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "65e-branch-run-ancestors.ansi",
       "text": "65e-branch-run-ancestors.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "65f-branch-cross-item",
@@ -942,7 +1012,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "65f-branch-cross-item.ansi",
       "text": "65f-branch-cross-item.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "65g-branch-two-names",
@@ -956,7 +1026,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "65g-branch-two-names.ansi",
       "text": "65g-branch-two-names.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "65h-branch-no-match",
@@ -970,7 +1040,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "65h-branch-no-match.ansi",
       "text": "65h-branch-no-match.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "66-concurrency-two-test",
@@ -984,7 +1054,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "66-concurrency-two-test.ansi",
       "text": "66-concurrency-two-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "68-no-match-unattended-preview",
@@ -998,7 +1068,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "68-no-match-unattended-preview.ansi",
       "text": "68-no-match-unattended-preview.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "70-lakehouse-incremental-check",
@@ -1012,7 +1082,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "70-lakehouse-incremental-check.ansi",
       "text": "70-lakehouse-incremental-check.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "71-lakehouse-incremental-build",
@@ -1026,7 +1096,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "71-lakehouse-incremental-build.ansi",
       "text": "71-lakehouse-incremental-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "72-lakehouse-incremental-preview",
@@ -1040,7 +1110,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "72-lakehouse-incremental-preview.ansi",
       "text": "72-lakehouse-incremental-preview.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "73-lakehouse-incremental-first-load",
@@ -1054,7 +1124,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "73-lakehouse-incremental-first-load.ansi",
       "text": "73-lakehouse-incremental-first-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "74-lakehouse-changed-preview",
@@ -1068,7 +1138,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "74-lakehouse-changed-preview.ansi",
       "text": "74-lakehouse-changed-preview.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "75-lakehouse-changed-load",
@@ -1082,7 +1152,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "75-lakehouse-changed-load.ansi",
       "text": "75-lakehouse-changed-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "76-lakehouse-noop-load",
@@ -1096,7 +1166,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "76-lakehouse-noop-load.ansi",
       "text": "76-lakehouse-noop-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "80-native-initialise",
@@ -1110,7 +1180,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "80-native-initialise.ansi",
       "text": "80-native-initialise.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "81-native-check",
@@ -1124,7 +1194,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "81-native-check.ansi",
       "text": "81-native-check.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "82-native-catalogue-free-build",
@@ -1138,7 +1208,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "82-native-catalogue-free-build.ansi",
       "text": "82-native-catalogue-free-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "83-native-catalogue-free-refresh",
@@ -1152,7 +1222,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "83-native-catalogue-free-refresh.ansi",
       "text": "83-native-catalogue-free-refresh.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "84-native-source-dax-validation",
@@ -1166,7 +1236,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "84-native-source-dax-validation.ansi",
       "text": "84-native-source-dax-validation.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "85-native-annotation-and-report-build",
@@ -1180,7 +1250,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "85-native-annotation-and-report-build.ansi",
       "text": "85-native-annotation-and-report-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "86-native-annotation-refresh",
@@ -1194,7 +1264,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "86-native-annotation-refresh.ansi",
       "text": "86-native-annotation-refresh.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "87a-policy-check",
@@ -1208,7 +1278,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "87a-policy-check.ansi",
       "text": "87a-policy-check.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "87b-policy-build",
@@ -1222,7 +1292,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "87b-policy-build.ansi",
       "text": "87b-policy-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "87c-policy-load",
@@ -1236,7 +1306,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "87c-policy-load.ansi",
       "text": "87c-policy-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "88a-annotation-check",
@@ -1250,7 +1320,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "88a-annotation-check.ansi",
       "text": "88a-annotation-check.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "88b-annotation-build",
@@ -1264,7 +1334,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "88b-annotation-build.ansi",
       "text": "88b-annotation-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "88c-annotation-load",
@@ -1278,7 +1348,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "88c-annotation-load.ansi",
       "text": "88c-annotation-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "89-annotation-diagnostic",
@@ -1292,7 +1362,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "89-annotation-diagnostic.ansi",
       "text": "89-annotation-diagnostic.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "90a-variants-check",
@@ -1306,7 +1376,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "90a-variants-check.ansi",
       "text": "90a-variants-check.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "90b-variants-build",
@@ -1320,7 +1390,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "90b-variants-build.ansi",
       "text": "90b-variants-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "90c-variants-load",
@@ -1334,7 +1404,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "90c-variants-load.ansi",
       "text": "90c-variants-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "90d-variants-test",
@@ -1348,7 +1418,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "90d-variants-test.ansi",
       "text": "90d-variants-test.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "90e-missing-base-check",
@@ -1362,7 +1432,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "90e-missing-base-check.ansi",
       "text": "90e-missing-base-check.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "91-native-failed-source-dax",
@@ -1376,7 +1446,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "91-native-failed-source-dax.ansi",
       "text": "91-native-failed-source-dax.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "94-native-restored-source-dax",
@@ -1390,7 +1460,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "94-native-restored-source-dax.ansi",
       "text": "94-native-restored-source-dax.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "95a-summary-build",
@@ -1404,7 +1474,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "95a-summary-build.ansi",
       "text": "95a-summary-build.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     },
     {
       "label": "95b-summary-load",
@@ -1418,7 +1488,7 @@
       "workspace": "Parcel Development",
       "raw_ansi": "95b-summary-load.ansi",
       "text": "95b-summary-load.txt",
-      "evidence": "live CLI; capture workspace Weaver Example shown as Parcel Development; PTY width 112"
+      "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
     }
   ],
   "runtime_basis": "feat/catalogue-dashboard 5ecccde + runtime commits 80af419b, 89e93c78, bf908f47, fb725f76, 1521ab9b from weaverstack PR #222 + three Initialise fixes (bytecode in installed examples, Shortcut mapping merge, no re-asked bindings)",

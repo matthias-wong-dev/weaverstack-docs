@@ -1,0 +1,21 @@
+Test
+
+  Read catalogue                                                                                           2.4s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  SemanticModel/ParcelWarehouse
+
+  Build run graph                                                                                          0.0s
+→   Test SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles
+✓   Test SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles                                      1.2s
+  Execute                                                                                                  1.4s
+  Record what the run did                                                                                  1.8s
+✓ Test                                                                                                     5.6s
+
+test passed
+
+Test summary
+    1 passed
+    0 failed
+  Workflow: 85af66f2a2424f7cbf428e309465ff1f

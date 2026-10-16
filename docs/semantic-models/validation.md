@@ -232,10 +232,36 @@ weaver load SemanticModel/ParcelWarehouse
 weaver test SemanticModel/ParcelWarehouse --name 'Parcel[.]CurrentStatusReconciles'
 ```
 
-<!-- review-todo: dax-sql -->
-!!! warning "TODO — capture Parcel.CurrentStatusReconciles Test output"
-    This exact Test has not run because ParcelWarehouse refresh is blocked by its missing credentialled connection. Capture its passing result after refresh, then exercise and restore the optional discrepancy below. Native DAX validation above is already verified.
-<!-- /review-todo -->
+<!-- cli-capture: {"id": "118-reconcile-test", "title": "Test · DAX count reconciles with Warehouse SQL"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · DAX count reconciles with Warehouse SQL">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
+
+  Read catalogue                                                                                           2.4s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  SemanticModel/ParcelWarehouse
+
+  Build run graph                                                                                          0.0s
+→   Test SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles
+<span class="terminal-status-green">✓   Test SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles                                      1.2s</span>
+  Execute                                                                                                  1.4s
+  Record what the run did                                                                                  1.8s
+<span class="terminal-status-green">✓ Test                                                                                                     5.6s</span>
+
+<span class="terminal-status-green">test passed</span>
+
+Test summary
+<span class="terminal-status-green">    1 passed</span>
+    0 failed
+  Workflow: 85af66f2a2424f7cbf428e309465ff1f
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+The Test ran the DAX query against the refreshed model and the `Expected SQL` against Operations, and both returned 2. Health now records the result:
 
 ```bash
 weaver health
@@ -255,7 +281,11 @@ Inspect the installed validation in `_.SemanticModelTest` and its result in `_.T
 
 ### Produce and correct a discrepancy
 
-Save `PowerBI/Parcel/ParcelWarehouse.tmdl` to an unused `ParcelWarehouse.tmdl.saved` file. In the existing measure declaration, change `COUNTROWS(CurrentStatus)` to `COUNTROWS(CurrentStatus) + 1`. Keep the source annotation and the rest of the file.
+Save a copy, then change `COUNTROWS(CurrentStatus)` to `COUNTROWS(CurrentStatus) + 1` in the measure. Keep the source annotation and the rest of the file:
+
+```bash
+cp PowerBI/Parcel/ParcelWarehouse.tmdl ParcelWarehouse.tmdl.saved
+```
 
 ```bash
 weaver build --item SemanticModel/ParcelWarehouse --bind-data-sources
@@ -263,9 +293,48 @@ weaver load SemanticModel/ParcelWarehouse
 weaver test SemanticModel/ParcelWarehouse --name 'Parcel[.]CurrentStatusReconciles'
 ```
 
-Expect a discrepancy: actual 3 against SQL expected 2. Restore your saved file even if a command fails, then repeat the three commands. The corrected Test should pass. Do not put restoration behind `&&` or automatic exit-on-error: a deliberate failed Test exits 1.
+<!-- cli-capture: {"id": "119-reconcile-discrepancy", "title": "Test · model count 3 against SQL 2"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · model count 3 against SQL 2">
+<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Test
 
-This edits the additional model’s measure, not Warehouse data or the native Parcel model. Access/query errors are invalid validations, not discrepancies; installed `_.TestStatus` records execution errors as `Error`. Binding uses an existing approved connection, not new credentials.
+  Read catalogue                                                                                           2.8s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  SemanticModel/ParcelWarehouse
+
+  Build run graph                                                                                          0.0s
+→   Test SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles
+<span class="terminal-status-red">✗   Test SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles  (1 missing, 1 unexpected)           1.1s</span>
+  Execute                                                                                                  1.3s
+  Record what the run did                                                                                  0.7s
+<span class="terminal-status-red">✗ Test                                                                                                     4.8s</span>
+
+<span class="terminal-status-red">test failed</span>
+
+<span class="terminal-status-red">  failed     Test        SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles  (1 missing, 1 unexpected)</span>
+
+Test summary
+    0 passed
+<span class="terminal-status-red">    1 failed</span>
+  Workflow: c6cca9bede6b49db8cbb20e63f27d9a4
+
+  SemanticModel/ParcelWarehouse/Parcel.CurrentStatusReconciles:
+    {&#x27;_weaver_side&#x27;: &#x27;expected&#x27;, &#x27;_weaver_sk&#x27;: 1, &#x27;ParcelCount&#x27;: 2}
+    {&#x27;_weaver_side&#x27;: &#x27;actual&#x27;, &#x27;_weaver_sk&#x27;: 2, &#x27;ParcelCount&#x27;: 3}
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
+The expected row (`ParcelCount` 2, from SQL) is missing and the actual row (3, from DAX) is unexpected. Restore the file and repeat the three commands; the Test passes again:
+
+```bash
+mv ParcelWarehouse.tmdl.saved PowerBI/Parcel/ParcelWarehouse.tmdl
+```
+
+This edits the additional model’s measure, not Warehouse data or the native Parcel model. Access or query errors make the validation `invalid`, not a discrepancy; installed `_.TestStatus` records them as `Error`.
 
 </details>
 

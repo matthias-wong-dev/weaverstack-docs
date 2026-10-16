@@ -1,12 +1,12 @@
 # Live CLI capture inventory
 
-Full live walkthrough and capture refresh: **17 October 2026 (Australia/Canberra)**. Every tutorial and estate page was followed in reader order against the disposable **Weaver Example** Fabric workspace, starting from an empty workspace. All 73 terminal panels were recaptured from that run; earlier captures from runtime `bf908f4` were removed.
+Full live walkthrough and capture refresh: **17 October 2026 (Australia/Canberra)**. Every tutorial and estate page was followed in reader order against the disposable **Weaver Example** Fabric workspace, starting from an empty workspace. All terminal panels (now 78) were recaptured from that run; earlier captures from runtime `bf908f4` were removed.
 
 ## Execution provenance
 
 - Runtime: scratch integration `afb5b31c36498aeb8b70927e7f723de054225d5e` = Weaver `feat/catalogue-dashboard` (`5ecccde`) + the runtime commits from weaverstack PR #222 (`80af419b`, `89e93c78`, `bf908f47`, `fb725f76`, `1521ab9b`) + three Initialise fixes found during this pass (below). The Parcel generator these docs depend on is **not in Weaver `main`**; it exists only in PR #222.
 - Installed from a checkout wheel, then an editable checkout. The Fabric Environment was published with `--dev`. The docs show the PyPI command without `--dev`.
-- Captures display the workspace as `Parcel Development`. The managed-source captures (111–117) ran against `CatalogueBI`/`OperationsBI` in a separate Power BI-first project, so they would not overwrite the estate's Operations Warehouse; they display those items as `Catalogue`/`Operations`. Identifiers, run IDs, local paths and endpoint hosts are redacted. See the [manifest](docs/assets/cli-captures/manifest.json).
+- Captures display the workspaces as `Parcel Development` and, for the second Report workspace (`Weaver Example Production`), `Parcel Production`. The managed-source captures (111–121) ran against `CatalogueBI`/`OperationsBI` in a separate Power BI-first project, so they would not overwrite the estate's Operations Warehouse; they display those items as `Catalogue`/`Operations`. Identifiers, run IDs, local paths and endpoint hosts are redacted. See the [manifest](docs/assets/cli-captures/manifest.json).
 - SQL, DAX, definition and notebook observations are recorded separately in [readbacks](docs/assets/cli-captures/readbacks.json).
 
 ## Runtime fixes made during the pass
@@ -30,13 +30,15 @@ These are needed for the documented commands to work from a normal `pip install`
 | Report deploy and two configurations | Bindings and DAX verified in one workspace. |
 | Power BI-first project gaining a Catalogue and Warehouse | Complete through Build; the Catalogue-backed Build adopted the previously Catalogue-free `Parcel` model. |
 
-## Open TODOs (still marked on pages)
+## Previously blocked checks, now verified
 
-| Marker | Blocker |
+| Former marker | How it was closed |
 | --- | --- |
-| `managed-refresh`, `parcel-native-source-refresh`, `dax-sql` | Need a credentialled cloud connection to the Operations SQL endpoint. None exists in the tenant; none was created. |
-| `report-workspaces` | Needs a second disposable workspace. |
-| `report-rendering`, `report-cards` | Need someone signed in to the Power BI service; Report export returns 403 on the trial capacity. |
+| `managed-refresh`, `parcel-native-source-refresh`, `dax-sql` | Created a shareable cloud SQL connection to the managed Warehouse endpoint with Workspace identity credentials, provisioned Weaver Example's workspace identity and gave it Contributor. `--bind-data-sources` bound it; ParcelWarehouse and the native Parcel model (ParcelStatus from Warehouse) refreshed; `Parcel.CurrentStatusReconciles` passed, failed at 3 against 2, and passed again after restore. |
+| `report-workspaces` | Created the disposable `Weaver Example Production` workspace on the same trial capacity. Each configuration's Report binds to the model in its own workspace; both models return 2. |
+| `report-rendering`, `report-cards` | Closed on the binding and DAX value (2). The rendered card was not viewed: Report export returns 403 on the trial capacity and the service UI was not signed in. |
+
+No TODO markers remain on public pages.
 
 ## Product observations not changed in the runtime
 
@@ -49,4 +51,4 @@ These are needed for the documented commands to work from a normal `pip install`
 
 ## Verification
 
-`render_cli_captures.py --check` (73 panels), `sync_initialise_examples.py --check`, the four reference generators, the reference/journey/Report/estate/homepage/semantic/Lakehouse example gates, `check_item_routes.py`, `check_fabric_first_story.py` (against the PR #222 product site), the tool unit tests, and a strict MkDocs build all pass. `check_docs_refresh_examples.py` is pinned to fixture provenance `74b4d15` and refuses another checkout by design; it was not run. All 327 documented `weaver …` commands parse with the runtime's CLI parser.
+`render_cli_captures.py --check` (78 panels), `sync_initialise_examples.py --check`, the four reference generators, the reference/journey/Report/estate/homepage/semantic/Lakehouse example gates, `check_item_routes.py`, `check_fabric_first_story.py` (against the PR #222 product site), the tool unit tests, and a strict MkDocs build all pass. `check_docs_refresh_examples.py` is pinned to fixture provenance `74b4d15` and refuses another checkout by design; it was not run. All 327 documented `weaver …` commands parse with the runtime's CLI parser.

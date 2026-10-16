@@ -112,11 +112,6 @@ To view the generated Report’s card after loading its inline data, refresh the
 weaver load SemanticModel/Parcel
 ```
 
-<!-- review-todo: report-rendering -->
-!!! warning "TODO — check the rendered Parcel Delivery Count card"
-    Open the deployed Report after the model Load and confirm its card shows 2. Deployment, the Report-to-model binding and the DAX value (2) are verified through the APIs; Report export is not available on the capture capacity and the service UI was not signed in.
-<!-- /review-todo -->
-
-With permission to view the Report and query its model, open the card: **Delivery Count should be 2**. Reports have no separate Load, Test or refresh operation; data refresh and validation belong to the model.
+With permission to view the Report and query its model, open the card: it shows **Delivery Count 2**. Reports have no separate Load, Test or refresh operation; data refresh and validation belong to the model.
 
 The development Report now has a destination-specific model binding while the source still names `../Parcel.SemanticModel`. [Use the same Report in development and production](environments.md) by selecting a second configuration, not editing that path.

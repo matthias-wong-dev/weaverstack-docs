@@ -1,6 +1,6 @@
 Load
 
-  Resolve semantic models                                                                                  0.4s
+  Resolve semantic models                                                                                  0.9s
   Read catalogue                                                                                           0.0s
 Workspace  Parcel Development
 Catalogue  none
@@ -9,9 +9,9 @@ Targets
 
   Build run graph                                                                                          0.0s
 →   Load SemanticModel/Parcel
-✓   Load SemanticModel/Parcel                                                                              7.6s
-  Execute                                                                                                  7.6s
-✓ Load                                                                                                     8.0s
+✓   Load SemanticModel/Parcel                                                                              7.3s
+  Execute                                                                                                  7.3s
+✓ Load                                                                                                     8.2s
 
 load succeeded: SemanticModel/Parcel
 
