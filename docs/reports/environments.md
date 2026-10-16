@@ -1,10 +1,5 @@
 # Development and production Reports
 
-<!-- review-todo: report-workspaces -->
-!!! warning "TODO — two-workspace and viewing checks pending"
-    Both configuration-specific bindings and model query results were verified within Weaver Example. Repeat in two authorised workspaces and inspect the rendered Reports; actual cross-workspace access and service rendering remain unverified.
-<!-- /review-todo -->
-
 Use the same native Report and model in both workspaces. The selected workspace configuration changes their physical names and the Report's deployed model binding; it does not change their logical names or authored files.
 
 Continue from [Deploy a native Report](deploy.md) in the same `parcel` project. If you are starting here, that page generates and deploys the pair. Keep your model overlays and source bindings.
@@ -33,14 +28,20 @@ targets:
 
 Use an identity with model/Report create or update and readback rights in each workspace. Build updates existing selected items, so choose names you own.
 
+<!-- review-todo: report-workspaces -->
+!!! warning "TODO — repeat these Builds in two authorised workspaces"
+    The captures below verify distinct physical pairs in Weaver Example only. Run these development and production configurations in two authorised workspaces and capture each Report’s actual workspace/model binding.
+<!-- /review-todo -->
+
 ```bash
 weaver check .
 weaver build . --item SemanticModel/Parcel --item Report/Parcel --workspace-config workspace-dev.yml
 ```
 
 <!-- cli-capture: {"id": "100-report-development-build", "title": "Build \u00b7 development pair and binding", "start": "Installation", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Build · development pair and binding <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Build · development pair and binding">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Installation
 <span class="terminal-status-green">    4 succeeded</span>
     0 failed
@@ -117,8 +118,9 @@ weaver build . --item SemanticModel/Parcel --item Report/Parcel --workspace-conf
 ```
 
 <!-- cli-capture: {"id": "101-report-production-build", "title": "Build \u00b7 production-labelled pair and binding", "start": "Installation", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Build · production-labelled pair and binding <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Build · production-labelled pair and binding">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Installation
 <span class="terminal-status-green">    4 succeeded</span>
     0 failed
@@ -209,8 +211,9 @@ weaver load SemanticModel/Parcel --workspace-config workspace-prod.yml
 ```
 
 <!-- cli-capture: {"id": "103-report-production-refresh", "title": "Load \u00b7 refresh the production-labelled model", "start": "load succeeded:"} -->
-<figure class="weaver-terminal">
-<figcaption>Load · refresh the production-labelled model <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · refresh the production-labelled model">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
 
 Load summary
@@ -221,6 +224,11 @@ Load summary
 <p class="terminal-source"><a href="../../assets/cli-captures/103-report-production-refresh.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
+
+<!-- review-todo: report-cards -->
+!!! warning "TODO — check both rendered Delivery Count cards"
+    Open Parcel_Report_Dev and Parcel_Report after the refreshes above and confirm each card shows 2. DAX values and bindings are verified; the rendered cards are not.
+<!-- /review-todo -->
 
 DAX readback returned 2 from each refreshed model. Both Delivery Count cards should show **2**. Model refresh and Report rendering are separate checks from Build and binding; there is no Report Load or Test.
 

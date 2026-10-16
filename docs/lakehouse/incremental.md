@@ -170,7 +170,7 @@ weaver build --item Lakehouse/Landing
 ```
 
 <!-- review-todo: notebook-ui -->
-!!! warning "TODO — notebook UI check pending"
+!!! warning "TODO — verify Files/Parcel/StatusSource in the attached notebook"
     File mutations and the incremental pipeline were executed through real DFS/Spark APIs. The notebook attachment, Shortcut visibility cell and manual notebook interaction below still need a UI check.
 <!-- /review-todo -->
 
@@ -195,8 +195,9 @@ weaver load Lakehouse/Landing
 ```
 
 <!-- cli-capture: {"id": "73-lakehouse-incremental-first-load", "title": "Load \u00b7 first file snapshot", "start": "\u2192   Load", "end": "  Execute", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Load · first file snapshot <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · first file snapshot">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>→   Load Lakehouse/Landing/Files/Parcel.Events
 
 →   Load Lakehouse/Landing/Files/Parcel.StatusFiles
@@ -322,8 +323,9 @@ weaver load Lakehouse/Landing
 ```
 
 <!-- cli-capture: {"id": "75-lakehouse-changed-load", "title": "Load \u00b7 one changed file and one deletion", "start": "\u2192   Load", "end": "  Execute", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Load · one changed file and one deletion <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · one changed file and one deletion">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>→   Load Lakehouse/Landing/Files/Parcel.Events
 
 →   Load Lakehouse/Landing/Files/Parcel.StatusFiles
@@ -419,8 +421,9 @@ weaver load Lakehouse/Landing
 ```
 
 <!-- cli-capture: {"id": "76-lakehouse-noop-load", "title": "Load \u00b7 unchanged source", "start": "\u2713   Load Lakehouse/Landing/Tables/Parcel.LiveStatus", "end": "  Execute", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Load · unchanged source <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · unchanged source">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.LiveStatus  (read 0, +0 ~0 -0 !0)                                 0.3s</span>
 
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     12.0s</span>

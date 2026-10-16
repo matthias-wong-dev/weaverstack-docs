@@ -19,8 +19,9 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-c
 ```
 
 <!-- cli-capture: {"id": "56-scoped-estate-health", "title": "Health \u00b7 the two Parcel items after Test", "start": "Weaver Health", "end": "Slowest loads"} -->
-<figure class="weaver-terminal">
-<figcaption>Health · the two Parcel items after Test <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Health · the two Parcel items after Test">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>
@@ -56,8 +57,9 @@ Green means the assessed subjects have no current finding. Amber identifies work
 For example, after loading the connected Parcel items but before rerunning Test, the report retained four successful historical validations and marked them stale:
 
 <!-- cli-capture: {"id": "53-cross-item-health", "title": "Health \u00b7 successful validations with newer inputs", "start": "Tests   Amber", "end": "Build   Green"} -->
-<figure class="weaver-terminal">
-<figcaption>Health · successful validations with newer inputs <span class="terminal-exit">exit 1</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Health · successful validations with newer inputs">
+<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-amber">Tests   Amber</span>
 <span class="terminal-status-green">  4 succeeded</span>
 <span class="terminal-status-amber">  Amber  Lakehouse/Landing/Parcel.CurrentStatusMatches</span>
@@ -80,8 +82,9 @@ For example, after loading the connected Parcel items but before rerunning Test,
 The [Warehouse failure exercise](../warehouse/tests.md#optional-make-one-discrepancy-visible) installs an intentionally wrong expected status, then runs Test. Its recorded finding is Red, not Amber:
 
 <!-- cli-capture: {"id": "20-health-failed-test", "title": "Health \u00b7 deliberate Warehouse finding", "start": "Tests   Red", "end": "Build   Green"} -->
-<figure class="weaver-terminal">
-<figcaption>Health · deliberate Warehouse finding <span class="terminal-exit">exit 1</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Health · deliberate Warehouse finding">
+<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">Tests   Red</span>
 <span class="terminal-status-red">  1 failed · 1 succeeded</span>
 <span class="terminal-status-red">  Red    Warehouse/Operations/Parcel.CurrentStatusMatches</span>

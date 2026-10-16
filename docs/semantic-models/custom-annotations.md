@@ -1,10 +1,5 @@
 # Add a custom model annotation
 
-<!-- review-todo: custom-annotation -->
-!!! warning "TODO — custom-annotation live check pending"
-    The handler and failure/restoration fixture pass offline checks. Capture the deployed display folder and the located failure from a live run of this extended walkthrough.
-<!-- /review-todo -->
-
 Set a native measure's display folder with one small Python handler. Use a custom annotation when declarative TMDL and built-ins do not express the convention you need.
 
 ## Before you start
@@ -58,6 +53,11 @@ weaver build . --item SemanticModel/Parcel
 weaver load SemanticModel/Parcel
 ```
 
+<!-- review-todo: custom-annotation -->
+!!! warning "TODO — capture the display-folder Build and Load output"
+    Run the commands immediately above and capture their terminal output. Confirm the deployed Delivery Count display folder is Parcel metrics and its format is 0 "deliveries"; only offline evidence is recorded so far.
+<!-- /review-todo -->
+
 Inspect the deployed Delivery Count measure: its display folder is `Parcel metrics`, its format is `0 "deliveries"`, and the original partition remains. If you also deployed its Report, the card should show `2 deliveries`. Compilation does not rewrite authored native files.
 
 ## 4. Read a located diagnostic
@@ -81,6 +81,11 @@ cp failure/Parcel.tmdl PowerBI/Parcel/Parcel.tmdl
 weaver build . --item SemanticModel/Parcel
 mv Parcel.tmdl.saved PowerBI/Parcel/Parcel.tmdl
 ```
+
+<!-- review-todo: annotation-diagnostic -->
+!!! warning "TODO — capture the empty-annotation diagnostic"
+    Capture the located file-and-line error from the failure command immediately above, and verify restoration of the saved overlay. This failure/restoration fixture has passed offline checks, not this live run.
+<!-- /review-todo -->
 
 The handler calls `error` for an empty value. The diagnostic identifies the declaration's file and line. Check loads the class and checks declaration shape; handler application occurs during compilation, so the value failure belongs at that boundary.
 

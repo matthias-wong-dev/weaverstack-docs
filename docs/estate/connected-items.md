@@ -20,7 +20,7 @@ cd parcel
 If already inside `parcel`, use `--project-folder .` instead. Initialise reads Landing’s existing binding, retains its files and adds Operations. The catalogue and published runtime stay in place. Use disposable managed targets: Build may prune undeclared co-located content; keep irreplaceable external sources outside them.
 
 <!-- review-todo: shortcut-extension -->
-!!! warning "TODO — authored Shortcut extension edge case"
+!!! warning "TODO — resolve Initialise’s refusal of authored shortcuts.yml"
     Initialise refuses to overwrite a `Warehouse/Operations/shortcuts.yml` it did not generate. Save and set aside only that local file before extension, then merge its saved mappings into the generated file **before Check or Build**. Keep the incremental example’s `physical` Source.Parcel mapping alongside the new `logical` entry; do not replace either. The capture continued that project using this explicit merge, without changing the existing Table/View definitions or data. The workaround is verified; a generator fix remains pending.
 <!-- /review-todo -->
 
@@ -79,8 +79,9 @@ weaver build --item Lakehouse/Landing --item Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "51-cross-item-build", "title": "Build \u00b7 connect the two managed items", "start": "Installation", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Build · connect the two managed items <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Build · connect the two managed items">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Installation
 <span class="terminal-status-green">    7 succeeded</span>
     0 failed
@@ -163,8 +164,9 @@ weaver load Lakehouse/Landing Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "52-cross-item-load", "title": "Load \u00b7 Lakehouse producer and Warehouse consumer", "start": "Load summary", "end": "  Workflow:", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Load · Lakehouse producer and Warehouse consumer <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · Lakehouse producer and Warehouse consumer">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
 <span class="terminal-status-green">    6 succeeded</span>
     0 failed
@@ -248,8 +250,9 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "53-cross-item-health", "title": "Health \u00b7 loaded data needs current validations", "start": "Weaver Health", "end": "Slowest loads"} -->
-<figure class="weaver-terminal">
-<figcaption>Health · loaded data needs current validations <span class="terminal-exit">exit 1</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Health · loaded data needs current validations">
+<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-amber">Weaver Health  Amber</span>
 
 <span class="terminal-status-green">Load    Green</span>

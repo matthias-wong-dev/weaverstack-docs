@@ -130,7 +130,7 @@ python tools/render_cli_captures.py --check
 "$PRODUCT_PYTHON" -m pytest -q tools/test_cli_captures.py
 ```
 
-The renderer only escapes text and adds presentation classes. Caption/footer labels are presentation, not invented terminal lines. Its raw-asset links account for MkDocs directory URLs. Review output text and copied source bytes, mobile/local scrolling, both themes and no-JavaScript disclosures after regeneration. Strip ANSI again during privacy checks so identifiers split by styling cannot escape the scan. [Capture inventory](CAPTURE-INVENTORY.md) records live coverage and remaining limits.
+The renderer only escapes text and adds presentation classes. Generic Terminal/Terminal output labels and footer text are presentation, not invented terminal lines. Shell prompts are CSS-only, leaving command clipboard targets unchanged. Keep command/output widths aligned and place each TODO at the exact pending result or inspection step. Its raw-asset links account for MkDocs directory URLs. Review output text and copied source bytes, mobile/local scrolling, both themes and no-JavaScript disclosures after regeneration. Strip ANSI again during privacy checks so identifiers split by styling cannot escape the scan. [Capture inventory](CAPTURE-INVENTORY.md) records live coverage and remaining limits.
 
 ## Validate the change
 

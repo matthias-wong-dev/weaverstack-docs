@@ -56,8 +56,9 @@ weaver load Lakehouse/Landing
 ```
 
 <!-- cli-capture: {"id": "46-lakehouse-load", "title": "CurrentStatus \u00b7 step from the first pipeline Load", "start": "\u2713   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus", "end": "  Execute"} -->
-<figure class="weaver-terminal">
-<figcaption>CurrentStatus · step from the first pipeline Load <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="CurrentStatus · step from the first pipeline Load">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.CurrentStatus  (read 2, +2 ~0 -0 !0)                             12.1s</span>
 
 </code></pre>

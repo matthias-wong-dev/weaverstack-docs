@@ -50,8 +50,9 @@ def render_terminal(
             + "</details>"
         )
     return (
-        '<figure class="weaver-terminal">\n'
-        f'<figcaption>{escape(title)} <span class="terminal-exit">exit {int(exit_code)}</span></figcaption>\n'
+        '<p class="terminal-intro">The command returned:</p>\n'
+        f'<figure class="weaver-terminal" aria-label="{escape(title, quote=True)}">\n'
+        f'<figcaption>Terminal output <span class="terminal-exit">exit {int(exit_code)}</span></figcaption>\n'
         + _pre(text)
         + "\n"
         + full

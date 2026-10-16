@@ -49,8 +49,9 @@ weaver build . --item SemanticModel/Parcel --item Report/Parcel
 ```
 
 <!-- cli-capture: {"id": "85-native-annotation-and-report-build", "title": "Build \u00b7 deploy and verify the linked pair", "start": "\u2192   Report/Parcel \u00b7 Deploy Report definitions", "end": "  Install", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Build · deploy and verify the linked pair <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Build · deploy and verify the linked pair">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>→   Report/Parcel · Deploy Report definitions · 1 action
 
 <span class="terminal-status-green">✓   Report/Parcel · Deploy Report definitions · 1 action                                                  20.3s</span>
@@ -128,11 +129,6 @@ Without a catalogue, a linked Report must include its local model in the same Bu
 
 ## Inspect the Report
 
-<!-- review-todo: report-rendering -->
-!!! warning "TODO — Report viewing check pending"
-    Deployment and the actual model binding were verified by API readback. Opening the service Report and checking its rendered card are still pending.
-<!-- /review-todo -->
-
 In the service workspace, find the Parcel Report and check that its linked model is `Parcel` in **Parcel Development**. Open the workspace’s **lineage view** and follow the Report’s model link. Confirm it points to the Parcel semantic model in this workspace, not a similarly named model in another destination.
 
 To view the generated Report’s card after loading its inline data, refresh the **model** with an identity allowed to refresh it:
@@ -140,6 +136,11 @@ To view the generated Report’s card after loading its inline data, refresh the
 ```bash
 weaver load SemanticModel/Parcel
 ```
+
+<!-- review-todo: report-rendering -->
+!!! warning "TODO — check the rendered Parcel Delivery Count card"
+    Open this deployed Report after the model Load above and confirm its card shows 2. Deployment, binding and model queries passed; the service viewing result is still unobserved.
+<!-- /review-todo -->
 
 With permission to view the Report and query its model, open the card: **Delivery Count should be 2**. This is a separate viewing check, not a Report deployment requirement. Reports have no separate Load, Test or refresh operation; data refresh and validation belong to the model. Build success alone does not establish refresh access or card rendering.
 

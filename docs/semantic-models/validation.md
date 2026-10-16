@@ -43,8 +43,9 @@ weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/P
 ```
 
 <!-- cli-capture: {"id": "84-native-source-dax-validation", "title": "Test \u00b7 source DAX against the deployed model", "start": "test passed"} -->
-<figure class="weaver-terminal">
-<figcaption>Test · source DAX against the deployed model <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · source DAX against the deployed model">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
 
 Test summary
@@ -94,8 +95,9 @@ weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/P
 ```
 
 <!-- cli-capture: {"id": "91-native-failed-source-dax", "title": "Test \u00b7 deliberately wrong measure", "start": "test failed"} -->
-<figure class="weaver-terminal">
-<figcaption>Test · deliberately wrong measure <span class="terminal-exit">exit 1</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · deliberately wrong measure">
+<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">test failed</span>
 
 <span class="terminal-status-red">  failed     Assumption  SemanticModel/Parcel/Parcel.PositiveDeliveryCount  (1 violation)</span>
@@ -130,8 +132,9 @@ weaver test SemanticModel/Parcel --source . --file 'PowerBI/Parcel/assumptions/P
 ```
 
 <!-- cli-capture: {"id": "94-native-restored-source-dax", "title": "Test \u00b7 restore the saved overlay", "start": "test passed"} -->
-<figure class="weaver-terminal">
-<figcaption>Test · restore the saved overlay <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · restore the saved overlay">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
 
 Test summary
@@ -152,11 +155,6 @@ To install this Assumption in a catalogue-backed project, Build the changed mode
 </details>
 
 ## Compare DAX with source SQL
-
-<!-- review-todo: dax-sql -->
-!!! warning "TODO — DAX-to-SQL comparison pending"
-    The native DAX pass, deliberate failure and restoration are verified. This managed-source comparison and its optional discrepancy/recovery exercise are not: refresh is blocked by the missing credentialled connection.
-<!-- /review-todo -->
 
 Use the already loaded [managed-source model](managed-sources.md) in this same project. **ParcelWarehouse** reads Operations’ CurrentStatus View; the native **Parcel** model remains inline. Do not compare the inline Delivery data with an unrelated Warehouse result.
 
@@ -193,6 +191,14 @@ weaver check
 weaver build --item SemanticModel/ParcelWarehouse --bind-data-sources
 weaver load SemanticModel/ParcelWarehouse
 weaver test SemanticModel/ParcelWarehouse --name 'Parcel[.]CurrentStatusReconciles'
+```
+
+<!-- review-todo: dax-sql -->
+!!! warning "TODO — capture Parcel.CurrentStatusReconciles Test output"
+    This exact Test has not run because ParcelWarehouse refresh is blocked by its missing credentialled connection. Capture its passing result after refresh, then exercise and restore the optional discrepancy below. Native DAX validation above is already verified.
+<!-- /review-todo -->
+
+```bash
 weaver health
 ```
 

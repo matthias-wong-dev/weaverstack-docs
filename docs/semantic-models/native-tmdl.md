@@ -74,8 +74,9 @@ weaver build --item SemanticModel/Parcel
 ```
 
 <!-- cli-capture: {"id": "82-native-catalogue-free-build", "title": "Build \u00b7 native model without a Catalogue", "start": "Installation", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Build · native model without a Catalogue <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Build · native model without a Catalogue">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Installation
 <span class="terminal-status-green">    2 succeeded</span>
     0 failed
@@ -140,8 +141,9 @@ weaver load SemanticModel/Parcel
 ```
 
 <!-- cli-capture: {"id": "83-native-catalogue-free-refresh", "title": "Load \u00b7 refresh the inline model", "start": "Workspace", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Load · refresh the inline model <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · refresh the inline model">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Workspace  Weaver Example
 Catalogue  none
 Targets
@@ -231,8 +233,9 @@ weaver build --item SemanticModel/Parcel --item Report/Parcel
 ```
 
 <!-- cli-capture: {"id": "85-native-annotation-and-report-build", "title": "Build \u00b7 apply the rule and bind the linked Report", "start": "Installation", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Build · apply the rule and bind the linked Report <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Build · apply the rule and bind the linked Report">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Installation
 <span class="terminal-status-green">    4 succeeded</span>
     0 failed
@@ -307,8 +310,9 @@ weaver load SemanticModel/Parcel
 ```
 
 <!-- cli-capture: {"id": "86-native-annotation-refresh", "title": "Load \u00b7 refresh after the modelling rule", "start": "load succeeded:"} -->
-<figure class="weaver-terminal">
-<figcaption>Load · refresh after the modelling rule <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · refresh after the modelling rule">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">load succeeded: SemanticModel/Parcel</span>
 
 Load summary
@@ -321,7 +325,7 @@ Load summary
 <!-- /cli-capture -->
 
 <!-- review-todo: native-field-list -->
-!!! warning "TODO — service field-list check pending"
+!!! warning "TODO — inspect Delivery[DepotId] in the Report Data pane"
     Deployed definition readback verified the foreign-key visibility change, and live DAX still returned 2. Confirm the service Data pane and the rendered Report card visually.
 <!-- /review-todo -->
 

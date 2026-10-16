@@ -40,7 +40,7 @@ Final scoped Lakehouse/Warehouse Test and Health (127–128) passed: four valida
 
 ## Presentation and verification
 
-Temporary yellow **TODO** review banners identify the outstanding checks at their relevant pages/steps, including optional live walkthroughs, UI checks, destructive scope and released-package acceptance. They are review markers requested by Matthias, not missing product features; remove them before publication.
+Temporary yellow **TODO** markers sit at the specific missing command result, field check or UI action—not in generic page-top warnings. They name the exact output/check still needed, including optional live walkthroughs, destructive scope and released-package acceptance. Remove them before publication. Commands and their following outputs use matching-width terminal boxes; visual shell prompts do not enter copied code, and real output is introduced with “The command returned:” rather than custom visible result headings.
 
 The existing pages now contain **51 authentic output panels across 17 pages**, backed by 81 recorded command attempts and 27 selected SQL/API observations. Attempt totals include deliberate failures and the two qualified harness attempts above; they are not a success count.
 

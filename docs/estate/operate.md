@@ -60,8 +60,9 @@ weaver test Lakehouse/Landing Warehouse/Operations --workspace-config workspace-
 ```
 
 <!-- cli-capture: {"id": "54-estate-test", "title": "Test \u00b7 both sides of the Parcel connection", "start": "test passed", "end": "  Workflow:"} -->
-<figure class="weaver-terminal">
-<figcaption>Test · both sides of the Parcel connection <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · both sides of the Parcel connection">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
 
 Test summary
@@ -77,8 +78,9 @@ weaver health --item Lakehouse/Landing --item Warehouse/Operations --workspace-c
 ```
 
 <!-- cli-capture: {"id": "56-scoped-estate-health", "title": "Health \u00b7 Parcel estate after validation", "start": "Weaver Health", "end": "Slowest loads"} -->
-<figure class="weaver-terminal">
-<figcaption>Health · Parcel estate after validation <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Health · Parcel estate after validation">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>

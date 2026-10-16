@@ -43,8 +43,9 @@ weaver test Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "14-warehouse-test", "title": "Test \u00b7 both generated validations", "start": "test passed", "end": "  Workflow:"} -->
-<figure class="weaver-terminal">
-<figcaption>Test · both generated validations <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · both generated validations">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
 
 Test summary
@@ -130,8 +131,9 @@ weaver test Warehouse/Operations --name 'Parcel[.]CurrentStatusMatches'
 ```
 
 <!-- cli-capture: {"id": "19-failed-warehouse-test", "title": "Test \u00b7 deliberate discrepancy", "start": "test failed", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Test · deliberate discrepancy <span class="terminal-exit">exit 1</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · deliberate discrepancy">
+<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">test failed</span>
 
 <span class="terminal-status-red">  failed     Test        Warehouse/Operations/Parcel.CurrentStatusMatches  (1 missing, 1 unexpected)</span>
@@ -187,8 +189,9 @@ weaver health --item Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "20-health-failed-test", "title": "Health \u00b7 recorded failed validation", "start": "Weaver Health", "end": "Slowest loads"} -->
-<figure class="weaver-terminal">
-<figcaption>Health · recorded failed validation <span class="terminal-exit">exit 1</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Health · recorded failed validation">
+<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">Weaver Health  Red</span>
 
 <span class="terminal-status-green">Load    Green</span>
@@ -220,8 +223,9 @@ weaver health --item Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "23-health-restored", "title": "Health \u00b7 restored validation", "start": "Weaver Health", "end": "Slowest loads"} -->
-<figure class="weaver-terminal">
-<figcaption>Health · restored validation <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Health · restored validation">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>

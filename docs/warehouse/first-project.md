@@ -20,8 +20,9 @@ cd parcel
 ```
 
 <!-- cli-capture: {"id": "10-warehouse-initialise", "title": "Initialise \u00b7 Parcel Warehouse", "start": "  Catalogue    Catalogue", "end": "Next:"} -->
-<figure class="weaver-terminal">
-<figcaption>Initialise · Parcel Warehouse <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Initialise · Parcel Warehouse">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>  Catalogue    Catalogue   already exists
   Environment  Weaver      already exists
   Warehouse    Operations  created
@@ -131,8 +132,9 @@ weaver check
 ```
 
 <!-- cli-capture: {"id": "11-warehouse-check", "title": "Check \u00b7 local project"} -->
-<figure class="weaver-terminal">
-<figcaption>Check · local project <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Check · local project">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Project valid.
 </code></pre>
 <p class="terminal-source"><a href="../../assets/cli-captures/11-warehouse-check.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Live CLI capture; progress redraws omitted.</p>
@@ -146,8 +148,9 @@ weaver build --item Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "12-warehouse-build", "title": "Build \u00b7 first Warehouse installation", "start": "Installation", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Build · first Warehouse installation <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Build · first Warehouse installation">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Installation
 <span class="terminal-status-green">   18 succeeded</span>
     0 failed
@@ -252,8 +255,9 @@ weaver load Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "13-warehouse-load", "title": "Load \u00b7 first event rows", "start": "Load summary", "end": "  Workflow:"} -->
-<figure class="weaver-terminal">
-<figcaption>Load · first event rows <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · first event rows">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
 <span class="terminal-status-green">    1 succeeded</span>
     0 failed
@@ -277,8 +281,9 @@ weaver test Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "14-warehouse-test", "title": "Test \u00b7 generated validations", "start": "test passed", "end": "  Workflow:"} -->
-<figure class="weaver-terminal">
-<figcaption>Test · generated validations <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · generated validations">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
 
 Test summary
@@ -294,8 +299,9 @@ weaver health --item Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "15-warehouse-health", "title": "Health \u00b7 loaded and tested Warehouse", "start": "Weaver Health", "end": "Slowest loads"} -->
-<figure class="weaver-terminal">
-<figcaption>Health · loaded and tested Warehouse <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Health · loaded and tested Warehouse">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>

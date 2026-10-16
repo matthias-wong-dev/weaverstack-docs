@@ -11,6 +11,11 @@ python -m pip install --upgrade weaverstack
 weaver --version
 ```
 
+<!-- review-todo: release-check -->
+!!! warning "TODO — verify this install with the matching released package"
+    The install/version commands above still need acceptance against the released wheel that matches these docs. Recorded runs used the built development wheel.
+<!-- /review-todo -->
+
 The package provides the `weaver` command and Python library. `weaver --help` lists the commands.
 
 ## Configure Fabric access

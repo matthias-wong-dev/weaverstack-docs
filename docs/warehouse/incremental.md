@@ -142,8 +142,9 @@ weaver load Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "33-incremental-first-load", "title": "Load \u00b7 establish the incremental Table", "start": "Load summary", "end": "  Workflow:", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Load · establish the incremental Table <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · establish the incremental Table">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
 <span class="terminal-status-green">    2 succeeded</span>
     0 failed
@@ -242,8 +243,9 @@ weaver load Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "35-incremental-changed-load", "title": "Load \u00b7 source update and cancellation", "start": "Load summary", "end": "  Workflow:"} -->
-<figure class="weaver-terminal">
-<figcaption>Load · source update and cancellation <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · source update and cancellation">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
 <span class="terminal-status-green">    2 succeeded</span>
     0 failed
@@ -273,8 +275,9 @@ weaver load Warehouse/Operations
 ```
 
 <!-- cli-capture: {"id": "36-incremental-noop-load", "title": "Load \u00b7 no new incremental changes", "start": "Load summary", "end": "  Workflow:"} -->
-<figure class="weaver-terminal">
-<figcaption>Load · no new incremental changes <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · no new incremental changes">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
 <span class="terminal-status-green">    2 succeeded</span>
     0 failed

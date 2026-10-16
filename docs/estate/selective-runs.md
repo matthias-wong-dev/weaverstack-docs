@@ -11,8 +11,9 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --dry-run --workspa
 ```
 
 <!-- cli-capture: {"id": "60-named-load-preview", "title": "Preview \u00b7 one installed Table", "start": "    validated"} -->
-<figure class="weaver-terminal">
-<figcaption>Preview · one installed Table <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Preview · one installed Table">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>    validated                load:Lakehouse/Landing/Tables/Parcel.Event
 
 Plan
@@ -31,8 +32,9 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --ancestors --dry-r
 ```
 
 <!-- cli-capture: {"id": "61-ancestor-load-preview", "title": "Preview \u00b7 include the producer", "start": "    validated"} -->
-<figure class="weaver-terminal">
-<figcaption>Preview · include the producer <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Preview · include the producer">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>    validated                load:Lakehouse/Landing/Files/Parcel.Events
     validated                load:Lakehouse/Landing/Tables/Parcel.Event
                              after load:Lakehouse/Landing/Files/Parcel.Events
@@ -49,8 +51,9 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --dry
 ```
 
 <!-- cli-capture: {"id": "62-descendant-load-preview", "title": "Preview \u00b7 include the consumer", "start": "    validated"} -->
-<figure class="weaver-terminal">
-<figcaption>Preview · include the consumer <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Preview · include the consumer">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>    validated                load:Lakehouse/Landing/Tables/Parcel.Event
     validated                load:Lakehouse/Landing/Tables/Parcel.CurrentStatus
                              after load:Lakehouse/Landing/Tables/Parcel.Event
@@ -79,8 +82,9 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]Event' --descendants --wor
 ```
 
 <!-- cli-capture: {"id": "63-descendant-load", "title": "Load \u00b7 the inspected downstream selection", "start": "\u2192   Load", "end": "  Execute", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Load · the inspected downstream selection <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · the inspected downstream selection">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>→   Load Lakehouse/Landing/Tables/Parcel.Event
 
 <span class="terminal-status-green">✓   Load Lakehouse/Landing/Tables/Parcel.Event  (read 3, +0 ~0 -0 !0)                                     16.0s</span>
@@ -146,8 +150,9 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]DoesNotExist' --dry-run --
 ```
 
 <!-- cli-capture: {"id": "68-no-match-unattended-preview", "title": "Preview \u00b7 no installed name matches", "start": "error:"} -->
-<figure class="weaver-terminal">
-<figcaption>Preview · no installed name matches <span class="terminal-exit">exit 1</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Preview · no installed name matches">
+<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-red">error: no installed loadable object in the requested items matches &#x27;Tables/Parcel[.]DoesNotExist&#x27;. Installed: Files/Parcel.Events, Tables/Parcel.CurrentStatus, Tables/Parcel.Event</span>
 </code></pre>
 <p class="terminal-source"><a href="../../assets/cli-captures/68-no-match-unattended-preview.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
@@ -157,11 +162,6 @@ weaver load Lakehouse/Landing --name 'Tables/Parcel[.]DoesNotExist' --dry-run --
 Check the installed names and item scope. In an interactive terminal, Esc leaves the error prompt; Enter retries the same request.
 
 ## Explore a larger branching selection
-
-<!-- review-todo: branching -->
-!!! warning "TODO — optional branching example pending"
-    The leading Landing named, ancestor and descendant runs above are verified. This optional larger Warehouse/Reporting branch has passed offline checks but has not been exercised live.
-<!-- /review-todo -->
 
 <details markdown="1">
 <summary>Optional: sibling prerequisites and a second Warehouse</summary>
@@ -245,6 +245,11 @@ SELECT DeliveryCount FROM [Parcel].[Summary]
 logical:
   Warehouse/Reporting/Parcel.Summary: Warehouse/Operations/Parcel.Summary
 ```
+
+<!-- review-todo: branching -->
+!!! warning "TODO — capture the larger Warehouse/Reporting selection results"
+    Landing selections earlier on this page are verified. This optional extended graph has only passed offline checks: capture its Build/Load and the branching previews below before filling in their terminal results.
+<!-- /review-todo -->
 
 Install and preload the extended graph using the same estate configuration:
 

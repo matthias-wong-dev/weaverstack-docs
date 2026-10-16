@@ -62,8 +62,9 @@ weaver test Lakehouse/Landing
 ```
 
 <!-- cli-capture: {"id": "47-lakehouse-test", "title": "Test \u00b7 independent expected rows and known statuses", "start": "test passed", "end": "  Workflow:"} -->
-<figure class="weaver-terminal">
-<figcaption>Test · independent expected rows and known statuses <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · independent expected rows and known statuses">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
 
 Test summary

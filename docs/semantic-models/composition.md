@@ -1,10 +1,5 @@
 # Compose two model variants
 
-<!-- review-todo: composition -->
-!!! warning "TODO — model-variant live check pending"
-    Composition and preservation pass offline checks. Deploy both variants and their Reports, refresh and run their DAX validations, then capture the service results.
-<!-- /review-todo -->
-
 Reuse a source foundation without deploying it as a physical base model. Give each output its own additions, Report and validations.
 
 ## Before you start
@@ -108,6 +103,11 @@ weaver build . --item SemanticModel/ParcelOperations --item Report/ParcelOperati
 weaver load SemanticModel/ParcelOperations SemanticModel/ParcelExecutive
 weaver test SemanticModel/ParcelOperations SemanticModel/ParcelExecutive --source .
 ```
+
+<!-- review-todo: composition -->
+!!! warning "TODO — capture both variants’ Build, Load and Test results"
+    Run the commands immediately above for ParcelOperations and ParcelExecutive. Capture their terminal results and verify each Report binding and model query; the composition and preservation checks so far are offline.
+<!-- /review-todo -->
 
 Do not replace that Build selection with `PowerBI/Parcel`: the broad project selector includes the base. This configuration deliberately has no base target, so that broader request refuses. Source composition does not itself select a base for deployment.
 

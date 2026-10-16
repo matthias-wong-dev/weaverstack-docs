@@ -1,10 +1,5 @@
 # Connect a managed Fabric source
 
-<!-- review-todo: managed-refresh -->
-!!! warning "TODO — managed model refresh blocked"
-    Model Build and certification passed, but refresh needs an explicit cloud or gateway connection with credentials for Operations. Bind an approved connection, rerun refresh, then capture the managed-model query result.
-<!-- /review-todo -->
-
 Extend the existing Parcel project from [Power BI-only operation into a Catalogue-managed Fabric estate](index.md#two-ways-to-use-weaver-with-power-bi). Keep its inline Delivery/Depot model and linked Report, then add a Warehouse and a separate model over its data. The original Delivery Count still works without a source connection.
 
 ## Before you start
@@ -71,8 +66,9 @@ weaver build --item SemanticModel/ParcelWarehouse --bind-data-sources
 ```
 
 <!-- cli-capture: {"id": "113-managed-model-bind-build", "title": "Build \u00b7 install and verify the managed model", "start": "Installation", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Build · install and verify the managed model <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Build · install and verify the managed model">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Installation
 <span class="terminal-status-green">    5 succeeded</span>
     0 failed
@@ -153,8 +149,9 @@ weaver load Warehouse/Operations SemanticModel/ParcelWarehouse
 ```
 
 <!-- cli-capture: {"id": "114-managed-source-and-model-load", "title": "Load \u00b7 source succeeded, model refresh failed", "start": "Load summary", "end": "  Rows", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Load · source succeeded, model refresh failed <span class="terminal-exit">exit 1</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · source succeeded, model refresh failed">
+<figcaption>Terminal output <span class="terminal-exit">exit 1</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
 <span class="terminal-status-green">    3 succeeded</span>
 <span class="terminal-status-red">    1 failed</span>
@@ -218,6 +215,11 @@ Load summary
 </code></pre></details><p class="terminal-source"><a href="../../assets/cli-captures/114-managed-source-and-model-load.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Transcript excerpt · Live CLI capture; progress redraws omitted.</p>
 </figure>
 <!-- /cli-capture -->
+
+<!-- review-todo: managed-refresh -->
+!!! warning "TODO — capture a successful ParcelWarehouse refresh"
+    The Load above failed because Operations has no explicit cloud or gateway connection with credentials. Bind an approved connection, rerun this Load and replace this TODO with its successful terminal result.
+<!-- /review-todo -->
 
 The capture’s source Loads succeeded, but the model refresh failed: the service had no explicit cloud or gateway connection with credentials for Operations. Build success verifies the deployed definition, not the credentials needed to refresh it. Select an existing approved connection with the connection’s owner before rerunning Load.
 

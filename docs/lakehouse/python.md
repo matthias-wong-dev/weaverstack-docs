@@ -108,8 +108,9 @@ weaver check
 ```
 
 <!-- cli-capture: {"id": "43-lakehouse-check", "title": "Check \u00b7 continuing Parcel project"} -->
-<figure class="weaver-terminal">
-<figcaption>Check · continuing Parcel project <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Check · continuing Parcel project">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Project valid.
 </code></pre>
 <p class="terminal-source"><a href="../../assets/cli-captures/43-lakehouse-check.txt">Sanitised transcript</a> · <a href="../../assets/cli-captures/manifest.json">Capture details</a> · Live CLI capture; progress redraws omitted.</p>
@@ -133,8 +134,9 @@ weaver build --item Lakehouse/Landing
 ```
 
 <!-- cli-capture: {"id": "45-lakehouse-build", "title": "Build \u00b7 Landing pipeline", "start": "Installation", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Build · Landing pipeline <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Build · Landing pipeline">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Installation
 <span class="terminal-status-green">   18 succeeded</span>
     0 failed
@@ -229,8 +231,9 @@ weaver load Lakehouse/Landing
 ```
 
 <!-- cli-capture: {"id": "46-lakehouse-load", "title": "Load \u00b7 carrier file and Delta Tables", "start": "Load summary", "end": "  Workflow:", "full": true} -->
-<figure class="weaver-terminal">
-<figcaption>Load · carrier file and Delta Tables <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Load · carrier file and Delta Tables">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code>Load summary
 <span class="terminal-status-green">    3 succeeded</span>
     0 failed
@@ -301,8 +304,9 @@ weaver test Lakehouse/Landing
 ```
 
 <!-- cli-capture: {"id": "47-lakehouse-test", "title": "Test \u00b7 generated Lakehouse validations", "start": "test passed", "end": "  Workflow:"} -->
-<figure class="weaver-terminal">
-<figcaption>Test · generated Lakehouse validations <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Test · generated Lakehouse validations">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">test passed</span>
 
 Test summary
@@ -318,8 +322,9 @@ weaver health --item Lakehouse/Landing
 ```
 
 <!-- cli-capture: {"id": "48-lakehouse-health", "title": "Health \u00b7 loaded and tested Landing", "start": "Weaver Health", "end": "Slowest loads"} -->
-<figure class="weaver-terminal">
-<figcaption>Health · loaded and tested Landing <span class="terminal-exit">exit 0</span></figcaption>
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Health · loaded and tested Landing">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
 <pre tabindex="0" aria-label="Captured terminal output"><code><span class="terminal-status-green">Weaver Health  Green</span>
 
 <span class="terminal-status-green">Load    Green</span>

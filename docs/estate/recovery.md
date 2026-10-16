@@ -64,11 +64,6 @@ Remove only `--dry-run` if the selection is correct. This is a whole-name regex,
 
 ## Reconstruct a Table
 
-<!-- review-todo: destructive-recovery -->
-!!! warning "TODO — destructive recovery checks pending"
-    Corrective Builds and validation restoration were verified. Reload, Wipe and Mirror/reset recovery were not executed live; approve their exact disposable scope before testing them.
-<!-- /review-todo -->
-
 Reload **empties each reached selected Table and resets its bookmark/progress before loading it**. Use it only when reconstruction from empty is intended:
 
 ```bash
@@ -83,6 +78,11 @@ weaver load Warehouse/Operations \
   --reload \
   --workspace-config workspace-development.yml
 ```
+
+<!-- review-todo: reload-result -->
+!!! warning "TODO — capture this Reload plan and reconstruction result"
+    The preview and destructive Reload commands immediately above have not been run. Approve the exact disposable scope before capturing their output and reset/bookmark result; corrective Build and Test restoration are already verified.
+<!-- /review-todo -->
 
 Plain named Reload follows its matching selection without expansion. Ancestors/descendants can deliberately enlarge the reached set and therefore enlarge the destructive scope. Folders cannot be reloaded; stale and reload cannot be combined. If execution fails after the reset or emptying step, the previous Table contents are not restored automatically.
 
@@ -138,6 +138,11 @@ Re-mirror **empties and reconstructs the destination catalogue and every selecte
 weaver mirror --workspace-config workspace-development.yml
 ```
 
+<!-- review-todo: remirror-result -->
+!!! warning "TODO — capture this re-mirror plan and resulting state"
+    This re-mirror has not been executed. Approve its full disposable reset scope, then capture its plan, confirmation and resulting Health; no live output should be inferred from the instructions.
+<!-- /review-todo -->
+
 Inspect the displayed source catalogue, destination catalogue and target bindings. Confirm if that boundary is correct; decline if it is not. Mirror has no dry-run mode, and declining leaves the destinations unchanged.
 
 Mirror reconstructs the destination catalogue and selected targets. Local materialisations in that boundary are replaced; they are not preserved as a fallback. Run Health after Mirror, then Build any project changes that should become local.
@@ -154,6 +159,11 @@ weaver wipe Warehouse/Operations \
   --dry-run \
   --workspace-config workspace-development.yml
 ```
+
+<!-- review-todo: wipe-result -->
+!!! warning "TODO — capture this Wipe preview and verified empty state"
+    No Wipe was run. Capture the preview above first; perform and verify the destructive step only after its exact disposable boundary is approved.
+<!-- /review-todo -->
 
 If the displayed plan is the desired empty state, rerun without `--dry-run` and confirm it. Wipe target arguments are physical Fabric items, not logical Weaver item identities. Naming no target selects the physical estate recorded by the catalogue and retains the normal catalogue-removal default; preview that full boundary before authorising it. Semantic-model-only named Wipe instead resets the selected model definitions and retains the catalogue while removing their claims; it does not empty their sources or shared connections. Wipe is not transactional: completed or independent mutations remain after failure. Inspect remaining state before retrying uncertain destructive work.
 

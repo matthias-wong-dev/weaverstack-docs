@@ -5,6 +5,27 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_output_is_introduced_as_terminal_output_not_a_custom_result_heading():
+    spec = importlib.util.spec_from_file_location(
+        "render_cli_captures", ROOT / "tools/render_cli_captures.py"
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    rendered = module.render_terminal(
+        "Project valid.\n",
+        title="Check · Parcel declarations",
+        raw_href="capture.txt",
+        exit_code=0,
+    )
+    assert "The command returned:" in rendered
+    assert "<figcaption>Terminal output " in rendered
+    assert "<figcaption>Check · Parcel declarations" not in rendered
+    parser = CodeText()
+    parser.feed(rendered)
+    assert "".join(parser.parts) == "Project valid.\n"
+
+
 def test_selected_output_is_explicitly_labelled_as_an_excerpt():
     spec = importlib.util.spec_from_file_location(
         "render_cli_captures", ROOT / "tools/render_cli_captures.py"

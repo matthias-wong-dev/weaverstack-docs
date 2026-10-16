@@ -7,11 +7,6 @@ image_alt: Weaver documentation for Microsoft Fabric data engineering.
 
 # Weaver
 
-<!-- review-todo: release-check -->
-!!! warning "TODO — review checks pending"
-    Matching released-package verification is still pending. The captures use a development wheel. Yellow TODO banners mark outstanding checks for this review; remove them before publication.
-<!-- /review-todo -->
-
 **Making Fabric easier to use.**
 
 Keep writing Python, SQL and native model definitions. Weaver handles the installation, load work and recorded results around them. Start with the item you are working on.

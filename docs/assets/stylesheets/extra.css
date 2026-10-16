@@ -640,6 +640,9 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
 
 /* Real CLI captures: the text and status glyphs carry meaning without colour. */
 .md-typeset .weaver-terminal {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
   margin: 1.25rem 0;
   min-width: 0;
   max-width: 100%;
@@ -651,6 +654,9 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   text-align: left;
 }
 .md-typeset .weaver-terminal figcaption {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -718,3 +724,47 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   line-height: 1.6;
 }
 .md-typeset .weaver-terminal .terminal-source a { color: #9dccff; }
+
+/* Shell prompts are presentation only: clipboard targets remain authored code. */
+.md-typeset .language-bash.highlight {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 1.25rem 0;
+  overflow: hidden;
+  border: 1px solid var(--weaver-line-strong);
+  border-radius: 0.65rem;
+  color: var(--weaver-code-text);
+  background: var(--weaver-code);
+}
+.md-typeset .language-bash.highlight::before {
+  content: "Terminal";
+  display: block;
+  padding: 0.65rem 0.9rem;
+  border-bottom: 1px solid rgba(223, 231, 247, 0.18);
+  color: var(--weaver-code-text);
+  font: 600 0.7rem/1.5 var(--weaver-mono);
+}
+.md-typeset .language-bash.highlight pre {
+  margin: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.md-typeset .language-bash.highlight pre > code {
+  padding: 0.9rem;
+  border-radius: 0;
+  background: transparent;
+  font: 0.7rem/1.55 var(--weaver-mono);
+}
+.md-typeset .language-bash.highlight pre > code > span[id]:first-child::before {
+  content: "$ ";
+  color: #88d6aa;
+  font-weight: 600;
+}
+.md-typeset .terminal-intro {
+  margin: 0.9rem 0 0.5rem;
+}
+.md-typeset .terminal-intro + .weaver-terminal {
+  margin-top: 0;
+}

@@ -1,10 +1,5 @@
 # Develop using Mirror
 
-<!-- review-todo: mirror -->
-!!! warning "TODO — Mirror live capture pending"
-    The plan, reset and resulting Health have not been captured live. Agree the disposable destination and full reset/re-mirror scope before running this task.
-<!-- /review-todo -->
-
 Borrow an installed estate’s data for development, then materialise only the objects your changes need. Keep the same project documents and logical identities while the development configuration selects different physical targets.
 
 Use Mirror only after the [ordinary development loop](development-cycle.md) is understood. **It empties and reconstructs the destination catalogue and every selected destination target**, including local materialisations there. Source items remain untouched. It is a baseline reset, not an iteration command.
@@ -46,6 +41,11 @@ Run Mirror once:
 ```bash
 weaver mirror --workspace-config workspace-development.yml
 ```
+
+<!-- review-todo: mirror -->
+!!! warning "TODO — capture this Mirror plan and resulting Health"
+    No reset/re-mirror scope is approved, so the command above has not been run. After approving the exact disposable destination scope, capture its plan, confirmation and resulting Health. Do not substitute illustrative output.
+<!-- /review-todo -->
 
 Weaver resolves the source bindings, then displays the source catalogue, destination catalogue and each logical-to-destination target mapping before it asks once for confirmation. Compare that settled plan with the source and destination names checked above, then confirm it if correct or decline it if not. Mirror has no dry-run mode, and declining leaves the destinations unchanged.
 
