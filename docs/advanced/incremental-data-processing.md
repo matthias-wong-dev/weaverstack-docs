@@ -3,7 +3,7 @@ meta_title: Incremental loads in Microsoft Fabric | Weaver docs
 description: Implement incremental loads in Microsoft Fabric with Weaver Tables and Folders, consumer-owned bookmarks, upserts and explicit deletes.
 social_title: Incremental loads in Microsoft Fabric
 image: https://docs.weaverstack.dev/assets/images/og-incremental-loads.png
-image_alt: Incremental loads in Microsoft Fabric with Weaver.
+image_alt: Weaver logo.
 schema_type: TechArticle
 breadcrumbs:
   - name: Weaver documentation
