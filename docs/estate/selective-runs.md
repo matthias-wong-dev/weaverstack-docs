@@ -473,17 +473,16 @@ The equivalent combined Python preview is:
 ```python
 import weaver
 
-workspace = weaver.current_workspace(workspace_config='workspace-development.yml').workspace
 preview = weaver.load(
     'Warehouse/Operations',
-    workspace=workspace,
+    workspace='Parcel Development',
+    catalogue='Warehouse/Catalogue',
     names=r'Parcel[.]Events',
     ancestors=True,
     descendants=True,
     dry_run=True,
-    workspace_config='workspace-development.yml',
 )
-print(preview.to_mapping())
+preview.report()
 ```
 
 ## 6. Cross an item boundary deliberately

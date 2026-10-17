@@ -69,7 +69,7 @@ def _action_fact(
     fact: dict[str, Any] = {
         "invocation": _invocation(parser, action),
         "help": _normalise(action.help),
-        "required": bool(action.required),
+        "required": bool(action.required and action.nargs not in {"*", "?"}),
     }
     if action.choices is not None:
         fact["choices"] = [str(choice) for choice in action.choices]

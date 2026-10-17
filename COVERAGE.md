@@ -2,10 +2,6 @@
 
 This maintainer-only ledger records the item-first revision and earlier delivery evidence. It is not rendered.
 
-## Notebook equivalence — accepted delivery requirement
-
-[The notebook-equivalence plan and output/API findings](NOTEBOOK-EQUIVALENCE.md) govern this delivery. All 232 terminal blocks now have matching native Notebook tabs (383 cells); all 29 cell-operation categories have an explicit output assessment. Workspace/configuration and confirmation behaviour are covered by source/signature regressions. Runtime fixes are isolated in weaverstack #226; the website work in weaverstack-docs #6 depends on it. There are 120 authentic static Notebook outputs: all 78 authored Terminal output panels have a capture-bound Notebook counterpart, with 42 additional safe observations. This is not complete execution of all 383 cells. The plan records the remaining credentialled-connection, Notebook Power BI HTTP 403, unexecuted live capacity control, matching-release and publication gates separately. Earlier CLI-only walkthrough completion does not close those gates.
-
 ## Full walkthrough and capture refresh — 17 October 2026
 
 Every tutorial and estate page was followed in reader order from an empty Weaver Example workspace. All 78 terminal panels were recaptured and all 18 TODO markers were resolved (the two rendered-card checks by binding and DAX value, not a viewed card); flow fixes landed across Getting started, Warehouse, Lakehouse, estate, semantic-model and Report pages. Three Initialise runtime fixes and one TMDL example fix were required. Runtime basis, fixes and observations: [capture inventory](CAPTURE-INVENTORY.md). Entries below are historical.

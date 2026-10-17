@@ -12,11 +12,10 @@ with weaver.session(
     catalogue="Warehouse/Weaver",
     environment="Weaver",
 ) as opened:
-    workspace = opened.workspace.workspace
-    build_result = weaver.build(".", workspace=workspace, session=opened)
-    load_report = weaver.load("Lakehouse/Parcels", workspace=workspace, session=opened)
-    validation_report = weaver.test("Lakehouse/Parcels", workspace=workspace, session=opened)
-    print(validation_report.to_mapping())
+    build_result = weaver.build(".", session=opened)
+    load_report = weaver.load("Lakehouse/Parcels", session=opened)
+    validation_report = weaver.test("Lakehouse/Parcels", session=opened)
+    validation_report.report()
 ```
 
 The Session closes on leaving the block. Each operation leaves a supplied Session open; an operation-created Session closes at the end of that call. A closed Session does not reopen.
@@ -48,7 +47,7 @@ Kind: class
 ### `weaver.current_workspace`
 
 ```python
-weaver.current_workspace(*, workspace_config=None) -> Workspace
+weaver.current_workspace() -> Workspace
 ```
 
 ### `weaver.default_lakehouse`

@@ -30,38 +30,16 @@ Keep a reviewed plan object when approval and execution happen in separate code 
 
 ## Public exports
 
-### `weaver.CapacityAction`
-
-Kind: class
-
 ### `weaver.build`
 
 ```python
 weaver.build(source=None, *, items: str | Sequence[str] | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, data_sources=None, bind_data_sources: bool=False, dry_run: bool=False, bundle_only: bool=False, bundle_path: str | Path | None=None, concurrency: int | None=None, session=None) -> BuildResult
 ```
 
-### `weaver.capacity`
-
-```python
-weaver.capacity(action: str, *, resource_group: str, capacity_name: str, subscription_id: str | None=None, credential=None, client=None) -> CapacityAction
-```
-
-### `weaver.check`
-
-```python
-weaver.check(project_folder=None) -> CheckResult
-```
-
 ### `weaver.check_mirror`
 
 ```python
 weaver.check_mirror(plan: MirrorPlan, *, session=None) -> ResolvedMirror
-```
-
-### `weaver.doctor`
-
-```python
-weaver.doctor(*, workspace: str, semantic_model: str | None=None, session=None, client=None) -> DoctorReport
 ```
 
 ### `weaver.health`
@@ -74,12 +52,6 @@ weaver.health(items: str | Sequence[str] | None=None, *, as_of: str | datetime |
 
 ```python
 weaver.initialise(project_folder, *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, lakehouse: str | None=None, warehouse: str | None=None, semantic_model: str | None=None, example: str | None=None, publish_environment: bool=False, install_weaver: bool | None=None, dry_run: bool=False, session=None, client=None) -> InitialiseReport
-```
-
-### `weaver.install`
-
-```python
-weaver.install(bundle, *, workspace: str | None=None, session=None)
 ```
 
 ### `weaver.load`
@@ -112,24 +84,6 @@ weaver.plan_unbind(targets: str | Iterable[str], *, workspace: str | None=None, 
 weaver.plan_wipe(targets: str | Iterable[str]=(), *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, preserve_data_source: bool=False, session=None) -> WipePlan
 ```
 
-### `weaver.publish_environment`
-
-```python
-weaver.publish_environment(environment=None, *, workspace=None, workspace_config=None, path=None, dev=False, session=None, client=None)
-```
-
-### `weaver.push_notebook`
-
-```python
-weaver.push_notebook(source, *, workspace=None, workspace_config=None, name=None, description=None, session=None, client=None)
-```
-
-### `weaver.run_notebook`
-
-```python
-weaver.run_notebook(name, *, workspace=None, workspace_config=None, lakehouse=None, environment=None, wait=True, timeout=7200.0, poll_interval=10.0, session=None, client=None)
-```
-
 ### `weaver.test`
 
 ```python
@@ -146,12 +100,6 @@ weaver.unbind(targets: str | Iterable[str]=(), *, plan: UnbindPlan | None=None, 
 
 ```python
 weaver.wipe(targets: str | Iterable[str]=(), *, plan: WipePlan | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, preserve_data_source: bool | None=None, dry_run: bool=False, session=None) -> WipeResult
-```
-
-### `weaver.workflow`
-
-```python
-weaver.workflow(name, *, file=None, workspace=None, workspace_config=None, catalogue=None, environment=None, arm_credential=None, timings=False, session=None) -> WorkflowReport
 ```
 
 <!-- END GENERATED PYTHON -->

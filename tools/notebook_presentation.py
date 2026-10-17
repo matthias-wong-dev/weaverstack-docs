@@ -90,7 +90,9 @@ def pair_markdown(markdown, *, page, examples):
     chunks = []
     previous = 0
     for ordinal, (match, language) in enumerate(terminal_blocks(markdown)):
-        entry = assigned[ordinal]
+        entry = assigned.get(ordinal)
+        if entry is None:
+            continue
         assert entry["terminal"] == match["source"] and entry["language"] == language, (
             f"{page}: Notebook example {ordinal} has drifted"
         )
@@ -109,7 +111,7 @@ def pair_markdown(markdown, *, page, examples):
         for cell in entry["cells"]:
             notebook.append(
                 indent(
-                    f"```python {{{notebook_classes}}}\n"
+                    f'```python {{{notebook_classes} linenums="1"}}\n'
                     + cell["code"].rstrip("\n")
                     + "\n```",
                     prefix + "    ",
@@ -118,6 +120,12 @@ def pair_markdown(markdown, *, page, examples):
             if "output" in cell:
                 # Tab containers also process inline Markdown inside raw HTML.
                 literal = literal_html(cell["output"])
+                notebook.append(
+                    indent(
+                        '<p class="terminal-intro">The command returned:</p>',
+                        prefix + "    ",
+                    )
+                )
                 figure = (
                     '<figure class="weaver-terminal weaver-notebook-output">\n<figcaption>Notebook output</figcaption>\n<pre tabindex="0" aria-label="Notebook output"><code>'
                     + literal

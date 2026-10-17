@@ -49,11 +49,9 @@ weaver fabric capacity [-h] --resource-group RESOURCE_GROUP --capacity-name CAPA
 
 ## Execution
 
-Terminal commands require the Azure CLI and its `fabric` capacity commands to be installed and authenticated. Weaver invokes the corresponding Azure operation and reads the returned state and SKU when present.
+The Azure CLI and its `fabric` capacity commands must be installed and authenticated. Weaver invokes the corresponding Azure operation and reads the returned state and SKU when present.
 
-Notebook cells use Azure Identity instead of the Azure CLI. Set `FABRIC_SUBSCRIPTION_ID` to the intended subscription. Interactive cells use device-code sign-in; unattended cells require an already configured Azure credential. The Fabric Notebook identity does not supply Azure resource-management authorisation. Pass a different `credential` when your organisation provides one.
-
-Terminal commands do not poll after the Azure CLI returns. A successful `resume` response that is not yet active is reported as starting. Notebook calls wait for the Azure operation to complete, then read the capacity's observed state.
+`resume` and `suspend` do not poll until the requested state is reached. A successful `resume` response that is not yet active is reported as starting.
 
 ## Interaction
 

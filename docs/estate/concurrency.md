@@ -106,17 +106,16 @@ The option does not change workspace configuration, retarget a bundle or rewrite
 ```python
 import weaver
 
-workspace = weaver.current_workspace(workspace_config='workspace-development.yml').workspace
 result = weaver.build(
     '.',
-    workspace=workspace,
-    items='Lakehouse/Landing',
+    items='Lakehouse/Landing=Lakehouse/Landing',
+    workspace='Parcel Development',
+    catalogue='Warehouse/Catalogue',
     concurrency=2,
-    workspace_config='workspace-development.yml',
 )
 if not result.succeeded:
     raise RuntimeError(result.errors)
-result.to_mapping()
+result.report()
 ```
 
 In a Fabric notebook, pass the supported project source location and let Weaver discover the notebook context, or reuse an established Session:
@@ -124,11 +123,15 @@ In a Fabric notebook, pass the supported project source location and let Weaver 
 ```python
 import weaver
 
-workspace = weaver.current_workspace(workspace_config='workspace-development.yml').workspace
-report = weaver.load('Lakehouse/Landing', workspace=workspace, workspace_config='workspace-development.yml', concurrency=2)
+report = weaver.load(
+    'Lakehouse/Landing',
+    workspace='Parcel Development',
+    catalogue='Warehouse/Catalogue',
+    concurrency=2,
+)
 if not report.succeeded:
     raise RuntimeError('Inspect the failed nodes in the Load report')
-report.to_mapping()
+report.report()
 ```
 
 Workspace selection and runtime prerequisites still apply. The invocation cap does not provision compute or make otherwise unavailable work runnable.

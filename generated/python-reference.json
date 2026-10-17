@@ -1,5 +1,5 @@
 {
-  "export_count": 68,
+  "export_count": 55,
   "exports": [
     {
       "kind": "class",
@@ -11,23 +11,11 @@
     },
     {
       "kind": "class",
-      "name": "CapacityAction"
-    },
-    {
-      "kind": "class",
-      "name": "CheckResult"
-    },
-    {
-      "kind": "class",
       "name": "CommandError"
     },
     {
       "kind": "class",
       "name": "ConfigError"
-    },
-    {
-      "kind": "class",
-      "name": "DoctorReport"
     },
     {
       "kind": "class",
@@ -166,14 +154,6 @@
       "name": "WipeResult"
     },
     {
-      "kind": "class",
-      "name": "WorkflowReport"
-    },
-    {
-      "kind": "class",
-      "name": "WorkflowStep"
-    },
-    {
       "kind": "value",
       "name": "__version__"
     },
@@ -184,33 +164,18 @@
     },
     {
       "kind": "function",
-      "name": "capacity",
-      "signature": "(action: str, *, resource_group: str, capacity_name: str, subscription_id: str | None=None, credential=None, client=None) -> CapacityAction"
-    },
-    {
-      "kind": "function",
-      "name": "check",
-      "signature": "(project_folder=None) -> CheckResult"
-    },
-    {
-      "kind": "function",
       "name": "check_mirror",
       "signature": "(plan: MirrorPlan, *, session=None) -> ResolvedMirror"
     },
     {
       "kind": "function",
       "name": "current_workspace",
-      "signature": "(*, workspace_config=None) -> Workspace"
+      "signature": "() -> Workspace"
     },
     {
       "kind": "function",
       "name": "default_lakehouse",
       "signature": "(spark: Any) -> Lakehouse"
-    },
-    {
-      "kind": "function",
-      "name": "doctor",
-      "signature": "(*, workspace: str, semantic_model: str | None=None, session=None, client=None) -> DoctorReport"
     },
     {
       "kind": "function",
@@ -221,11 +186,6 @@
       "kind": "function",
       "name": "initialise",
       "signature": "(project_folder, *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, lakehouse: str | None=None, warehouse: str | None=None, semantic_model: str | None=None, example: str | None=None, publish_environment: bool=False, install_weaver: bool | None=None, dry_run: bool=False, session=None, client=None) -> InitialiseReport"
-    },
-    {
-      "kind": "function",
-      "name": "install",
-      "signature": "(bundle, *, workspace: str | None=None, session=None)"
     },
     {
       "kind": "function",
@@ -259,21 +219,6 @@
     },
     {
       "kind": "function",
-      "name": "publish_environment",
-      "signature": "(environment=None, *, workspace=None, workspace_config=None, path=None, dev=False, session=None, client=None)"
-    },
-    {
-      "kind": "function",
-      "name": "push_notebook",
-      "signature": "(source, *, workspace=None, workspace_config=None, name=None, description=None, session=None, client=None)"
-    },
-    {
-      "kind": "function",
-      "name": "run_notebook",
-      "signature": "(name, *, workspace=None, workspace_config=None, lakehouse=None, environment=None, wait=True, timeout=7200.0, poll_interval=10.0, session=None, client=None)"
-    },
-    {
-      "kind": "function",
       "name": "session",
       "signature": "(*, workspace: Any=None, catalogue: str | None=None, environment: str | None=None, workspace_config: Any=None, credential: Any=None)"
     },
@@ -291,21 +236,13 @@
       "kind": "function",
       "name": "wipe",
       "signature": "(targets: str | Iterable[str]=(), *, plan: WipePlan | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, preserve_data_source: bool | None=None, dry_run: bool=False, session=None) -> WipeResult"
-    },
-    {
-      "kind": "function",
-      "name": "workflow",
-      "signature": "(name, *, file=None, workspace=None, workspace_config=None, catalogue=None, environment=None, arm_credential=None, timings=False, session=None) -> WorkflowReport"
     }
   ],
   "ownership": {
     "Assumption": "docs/reference/python/validation.md",
     "BuildResult": "docs/reference/python/results.md",
-    "CapacityAction": "docs/reference/python/operations.md",
-    "CheckResult": "docs/reference/python/results.md",
     "CommandError": "docs/reference/python/errors.md",
     "ConfigError": "docs/reference/python/errors.md",
-    "DoctorReport": "docs/reference/python/results.md",
     "ExampleOutcome": "docs/reference/python/results.md",
     "FabricItemOutcome": "docs/reference/python/results.md",
     "Folder": "docs/reference/python/objects.md",
@@ -340,33 +277,23 @@
     "WipePlan": "docs/reference/python/results.md",
     "WipeReport": "docs/reference/python/results.md",
     "WipeResult": "docs/reference/python/results.md",
-    "WorkflowReport": "docs/reference/python/results.md",
-    "WorkflowStep": "docs/reference/python/results.md",
     "__version__": "docs/reference/python/index.md",
     "build": "docs/reference/python/operations.md",
-    "capacity": "docs/reference/python/operations.md",
-    "check": "docs/reference/python/operations.md",
     "check_mirror": "docs/reference/python/operations.md",
     "current_workspace": "docs/reference/python/session.md",
     "default_lakehouse": "docs/reference/python/session.md",
-    "doctor": "docs/reference/python/operations.md",
     "health": "docs/reference/python/operations.md",
     "initialise": "docs/reference/python/operations.md",
-    "install": "docs/reference/python/operations.md",
     "lakehouse_for": "docs/reference/python/session.md",
     "load": "docs/reference/python/operations.md",
     "mirror": "docs/reference/python/operations.md",
     "plan_mirror": "docs/reference/python/operations.md",
     "plan_unbind": "docs/reference/python/operations.md",
     "plan_wipe": "docs/reference/python/operations.md",
-    "publish_environment": "docs/reference/python/operations.md",
-    "push_notebook": "docs/reference/python/operations.md",
-    "run_notebook": "docs/reference/python/operations.md",
     "session": "docs/reference/python/session.md",
     "test": "docs/reference/python/operations.md",
     "unbind": "docs/reference/python/operations.md",
-    "wipe": "docs/reference/python/operations.md",
-    "workflow": "docs/reference/python/operations.md"
+    "wipe": "docs/reference/python/operations.md"
   },
   "page_count": 7,
   "schema_version": 1
