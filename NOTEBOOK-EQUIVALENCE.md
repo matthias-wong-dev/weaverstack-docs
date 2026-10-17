@@ -12,9 +12,22 @@ This is a maintainer plan, not a public documentation page.
 - The matching development runtime passed **7,827 core tests** and the current-head Windows CI. A real Fabric Notebook recorded **50 cells without execution errors**, including all eight Warehouse/Lakehouse Build/Load/Test/Health calls and a deliberately failed Test/workflow. Job completion is not used as a substitute for the returned reports.
 - The exact first-task native cells were replayed and their eight operation outputs integrated. Native Notebook create/update/run and frozen-bundle installation were also exercised. Owned resource identities and definitions were read back privately.
 - Native Power BI deployment reached the owned model and Report, but Report-binding verification and model refresh returned **HTTP 403** under the Notebook identity. The failed Build report is preserved. No tenant/identity setting or connection was changed. Catalogue-free Health and Test run from the wrong source directory were invalid probe requests, not API-equivalence defects.
+- The parent's Catalogue reference includes the independent `_.LineageEdge` / `_.LineageNode` feature. It is retained unchanged, not regenerated backwards against the Notebook-only branch. The combined intended release still needs its Catalogue inventory check; that difference is not treated as a passing generator result.
 - Azure SDK capacity request/state handling is tested locally. No live capacity resume/suspend is authorised or claimed. Development-Environment publication is not a public package release.
 
 Implementation and source/type output coverage do not close the remaining live, matching-release or publication gates. The accepted all-block requirement below is unchanged.
+
+### Final technical verification
+
+- Runtime: **7,827 passed**, zero JUnit failures/errors/skips; exact-head Windows CI succeeded.
+- Website tooling: **56 passed**, plus three subtests; Ruff and strict Notebook/CLI/Python reference checks passed. The independent Catalogue inventory gate remains held as explained above.
+- Strict MkDocs build passed. The rendered route gate checked **6,655 links**, all 35 canonical pages and the retained legacy routes/fragments, with no errors.
+- The complete browser sweep compared **59 pages / 232 pairs**, all **78 CLI output panels** and all **68 static Notebook output panels** byte-for-byte with their source expectations.
+- **472 layout states** passed across desktop/mobile, light/dark and both modes; **64 current affected/core-route clipboard readbacks** and four narrow no-JavaScript routes passed. The earlier complete clipboard sweep is separate historical evidence, not added to these totals.
+- Real keyboard focus and Enter selected the linked Notebook tabs. Desktop and phone screenshots were inspected in both themes.
+- A final copy-confirmation colour-only correction was checked separately in all four viewport/theme states, using actual clipboard readback and measured text contrast above 4.5:1. It changes no cells or output text.
+
+Private sweep, screenshot, job and runtime evidence remains outside the served site. Nothing was merged, released or publicly deployed.
 
 ## Accepted requirements — 17 October 2026
 

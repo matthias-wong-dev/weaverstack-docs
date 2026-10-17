@@ -542,6 +542,11 @@ input {
   box-shadow: 0 -1px var(--weaver-line) inset;
 }
 
+.md-dialog {
+  color: var(--weaver-code-text);
+  background: var(--weaver-code);
+}
+
 /* Keep Material's mobile label bleed inside the actual page width,
    including narrow no-JavaScript windows with a classic scrollbar. */
 .md-typeset .tabbed-set.tabbed-alternate > .tabbed-labels {
