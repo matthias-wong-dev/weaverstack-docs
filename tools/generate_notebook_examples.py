@@ -290,6 +290,17 @@ def main(argv=None):
                         for field in ("output", "observation"):
                             if field in captured:
                                 cell[field] = captured[field]
+    # A CLI result and its Notebook result are one pair. Old incidental captures
+    # from another cell in the same command block must not impersonate it.
+    for entry in examples:
+        expected = set(entry["cli_captures"])
+        if not expected:
+            continue
+        for cell in entry["cells"]:
+            capture_id = cell.get("observation", {}).get("capture_id")
+            if capture_id not in expected:
+                cell.pop("output", None)
+                cell.pop("observation", None)
     if args.observations:
         records = json.loads(args.observations.read_text())
         assert records["runtime_revision"] == payload["runtime_revision"], (

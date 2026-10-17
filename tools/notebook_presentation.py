@@ -103,10 +103,13 @@ def pair_markdown(markdown, *, page, examples):
             terminal += "\n\n" + indent("".join(transcript.parts), prefix + "    ")
             end = captured.end()
         notebook = []
+        notebook_classes = ".weaver-notebook-cell"
+        if language == "bash":
+            notebook_classes += " .weaver-notebook-shell-cell"
         for cell in entry["cells"]:
             notebook.append(
                 indent(
-                    '```python title="Notebook"\n'
+                    f"```python {{{notebook_classes}}}\n"
                     + cell["code"].rstrip("\n")
                     + "\n```",
                     prefix + "    ",

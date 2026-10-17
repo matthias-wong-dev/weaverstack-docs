@@ -3,7 +3,7 @@
   "terminal_blocks": 232,
   "cells": 383,
   "operations": 29,
-  "captured_cells": 68,
+  "captured_cells": 120,
   "operation_counts": {
     "build": 66,
     "check": 40,
@@ -42,10 +42,17 @@
       "finding": "help(weaver) returned a 140 KB package dump rather than a useful operation index.",
       "treatment": "Root discovery now prints the actual sorted weaver.__all__ index. Operation-specific help remains help(weaver.operation). Matching-wheel outputs were executed and recaptured.",
       "status": "fixed"
+    },
+    {
+      "id": "OUT-006",
+      "surface": "Managed semantic-model Load in the current native capture",
+      "finding": "SemanticModel/ParcelWarehouse and source-backed SemanticModel/Parcel returned explicit-connection credential errors. The earlier Terminal captures succeeded when that connection was available.",
+      "treatment": "Keep the genuine Notebook error output. No connection, credential, gateway, tenant or identity setting was created or changed. Re-capture the two successful mappings only after the authorised matching connection exists.",
+      "status": "external prerequisite remains"
     }
   ],
   "verification_limits": [
-    "Static captures are not complete for every cell. Missing capture is not classified as missing API output.",
+    "All 78 authored Terminal output panels now have a capture-bound Notebook output. The other 42 static Notebook outputs are safe inspection/check/first-task observations; 263 cells have source/type assessment without invented execution output.",
     "Native Notebook Power BI readback/refresh returned HTTP 403; no tenant or identity settings were changed.",
     "Catalogue-free Health and Test without the source project are invalid probe requests, not evidence of a CLI/Notebook mismatch.",
     "No live Azure capacity resume/suspend was authorised or executed. SDK request/state handling has local boundary tests.",
@@ -482,7 +489,7 @@
       "cell": 0,
       "operation": "health",
       "surface": "HealthReport.to_mapping() (status is the health colour; no invented succeeded field)",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "a5f15e711161e7bc242cb207f78ebaf6468dd1eea2965159d0b8388b98ca2ce1"
     },
     {
@@ -491,7 +498,7 @@
       "cell": 0,
       "operation": "health",
       "surface": "HealthReport.to_mapping() (status is the health colour; no invented succeeded field)",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "aafb5a14fdf144c4f9ca80fe3adb283e02332707b2511e822c032cdb54e11575"
     },
     {
@@ -500,7 +507,7 @@
       "cell": 0,
       "operation": "health",
       "surface": "HealthReport.to_mapping() (status is the health colour; no invented succeeded field)",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "7e02724092b10e80e9b0173007d6913b8992519412a37299b63204ef8c51874a"
     },
     {
@@ -509,7 +516,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "4055250cdfcbe986b81eb069bcf4841f67e23f51084e220f039e7271cf5e1e14"
     },
     {
@@ -527,7 +534,7 @@
       "cell": 1,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "8ed8092d401529b9324e62a6f491d97ed96712bc697a825bea353e98d6ff8fa1"
     },
     {
@@ -554,7 +561,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -563,7 +570,7 @@
       "cell": 1,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "d8467a737c5f8dace95be06465e86c8cfe5dda6c7348e4da05b52f9e7f91b5e6"
     },
     {
@@ -572,7 +579,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "07246c25d26c3ee5d21ad1446a1242009af14b88b7170572f8a8e7e967f3656e"
     },
     {
@@ -581,7 +588,7 @@
       "cell": 0,
       "operation": "health",
       "surface": "HealthReport.to_mapping() (status is the health colour; no invented succeeded field)",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "aafb5a14fdf144c4f9ca80fe3adb283e02332707b2511e822c032cdb54e11575"
     },
     {
@@ -833,7 +840,7 @@
       "cell": 1,
       "operation": "mirror",
       "surface": "MirrorResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "30a34705a7ac708676130a6856c53d5c1fe14a068dab92762a49d9d4281ba63b"
     },
     {
@@ -842,7 +849,7 @@
       "cell": 0,
       "operation": "health",
       "surface": "HealthReport.to_mapping() (status is the health colour; no invented succeeded field)",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "26e998efb9eeac7d29f4a1a7c3a4775de485334f110130841684a7ffb3cf5023"
     },
     {
@@ -923,7 +930,7 @@
       "cell": 1,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "76dec402900f96ed416ba014c6b4d3914956856ab31edab2b96d9c06a1251d60"
     },
     {
@@ -932,7 +939,7 @@
       "cell": 0,
       "operation": "health",
       "surface": "HealthReport.to_mapping() (status is the health colour; no invented succeeded field)",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "a5f15e711161e7bc242cb207f78ebaf6468dd1eea2965159d0b8388b98ca2ce1"
     },
     {
@@ -1031,7 +1038,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "b586c323582bb813d5e0defaba790b4ee03df927f7d6081df8543f1198b96c55"
     },
     {
@@ -1040,7 +1047,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "994a316c6aa1c14d9c62a2c2b3d434de684f6b7cf4af98b4c4d4bcb4146966db"
     },
     {
@@ -1130,7 +1137,7 @@
       "cell": 1,
       "operation": "mirror",
       "surface": "MirrorResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "30a34705a7ac708676130a6856c53d5c1fe14a068dab92762a49d9d4281ba63b"
     },
     {
@@ -1148,7 +1155,7 @@
       "cell": 0,
       "operation": "wipe",
       "surface": "WipeResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "228627a17c4a990f65774a89411b0af47cce85f6b64551b6cdfa1178cb1dd561"
     },
     {
@@ -1166,7 +1173,7 @@
       "cell": 1,
       "operation": "wipe",
       "surface": "WipeResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "3856b8285954ce8f979a6de083b5d6ca1ac11ed47ed64d0ec40fe5f2ef4013e9"
     },
     {
@@ -1211,7 +1218,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "f73ae1b518b41ffc05adde5b03acd0d47f94b0358e48450eb54d26b57520fd20"
     },
     {
@@ -1220,7 +1227,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "3ab87a9d077359692650a9a1b1e5ac4729c688fb267a13f2a1330cbc40de7eec"
     },
     {
@@ -1229,7 +1236,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "15da15003ff37b1c80ecd6d9daa473bd438d8790943914be5627b424258dd28c"
     },
     {
@@ -1238,7 +1245,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "1f2d7785f68cc3e610cda13f025b37ff7bd78b6698d4ea0a12033d37f187b2bc"
     },
     {
@@ -1247,7 +1254,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "7ad779004e8f14b445ee2e643be0c3721bf830eecb79b4ee0e199ab05f8d1a73"
     },
     {
@@ -1256,7 +1263,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -1274,7 +1281,7 @@
       "cell": 2,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "482b9a6ddb7221743f0e3dc601e9c9433b723d5329d8f1dcaf4c79f8a8f52d03"
     },
     {
@@ -1310,7 +1317,7 @@
       "cell": 2,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "32fba58ef839d55526f486d3096103ea6d1a0dd45bd900e37c36b4632342083e"
     },
     {
@@ -1319,7 +1326,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "131f315ac3847fed17e3734de59036fc87f204e8036e66e3e7904e1184fb33a7"
     },
     {
@@ -1328,7 +1335,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "d7ddaadaed898f545a933e3baafc50e52e137b4b8f4753fd8e7c6ddff3c7434b"
     },
     {
@@ -1346,7 +1353,7 @@
       "cell": 1,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "9235ff200054f940471e71d128704f457a41e6a86dd347a4f2911711d77c5e94"
     },
     {
@@ -1409,7 +1416,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "a20b5d8639f3dfffa2e36343ab44b4291d733c557fb268be0c75ab742f2b881c"
     },
     {
@@ -1418,7 +1425,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "94652a45810f4e96a2f0480d07f9c5c3cb76717c3b61294a7f74ce2be6e16d52"
     },
     {
@@ -1436,7 +1443,7 @@
       "cell": 1,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "94652a45810f4e96a2f0480d07f9c5c3cb76717c3b61294a7f74ce2be6e16d52"
     },
     {
@@ -1445,7 +1452,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "94652a45810f4e96a2f0480d07f9c5c3cb76717c3b61294a7f74ce2be6e16d52"
     },
     {
@@ -1472,7 +1479,7 @@
       "cell": 0,
       "operation": "initialise",
       "surface": "InitialiseReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "c397cd1e8d822e73c6b0ef8ac8ae57d9067bdfc53be3448bb7c8b9575c8d3bd0"
     },
     {
@@ -1571,7 +1578,7 @@
       "cell": 0,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "2c599f5ceb07b694bb3086297a7610040bd428fd7198e6b9a07b916445d7f9b4"
     },
     {
@@ -2633,7 +2640,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -2642,7 +2649,7 @@
       "cell": 1,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "fd592e2b043360e3152d5b681acd6a5f81dcb8e091214a807ac0f76183e9fd63"
     },
     {
@@ -2660,7 +2667,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -2669,7 +2676,7 @@
       "cell": 1,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "6c91ac4c15bfdeb214679f50c4450edfe5cb12d444fe9b472aa74bc98ff34929"
     },
     {
@@ -2678,7 +2685,7 @@
       "cell": 0,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "6c21c7a16cd33ec840553c002e99e7b4614f2736021b1865bb8e082a576b95f8"
     },
     {
@@ -2696,7 +2703,7 @@
       "cell": 1,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "f0d3d0ae7110eeaa72d5caa1903a7c713c37356e8fa368ae73b55e8ebb5a4033"
     },
     {
@@ -2705,7 +2712,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -2714,7 +2721,7 @@
       "cell": 1,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "0156ff25aadf3c786e937239a934132c0356e87804ce50d20fc61e4f7c5fd58c"
     },
     {
@@ -2732,7 +2739,7 @@
       "cell": 1,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "d1ab855667038f30be43c851f8f49490cefbc2a0a7b77758ed0ff51a17315506"
     },
     {
@@ -2777,7 +2784,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -2786,7 +2793,7 @@
       "cell": 1,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "6315ac4f962570cad5e0110748740970878b11d2a3202f3f2741e6a6104f4600"
     },
     {
@@ -2822,7 +2829,7 @@
       "cell": 2,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "6315ac4f962570cad5e0110748740970878b11d2a3202f3f2741e6a6104f4600"
     },
     {
@@ -2840,7 +2847,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -2849,7 +2856,7 @@
       "cell": 1,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "43d2e46d0c5ee69ab8007fbb5f3b68e8d2c7e04d16f40246245206b2e14c0354"
     },
     {
@@ -2939,7 +2946,7 @@
       "cell": 0,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "cd67a4863db29cf923109d658b3f8fb2e16872a5c2563c5bf6516fd8ad74e51b"
     },
     {
@@ -2948,7 +2955,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "ebbf6728072d86f6c4dfd0ed4b8fa497a8e2ea16155c6afa71f0ae870079811e"
     },
     {
@@ -2957,7 +2964,7 @@
       "cell": 0,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "88d1893577fd1e46ad85777f9479d07b569ea1fa89bf3feb3e469be2652454b8"
     },
     {
@@ -2966,7 +2973,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "f7977c5840e0ca7421b07361d270e0f8c600b015c89f63f17b83e1e8702eb39b"
     },
     {
@@ -3002,7 +3009,7 @@
       "cell": 0,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "6315ac4f962570cad5e0110748740970878b11d2a3202f3f2741e6a6104f4600"
     },
     {
@@ -3011,7 +3018,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "4bb4e9cbc52aaa25e3f1a47474b5100a11f4174c9d4583497e2690e050bd1e0a"
     },
     {
@@ -3020,7 +3027,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -3029,7 +3036,7 @@
       "cell": 1,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "fd592e2b043360e3152d5b681acd6a5f81dcb8e091214a807ac0f76183e9fd63"
     },
     {
@@ -3038,7 +3045,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "4bb4e9cbc52aaa25e3f1a47474b5100a11f4174c9d4583497e2690e050bd1e0a"
     },
     {
@@ -3047,7 +3054,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -3056,7 +3063,7 @@
       "cell": 1,
       "operation": "build",
       "surface": "BuildResult.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "6315ac4f962570cad5e0110748740970878b11d2a3202f3f2741e6a6104f4600"
     },
     {
@@ -3074,7 +3081,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -3083,7 +3090,7 @@
       "cell": 1,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "dc320bd2a61dcc6e2aef38e3fc412a245feeb09ae78474f781fcdbd1e1168d0c"
     },
     {
@@ -3101,7 +3108,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -3128,7 +3135,7 @@
       "cell": 3,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "dc320bd2a61dcc6e2aef38e3fc412a245feeb09ae78474f781fcdbd1e1168d0c"
     },
     {
@@ -3146,7 +3153,7 @@
       "cell": 1,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -3173,7 +3180,7 @@
       "cell": 4,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "dc320bd2a61dcc6e2aef38e3fc412a245feeb09ae78474f781fcdbd1e1168d0c"
     },
     {
@@ -3191,7 +3198,7 @@
       "cell": 1,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "9f34231a10165107b87a1400e4cd1ef6f07ff7649a3cac8394af58e1b0e0d239"
     },
     {
@@ -3200,7 +3207,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -3227,7 +3234,7 @@
       "cell": 3,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "d3bf597f7e0113ebe78aeff437c1eba983606b54b46e40b3986d71d3032b0fe9"
     },
     {
@@ -3272,7 +3279,7 @@
       "cell": 2,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "d3bf597f7e0113ebe78aeff437c1eba983606b54b46e40b3986d71d3032b0fe9"
     },
     {
@@ -3290,7 +3297,7 @@
       "cell": 0,
       "operation": "initialise",
       "surface": "InitialiseReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "3f189c62525244a420e5aad425cb691c055bd5bd242d746d4a2f835cabf0d43d"
     },
     {
@@ -3371,7 +3378,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "1a667505a2dd1431ceb12bfd919658b7be1d460248f0b906daa3791eb35db0d4"
     },
     {
@@ -3380,7 +3387,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "8fa6d34e3760709c79fbfc95fa2c4acd7aebc9ecd4c70686df5c5c0c21533123"
     },
     {
@@ -3398,7 +3405,7 @@
       "cell": 1,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "8fa6d34e3760709c79fbfc95fa2c4acd7aebc9ecd4c70686df5c5c0c21533123"
     },
     {
@@ -3407,7 +3414,7 @@
       "cell": 0,
       "operation": "load",
       "surface": "LoadRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "8fa6d34e3760709c79fbfc95fa2c4acd7aebc9ecd4c70686df5c5c0c21533123"
     },
     {
@@ -3416,7 +3423,7 @@
       "cell": 0,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "823973a8dcad126a13506021d781072bb69846035bbe850f1e7abcedbf49f484"
     },
     {
@@ -3425,7 +3432,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -3443,7 +3450,7 @@
       "cell": 2,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "54a2d78f446a2993946d7837c2f516beeeaf5f0d48da4f154ee4087a19d5ceed"
     },
     {
@@ -3452,7 +3459,7 @@
       "cell": 0,
       "operation": "health",
       "surface": "HealthReport.to_mapping() (status is the health colour; no invented succeeded field)",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "7e02724092b10e80e9b0173007d6913b8992519412a37299b63204ef8c51874a"
     },
     {
@@ -3461,7 +3468,7 @@
       "cell": 0,
       "operation": "check",
       "surface": "Print CheckResult.project_folder after validation succeeds",
-      "handling": "captured",
+      "handling": "source/type audited; no static execution output claimed",
       "source_sha256": "e286fb906fe64aec336e86b47f4d3b156f699389867d7096b6b84e4f401eb3fc"
     },
     {
@@ -3488,7 +3495,7 @@
       "cell": 3,
       "operation": "health",
       "surface": "HealthReport.to_mapping() (status is the health colour; no invented succeeded field)",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "7e02724092b10e80e9b0173007d6913b8992519412a37299b63204ef8c51874a"
     },
     {
@@ -3497,8 +3504,10 @@
       "cell": 0,
       "operation": "test",
       "surface": "ValidationRunReport.to_mapping()",
-      "handling": "source/type audited; no static execution output claimed",
+      "handling": "captured",
       "source_sha256": "f64ad779fcebd41618ebaf5411f5c2c16d9f45a133d52601a772ae0307bf16d4"
     }
-  ]
+  ],
+  "terminal_output_pairs": 78,
+  "paired_notebook_outputs": 78
 }

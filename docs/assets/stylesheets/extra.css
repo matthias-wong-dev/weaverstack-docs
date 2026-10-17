@@ -750,6 +750,9 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   color: var(--weaver-code-text);
   background: var(--weaver-code);
 }
+.md-typeset .weaver-notebook-shell-cell.highlight {
+  margin: 1.25rem 0;
+}
 .md-typeset .language-bash.highlight::before {
   content: "Terminal";
   display: block;

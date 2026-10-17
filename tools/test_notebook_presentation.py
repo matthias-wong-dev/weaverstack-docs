@@ -15,6 +15,15 @@ def hook():
     return module
 
 
+def generator():
+    spec = importlib.util.spec_from_file_location(
+        "generate_notebook_examples", ROOT / "tools/generate_notebook_examples.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
 def test_a_terminal_block_gets_its_native_notebook_cell():
     original = "Before\n\n```bash\nweaver load Warehouse/Operations\n```\n\nAfter\n"
     examples = [
@@ -37,8 +46,32 @@ def test_a_terminal_block_gets_its_native_notebook_cell():
     assert '=== "Notebook"' in rendered
     assert "    weaver load Warehouse/Operations" in rendered
     assert "    result.to_mapping()" in rendered
+    assert 'title="Notebook"' not in rendered
+    assert "```python {.weaver-notebook-cell .weaver-notebook-shell-cell}" in rendered
     assert rendered.startswith("Before\n")
     assert rendered.endswith("After\n")
+
+
+def test_plain_reference_and_console_tabs_keep_their_zero_top_gap():
+    for language, source in (
+        ("text", "weaver build [-h]\n"),
+        ("console", "$ weaver session\n"),
+    ):
+        original = f"```{language}\n{source}```\n"
+        examples = [
+            {
+                "page": "reference/example.md",
+                "ordinal": 0,
+                "terminal": source,
+                "language": language,
+                "cells": [{"code": "import weaver\nhelp(weaver.build)\n"}],
+            }
+        ]
+        rendered = hook().pair_markdown(
+            original, page="reference/example.md", examples=examples
+        )
+        assert "```python {.weaver-notebook-cell}" in rendered
+        assert "weaver-notebook-shell-cell" not in rendered
 
 
 def test_mode_switch_keeps_each_output_with_its_producing_cell():
@@ -167,3 +200,46 @@ def test_cli_output_retains_literal_punctuation_inside_tabs():
         '<span class="terminal-status-green">&#95;literal&#95; &#42;stars&#42;</span>'
         in rendered
     )
+
+
+def test_every_terminal_output_has_one_equivalent_notebook_output():
+    import json
+
+    examples = json.loads((ROOT / "notebook-examples.json").read_text())["examples"]
+    captures = {
+        row["label"]: row
+        for row in json.loads(
+            (ROOT / "docs/assets/cli-captures/manifest.json").read_text()
+        )["captures"]
+    }
+    module = generator()
+
+    def semantic_parameters(values):
+        values = dict(values or {})
+        if values.get("source") == ".":
+            values.pop("source")
+        if values.get("project_folder") == ".":
+            values.pop("project_folder")
+        return values
+
+    failures = []
+    for entry in examples:
+        if not entry["cli_captures"]:
+            continue
+        assert len(entry["cli_captures"]) == 1
+        capture_id = entry["cli_captures"][0]
+        expected = module.compile_terminal(captures[capture_id]["command"])[-1]
+        observed = [
+            cell
+            for cell in entry["cells"]
+            if cell.get("observation", {}).get("capture_id") == capture_id
+            and "output" in cell
+        ]
+        if (
+            len(observed) != 1
+            or observed[0]["operation"] != expected["operation"]
+            or semantic_parameters(observed[0].get("parameters"))
+            != semantic_parameters(expected.get("parameters"))
+        ):
+            failures.append((entry["page"], entry["ordinal"], capture_id))
+    assert failures == []
