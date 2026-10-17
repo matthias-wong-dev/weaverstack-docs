@@ -45,6 +45,7 @@ plugins:
       lang: en
 
 hooks:
+  - tools/notebook_presentation.py
   - tools/terminal_presentation.py
 
 markdown_extensions:

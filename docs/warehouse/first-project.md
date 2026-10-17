@@ -90,7 +90,7 @@ You can set this up again with:
 </figure>
 <!-- /cli-capture -->
 
-Initialise asks one question you did not answer on the command line: press Enter to skip the Lakehouse, choose `1` to continue, and answer `n` to publishing the Environment. A Warehouse-only project runs no Python in Fabric, so it needs no published Environment yet, even though the closing hint mentions one.
+The Terminal wizard asks one question you did not answer on the command line: press Enter to skip the Lakehouse, choose `1` to continue, and answer `n` to publishing the Environment. A Warehouse-only project runs no Python in Fabric, so it needs no published Environment yet, even though the closing hint mentions one.
 
 Initialise created the Catalogue and Operations Warehouses and wrote the SQL Table, View and validations below. Run every later command from the `parcel` folder. Open the generated files as you read; you do not need to copy them.
 

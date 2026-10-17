@@ -542,6 +542,17 @@ input {
   box-shadow: 0 -1px var(--weaver-line) inset;
 }
 
+.md-dialog {
+  color: var(--weaver-code-text);
+  background: var(--weaver-code);
+}
+
+/* Keep Material's mobile label bleed inside the actual page width,
+   including narrow no-JavaScript windows with a classic scrollbar. */
+.md-typeset .tabbed-set.tabbed-alternate > .tabbed-labels {
+  max-width: calc(100% + 1.6rem);
+}
+
 .md-typeset .tabbed-labels > label {
   color: var(--weaver-muted);
 }
@@ -738,6 +749,9 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   border-radius: 0.65rem;
   color: var(--weaver-code-text);
   background: var(--weaver-code);
+}
+.md-typeset .weaver-notebook-shell-cell.highlight {
+  margin: 1.25rem 0;
 }
 .md-typeset .language-bash.highlight::before {
   content: "Terminal";

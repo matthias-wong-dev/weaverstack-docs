@@ -15,6 +15,7 @@ with weaver.session(
     build_result = weaver.build(".", session=opened)
     load_report = weaver.load("Lakehouse/Parcels", session=opened)
     validation_report = weaver.test("Lakehouse/Parcels", session=opened)
+    validation_report.report()
 ```
 
 The Session closes on leaving the block. Each operation leaves a supplied Session open; an operation-created Session closes at the end of that call. A closed Session does not reopen.

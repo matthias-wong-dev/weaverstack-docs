@@ -19,22 +19,19 @@ You need [Weaver installed](../getting-started/installation.md) and a disposable
     cd parcel
     ```
 
-    Press Enter to skip the optional Warehouse, choose `1` to continue, and answer `n` to publishing the Environment; the next section publishes it.
+    In the Terminal, press Enter to skip the optional Warehouse, choose `1` to continue, and answer `n` to publishing the Environment; the next section publishes it.
 
 === "Add to the Warehouse project"
 
     If you already have the `parcel` project from the [Warehouse task](../warehouse/first-project.md), add Landing to it. From inside `parcel`:
 
-    ```bash
-    weaver initialise --workspace "Parcel Development" --project-folder . --lakehouse Landing --example Parcel
-    ```
-
-    Initialise reads the existing bindings, so it only asks you to confirm. Choose `1`, then answer `n` to publishing the Environment.
+    The Terminal wizard reads the existing bindings, so it only asks you to confirm. Choose `1`, then answer `n` to publishing the Environment.
 
     Your Warehouse files stay as they were. Initialise also adds a separately named Warehouse Table that reads Landing; [Connect items and dependencies](../estate/connected-items.md) uses it later.
 
-<details markdown="1">
-<summary>What adding Landing to the Warehouse project returns</summary>
+    ```bash
+    weaver initialise --workspace "Parcel Development" --project-folder . --lakehouse Landing --example Parcel
+    ```
 
 <!-- cli-capture: {"id": "42-add-lakehouse", "title": "Initialise · add Landing to the Warehouse project"} -->
 <p class="terminal-intro">The command returned:</p>
@@ -99,8 +96,6 @@ You can set this up again with:
 </code></pre>
 </figure>
 <!-- /cli-capture -->
-
-</details>
 
 Initialise writes the configuration, Environment definition, carrier Folder, Python Event Table, Spark SQL CurrentStatus Table and two validations. Open the generated files as you read; you do not need to copy them.
 
