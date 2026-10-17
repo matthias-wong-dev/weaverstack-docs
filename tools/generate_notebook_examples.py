@@ -12,7 +12,16 @@ from html.parser import HTMLParser
 from pathlib import Path
 from textwrap import dedent
 
-CORE_OPERATIONS = {"build", "load", "test", "health", "mirror", "wipe"}
+NATURAL_OPERATIONS = {
+    "initialise",
+    "build",
+    "load",
+    "test",
+    "health",
+    "mirror",
+    "wipe",
+}
+NOTEBOOK_PROJECT = "builtin/project"
 PAGE_CONTEXT = {
     # The page continues the Parcel estate established by the preceding guide;
     # its compact Health outputs do not repeat these two values.
@@ -102,7 +111,7 @@ def capture_context(capture):
 
 def _parse_command(command):
     words = shlex.split(command)
-    if len(words) < 2 or words[0] != "weaver" or words[1] not in CORE_OPERATIONS:
+    if len(words) < 2 or words[0] != "weaver" or words[1] not in NATURAL_OPERATIONS:
         return None
     from weaver_cli.main import build_parser
 
@@ -119,6 +128,14 @@ def _operation_values(parsed, function, *, context):
         values["inventories"] = not values.get("no_inventory", False)
     if name == "mirror":
         values["mirror"] = values.get("mirror_source")
+    if name == "initialise":
+        values["project_folder"] = NOTEBOOK_PROJECT
+    elif (
+        name in {"build", "load", "test"}
+        and "source" in inspect.signature(function).parameters
+        and values.get("source") in {None, "."}
+    ):
+        values["source"] = NOTEBOOK_PROJECT
     for key in REMOVED_CLI_FIELDS:
         values.pop(key, None)
 
@@ -156,8 +173,24 @@ def _operation_values(parsed, function, *, context):
 
 def _call_code(operation, parameters, *, variable=None):
     variable = variable or operation + "_result"
-    lines = ["import weaver", f"{variable} = weaver.{operation}("]
-    lines.extend(f"    {key}={value!r}," for key, value in parameters.items())
+    uses_project = any(
+        key in {"source", "project_folder"} and value == NOTEBOOK_PROJECT
+        for key, value in parameters.items()
+    )
+    lines = ["import weaver"]
+    if uses_project:
+        lines = [
+            "from pathlib import Path",
+            "",
+            "import weaver",
+            "",
+            'project = Path("builtin") / "project"',
+        ]
+    lines.append(f"{variable} = weaver.{operation}(")
+    lines.extend(
+        f"    {key}={'project' if key in {'source', 'project_folder'} and value == NOTEBOOK_PROJECT else repr(value)},"
+        for key, value in parameters.items()
+    )
     lines.extend([")", f"{variable}.report()"])
     return "\n".join(lines) + "\n"
 
@@ -233,6 +266,12 @@ def compile_terminal(
 ):
     del language  # Fence language affects presentation, not operation selection.
     commands = _commands(source)
+    if (
+        commands
+        and commands[0].startswith("weaver initialise")
+        and all(command.startswith("cd ") for command in commands[1:])
+    ):
+        commands = commands[:1]
     parsed = [_parse_command(command) for command in commands]
     if not commands or any(request is None for request in parsed):
         return []
@@ -267,9 +306,12 @@ def collect_examples(docs):
                 captured.append(spec["id"])
                 capture_blocks.append(capture[0])
                 end = capture.end()
-            if not captured:
-                continue
             context = capture_context("\n".join(capture_blocks))
+            if not captured and (
+                page.startswith("reference/")
+                or not re.search(r"(?m)^\s*weaver initialise(?:\s|$)", match["source"])
+            ):
+                continue
             for key, value in context.items():
                 page_values[page][key].add(value)
             recorded.append((page, ordinal, match, language, captured, context))

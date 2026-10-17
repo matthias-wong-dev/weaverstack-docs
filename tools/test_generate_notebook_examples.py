@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CORE = {"build", "load", "test", "health", "mirror", "wipe"}
+NATURAL = {"initialise", "build", "load", "test", "health", "mirror", "wipe"}
 
 
 def generator():
@@ -50,6 +50,32 @@ def test_core_cell_spells_out_parameters_and_uses_report():
     assert cell["code"].endswith("load_result.report()\n")
 
 
+def test_initialise_uses_the_notebook_resources_project_without_a_cd_cell():
+    cells = generator().compile_terminal(
+        'weaver initialise --workspace "Parcel Development" --project-folder ./parcel --catalogue Catalogue --warehouse Operations --example Parcel\ncd parcel\n',
+        context={},
+    )
+    assert [cell["operation"] for cell in cells] == ["initialise"]
+    code = cells[0]["code"]
+    assert "from pathlib import Path" in code
+    assert 'project = Path("builtin") / "project"' in code
+    assert "project_folder=project" in code
+    assert "initialise_result.report()" in code
+
+
+def test_build_and_file_mode_test_name_the_resources_project_explicitly():
+    build = generator().compile_command(
+        "weaver build --item Warehouse/Operations", context=context()
+    )
+    tested = generator().compile_command(
+        "weaver test Warehouse/Operations --source . --file Warehouse/Operations/tests",
+        context=context(),
+    )
+    for cell in (build, tested):
+        assert 'project = Path("builtin") / "project"' in cell["code"]
+        assert "source=project" in cell["code"]
+
+
 def test_terminal_shaped_commands_are_not_manufactured_into_notebook_cells():
     tool = generator()
     for source in (
@@ -57,7 +83,6 @@ def test_terminal_shaped_commands_are_not_manufactured_into_notebook_cells():
         "weaver fabric capacity status --resource-group parcel --capacity-name dev\n",
         "weaver fabric notebook run Parcel\n",
         "weaver fabric environment publish ParcelRuntime\n",
-        "weaver initialise --workspace 'Parcel Development'\n",
         "python -m pip install weaverstack\n",
     ):
         assert tool.compile_terminal(source, context=context()) == []
@@ -110,6 +135,20 @@ def test_collection_selects_only_captured_pure_core_operations(tmp_path):
     assert "workspace_config" not in examples[0]["cells"][0]["code"]
 
 
+def test_uncaptured_initialise_is_selected_on_a_task_page_but_not_cli_reference(
+    tmp_path,
+):
+    docs = tmp_path / "docs"
+    (docs / "lakehouse").mkdir(parents=True)
+    (docs / "reference/cli").mkdir(parents=True)
+    source = '```bash\nweaver initialise --workspace "Parcel Development" --project-folder ./parcel --lakehouse Landing\n```\n'
+    (docs / "lakehouse/python.md").write_text(source)
+    (docs / "reference/cli/initialise.md").write_text(source)
+    (entry,) = generator().collect_examples(docs)
+    assert entry["page"] == "lakehouse/python.md"
+    assert entry["cells"][0]["operation"] == "initialise"
+
+
 def test_page_context_fills_an_observed_core_result_without_context_lines(tmp_path):
     docs = tmp_path / "docs"
     docs.mkdir()
@@ -146,11 +185,14 @@ def test_current_manifest_contains_only_bound_core_calls():
     payload = json.loads((ROOT / "notebook-examples.json").read_text())
     assert payload["examples"]
     for entry in payload["examples"]:
-        assert entry["cli_captures"]
-        assert entry["context"].get("workspace")
+        if not entry["cli_captures"]:
+            assert all(cell["operation"] == "initialise" for cell in entry["cells"])
+        assert entry["context"].get("workspace") or all(
+            cell["operation"] == "initialise" for cell in entry["cells"]
+        )
         assert entry["cells"]
         for cell in entry["cells"]:
-            assert cell["operation"].removeprefix("plan_") in CORE
+            assert cell["operation"].removeprefix("plan_") in NATURAL
             tree = ast.parse(cell["code"])
             assert "workspace_config" not in cell["code"]
             assert ".to_mapping()" not in cell["code"]
@@ -174,10 +216,19 @@ def test_current_manifest_contains_only_bound_core_calls():
             for entry in payload["examples"]
             if entry["page"] == page
             for cell in entry["cells"]
+            if cell["operation"] != "initialise"
         ]
         assert cells and all(
             "catalogue='Warehouse/Catalogue'" in cell["code"] for cell in cells
         )
+    initialise = [
+        cell
+        for entry in payload["examples"]
+        for cell in entry["cells"]
+        if cell["operation"] == "initialise"
+    ]
+    assert len(initialise) >= 2
+    assert sum("output" in cell for cell in initialise) == 2
 
 
 def test_recorded_output_requires_the_exact_cell_source(tmp_path):
