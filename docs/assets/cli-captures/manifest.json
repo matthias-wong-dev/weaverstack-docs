@@ -1489,6 +1489,20 @@
       "raw_ansi": "95b-summary-load.ansi",
       "text": "95b-summary-load.txt",
       "evidence": "live CLI; workspaces Weaver Example / Weaver Example Production shown as Parcel Development / Parcel Production; PTY width 112"
+    },
+    {
+      "label": "152-catalogue-dashboard",
+      "command": "weaver catalogue-dashboard --name \"Catalogue Dashboard\" --workspace-config workspace-development.yml",
+      "exit_code": 0,
+      "timed_out": false,
+      "page": "estate/catalogue-dashboard",
+      "elapsed_seconds": 128.586,
+      "started_at": "2026-10-17T12:58:22.998173+00:00",
+      "cwd": "[project-root]",
+      "workspace": "Parcel Development",
+      "raw_ansi": "152-catalogue-dashboard.ansi",
+      "text": "152-catalogue-dashboard.txt",
+      "evidence": "live CLI at weaverstack dbd5eddb after a Warehouse/Operations Build into the Parcel catalogue; workspace Weaver Example shown as Parcel Development; PTY width 112"
     }
   ],
   "runtime_basis": "feat/catalogue-dashboard 5ecccde + runtime commits 80af419b, 89e93c78, bf908f47, fb725f76, 1521ab9b from weaverstack PR #222 + three Initialise fixes (bytecode in installed examples, Shortcut mapping merge, no re-asked bindings)",

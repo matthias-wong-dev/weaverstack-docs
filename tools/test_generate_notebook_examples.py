@@ -7,7 +7,16 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-NATURAL = {"initialise", "build", "load", "test", "health", "mirror", "wipe"}
+NATURAL = {
+    "initialise",
+    "build",
+    "load",
+    "test",
+    "health",
+    "mirror",
+    "wipe",
+    "deploy_catalogue_dashboard",
+}
 
 
 def generator():
@@ -48,6 +57,21 @@ def test_core_cell_spells_out_parameters_and_uses_report():
     assert ast.literal_eval(parameters["catalogue"]) == "Warehouse/Catalogue"
     assert "workspace_config" not in parameters
     assert cell["code"].endswith("load_result.report()\n")
+
+
+def test_catalogue_dashboard_calls_its_python_operation():
+    cell = generator().compile_command(
+        'weaver catalogue-dashboard --name "Catalogue Dashboard" --workspace-config workspace-development.yml',
+        context=context(),
+    )
+    assert cell["operation"] == "deploy_catalogue_dashboard"
+    assert cell["parameters"] == {
+        "catalogue": "Warehouse/Catalogue",
+        "name": "Catalogue Dashboard",
+        "workspace": "Parcel Development",
+    }
+    assert "dashboard_result = weaver.deploy_catalogue_dashboard(" in cell["code"]
+    assert cell["code"].endswith("dashboard_result.report()\n")
 
 
 def test_initialise_uses_the_notebook_resources_project_without_a_cd_cell():

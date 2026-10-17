@@ -84,6 +84,53 @@
       "synopsis": "weaver build [-h] [--item ITEM[=TARGET]] [--data-source EXPRESSION=KIND/NAME] [--bind-data-sources] [--dry-run] [--bundle-only] [--bundle-path PATH] [--concurrency N] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [SOURCE]"
     },
     {
+      "command": "catalogue-dashboard",
+      "options": [
+        {
+          "help": "show this help message and exit",
+          "invocation": "-h, --help",
+          "required": false
+        },
+        {
+          "help": "Fabric Workspace name.",
+          "invocation": "--workspace WORKSPACE",
+          "required": false
+        },
+        {
+          "help": "Workspace configuration file.",
+          "invocation": "--workspace-config WORKSPACE_CONFIG",
+          "required": false
+        },
+        {
+          "help": "The catalogue Warehouse to read, as Workspace/Warehouse/Name or Warehouse/Name. Defaults to catalogue: in workspace configuration.",
+          "invocation": "--catalogue REFERENCE",
+          "required": false
+        },
+        {
+          "help": "The SemanticModel and Report to deploy to. Defaults to catalogue_dashboard: in workspace configuration.",
+          "invocation": "--name NAME",
+          "required": false
+        },
+        {
+          "help": "Resolve the source and the Dashboard's items without changing them.",
+          "invocation": "--dry-run",
+          "required": false
+        },
+        {
+          "help": "Emit the result as JSON.",
+          "invocation": "--json",
+          "required": false
+        },
+        {
+          "help": "Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.",
+          "invocation": "--non-interactive",
+          "required": false
+        }
+      ],
+      "positionals": [],
+      "synopsis": "weaver catalogue-dashboard [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--catalogue REFERENCE] [--name NAME] [--dry-run] [--json] [--non-interactive]"
+    },
+    {
       "command": "check",
       "options": [
         {
@@ -1062,9 +1109,10 @@
       "synopsis": "weaver workflow [-h] [--file PATH] [--timings] [--yes] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] name"
     }
   ],
-  "leaf_count": 18,
+  "leaf_count": 19,
   "ownership": {
     "build": "docs/reference/cli/build.md",
+    "catalogue-dashboard": "docs/reference/cli/catalogue-dashboard.md",
     "check": "docs/reference/cli/check.md",
     "doctor": "docs/reference/cli/doctor.md",
     "fabric capacity": "docs/reference/cli/fabric-capacity.md",
@@ -1083,6 +1131,6 @@
     "wipe": "docs/reference/cli/wipe.md",
     "workflow": "docs/reference/cli/workflow.md"
   },
-  "page_count": 16,
+  "page_count": 17,
   "schema_version": 1
 }

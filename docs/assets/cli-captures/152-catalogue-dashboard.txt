@@ -1,0 +1,45 @@
+Catalogue Dashboard
+
+  Check the source catalogue                                                                               1.8s
+  Resolve the Dashboard's items                                                                           21.3s
+Workspace  Parcel Development
+Catalogue  none
+Targets
+  SemanticModel/Catalogue Dashboard
+  Report/Catalogue Dashboard
+
+
+Build
+
+    Resolve semantic data sources                                                                          0.3s
+      Resolve SemanticModel/Catalogue Dashboard                                                            0.0s
+      Resolve Report/Catalogue Dashboard                                                                   0.0s
+    Read target inventories                                                                                0.2s
+    Read semantic sources                                                                                  5.1s
+    Prepare bundle                                                                                         0.4s
+Install selection
+  SemanticModel/Catalogue Dashboard
+    changed                 1
+    selected for build      1
+  Report/Catalogue Dashboard
+    changed                 1
+    selected for build      1
+
+→     SemanticModel/Catalogue Dashboard · Deploy semantic definitions · 1 action
+✓     SemanticModel/Catalogue Dashboard · Deploy semantic definitions · 1 action                          22.6s
+→     SemanticModel/Catalogue Dashboard, Report/Catalogue Dashboard · Verify deployed semantic definitions · 1 action
+✓     SemanticModel/Catalogue Dashboard, Report/Catalogue Dashboard · Verify deployed semantic definitions · 1 action   20.6s
+→     Report/Catalogue Dashboard · Deploy Report definitions · 1 action
+✓     Report/Catalogue Dashboard · Deploy Report definitions · 1 action                                   20.4s
+→     Report/Catalogue Dashboard · Verify deployed Report definitions · 1 action
+✓     Report/Catalogue Dashboard · Verify deployed Report definitions · 1 action                          20.9s
+    Install                                                                                               1m24s
+✓ Build                                                                                                   1m30s
+
+  Refresh the Dashboard model                                                                             13.6s
+✓ Catalogue Dashboard                                                                                     2m08s
+
+Catalogue Dashboard  Catalogue Dashboard  in Parcel Development
+  Reads  Parcel Development/Warehouse/Catalogue  (21 tables)
+  SemanticModel Catalogue Dashboard  updated
+  Report        Catalogue Dashboard  updated

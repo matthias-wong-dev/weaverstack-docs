@@ -72,6 +72,9 @@ markdown_extensions:
 extra_css:
   - assets/stylesheets/extra.css
 
+extra_javascript:
+  - assets/javascripts/dashboard-demo.js
+
 not_in_nav: |
   /getting-started/first-project.md
   /advanced/automation-and-execution-contexts.md
@@ -162,6 +165,7 @@ nav:
       - Connect items and dependencies: estate/connected-items.md
       - Workspace and environment mappings: estate/environments.md
       - Catalogue and Health: estate/catalogue-and-health.md
+      - Catalogue Dashboard: estate/catalogue-dashboard.md
       - The development cycle: estate/development-cycle.md
       - Run, test and inspect the estate: estate/operate.md
       - Recover failed work: estate/recovery.md
@@ -209,6 +213,7 @@ nav:
           - Load: reference/cli/load.md
           - Test: reference/cli/test.md
           - Health: reference/cli/health.md
+          - Catalogue Dashboard: reference/cli/catalogue-dashboard.md
           - Session: reference/cli/session.md
           - Workflow: reference/cli/workflow.md
           - Wipe: reference/cli/wipe.md

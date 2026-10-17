@@ -873,3 +873,28 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
 @media (max-width: 47.99em) {
   .md-typeset .project-overview-files { padding: 0.8rem; }
 }
+.md-typeset .dashboard-demo {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin: 1rem 0 0.3rem;
+  border: 1px solid var(--weaver-line);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #f7f7f6;
+}
+.md-typeset .dashboard-demo iframe {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+/* The Power BI page is 1280 by 720; dashboard-demo.js scales it to the column. */
+.md-typeset .dashboard-demo.is-scaled iframe {
+  width: 1280px;
+  max-width: none;
+  height: 720px;
+  transform: scale(var(--dashboard-scale));
+  transform-origin: 0 0;
+}
+.md-typeset .dashboard-demo-open { margin-top: 0; font-size: 0.7rem; text-align: right; }
