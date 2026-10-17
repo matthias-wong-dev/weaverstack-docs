@@ -30,6 +30,7 @@ OWNERSHIP: tuple[tuple[str, str], ...] = (
     ("load", "docs/reference/cli/load.md"),
     ("test", "docs/reference/cli/test.md"),
     ("health", "docs/reference/cli/health.md"),
+    ("catalogue-dashboard", "docs/reference/cli/catalogue-dashboard.md"),
     ("wipe", "docs/reference/cli/wipe.md"),
     ("unbind", "docs/reference/cli/unbind.md"),
     ("mirror", "docs/reference/cli/mirror.md"),

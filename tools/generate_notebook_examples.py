@@ -13,6 +13,7 @@ from pathlib import Path
 from textwrap import dedent
 
 NATURAL_OPERATIONS = {
+    "catalogue-dashboard",
     "initialise",
     "build",
     "load",
@@ -21,8 +22,15 @@ NATURAL_OPERATIONS = {
     "mirror",
     "wipe",
 }
+#: Commands whose Python operation has another name.
+OPERATION_FUNCTIONS = {"catalogue-dashboard": "deploy_catalogue_dashboard"}
+RESULT_VARIABLES = {"deploy_catalogue_dashboard": "dashboard_result"}
 NOTEBOOK_PROJECT = "builtin/project"
 PAGE_CONTEXT = {
+    "estate/catalogue-dashboard.md": {
+        "workspace": "Parcel Development",
+        "catalogue": "Warehouse/Catalogue",
+    },
     # The page continues the Parcel estate established by the preceding guide;
     # its compact Health outputs do not repeat these two values.
     "estate/catalogue-and-health.md": {
@@ -122,6 +130,9 @@ def _parse_command(command):
 def _operation_values(parsed, function, *, context):
     name = parsed.command
     values = vars(parsed).copy()
+    if name == "catalogue-dashboard":
+        catalogues = values.pop("source_catalogues", None) or []
+        values["catalogue"] = catalogues[0] if len(catalogues) == 1 else None
     if values.get("extra_items"):
         values["items"] = [*(values.get("items") or []), *values["extra_items"]]
     if name == "health":
@@ -172,7 +183,7 @@ def _operation_values(parsed, function, *, context):
 
 
 def _call_code(operation, parameters, *, variable=None):
-    variable = variable or operation + "_result"
+    variable = variable or RESULT_VARIABLES.get(operation, operation + "_result")
     uses_project = any(
         key in {"source", "project_folder"} and value == NOTEBOOK_PROJECT
         for key, value in parameters.items()
@@ -201,7 +212,7 @@ def compile_command(command, *, context=None):
     parsed = _parse_command(command)
     if parsed is None:
         return None
-    operation = parsed.command
+    operation = OPERATION_FUNCTIONS.get(parsed.command, parsed.command)
     function = getattr(weaver, operation)
     parameters = _operation_values(parsed, function, context=context or {})
     return {

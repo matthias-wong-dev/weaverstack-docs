@@ -25,24 +25,65 @@ The catalogue must have been built into by Weaver 0.10.0 or later, which records
 weaver catalogue-dashboard --name "Catalogue Dashboard" --workspace-config workspace-development.yml
 ```
 
+<!-- cli-capture: {"id": "152-catalogue-dashboard", "title": "Catalogue Dashboard · deploy over the Parcel catalogue"} -->
+<p class="terminal-intro">The command returned:</p>
+<figure class="weaver-terminal" aria-label="Catalogue Dashboard · deploy over the Parcel catalogue">
+<figcaption>Terminal output <span class="terminal-exit">exit 0</span></figcaption>
+<pre tabindex="0" aria-label="Terminal output"><code>Catalogue Dashboard
+
+  Check the source catalogue                                                                               1.8s
+  Resolve the Dashboard&#x27;s items                                                                           21.3s
+Workspace  Parcel Development
+Catalogue  none
+Targets
+  SemanticModel/Catalogue Dashboard
+  Report/Catalogue Dashboard
+
+
+Build
+
+    Resolve semantic data sources                                                                          0.3s
+      Resolve SemanticModel/Catalogue Dashboard                                                            0.0s
+      Resolve Report/Catalogue Dashboard                                                                   0.0s
+    Read target inventories                                                                                0.2s
+    Read semantic sources                                                                                  5.1s
+    Prepare bundle                                                                                         0.4s
+Install selection
+  SemanticModel/Catalogue Dashboard
+    changed                 1
+    selected for build      1
+  Report/Catalogue Dashboard
+    changed                 1
+    selected for build      1
+
+→     SemanticModel/Catalogue Dashboard · Deploy semantic definitions · 1 action
+<span class="terminal-status-green">✓     SemanticModel/Catalogue Dashboard · Deploy semantic definitions · 1 action                          22.6s</span>
+→     SemanticModel/Catalogue Dashboard, Report/Catalogue Dashboard · Verify deployed semantic definitions · 1 action
+<span class="terminal-status-green">✓     SemanticModel/Catalogue Dashboard, Report/Catalogue Dashboard · Verify deployed semantic definitions · 1 action   20.6s</span>
+→     Report/Catalogue Dashboard · Deploy Report definitions · 1 action
+<span class="terminal-status-green">✓     Report/Catalogue Dashboard · Deploy Report definitions · 1 action                                   20.4s</span>
+→     Report/Catalogue Dashboard · Verify deployed Report definitions · 1 action
+<span class="terminal-status-green">✓     Report/Catalogue Dashboard · Verify deployed Report definitions · 1 action                          20.9s</span>
+    Install                                                                                               1m24s
+<span class="terminal-status-green">✓ Build                                                                                                   1m30s</span>
+
+  Refresh the Dashboard model                                                                             13.6s
+<span class="terminal-status-green">✓ Catalogue Dashboard                                                                                     2m08s</span>
+
+Catalogue Dashboard  Catalogue Dashboard  in Parcel Development
+  Reads  Parcel Development/Warehouse/Catalogue  (21 tables)
+  SemanticModel Catalogue Dashboard  updated
+  Report        Catalogue Dashboard  updated
+</code></pre>
+</figure>
+<!-- /cli-capture -->
+
 The command creates or updates a SemanticModel and a Report with that name in the catalogue's workspace, then refreshes the model. It reads the catalogue named by `catalogue:` in the workspace configuration; `--catalogue Warehouse/Name` names another. To deploy without naming it each time, add the name to the configuration:
 
 ```yaml
 workspace: Parcel Development
 catalogue: Warehouse/Catalogue
 catalogue_dashboard: Catalogue Dashboard
-```
-
-From Python, the same operation is `weaver.deploy_catalogue_dashboard`:
-
-```python
-import weaver
-
-result = weaver.deploy_catalogue_dashboard(
-    name="Catalogue Dashboard",
-    catalogue="Warehouse/Catalogue",
-    workspace="Parcel Development",
-)
 ```
 
 - The Dashboard deploys into the workspace of the catalogue it reads. A catalogue in another workspace is refused.
