@@ -35,6 +35,7 @@ from pathlib import Path
 import weaver
 
 project = Path("builtin") / "project"
+workspace = weaver.current_workspace().workspace
 catalogue = "Warehouse/<catalogue-name>"
 items = [
     "Lakehouse/Landing=Lakehouse/<physical-lakehouse-name>",
@@ -43,11 +44,13 @@ items = [
 
 result = weaver.build(
     project,
+    workspace=workspace,
     catalogue=catalogue,
     items=items,
 )
 if not result.succeeded:
     raise RuntimeError(result.errors)
+result.to_mapping()
 ```
 
 Replace each angle-bracketed value with an existing physical item name in the notebook's workspace. The notebook's attached runtime must contain Weaver and any libraries imported by the project. Build installs Python definitions but does not call their authored `read()` methods.
@@ -91,7 +94,7 @@ The CLI and top-level Python package expose the core lifecycle through both entr
 | Test | `weaver test ITEM...` | `weaver.test(items, ...)` |
 | Health | `weaver health --item ITEM` | `weaver.health(items, ...)` |
 
-The entry point changes, but logical identities, catalogue selection, installed bindings and the operation's selection rules do not. This is not a claim that every CLI command has a notebook counterpart. CLI interaction, confirmation and output remain CLI concerns.
+The entry point changes, but logical identities, catalogue selection, installed bindings and the operation's selection rules do not.
 
 Mirror and Wipe are also public Python operations. They retain their operation-specific planning and destructive boundaries, so they are not folded into the routine lifecycle shorthand above: inspect a Mirror or Wipe plan using the documented operation interface before executing it. See [Mirror behaviour](../reference/operation-behaviour/mirror.md) and [Wipe behaviour](../reference/operation-behaviour/wipe.md).
 
@@ -103,6 +106,7 @@ from pathlib import Path
 import weaver
 
 project = Path("builtin") / "project"
+workspace = weaver.current_workspace().workspace
 catalogue = "Warehouse/<catalogue-name>"
 items = ["Lakehouse/Landing", "Warehouse/Operations"]
 bindings = [
@@ -112,19 +116,26 @@ bindings = [
 
 build_result = weaver.build(
     project,
+    workspace=workspace,
     items=bindings,
     catalogue=catalogue,
 )
 if not build_result.succeeded:
     raise RuntimeError(build_result.errors)
 
-load_report = weaver.load(items, catalogue=catalogue)
+load_report = weaver.load(items, workspace=workspace, catalogue=catalogue)
 
-test_report = weaver.test(items, catalogue=catalogue)
+test_report = weaver.test(items, workspace=workspace, catalogue=catalogue)
 if not test_report.succeeded:
     raise RuntimeError(f"Test {test_report.status}")
 
-health_report = weaver.health(items, catalogue=catalogue)
+health_report = weaver.health(items, workspace=workspace, catalogue=catalogue)
+{
+    "build": build_result.to_mapping(),
+    "load": load_report.to_mapping(),
+    "test": test_report.to_mapping(),
+    "health": health_report.to_mapping(),
+}
 ```
 
 No desktop credential or `environment=` argument is needed for this attached-workspace path. The attached runtime must still contain Weaver and the project's Python dependencies. Supplying a [Session](../reference/python/session.md) is optional when a caller needs explicit context reuse or control.
@@ -147,13 +158,14 @@ weaver health \
 
 Build records the physical bindings in the selected catalogue. Load, Test and Health use those installed bindings; changing the current `targets` mapping does not retarget an installed generation until Build installs it.
 
-The rest of the CLI is deliberately not folded into this table:
+Setup and management also have public Python entry points:
 
 - `weaver.initialise()` is a public Python function as well as a CLI setup command. It creates project files and requested Fabric items; it is not an installed-estate operation.
-- Doctor and frozen-bundle Install are CLI commands. `doctor` and `install` are not exports of the top-level `weaver` Python API.
-- Check is local project validation rather than a hosted estate operation.
-- `weaver fabric environment publish` and `weaver fabric notebook push|run` are CLI helpers for Fabric items. They have no top-level Python operation counterparts.
-- A CLI workflow is represented in Python by an explicit sequence of public operation calls. Each call can discover the attached notebook context as shown above.
+- `weaver.check()` validates local project files; `weaver.doctor()` checks access and execution capabilities.
+- `weaver.install()` installs a frozen bundle. Its explicit workspace confirms the bundle's sealed target rather than retargeting it.
+- `weaver.publish_environment()`, `weaver.push_notebook()` and `weaver.run_notebook()` manage Fabric items.
+- `weaver.workflow()` runs a named sequence from the same workflow file and returns each step's result.
+- `weaver.capacity()` manages the Azure capacity resource. It requires separate [Azure resource-management authentication](../reference/cli/fabric-capacity.md#execution).
 
 See [Python operations](../reference/python/operations.md) and the [CLI reference](../reference/cli.md) for exact signatures and selection rules.
 
@@ -209,6 +221,7 @@ violations = Parcel__HasDestination(
 ).read()
 validation_report = weaver.test(
     "Lakehouse/Landing",
+    workspace=workspace,
     names=r"Parcel[.]HasDestination",
     catalogue=catalogue,
 )

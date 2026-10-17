@@ -700,7 +700,7 @@
         {
           "help": "Weaver items to load, as Lakehouse/Name, Warehouse/Name or SemanticModel/Name. PowerBI or PowerBI/<project> names the semantic models of the project folder. Naming none loads every installed item.",
           "invocation": "ITEM",
-          "required": false
+          "required": true
         }
       ],
       "synopsis": "weaver load [-h] [--item ITEM] [--name NAME] [--source SOURCE] [--concurrency N] [--ancestors] [--descendants] [--fault-tolerant] [--reload] [--ignore-stability-threshold] [--stale] [--as-of DATETIME] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]"
@@ -877,7 +877,7 @@
         {
           "help": "Weaver items to validate, as Lakehouse/Name, Warehouse/Name or SemanticModel/Name. PowerBI or PowerBI/<project> names the semantic models of the project folder. Naming none validates every item.",
           "invocation": "ITEM",
-          "required": false
+          "required": true
         }
       ],
       "synopsis": "weaver test [-h] [--item ITEM] [--name PATTERN] [--file PATH] [--source SOURCE] [--concurrency N] [--dry-run] [--json] [--non-interactive] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [ITEM ...]"
@@ -998,7 +998,7 @@
         {
           "help": "Physical items to empty: Lakehouse/Name, Warehouse/Name or SemanticModel/Name. Naming none empties the estate the catalogue records.",
           "invocation": "TARGET",
-          "required": false
+          "required": true
         }
       ],
       "synopsis": "weaver wipe [-h] [--workspace WORKSPACE] [--workspace-config WORKSPACE_CONFIG] [--environment ENVIRONMENT] [--catalogue CATALOGUE] [--unbind] [--preserve-data-source] [--dry-run] [--yes] [--json] [--non-interactive] [TARGET ...]"

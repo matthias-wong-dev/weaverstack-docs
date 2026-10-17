@@ -4,7 +4,7 @@ This maintainer-only ledger records the item-first revision and earlier delivery
 
 ## Notebook equivalence — accepted delivery requirement
 
-[The notebook-equivalence plan and output/API findings](NOTEBOOK-EQUIVALENCE.md) govern the next delivery. Every terminal CLI block needs a matching Notebook cell, with close parameter parity and an explicit workspace for workspace-scoped calls. Missing public calls and parameter mismatches are product fixes, not exemptions. Audit each call's output, reuse sensible existing output, and track deficient output separately. Earlier CLI-only walkthrough completion does not satisfy this requirement.
+[The notebook-equivalence plan and output/API findings](NOTEBOOK-EQUIVALENCE.md) govern this delivery. All 232 terminal blocks now have matching native Notebook tabs (383 cells); all 29 cell-operation categories have an explicit output assessment. Workspace/configuration and confirmation behaviour are covered by source/signature regressions. Runtime fixes are isolated in weaverstack #226; the website work in weaverstack-docs #6 depends on it. There are 68 authentic static Notebook outputs, not complete scenario-by-scenario live acceptance. The plan records the Notebook Power BI HTTP 403, unexecuted live capacity control, matching-release and publication gates separately. Earlier CLI-only walkthrough completion does not close those gates.
 
 ## Full walkthrough and capture refresh — 17 October 2026
 

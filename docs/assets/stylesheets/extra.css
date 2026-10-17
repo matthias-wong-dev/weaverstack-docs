@@ -542,6 +542,12 @@ input {
   box-shadow: 0 -1px var(--weaver-line) inset;
 }
 
+/* Keep Material's mobile label bleed inside the actual page width,
+   including narrow no-JavaScript windows with a classic scrollbar. */
+.md-typeset .tabbed-set.tabbed-alternate > .tabbed-labels {
+  max-width: calc(100% + 1.6rem);
+}
+
 .md-typeset .tabbed-labels > label {
   color: var(--weaver-muted);
 }

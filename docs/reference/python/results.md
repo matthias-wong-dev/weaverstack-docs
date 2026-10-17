@@ -9,6 +9,8 @@ The constructors below describe the returned shape and are useful in tests. Norm
 ## Public exports
 
 - `weaver.BuildResult` — class
+- `weaver.CheckResult` — class
+- `weaver.DoctorReport` — class
 - `weaver.ExampleOutcome` — class
 - `weaver.FabricItemOutcome` — class
 - `weaver.HealthFinding` — class
@@ -30,6 +32,8 @@ The constructors below describe the returned shape and are useful in tests. Norm
 - `weaver.WipePlan` — class
 - `weaver.WipeReport` — class
 - `weaver.WipeResult` — class
+- `weaver.WorkflowReport` — class
+- `weaver.WorkflowStep` — class
 
 <!-- END GENERATED PYTHON -->
 
