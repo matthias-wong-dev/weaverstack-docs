@@ -565,7 +565,7 @@ Keys on this page are Weaver's row-identity rules, not declared Warehouse primar
 - `Workflow ID` associates status and statistic rows with operational evidence in `_.Log`; it is an operational join, not a declared key relationship; and
 - a matching `_.Mirror` row supplements a `_.Registry` certification with the borrowed source and local physical form.
 
-`_.Bookmark`, `_.LoadStatus`, and `_.TestStatus` are current state for an installed incarnation. Rebuilding the corresponding loadable object, data node, or validation invalidates that object's applicable rows. `_.Log` and `_.LoadStatistic` are append-only history and are not invalidated by Build. `_.Mirror` is borrowed state: it remains until the object is materialised locally or Mirror replaces the borrowed scope.
+`_.Bookmark`, `_.LoadStatus`, and `_.TestStatus` are current state for the object as installed. Rebuilding the corresponding loadable object, data node, or validation invalidates that object's applicable rows. `_.Log` and `_.LoadStatistic` are append-only history and are not invalidated by Build. `_.Mirror` is borrowed state: it remains until the object is materialised locally or Mirror replaces the borrowed scope.
 
 A physical object is not installed state without its Registry certification and item binding. Build reconciles those claims against physical inventory. A selected item remains bound even when a successful Build certifies no objects.
 
