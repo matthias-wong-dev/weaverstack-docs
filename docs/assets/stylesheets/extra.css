@@ -889,11 +889,11 @@ html .md-footer-meta.md-typeset .md-copyright a:hover {
   height: 100%;
   border: 0;
 }
-/* The Power BI page is 1280 by 720; dashboard-demo.js scales it to the column. */
+/* The Power BI page is 1920 by 1080; dashboard-demo.js scales it to the column. */
 .md-typeset .dashboard-demo.is-scaled iframe {
-  width: 1280px;
+  width: 1920px;
   max-width: none;
-  height: 720px;
+  height: 1080px;
   transform: scale(var(--dashboard-scale));
   transform-origin: 0 0;
 }

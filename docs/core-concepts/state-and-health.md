@@ -16,7 +16,7 @@ A model refreshed before its source changes is now behind, even if that refresh 
 
 A Health report separates three concerns:
 
-- **Load** — whether recorded Tables, Folders and registered semantic-model refreshes have settled and remain fresh enough to use.
+- **Load** — whether recorded Tables, Folders and registered semantic-model refreshes have been processed and remain fresh enough to use.
 - **Tests** — whether each installed Test and Assumption has run against the data it now depends on.
 - **Build** — whether the catalogue's installed claims are internally consistent and, when inventory is read, agree with the physical estate.
 
@@ -26,7 +26,7 @@ The distinction matters because each concern has a different recovery path. A Ta
 
 Each section, and the report as a whole, is classified as **Green**, **Amber** or **Red**. The overall status is the worst section status.
 
-**Green** means the assessed subjects have no current finding. Loads have settled and are fresh, validations have passed since their dependencies last changed, and the installed catalogue is consistent with the evidence Health inspected.
+**Green** means the assessed subjects have no current finding. Loads have been processed and are fresh, validations have passed since their dependencies last changed, and the installed catalogue is consistent with the evidence Health inspected.
 
 **Amber** means the estate needs work but does not currently record a failure for that subject. Common examples are a Table that has not loaded since Build, a load that completed with rejected rows, data older than the chosen freshness point, or a Test whose inputs changed after it passed.
 

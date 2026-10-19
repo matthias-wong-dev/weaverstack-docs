@@ -7,7 +7,7 @@ hide:
 
 The Catalogue Dashboard is a Power BI semantic model and Report over a Weaver catalogue. One command deploys it beside the catalogue. Its seven pages show Health, the Load orchestration graph, recent workflows as a Gantt chart, load performance, an ER diagram with a metadata browser, and a bus matrix for each semantic model.
 
-The model reads the catalogue's tables over Direct Lake, so each page shows what the catalogue records as work settles. The Dashboard only reads the catalogue. Nothing about it is recorded there, and Initialise, Build, Wipe and Mirror never touch it.
+The model reads the catalogue's tables over Direct Lake, so each page shows what the catalogue records as work is processed. The Dashboard only reads the catalogue. Nothing about it is recorded there, and Initialise, Build, Wipe and Mirror never touch it.
 
 It is an ordinary semantic model and Report. Change it to fit your needs, or build your own over the catalogue.
 
@@ -104,9 +104,24 @@ The first page view after a load, or after the model has been idle, can take sev
 
 The pages below are the Dashboard's own renderer over a generated estate of 133 objects, recorded at a fixed time. Search, select, drag and zoom as you would in Power BI.
 
+### Marks
+
+Each object carries a mark for its kind, in lists, chips and the graph. Hover a mark for its name.
+
+| Mark | Kind |
+| --- | --- |
+| Filled blue circle | Table |
+| Blue ring with a dot | View |
+| Green folder | Folder |
+| Amber diamond | Shortcut |
+| Filled violet triangle | Test |
+| Outlined violet triangle | Assumption |
+| Dark blue hexagon | Semantic model |
+| Dark blue outlined square | Report |
+
 ### Overview
 
-Installed items by kind, with their object counts, a status bar and when work last settled. The tiles summarise Load, Tests and Build health and the workflows of the last 7 days; significant findings are listed below.
+Installed items by kind, with their object counts, a status bar and when work was last processed. The tiles summarise Load, Tests and Build health and the workflows of the last 7 days; significant findings are listed below.
 
 <div class="dashboard-demo"><iframe src="../../assets/catalogue-dashboard/overview.html" title="Catalogue Dashboard demo: Overview" loading="lazy"></iframe></div>
 <p class="dashboard-demo-open" markdown>[Open the Overview full size](../assets/catalogue-dashboard/overview.html){ target="_blank" }</p>

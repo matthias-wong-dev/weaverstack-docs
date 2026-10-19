@@ -169,20 +169,20 @@ m.nodes.forEach(function (n) { if (!placed.has(n.key)) order.push(n); });
 }
 return order;
 }
-/* Over each node's lifecycle ancestors: whether one has not settled, the
-latest instant one settled, and the latest it settled or was built. */
+/* Over each node's lifecycle ancestors: whether one has not been processed,
+the latest instant one was processed, and the latest it was processed or built. */
 function ancestry(m) {
 var out = new Map();
 topological(m).forEach(function (n) {
-var a = { unsettled: false, latest: null, changed: null };
+var a = { unprocessed: false, latest: null, changed: null };
 n.up.forEach(function (key) {
-var p = m.nodes.get(key), pa = out.get(key) || { unsettled: false, latest: null, changed: null };
-if (pa.unsettled) a.unsettled = true;
+var p = m.nodes.get(key), pa = out.get(key) || { unprocessed: false, latest: null, changed: null };
+if (pa.unprocessed) a.unprocessed = true;
 a.latest = later(a.latest, pa.latest);
 a.changed = later(a.changed, pa.changed);
 if (participates(p)) {
 var at = establishedAt(p);
-if (at === null) a.unsettled = true;
+if (at === null) a.unprocessed = true;
 a.latest = later(a.latest, at);
 a.changed = later(a.changed, later(at, p.built));
 }
@@ -249,7 +249,7 @@ var s = effectiveLoad(n), out = [];
 if (!s || s.result === "Pending") {
 var f = finding("load", "load_pending", AMBER, n, "Pending", n.isMirrored ?
 "loaded in the catalogue this one mirrors, which the Dashboard does not read" :
-"no load has settled since this object was built", s);
+"no load has processed this object since it was built", s);
 f.unobserved = n.isMirrored;
 return [f];
 }
@@ -258,10 +258,10 @@ if (s.result === "Rejected") out.push(finding("load", "load_rejected", AMBER, n,
 if (NO_DATA.indexOf(s.result) >= 0 || n.isStatic) return out;
 if (s.completed !== null && s.completed < asOf) out.push(finding("load", "load_stale_time", AMBER, n, s.result, "last loaded " + stamp(s.completed), s));
 var a = anc.get(n.key);
-if (a.unsettled) {
+if (a.unprocessed) {
 var behind = firstAncestor(m, n.key, function (p) { return establishedAt(p) === null; });
 out.push(finding("load", "load_ancestor_unestablished", AMBER, n, s.result,
-(behind ? behind.label : "an upstream object") + " has no settled state for its current incarnation", s));
+(behind ? behind.label : "an upstream object") + " has not been processed since it was built", s));
 }
 var loaded = establishedAt(n);
 if (loaded !== null && a.latest !== null && a.latest > loaded) {
@@ -305,13 +305,13 @@ var READINESS = { CURRENT: "Current", READY: "Ready", WAITING: "Waiting", ELSEWH
 /* Readiness keeps apart what happened (the outcome) and whether the recorded
 dependencies would let it run again now. */
 function readiness(m, n) {
-if (n.isMirrored) return { state: READINESS.ELSEWHERE, waitingOn: [], unsettled: 0 };
-if (!n.canLoad) return { state: READINESS.NONE, waitingOn: [], unsettled: 0 };
+if (n.isMirrored) return { state: READINESS.ELSEWHERE, waitingOn: [], unprocessed: 0 };
+if (!n.canLoad) return { state: READINESS.NONE, waitingOn: [], unprocessed: 0 };
 var ups = nearestStateful(m, n), waiting = ups.filter(function (p) { return establishedAt(p) === null; });
-if (waiting.length) return { state: READINESS.WAITING, waitingOn: waiting, unsettled: waiting.length };
+if (waiting.length) return { state: READINESS.WAITING, waitingOn: waiting, unprocessed: waiting.length };
 var loaded = establishedAt(n);
 var behind = loaded === null || ups.some(function (p) { return establishedAt(p) > loaded; });
-return { state: behind ? READINESS.READY : READINESS.CURRENT, waitingOn: [], unsettled: 0 };
+return { state: behind ? READINESS.READY : READINESS.CURRENT, waitingOn: [], unprocessed: 0 };
 }
 function tone(result) {
 switch (result) {
@@ -1080,7 +1080,7 @@ function severityChip(severity, unobserved) {
 if (unobserved) return el("span", { "class": "wd-chip wd-none", text: "Unobserved" });
 return el("span", { "class": "wd-chip wd-" + ({ red: "bad", amber: "warn", green: "ok" }[severity]), text: { red: "Red", amber: "Amber", green: "Green" }[severity] });
 }
-function kindMark(kind) { return el("i", { "class": "wd-kind wd-kind-" + String(kind).toLowerCase().replace(/\s+/g, "-"), "aria-hidden": "true" }); }
+function kindMark(kind) { return el("i", { "class": "wd-kind wd-kind-" + String(kind).toLowerCase().replace(/\s+/g, "-"), title: String(kind), "aria-hidden": "true" }); }
 function state() {
 root.__WD_STATE = root.__WD_STATE || {};
 return root.__WD_STATE;
@@ -1093,13 +1093,13 @@ performance: "Performance", entities: "Entity dictionary", semantic: "Semantic m
 };
 /* The header every page shares: the catalogue's own name, where it lives, and
 the two times a reader needs apart, when this was queried and when work
-last settled. */
+last processed. */
 function shell(mount, m) {
 var s = state();
 var title = m.catalogue.name || "Weaver catalogue";
 var context = [m.catalogue.workspace ? "Workspace " + m.catalogue.workspace : null,
 m.catalogue.version ? "Weaver " + m.catalogue.version : null].filter(Boolean).join(" · ");
-var settled = latestSettled(m);
+var processed = latestProcessed(m);
 var head = el("header", { "class": "wd-top" }, [
 el("div", { "class": "wd-brand" }, [weaveMark(), el("div", {}, [
 el("div", { "class": "wd-eyebrow", text: "Catalogue · " + (PAGE_TITLES[m.page] || m.page) }),
@@ -1109,8 +1109,8 @@ context ? el("div", { "class": "wd-context", text: context }) : null
 el("span", { "class": "wd-grow" }),
 el("dl", { "class": "wd-times" }, [
 el("dt", { text: "Queried" }), el("dd", { text: stamp(m.at) }),
-settled === undefined ? null : el("dt", { text: "Last settled" }),
-settled === undefined ? null : el("dd", { text: settled ? stamp(settled) + " · " + ago(settled, m.at) : "nothing has settled" })
+processed === undefined ? null : el("dt", { text: "Last processed" }),
+processed === undefined ? null : el("dd", { text: processed ? stamp(processed) + " · " + ago(processed, m.at) : "nothing has been processed" })
 ])
 ]);
 mount.appendChild(head);
@@ -1132,9 +1132,9 @@ var body = el("main", { "class": "wd-body" });
 mount.appendChild(body);
 return body;
 }
-/* The latest settled load, test or workflow, or undefined when the page
+/* The latest processed load, test or workflow, or undefined when the page
 carries none of them. */
-function latestSettled(m) {
+function latestProcessed(m) {
 if (!m.tables.loads && !m.tables.tests && !m.tables.workflows) return undefined;
 var latest = null;
 m.nodes.forEach(function (n) {
@@ -1169,10 +1169,16 @@ document.addEventListener("scroll", listener, { capture: true, passive: true });
 }
 /* Canvas pixels per CSS pixel. The Power BI Service fits a page to its window
 by scaling the visual's frame, which enlarges a canvas drawn at the device
-ratio alone, so a canvas draws at least twice over, within a pixel budget. */
+ratio alone. The frame scales up to the screen's size at most, and the
+screen stays the same through full screen, so the canvas draws that many
+times over, within a pixel budget. An expanded visual is not scaled and its
+layout width is the screen's, so it draws near the device ratio. */
 function canvasRatio(width, height) {
-var device = root.devicePixelRatio || 1, wanted = Math.min(3, Math.max(2, device * 1.5));
-return Math.max(device, Math.min(wanted, Math.sqrt(12e6 / Math.max(1, width * height))));
+var device = root.devicePixelRatio || 1, scr = root.screen || {};
+var frame = Math.max(1, Math.min((scr.availWidth || 0) / Math.max(1, root.innerWidth || 0) || 1,
+(scr.availHeight || 0) / Math.max(1, root.innerHeight || 0) || 1));
+var wanted = Math.min(6, Math.max(2, device * 1.5, device * frame));
+return Math.max(device, Math.min(wanted, Math.sqrt(20e6 / Math.max(1, width * height))));
 }
 function redraw() { if (root.__WD_REDRAW) root.__WD_REDRAW(); }
 function section(title, children, attrs) {
@@ -1297,7 +1303,7 @@ fact(isValidation(n) ? "Last run" : "Last load", el("span", {}, [chip(s.result),
 if (s.duration !== null && s.duration !== undefined) fact("Duration", duration(s.duration));
 if (isValidation(n) && s.failures) fact("Failing rows", fmt(s.failures));
 if (s.workflow) fact("Workflow", el("span", { "class": "wd-mono", text: s.workflow }));
-} else if (carries && (participates(n) || isValidation(n))) fact(isValidation(n) ? "Last run" : "Last load", el("span", { "class": "wd-muted", text: "Nothing has settled since it was built" }));
+} else if (carries && (participates(n) || isValidation(n))) fact(isValidation(n) ? "Last run" : "Last load", el("span", { "class": "wd-muted", text: "Nothing has been processed since it was built" }));
 if (carries && isLoadSubject(n)) {
 var ready = readiness(m, n);
 fact("Readiness", el("span", {}, [el("span", { "class": "wd-chip wd-" + readinessTone(ready.state), text: ready.state }),
@@ -1575,7 +1581,7 @@ if (selection.length + terms.length > 1) chips.appendChild(el("button", { type: 
 function legend(mode) {
 var entries = mode === "load" ? [
 ["swatch wd-ok", "Last load succeeded"], ["swatch wd-bad", "Failed, error or blocked"], ["swatch wd-warn", "Rejected rows or pending"],
-["swatch wd-none", "Nothing settled, or loaded elsewhere"], ["ring wd-next", "Ready: dependencies settled"], ["ring wd-wait", "Waiting on a dependency"]
+["swatch wd-none", "Nothing processed, or loaded elsewhere"], ["ring wd-next", "Ready: dependencies processed"], ["ring wd-wait", "Waiting on a dependency"]
 ] : [
 ["kind wd-kind wd-kind-table", "Table"], ["kind wd-kind wd-kind-view", "View"], ["kind wd-kind wd-kind-folder", "Folder"], ["kind wd-kind wd-kind-shortcut", "Shortcut"],
 ["kind wd-kind wd-kind-test", "Test"], ["kind wd-kind wd-kind-assumption", "Assumption"], ["kind wd-kind wd-kind-semantic-model", "Semantic model"], ["kind wd-kind wd-kind-report", "Report"],
@@ -1597,14 +1603,14 @@ if (r.state === READINESS.WAITING) waiting.push({ n: n, r: r });
 });
 var latest = (m.workflows || [])[0];
 var tiles = el("div", { "class": "wd-tiles" }, [
-tile("Current", counts[READINESS.CURRENT] || 0, "settled after every dependency", "ok"),
-tile("Ready", counts[READINESS.READY] || 0, "behind, with every dependency settled", "next"),
-tile("Waiting", counts[READINESS.WAITING] || 0, "a dependency has not settled", "wait"),
+tile("Current", counts[READINESS.CURRENT] || 0, "processed after every dependency", "ok"),
+tile("Ready", counts[READINESS.READY] || 0, "behind, with every dependency processed", "next"),
+tile("Waiting", counts[READINESS.WAITING] || 0, "a dependency has not been processed", "wait"),
 tile("Last outcome failed", failed.length, "Failed, Error or Blocked", failed.length ? "bad" : "ok"),
 tile("Loaded elsewhere", counts[READINESS.ELSEWHERE] || 0, "mirrored; not read here", "none"),
-latest ? tile("Latest workflow", duration((latest.completed || 0) - (latest.started || 0)), fmt(latest.records) + " settled records · " + ago(latest.completed, m.at), latest.failed ? "bad" : "none") : null
+latest ? tile("Latest workflow", duration((latest.completed || 0) - (latest.started || 0)), fmt(latest.records) + " processed records · " + ago(latest.completed, m.at), latest.failed ? "bad" : "none") : null
 ]);
-var note = el("p", { "class": "wd-note", text: "Readiness is derived from the recorded state of each object's nearest loadable dependencies. It is not a queue: the catalogue records settled work only, so nothing here is shown as running." });
+var note = el("p", { "class": "wd-note", text: "Readiness is derived from the recorded state of each object's nearest loadable dependencies. It is not a queue: the catalogue records processed work only, so nothing here is shown as running." });
 graphWorkspace(body, m, { page: "orchestration", mode: "load", health: true, label: "Load orchestration graph", above: el("div", { "class": "wd-summary" }, [tiles, note]),
 empty: "Search for an object, or select one in the graph, to follow its lineage, last outcome and readiness." });
 var lists = el("div", { "class": "wd-columns-2" }, [
@@ -1615,7 +1621,7 @@ section("Ready · " + ready.length, [dataTable([
 ], ready, { limit: 100, sort: "object", desc: false, emptyText: "Nothing is ready to load." })]),
 section("Waiting · " + waiting.length, [dataTable([
 { key: "object", title: "Object", value: function (r) { return r.n.label; } },
-{ key: "on", title: "Waiting on", value: function (r) { return r.r.waitingOn[0].label + (r.r.unsettled > 1 ? " and " + (r.r.unsettled - 1) + " more" : ""); } },
+{ key: "on", title: "Waiting on", value: function (r) { return r.r.waitingOn[0].label + (r.r.unprocessed > 1 ? " and " + (r.r.unprocessed - 1) + " more" : ""); } },
 { key: "outcome", title: "Last outcome", render: function (r) { var s = effectiveLoad(r.n); return chip(s ? s.result : null, s ? null : "None"); }, value: function (r) { var s = effectiveLoad(r.n); return s ? s.result : ""; } }
 ], waiting, { limit: 100, sort: "object", desc: false, emptyText: "Nothing is waiting on a dependency." })])
 ]);
@@ -1655,7 +1661,7 @@ var significant = section("Significant findings", [findings.length ? el("ul", { 
 return el("li", {}, [severityChip(f.severity), f.node ? nodeLink(m, f.node.key, open) : el("span", { "class": "wd-mono", text: f.label }),
 el("span", { "class": "wd-muted", text: " " + f.message })]);
 }).concat(findings.length > 12 ? [el("li", { "class": "wd-muted", text: (findings.length - 12) + " more on the Health page" })] : []))
-: el("div", { "class": "wd-allclear", text: "No findings. Every load and Test the catalogue records has settled, within the last 24 hours, after its dependencies." })]);
+: el("div", { "class": "wd-allclear", text: "No findings. Every load and Test the catalogue records has been processed, within the last 24 hours, after its dependencies." })]);
 var activity = section("Recent workflows", [workflowTable(m, 8)]);
 body.appendChild(el("div", { "class": "wd-overview" }, [el("div", { "class": "wd-overview-main" }, [inventory, significant, activity]), side]));
 if (s.open && m.nodes.has(s.open)) open(s.open);
@@ -1687,20 +1693,20 @@ var first = it.nodes[0];
 return el("button", { "class": "wd-inv-item", type: "button", onclick: function () { if (first) open(first.key); } }, [
 el("div", { "class": "wd-inv-head" }, [el("b", { text: it.name }), it.target && it.target !== it.name ? el("span", { "class": "wd-muted", text: " → " + it.target }) : null]),
 el("div", { "class": "wd-inv-kinds" }, KIND_ORDER.filter(function (k) { return byKind[k]; }).map(function (k) {
-return el("span", { "class": "wd-inv-kind", title: k }, [kindMark(k), fmt(byKind[k])]);
+return el("span", { "class": "wd-inv-kind" }, [kindMark(k), fmt(byKind[k]) + " " + k.toLowerCase() + (byKind[k] === 1 ? "" : "s")]);
 })),
-total ? el("div", { "class": "wd-bar-stack", title: tones.ok + " succeeded · " + tones.bad + " failed · " + (tones.warn + tones.wait) + " pending or rejected · " + tones.none + " not settled" },
+total ? el("div", { "class": "wd-bar-stack", title: tones.ok + " succeeded · " + tones.bad + " failed · " + (tones.warn + tones.wait) + " pending or rejected · " + tones.none + " not processed" },
 ["ok", "warn", "wait", "bad", "none"].map(function (t) { return tones[t] ? el("i", { "class": "wd-" + t, style: "flex:" + tones[t] }) : null; })) : null,
-el("div", { "class": "wd-inv-meta", text: total ? "Last settled " + ago(latest, m.at) : it.nodes.length ? "Nothing to load" : "No objects" })
+el("div", { "class": "wd-inv-meta", text: total ? "Last processed " + ago(latest, m.at) : it.nodes.length ? "Nothing to load" : "No objects" })
 ]);
 }))
 ]);
 }));
 }
 function workflowTable(m, limit) {
-if (!m.workflows.length) return empty("No workflow has settled a record in the last 7 days.");
+if (!m.workflows.length) return empty("No workflow has processed a record in the last 7 days.");
 return dataTable([
-{ key: "completed", title: "Settled", value: function (w) { return w.completed; }, render: function (w) { return stamp(w.completed); }, numeric: true },
+{ key: "completed", title: "Processed", value: function (w) { return w.completed; }, render: function (w) { return stamp(w.completed); }, numeric: true },
 { key: "span", title: "Span", value: function (w) { return (w.completed || 0) - (w.started || 0); }, render: function (w) { return duration((w.completed || 0) - (w.started || 0)); }, numeric: true },
 { key: "tasks", title: "Work", value: function (w) { return w.tasks.join(", "); } },
 { key: "records", title: "Records", value: function (w) { return w.records; }, numeric: true },
@@ -1746,7 +1752,7 @@ tableHost.appendChild(dataTable([
 { key: "item", title: "Item", value: function (f) { return f.node ? f.node.item : ""; } },
 { key: "result", title: "Status", value: function (f) { return f.result || ""; }, render: function (f) { return f.result ? chip(f.result) : "—"; } },
 { key: "message", title: "Finding", value: function (f) { return f.message; } },
-{ key: "completed", title: "Settled", value: function (f) { return f.completed; }, render: function (f) { return f.completed ? stamp(f.completed) : "—"; }, numeric: true }
+{ key: "completed", title: "Processed", value: function (f) { return f.completed; }, render: function (f) { return f.completed ? stamp(f.completed) : "—"; }, numeric: true }
 ], rows, { limit: 500, sort: "severity", emptyText: "No findings match." }));
 }
 body.appendChild(el("div", { "class": "wd-toolbar" }, [
@@ -2229,7 +2235,7 @@ var refresh = mo.node ? effectiveLoad(mo.node) : null, it = m.items.get(mo.item)
 mo.tables.forEach(function (tb) { measureCount += tb.measures.length; columnCount += tb.columns.length; });
 var facts = el("dl", { "class": "wd-facts wd-facts-wide" });
 function fact(label, value) { facts.appendChild(el("dt", { text: label })); facts.appendChild(el("dd", {}, [value])); }
-fact("Last refresh", refresh ? el("span", {}, [chip(refresh.result), " " + stamp(refresh.completed)]) : el("span", { "class": "wd-muted", text: "Nothing has settled since it was built" }));
+fact("Last refresh", refresh ? el("span", {}, [chip(refresh.result), " " + stamp(refresh.completed)]) : el("span", { "class": "wd-muted", text: "Nothing has been processed since it was built" }));
 if (mo.node && mo.node.built) fact("Built", stamp(mo.node.built));
 if (it && it.target) fact("Fabric item", it.target);
 fact("Contents", fmt(mo.tables.size) + " tables · " + fmt(columnCount) + " columns · " + fmt(measureCount) + " measures · " + fmt(mo.relationships.length) + " relationships");
@@ -2748,7 +2754,7 @@ label: node ? node.label : r.object ? qualified({ item: item, schema: r.schema, 
 });
 return m.logRows;
 }
-/* Elapsed span, summed task time and peak concurrency of settled records. */
+/* Elapsed span, summed task time and peak concurrency of processed records. */
 function ganttSummary(rows) {
 var t0 = Infinity, t1 = -Infinity, work = 0, events = [];
 rows.forEach(function (r) {
@@ -2765,7 +2771,7 @@ return { t0: t0, t1: Math.max(t1, t0 + 1000), span: t1 > t0 ? t1 - t0 : 0, work:
 function ganttPage(body, m) {
 var s = pageState("gantt"), all = logRows(m), flows = m.workflows || [];
 var included = new Map((m.tables.logflows || []).map(function (r) { return [r.workflow, { records: num(r.records), included: num(r.included) }]; }));
-if (!flows.length) { body.appendChild(empty("No workflow has settled a record in the last 7 days. Run weaver load to see its timeline.")); return; }
+if (!flows.length) { body.appendChild(empty("No workflow has processed a record in the last 7 days. Run weaver load to see its timeline.")); return; }
 if (!s.workflow || !flows.some(function (w) { return w.id === s.workflow; }) || s.follow !== false) s.workflow = flows[0].id;
 s.scope = s.scope || "objects";
 var select = el("select", { "class": "wd-select", "aria-label": "Workflow", onchange: function () {
@@ -2801,7 +2807,7 @@ tile("Failed", failed, "Failed, Error or Blocked", failed ? "bad" : "ok")
 ]));
 var shown = rows.filter(function (r) { return s.scope === "all" || !r.envelope; }).filter(function (r) { return r.started !== null; });
 shown.sort(function (a, b) { return a.started - b.started || compare(a.label, b.label) || compare(a.id, b.id); });
-if (!shown.length) { host.appendChild(empty("No object record has settled for this workflow.")); return; }
+if (!shown.length) { host.appendChild(empty("No object record has been processed for this workflow.")); return; }
 host.appendChild(ganttChart(shown, sum, s, m));
 }
 render();
@@ -2987,7 +2993,7 @@ inserted: num(r.inserted), updated: num(r.updated), deleted: num(r.deleted), rej
 };
 var loadColumns = [
 { key: "label", title: "Object", value: function (r) { return r.label; } },
-{ key: "completed", title: "Settled", value: function (r) { return r.completed; }, render: function (r) { return stamp(r.completed); }, numeric: true },
+{ key: "completed", title: "Processed", value: function (r) { return r.completed; }, render: function (r) { return stamp(r.completed); }, numeric: true },
 { key: "duration", title: "Time", value: function (r) { return r.duration; }, render: function (r) { return duration(r.duration); }, numeric: true },
 { key: "changed", title: "Changed", value: changed, render: function (r) { return fmt(changed(r)); }, numeric: true },
 { key: "flags", title: "", value: function (r) { return (r.reload ? "reload " : "") + (r.skip ? "static skip" : ""); }, sortable: false }
@@ -3073,7 +3079,7 @@ var api = {
 parsePayload: parsePayload, buildModel: buildModel, assessHealth: assessHealth, readiness: readiness,
 layoutEstate: layoutEstate, WINDOW_GEOMETRY: WINDOW_GEOMETRY, subModel: subModel, focusWindow: focusWindow, searchNodes: searchNodes, nodeMatches: nodeMatches, dictionaryEntries: dictionaryEntries,
 searchEntries: searchEntries, metadata: metadata, modelTables: modelTables, busMatrix: busMatrix, erGraph: erGraph,
-erWindow: erWindow, erLayout: erLayout, ER: ER, ganttSummary: ganttSummary, clockTicks: clockTicks, clockLabel: clockLabel, logRows: logRows, perfRows: perfRows, tone: tone, BUDGET: BUDGET,
+erWindow: erWindow, erLayout: erLayout, ER: ER, ganttSummary: ganttSummary, clockTicks: clockTicks, clockLabel: clockLabel, canvasRatio: canvasRatio, logRows: logRows, perfRows: perfRows, tone: tone, BUDGET: BUDGET,
 FIELD: FIELD, ROW: ROW, TABLE: TABLE, LESS: LESS
 };
 if (typeof module === "object" && module && module.exports) module.exports = api;
