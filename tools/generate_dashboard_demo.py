@@ -22,9 +22,9 @@ AT = datetime(2026, 10, 16, 2, 0, tzinfo=timezone.utc)
 TITLES = {
     "overview": "Overview",
     "health": "Health",
-    "orchestration": "Load orchestration",
-    "gantt": "Gantt",
+    "orchestration": "Orchestration",
     "performance": "Performance",
+    "gantt": "Gantt",
     "entities": "Entity dictionary",
     "semantic": "Semantic model",
 }

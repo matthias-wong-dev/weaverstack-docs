@@ -5,7 +5,7 @@ hide:
 
 # Catalogue Dashboard
 
-The Catalogue Dashboard is a Power BI semantic model and Report over a Weaver catalogue. One command deploys it beside the catalogue. Its seven pages show Health, the Load orchestration graph, recent workflows as a Gantt chart, load performance, an ER diagram with a metadata browser, and a bus matrix for each semantic model.
+The Catalogue Dashboard is a Power BI semantic model and Report over a Weaver catalogue. One command deploys it beside the catalogue. Its seven pages show Health, the Orchestration graph, when each run started and finished, recent workflows as a Gantt chart, an ER diagram with a metadata browser, and a bus matrix for each semantic model.
 
 The model reads the catalogue's tables over Direct Lake, so each page shows what the catalogue records as work is processed. The Dashboard only reads the catalogue. Nothing about it is recorded there, and Initialise, Build, Wipe and Mirror never touch it.
 
@@ -106,7 +106,7 @@ The pages below are the Dashboard's own renderer over a generated estate of 133 
 
 ### Marks
 
-Each object carries a mark for its kind, in lists, chips and the graph. Hover a mark for its name.
+Each object carries a mark for its kind, in lists, chips, the graph and the Gantt and Performance tables. Hover a mark for its name.
 
 | Mark | Kind |
 | --- | --- |
@@ -133,7 +133,7 @@ The Load, Tests and Build findings, filtered by area and severity, including gre
 <div class="dashboard-demo"><iframe src="../../assets/catalogue-dashboard/health.html" title="Catalogue Dashboard demo: Health" loading="lazy"></iframe></div>
 <p class="dashboard-demo-open" markdown>[Open Health full size](../assets/catalogue-dashboard/health.html){ target="_blank" }</p>
 
-### Load orchestration
+### Orchestration
 
 The installed dependency graph across Lakehouses, Warehouses and semantic models, coloured by each object's last outcome or by kind. The tiles count objects that are current, ready to load, waiting on a dependency or failed.
 
@@ -142,22 +142,24 @@ The installed dependency graph across Lakehouses, Warehouses and semantic models
 - **Up** and **Down** set how many dependency levels to show either side of the selection. `‹‹ N` and `N ››` markers expand the neighbours not shown.
 - Drag nodes, zoom, and use ⤢ to fill the page. The side panel shows the selected object's last load, readiness, findings, validations, and what it reads and is read by.
 
-<div class="dashboard-demo"><iframe src="../../assets/catalogue-dashboard/orchestration.html" title="Catalogue Dashboard demo: Load orchestration" loading="lazy"></iframe></div>
-<p class="dashboard-demo-open" markdown>[Open Load orchestration full size](../assets/catalogue-dashboard/orchestration.html){ target="_blank" }</p>
-
-### Gantt
-
-One workflow from the last 7 days, each record a bar on its timeline. The tiles give elapsed time, summed task time, peak concurrency and failures. Hold Ctrl or ⌘ and scroll to zoom time; drag to pan; double-click to reset.
-
-<div class="dashboard-demo"><iframe src="../../assets/catalogue-dashboard/gantt.html" title="Catalogue Dashboard demo: Gantt" loading="lazy"></iframe></div>
-<p class="dashboard-demo-open" markdown>[Open the Gantt full size](../assets/catalogue-dashboard/gantt.html){ target="_blank" }</p>
+<div class="dashboard-demo"><iframe src="../../assets/catalogue-dashboard/orchestration.html" title="Catalogue Dashboard demo: Orchestration" loading="lazy"></iframe></div>
+<p class="dashboard-demo-open" markdown>[Open Orchestration full size](../assets/catalogue-dashboard/orchestration.html){ target="_blank" }</p>
 
 ### Performance
 
-Load statistics over the last 24 hours, 7 days or 30 days, for every item or one: load count and time, rows read, changed and rejected, throughput, a daily trend, and a table of objects ranked by load time.
+Did the run finish in time. Each workflow is one vertical bar, from the time it started to the time it finished, in a column for its day, with the time of day down the side in UTC. The bar is drawn in blue for the Load part and violet for the Test part, and outlined in red when a record failed. Runs that overlap are never added together. Set a deadline to see which runs ended after it.
+
+Choose a window of 24 hours, 7 days or 30 days, a task and an item. Select a run, in the chart or its table, to list its longest object records, then see each object's load and Test statistics over the window: counts, time, rows read, changed and rejected for Loads, and failures for Tests.
 
 <div class="dashboard-demo"><iframe src="../../assets/catalogue-dashboard/performance.html" title="Catalogue Dashboard demo: Performance" loading="lazy"></iframe></div>
 <p class="dashboard-demo-open" markdown>[Open Performance full size](../assets/catalogue-dashboard/performance.html){ target="_blank" }</p>
+
+### Gantt
+
+One workflow from the last 7 days, each record a bar on its timeline, with the object's mark, its item as `Type/Name` and its task, Load or Test. The tiles give elapsed time, summed task time, peak concurrency and failures. Click a row for the object and the record's outcome. Hold Ctrl or ⌘ and scroll to zoom time; drag to pan; double-click to reset.
+
+<div class="dashboard-demo"><iframe src="../../assets/catalogue-dashboard/gantt.html" title="Catalogue Dashboard demo: Gantt" loading="lazy"></iframe></div>
+<p class="dashboard-demo-open" markdown>[Open the Gantt full size](../assets/catalogue-dashboard/gantt.html){ target="_blank" }</p>
 
 ### Entity dictionary
 
