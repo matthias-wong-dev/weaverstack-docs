@@ -1,5 +1,43 @@
 (function (root, module) {
 "use strict";
+var UTC_ZONES = /^(?:UTC|Etc\/UTC|GMT|Etc\/GMT|Z)$/;
+function showUtc() { return !!(root.__WD_STATE && root.__WD_STATE.utc); }
+/* True when the viewer's own zone is UTC all year, so there is nothing to choose. */
+function localIsUtc() {
+try { if (UTC_ZONES.test(Intl.DateTimeFormat().resolvedOptions().timeZone)) return true; } catch (e) { /* no Intl */ }
+return new Date(Date.UTC(2026, 0, 1)).getTimezoneOffset() === 0 && new Date(Date.UTC(2026, 6, 1)).getTimezoneOffset() === 0;
+}
+function offsetAt(t) { return showUtc() ? 0 : -new Date(t).getTimezoneOffset() * 60000; }
+function wallOf(t) { return t + offsetAt(t); }
+/* The instant a wall time names. An hour the clock repeats resolves to its first. */
+function instantOf(wall) {
+if (showUtc()) return wall;
+return wall - offsetAt(wall - offsetAt(wall));
+}
+/* The zone's short name at t: "AEDT", "UTC", or an offset where the browser has no name. */
+function zoneLabel(t, utc) {
+if (utc === undefined ? showUtc() : utc) return "UTC";
+try {
+var parts = new Intl.DateTimeFormat("en-AU", { timeZoneName: "short" }).formatToParts(new Date(t));
+for (var i = 0; i < parts.length; i++) if (parts[i].type === "timeZoneName") return parts[i].value;
+} catch (e) { /* no Intl */ }
+var minutes = -new Date(t).getTimezoneOffset();
+return "UTC" + (minutes < 0 ? "-" : "+") + Math.floor(Math.abs(minutes) / 60);
+}
+function pad2(n) { return n < 10 ? "0" + n : String(n); }
+/* yyyy-mm-dd and hh:mm:ss of a wall time. */
+function wallDate(wall) { var d = new Date(wall); return d.getUTCFullYear() + "-" + pad2(d.getUTCMonth() + 1) + "-" + pad2(d.getUTCDate()); }
+function wallClock(wall) { var d = new Date(wall); return pad2(d.getUTCHours()) + ":" + pad2(d.getUTCMinutes()) + ":" + pad2(d.getUTCSeconds()); }
+/* The time control every page header shares: the viewer's zone or UTC. */
+function zoneControl(m) {
+if (localIsUtc()) return null;
+return segmented("Times", ["local", "utc"], showUtc() ? "utc" : "local", function (v) {
+state().utc = v === "utc";
+if (state().performance) state().performance.deadline = "";
+saveState();
+if (root.__WD_REDRAW) root.__WD_REDRAW();
+}, function (v) { return v === "utc" ? "UTC" : "Local · " + zoneLabel(m.at, false); });
+}
 var FIELD = "", ROW = "", TABLE = "", LESS = "";
 var KIND = {
 TABLE: "Table", VIEW: "View", FOLDER: "Folder", SHORTCUT: "Shortcut",
@@ -1065,7 +1103,8 @@ return h < 48 ? h + " h " + (mins % 60) + " min" : Math.floor(h / 24) + " d " + 
 }
 function stamp(t) {
 if (t === null || t === undefined) return "—";
-return new Date(t).toISOString().replace("T", " ").slice(0, 19) + " UTC";
+var wall = wallOf(t);
+return wallDate(wall) + " " + wallClock(wall) + " " + zoneLabel(t);
 }
 function ago(t, now) {
 if (t === null || t === undefined) return "never";
@@ -1109,6 +1148,7 @@ el("h1", { text: title }),
 context ? el("div", { "class": "wd-context", text: context }) : null
 ])]),
 el("span", { "class": "wd-grow" }),
+zoneControl(m),
 el("dl", { "class": "wd-times" }, [
 el("dt", { text: "Queried" }), el("dd", { text: stamp(m.at) }),
 processed === undefined ? null : el("dt", { text: "Last processed" }),
@@ -2907,7 +2947,7 @@ ctx.fillStyle = P.surface; ctx.fillRect(0, axisY, width, GANTT.AXIS);
 ctx.strokeStyle = P.line; ctx.beginPath(); ctx.moveTo(0, axisY + GANTT.AXIS - 0.5); ctx.lineTo(width, axisY + GANTT.AXIS - 0.5); ctx.stroke();
 var a = sum.t0 + span * s.zoom.a, b = sum.t0 + span * s.zoom.b, plot = width - labelW - 16;
 ctx.fillStyle = P.ink; ctx.font = "600 10.5px " + P.mono;
-var startText = clockLabel(a, null) + " UTC", startEnd = labelW + 4 + ctx.measureText(startText).width + 18;
+var startText = clockLabel(a, null) + " " + zoneLabel(a), startEnd = labelW + 4 + ctx.measureText(startText).width + 18;
 ctx.fillText(startText, labelW + 4, axisY + 14);
 ctx.fillStyle = P.muted; ctx.font = "10.5px " + P.mono;
 var previous = a;
@@ -2975,19 +3015,19 @@ return wrap;
 }
 var CLOCK_STEPS = [1, 2, 5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 10800, 21600, 43200, 86400]
 .map(function (seconds) { return seconds * 1000; });
-/* Round instants between a and b, about one per 110 px. */
+/* Round clock times between a and b, about one per 110 px, as instants. */
 function clockTicks(a, b, width) {
-var room = Math.max(2, Math.floor(width / 110)), step = null;
-for (var i = 0; i < CLOCK_STEPS.length && step === null; i++) if ((b - a) / CLOCK_STEPS[i] <= room) step = CLOCK_STEPS[i];
-if (step === null) step = 86400000 * Math.ceil((b - a) / 86400000 / room);
+var room = Math.max(2, Math.floor(width / 110)), step = null, wa = wallOf(a), wb = wallOf(b);
+for (var i = 0; i < CLOCK_STEPS.length && step === null; i++) if ((wb - wa) / CLOCK_STEPS[i] <= room) step = CLOCK_STEPS[i];
+if (step === null) step = 86400000 * Math.ceil((wb - wa) / 86400000 / room);
 var out = [];
-for (var t = Math.ceil(a / step) * step; t <= b; t += step) out.push(t);
+for (var w = Math.ceil(wa / step) * step; w <= wb; w += step) out.push(instantOf(w));
 return out;
 }
 /* hh:mm:ss, preceded by the date when it differs from the previous label's. */
 function clockLabel(t, previous) {
-var iso = new Date(t).toISOString(), day = iso.slice(0, 10), clock = iso.slice(11, 19);
-return previous === null || new Date(previous).toISOString().slice(0, 10) !== day ? day + " " + clock : clock;
+var wall = wallOf(t);
+return previous === null || wallDate(wallOf(previous)) !== wallDate(wall) ? wallDate(wall) + " " + wallClock(wall) : wallClock(wall);
 }
 function paletteOf(node) {
 var cs = root.getComputedStyle(node), P = {};
@@ -3078,27 +3118,27 @@ function taskSpan(run, task) {
 var v = runView(run, task);
 return v ? v.elapsed : null;
 }
-function clock(t) { return new Date(t).toISOString().slice(11, 16); }
 var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-function shortDate(t) { var d = new Date(t); return d.getUTCDate() + " " + MONTHS[d.getUTCMonth()]; }
+/* A day of a wall time, as "16 Oct". */
+function shortDate(wall) { var d = new Date(wall); return d.getUTCDate() + " " + MONTHS[d.getUTCMonth()]; }
 function median(values) {
 if (!values.length) return null;
 var sorted = values.slice().sort(function (a, b) { return a - b; }), mid = sorted.length >> 1;
 return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 function crossesMidnight(views) {
-return views.some(function (v) { return new Date(v.started).toISOString().slice(0, 10) !== new Date(v.completed).toISOString().slice(0, 10); });
+return views.some(function (v) { return wallDate(wallOf(v.started)) !== wallDate(wallOf(v.completed)); });
 }
-/* The hour a day column starts at: midnight, unless a run crosses it, then the
-middle of the longest stretch of the day no run touches, so each run sits in
-one column. */
+/* The hour of the clock a day column starts at: midnight, unless a run crosses
+it, then the middle of the longest stretch of the day no run touches, so each
+run sits in one column. */
 function dayStartHour(views) {
 if (!views.length || !crossesMidnight(views)) return 0;
 var covered = [], h;
 for (h = 0; h < 24; h++) covered.push(false);
 views.forEach(function (v) {
 if (v.completed - v.started >= DAY) { for (var i = 0; i < 24; i++) covered[i] = true; return; }
-for (var t = Math.floor(v.started / HOUR) * HOUR; t <= v.completed; t += HOUR) covered[new Date(t).getUTCHours()] = true;
+for (var t = Math.floor(wallOf(v.started) / HOUR) * HOUR; t <= wallOf(v.completed); t += HOUR) covered[new Date(t).getUTCHours()] = true;
 });
 var best = 0, at = 0;
 for (h = 0; h < 24; h++) {
@@ -3115,15 +3155,17 @@ run from its start to its end. Runs sharing a day stand side by side. */
 function runChart(views, s, m, pick) {
 var W = 1800, H = 340, L = 64, R = 14, T = 12, B = 34, columns = WINDOW_DAYS[s.window] + (s.window === "day" ? 1 : 0);
 var cut = dayStartHour(views), cutMs = cut * HOUR, plotW = W - L - R, plotH = H - T - B, colW = plotW / columns;
-var last = Math.floor((m.at - cutMs) / DAY), first = last - (columns - 1);
-function cycle(v) { return Math.floor((v.started - cutMs) / DAY); }
-function offset(v) { return v.started - (cycle(v) * DAY + cutMs); }
+var last = Math.floor((wallOf(m.at) - cutMs) / DAY), first = last - (columns - 1);
+function cycle(v) { return Math.floor((wallOf(v.started) - cutMs) / DAY); }
+function base(v) { return cycle(v) * DAY + cutMs; }
+function offset(v) { return wallOf(v.started) - base(v); }
+function endOffset(v) { return wallOf(v.completed) - base(v); }
 var shown = views.filter(function (v) { return cycle(v) >= first && cycle(v) <= last; });
 var deadline = s.deadline === "" || s.deadline === undefined ? null : ((Number(s.deadline) * HOUR - cutMs) % DAY + DAY) % DAY;
 var lo = 0, hi = 24;
 if (s.axis !== "day" && shown.length) {
 lo = Math.floor(Math.min.apply(null, shown.map(offset)) / HOUR);
-hi = Math.ceil(Math.max.apply(null, shown.map(function (v) { return offset(v) + v.elapsed; })) / HOUR);
+hi = Math.ceil(Math.max.apply(null, shown.map(endOffset)) / HOUR);
 if (deadline !== null) { lo = Math.min(lo, Math.floor(deadline / HOUR)); hi = Math.max(hi, Math.ceil(deadline / HOUR)); }
 if (hi - lo < 2) hi = lo + 2;
 if (hi > lo + 24) hi = lo + 24;
@@ -3150,7 +3192,7 @@ byColumn.forEach(function (list, col) {
 list.sort(function (a, b) { return a.started - b.started || compare(a.run.id, b.run.id); });
 var slot = Math.min(44, (colW - 8) / list.length), x0 = L + col * colW + (colW - slot * list.length) / 2;
 list.forEach(function (v, k) {
-var top = y(offset(v)), bottom = y(offset(v) + v.elapsed), x = x0 + k * slot + 1.5, w = Math.max(2, slot - 3);
+var top = y(offset(v)), bottom = y(endOffset(v)), x = x0 + k * slot + 1.5, w = Math.max(2, slot - 3);
 var failed = v.run.failed > 0, picked = v.run.id === s.run;
 var title = stamp(v.started) + " → " + stamp(v.completed).slice(11) + " · " + duration(v.elapsed) + " · " + fmt(v.run.records) + " records" +
 (failed ? " · " + v.run.failed + " failed" : "") + " · " + v.run.id.slice(0, 8);
@@ -3159,7 +3201,7 @@ onkeydown: function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDef
 group.appendChild(sv("rect", { "class": "wd-run-hit", x: x - 1.5, y: top - 3, width: slot, height: Math.max(8, bottom - top + 6) }));
 group.appendChild(sv("rect", { "class": "wd-run-bar" + (failed ? " wd-run-failed" : ""), x: x, y: top, width: w, height: Math.max(3, bottom - top), rx: 2 }));
 v.tasks.slice().sort(function (a, b) { return a.started - b.started; }).forEach(function (task) {
-var a = y(task.started - (cycle(v) * DAY + cutMs)), b = y(task.completed - (cycle(v) * DAY + cutMs));
+var a = y(wallOf(task.started) - base(v)), b = y(wallOf(task.completed) - base(v));
 group.appendChild(sv("rect", { "class": "wd-run-task wd-run-" + (TASK_NAMES[task.task] ? task.task : "other"), x: x + 1, y: a, width: Math.max(1, w - 2), height: Math.max(2, b - a), rx: 1.5 }));
 });
 svg.appendChild(group);
@@ -3169,10 +3211,10 @@ if (deadline !== null && deadline / HOUR >= lo && deadline / HOUR <= hi) {
 svg.appendChild(sv("line", { "class": "wd-deadline", x1: L, x2: W - R, y1: y(deadline), y2: y(deadline) }));
 svg.appendChild(sv("text", { "class": "wd-deadline-label", x: W - R - 4, y: y(deadline) - 5, "text-anchor": "end" }, ["Deadline " + (s.deadline < 10 ? "0" : "") + s.deadline + ":00"]));
 }
-return { svg: svg, offset: offset, deadline: deadline, cut: cut, shown: shown };
+return { svg: svg, endOffset: endOffset, deadline: deadline, cut: cut, shown: shown };
 }
 function performancePage(body, m) {
-var s = pageState("performance");
+var s = pageState("performance"), zone = zoneLabel(m.at);
 if (WINDOW_DAYS[s.window] === undefined) s.window = "week";
 if (["all", "load", "test"].indexOf(s.task) < 0) s.task = "all";
 if (["fit", "day"].indexOf(s.axis) < 0) s.axis = "fit";
@@ -3190,7 +3232,7 @@ var allItems = Array.from(new Set(["perfmonth", "testmonth"].reduce(function (al
 return all.concat((m.tables[name] || []).map(function (r) { return r.item || targetItem(m, r.targettype, r.target); }));
 }, []).filter(Boolean))).filter(function (it) { return !isInternal(m, it); }).sort(compare);
 var deadlines = [el("option", { value: "", selected: s.deadline === "" ? "selected" : null, text: "No deadline" })];
-for (var h = 0; h < 24; h++) deadlines.push(el("option", { value: String(h), selected: s.deadline === String(h) ? "selected" : null, text: (h < 10 ? "0" : "") + h + ":00 UTC" }));
+for (var h = 0; h < 24; h++) deadlines.push(el("option", { value: String(h), selected: s.deadline === String(h) ? "selected" : null, text: (h < 10 ? "0" : "") + h + ":00 " + zone }));
 body.appendChild(el("div", { "class": "wd-toolbar" }, [
 segmented("Window", ["day", "week", "month"], s.window, function (v) { s.window = v; render(); saveState(); }, function (v) { return { day: "Last 24 hours", week: "Last 7 days", month: "Last 30 days" }[v]; }),
 segmented("Task", ["all", "load", "test"], s.task, function (v) { s.task = v; render(); saveState(); }, function (v) { return { all: "All", load: "Load", test: "Test" }[v]; }),
@@ -3209,19 +3251,19 @@ var elapsed = views.map(function (v) { return v.elapsed; }), latest = views[0] |
 var longest = views.reduce(function (a, v) { return !a || v.elapsed > a.elapsed ? v : a; }, null);
 var typical = median(elapsed), failedRuns = views.filter(function (v) { return v.run.failed > 0; }).length;
 var chart = runChart(views, s, m, function (id) { s.run = id; render(); saveState(); });
-var late = chart.deadline === null ? null : views.filter(function (v) { return chart.shown.indexOf(v) >= 0 && chart.offset(v) + v.elapsed > chart.deadline; }).length;
+var late = chart.deadline === null ? null : views.filter(function (v) { return chart.shown.indexOf(v) >= 0 && chart.endOffset(v) > chart.deadline; }).length;
 host.appendChild(el("div", { "class": "wd-tiles" }, [
 tile("Runs", views.length, failedRuns ? failedRuns + " with failed records" : "none with failed records", failedRuns ? "bad" : "none"),
 tile("Latest run", latest ? duration(latest.elapsed) : "—", latest ? "ended " + ago(latest.completed, m.at) + " · " + stamp(latest.completed) : "none in this window", "none"),
 tile("Typical run", typical === null ? "—" : duration(typical), "median of the runs in this window", "none"),
 tile("Longest run", longest ? duration(longest.elapsed) : "—", longest ? stamp(longest.started) : "", "none"),
-tile("Past the deadline", late === null ? "—" : late + " of " + chart.shown.length, late === null ? "set a deadline above" : "runs ending after " + (s.deadline < 10 ? "0" : "") + s.deadline + ":00 UTC", late ? "warn" : "none")
+tile("Past the deadline", late === null ? "—" : late + " of " + chart.shown.length, late === null ? "set a deadline above" : "runs ending after " + (s.deadline < 10 ? "0" : "") + s.deadline + ":00 " + zone, late ? "warn" : "none")
 ]));
 var legend = el("div", { "class": "wd-legend" }, [
 el("span", {}, [el("i", { "class": "wd-swatch wd-swatch-load" }), "Load"]),
 el("span", {}, [el("i", { "class": "wd-swatch wd-swatch-test" }), "Test"]),
 el("span", {}, [el("i", { "class": "wd-swatch wd-swatch-failed" }), "A record failed"]),
-el("span", { text: "Time of day, UTC" + (chart.cut ? ". Each column runs from " + (chart.cut < 10 ? "0" : "") + chart.cut + ":00 to the same time the next day." : ".") })
+el("span", { text: "Time of day, " + zone + (chart.cut ? ". Each column runs from " + (chart.cut < 10 ? "0" : "") + chart.cut + ":00 to the same time the next day." : ".") })
 ]);
 host.appendChild(section("Runs", views.length ? [chart.svg, legend] : [empty("No workflow ran in this window.")]));
 var runColumns = [
@@ -3349,7 +3391,7 @@ var api = {
 parsePayload: parsePayload, buildModel: buildModel, assessHealth: assessHealth, readiness: readiness,
 layoutEstate: layoutEstate, WINDOW_GEOMETRY: WINDOW_GEOMETRY, subModel: subModel, focusWindow: focusWindow, searchNodes: searchNodes, nodeMatches: nodeMatches, dictionaryEntries: dictionaryEntries,
 searchEntries: searchEntries, metadata: metadata, modelTables: modelTables, busMatrix: busMatrix, erGraph: erGraph,
-erWindow: erWindow, erLayout: erLayout, ER: ER, ganttSummary: ganttSummary, clockTicks: clockTicks, clockLabel: clockLabel, canvasRatio: canvasRatio, duration: duration, logRows: logRows, perfRows: perfRows, runsOf: runsOf, runObjectRows: runObjectRows, runView: runView, dayStartHour: dayStartHour, testRows: testRows, recordKind: recordKind, tone: tone, BUDGET: BUDGET,
+erWindow: erWindow, erLayout: erLayout, ER: ER, ganttSummary: ganttSummary, clockTicks: clockTicks, clockLabel: clockLabel, canvasRatio: canvasRatio, duration: duration, stamp: stamp, wallOf: wallOf, instantOf: instantOf, zoneLabel: zoneLabel, logRows: logRows, perfRows: perfRows, runsOf: runsOf, runObjectRows: runObjectRows, runView: runView, dayStartHour: dayStartHour, testRows: testRows, recordKind: recordKind, tone: tone, BUDGET: BUDGET,
 FIELD: FIELD, ROW: ROW, TABLE: TABLE, LESS: LESS
 };
 if (typeof module === "object" && module && module.exports) module.exports = api;

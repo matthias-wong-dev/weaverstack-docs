@@ -104,6 +104,8 @@ The first page view after a load, or after the model has been idle, can take sev
 
 The pages below are the Dashboard's own renderer over a generated estate of 133 objects, recorded at a fixed time. Search, select, drag and zoom as you would in Power BI.
 
+Times show in the time zone of your browser, with the zone named, for example `AEDT`. The **Times** control in the page header switches the page to UTC and back. The catalogue holds UTC and the Dashboard converts it as it draws, so a time in the table is the same instant in either zone.
+
 ### Marks
 
 Each object carries a mark for its kind, in lists, chips, the graph and the Gantt and Performance tables. Hover a mark for its name.
@@ -147,7 +149,7 @@ The installed dependency graph across Lakehouses, Warehouses and semantic models
 
 ### Performance
 
-Did the run finish in time. Each workflow is one vertical bar, from the time it started to the time it finished, in a column for its day, with the time of day down the side in UTC. The bar is drawn in blue for the Load part and violet for the Test part, and outlined in red when a record failed. Runs that overlap are never added together. Set a deadline to see which runs ended after it.
+Did the run finish in time. Each workflow is one vertical bar, from the time it started to the time it finished, in a column for its day, with the time of day down the side in the page's time zone. The bar is drawn in blue for the Load part and violet for the Test part, and outlined in red when a record failed. Runs that overlap are never added together. Set a deadline, an hour of that zone, to see which runs ended after it.
 
 Choose a window of 24 hours, 7 days or 30 days, a task and an item. Select a run, in the chart or its table, to list its longest object records, then see each object's load and Test statistics over the window: counts, time, rows read, changed and rejected for Loads, and failures for Tests.
 
