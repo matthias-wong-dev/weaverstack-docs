@@ -1,5 +1,5 @@
 {
-  "export_count": 55,
+  "export_count": 57,
   "exports": [
     {
       "kind": "class",
@@ -8,6 +8,10 @@
     {
       "kind": "class",
       "name": "BuildResult"
+    },
+    {
+      "kind": "class",
+      "name": "CatalogueDashboardResult"
     },
     {
       "kind": "class",
@@ -179,6 +183,11 @@
     },
     {
       "kind": "function",
+      "name": "deploy_catalogue_dashboard",
+      "signature": "(*, catalogue: str | Sequence[str] | None=None, name: str | None=None, workspace: str | None=None, workspace_config: str | Path | None=None, dry_run: bool=False, session=None) -> CatalogueDashboardResult"
+    },
+    {
+      "kind": "function",
       "name": "health",
       "signature": "(items: str | Sequence[str] | None=None, *, as_of: str | datetime | None=None, workspace: str | None=None, catalogue: str | None=None, workspace_config: str | Path | None=None, inventories: bool=True, session=None) -> HealthReport"
     },
@@ -241,6 +250,7 @@
   "ownership": {
     "Assumption": "docs/reference/python/validation.md",
     "BuildResult": "docs/reference/python/results.md",
+    "CatalogueDashboardResult": "docs/reference/python/results.md",
     "CommandError": "docs/reference/python/errors.md",
     "ConfigError": "docs/reference/python/errors.md",
     "ExampleOutcome": "docs/reference/python/results.md",
@@ -282,6 +292,7 @@
     "check_mirror": "docs/reference/python/operations.md",
     "current_workspace": "docs/reference/python/session.md",
     "default_lakehouse": "docs/reference/python/session.md",
+    "deploy_catalogue_dashboard": "docs/reference/python/operations.md",
     "health": "docs/reference/python/operations.md",
     "initialise": "docs/reference/python/operations.md",
     "lakehouse_for": "docs/reference/python/session.md",

@@ -42,6 +42,12 @@ weaver.build(source=None, *, items: str | Sequence[str] | None=None, workspace: 
 weaver.check_mirror(plan: MirrorPlan, *, session=None) -> ResolvedMirror
 ```
 
+### `weaver.deploy_catalogue_dashboard`
+
+```python
+weaver.deploy_catalogue_dashboard(*, catalogue: str | Sequence[str] | None=None, name: str | None=None, workspace: str | None=None, workspace_config: str | Path | None=None, dry_run: bool=False, session=None) -> CatalogueDashboardResult
+```
+
 ### `weaver.health`
 
 ```python

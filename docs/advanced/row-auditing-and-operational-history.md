@@ -67,7 +67,7 @@ Health reads current status and the matching statistics behind that status. It d
 
 ## Rebuild resets current state, not history
 
-Build starts a new current-state incarnation for work it rebuilds:
+Build starts fresh current state for work it rebuilds:
 
 - rebuilding a loadable object resets its bookmark and current Load state;
 - rebuilding a Test or Assumption resets its current Test state; and

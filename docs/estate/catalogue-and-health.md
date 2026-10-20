@@ -192,6 +192,8 @@ select * from [_].[TestStatus];
 
 Interpret current status separately from history. A blocked Load can have a current status without a row-movement statistic because no data work ran. Build establishes fresh current state for changed installed objects; earlier history remains. Do not edit catalogue rows by hand: use the operations that reconcile definitions, bindings and results together.
 
+To browse the same state in Power BI, deploy the [Catalogue Dashboard](catalogue-dashboard.md).
+
 The [catalogue tour](../core-concepts/catalogue.md) groups every table by the question it answers. The [Catalogue schema reference](../reference/catalogue-schema.md) owns exact columns, keys and stored values. The catalogue records resolved managed lineage, not every external connection.
 
 Catalogue-free Power BI deployment/refresh and source/file-mode Test return reports without persisted Weaver status/history. They are separate supported modes, not another installed estate for this Health command. In an optional mixed mirrored estate, borrowed data’s current Load state comes from its source catalogue while local work uses the destination.

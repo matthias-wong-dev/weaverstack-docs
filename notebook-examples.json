@@ -1,6 +1,6 @@
 {
   "schema": 2,
-  "runtime_revision": "bde7ecda0bc3b8537bb5cecae548837de52917b9",
+  "runtime_revision": "99de3d20afbb2bd7e94982d6d099d21b56ac3d39",
   "examples": [
     {
       "id": "3ca6b0fbd2499cc89d4c",
@@ -118,6 +118,32 @@
             "display_source_sha256": "f459e542de3378351ce245ed8b56ed9e80bb95db0722c4b19e87332aa07ca40e",
             "source_equivalence": "Same public operation and observed target context; canonical cell uses explicit parameters and the report presentation alias."
           }
+        }
+      ]
+    },
+    {
+      "id": "9ae1c3f2c8fa72bd9da4",
+      "page": "estate/catalogue-dashboard.md",
+      "ordinal": 0,
+      "language": "bash",
+      "terminal": "weaver catalogue-dashboard --name \"Catalogue Dashboard\" --workspace-config workspace-development.yml\n",
+      "cli_captures": [
+        "152-catalogue-dashboard"
+      ],
+      "context": {
+        "workspace": "Parcel Development",
+        "catalogue": "Warehouse/Catalogue"
+      },
+      "cells": [
+        {
+          "operation": "deploy_catalogue_dashboard",
+          "parameters": {
+            "catalogue": "Warehouse/Catalogue",
+            "name": "Catalogue Dashboard",
+            "workspace": "Parcel Development"
+          },
+          "requires_review": false,
+          "code": "import weaver\ndashboard_result = weaver.deploy_catalogue_dashboard(\n    catalogue='Warehouse/Catalogue',\n    name='Catalogue Dashboard',\n    workspace='Parcel Development',\n)\ndashboard_result.report()\n"
         }
       ]
     },

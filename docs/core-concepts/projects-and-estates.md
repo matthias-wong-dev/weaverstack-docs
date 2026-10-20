@@ -63,6 +63,6 @@ This separation allows source and installed state to differ during development. 
 
 ## Recorded operational state belongs to the installed generation
 
-The catalogue combines source-data and model operational state. Load records what happened when installed work ran or a model refreshed. Test records what installed SQL, Python and DAX validations found. Rebuilding an affected object starts new current state for that installed incarnation, while operational history remains a record of earlier runs.
+The catalogue combines source-data and model operational state. Load records what happened when installed work ran or a model refreshed. Test records what installed SQL, Python and DAX validations found. Rebuilding an affected object starts new current state for it, while operational history remains a record of earlier runs.
 
 The next concept, [Logical and physical items](logical-and-physical-items.md), explains how `workspace-config.yml` connects stable project identities to an environment. Exact project discovery and selection rules are in [Reference](../reference/index.md).

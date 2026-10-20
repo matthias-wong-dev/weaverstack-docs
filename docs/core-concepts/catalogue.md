@@ -53,7 +53,7 @@ Models and Reports also have Installation/Registry claims when a catalogue is us
 
 ## Current operational state
 
-These tables answer what is true for the current installed incarnation of an object. Rebuilding that object resets or replaces the applicable current state.
+These tables answer what is true for an object as it is installed now. Rebuilding that object resets or replaces the applicable current state.
 
 | Table | What it tells you | Inspect it when |
 | --- | --- | --- |
@@ -61,7 +61,7 @@ These tables answer what is true for the current installed incarnation of an obj
 | `_.LoadStatus` | The current Load/refresh outcome for recorded data subjects, including registered models. | You need the Load state used by Health. |
 | `_.TestStatus` | The current outcome and finding count for each installed Test and Assumption. | You need the validation state used by Health. |
 
-A rebuilt loadable object or validation begins with fresh current state for its new installed incarnation. These tables answer “what is the result now?”, not “what has ever happened?”.
+A rebuilt loadable object or validation begins with fresh current state. These tables answer “what is the result now?”, not “what has ever happened?”.
 
 ## Operational history
 

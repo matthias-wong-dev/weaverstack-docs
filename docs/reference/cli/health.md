@@ -19,7 +19,7 @@ weaver health [-h] [--item ITEM] [--as-of DATETIME] [--no-inventory] [--json] [-
 : Weaver item to report on, as Lakehouse/Name, Warehouse/Name or SemanticModel/Name. Repeat to select more than one. Naming none reports on the whole installed estate.
 
 `--as-of DATETIME`
-: ISO-8601 instant with a zone. A load settled before it reads as stale. Defaults to 24 hours ago.
+: ISO-8601 instant with a zone. A load processed before it reads as stale. Defaults to 24 hours ago.
 
 `--no-inventory`
 : Skip the physical inventory check for certified objects.

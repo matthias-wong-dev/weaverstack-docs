@@ -35,8 +35,8 @@ The severity order is **Green**, **Amber**, **Red**. A section with no findings 
 
 Installed Tables, Folders and registered semantic-model refresh roots are Load subjects. Views and generated runtime artefacts are not, although a View's Build-established time can affect descendants.
 
-- **Green:** the current installed generation settled successfully, is not older than `as_of`, and is not behind a managed ancestor.
-- **Amber:** no load has settled since Build; the latest result contains tolerated rejects or another non-failure state; the last clean completion is older than `as_of`; or a managed ancestor has no settled current generation or was established later.
+- **Green:** the current installed generation was processed successfully, is not older than `as_of`, and is not behind a managed ancestor.
+- **Amber:** no load has processed the object since Build; the latest result contains tolerated rejects or another non-failure state; the last clean completion is older than `as_of`; or a managed ancestor has not been processed in its current generation or was established later.
 - **Red:** the current result is failed, errored or blocked.
 
 After a static object has established its load-once state, its own age and ancestor-freshness checks are exempt. Its latest lifecycle touch can still affect descendant freshness. A static object that has never loaded is Amber.
@@ -65,7 +65,7 @@ Build has no Amber classification in the current assessment: contradictions abov
 
 ## `as_of` and dependency freshness
 
-`--as-of` is the oldest acceptable settled Load completion time. It accepts an ISO-8601 instant with a time zone, normalises it to UTC and defaults to 24 hours before Health began. A naive or invalid instant is a command error.
+`--as-of` is the oldest acceptable Load completion time. It accepts an ISO-8601 instant with a time zone, normalises it to UTC and defaults to 24 hours before Health began. A naive or invalid instant is a command error.
 
 The cutoff applies to Load age only. It does not replace dependency freshness: a recent load can be Amber when an ancestor is unestablished or newer, and a validation can be Amber after a dependency moves regardless of `as_of`.
 

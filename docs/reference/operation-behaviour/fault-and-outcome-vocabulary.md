@@ -76,7 +76,7 @@ Workflow has no nested universal outcome vocabulary. It returns success only whe
 
 Current Load/Test state and operational Log evidence use these catalogue values:
 
-- `Pending` — no outcome for the current installed incarnation;
+- `Pending` — no outcome since the object was last built;
 - `Skipped` — work was deliberately omitted;
 - `Succeeded` — work completed acceptably;
 - `Failed` — evaluated work produced an unacceptable result;
