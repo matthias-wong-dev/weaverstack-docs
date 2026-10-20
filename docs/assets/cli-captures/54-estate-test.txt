@@ -1,0 +1,29 @@
+Test
+
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Lakehouse/Landing
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+  Wait for Spark session                                                                                  35.8s
+→   Test Lakehouse/Landing/Parcel.CurrentStatusMatches
+→   Test Lakehouse/Landing/Parcel.EventStatusIsKnown
+→   Test Warehouse/Operations/Parcel.CurrentStatusMatches
+→   Test Warehouse/Operations/Parcel.StatusIsKnown
+✓   Test Warehouse/Operations/Parcel.StatusIsKnown                                                         1.9s
+✓   Test Warehouse/Operations/Parcel.CurrentStatusMatches                                                  5.5s
+✓   Test Lakehouse/Landing/Parcel.EventStatusIsKnown                                                      12.7s
+✓   Test Lakehouse/Landing/Parcel.CurrentStatusMatches                                                    14.7s
+  Execute                                                                                                 12.8s
+  Record what the run did                                                                                  0.0s
+✓ Test                                                                                                    59.9s
+
+test passed
+
+Test summary
+    4 passed
+    0 failed
+  Workflow: 05dc2c23a84c45899e318715a6a41a54

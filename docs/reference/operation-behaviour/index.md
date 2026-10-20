@@ -11,6 +11,7 @@ Use these pages to look up the current selection, ordering, state-change and fai
 | How is estate state assessed? | [Health](health.md) |
 | What does Mirror copy, borrow, empty and reset? | [Mirror](mirror.md) |
 | Which physical items does Wipe empty? | [Wipe](wipe.md) |
+| How do I stop managing an item without changing it? | [Unbind](unbind.md) |
 | How are ordinary commands composed? | [Workflow](workflow.md) |
 | Where does work run and what does a Session reuse? | [Session and runtime](session-runtime.md) |
 | What do operation-specific status words mean? | [Fault and outcome vocabulary](fault-and-outcome-vocabulary.md) |

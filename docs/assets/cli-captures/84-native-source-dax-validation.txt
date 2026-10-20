@@ -1,0 +1,11 @@
+Test
+
+  Read validations                                                                                         0.1s
+  Execute                                                                                                  1.1s
+✓ Test                                                                                                     1.2s
+
+test passed
+
+Test summary
+    1 passed
+    0 failed

@@ -6,7 +6,7 @@ Portability has three separate layers in Weaver:
 - **Operation portability** means the public Build, Load, Test and Health operations can run through the desktop CLI or the Python API in a Fabric notebook.
 - **Installed-artifact portability** means built Lakehouse modules and Warehouse SQL objects execute in Fabric without a desktop process reopening the project.
 
-The host supplies workspace discovery, credentials, storage and Spark. The project keeps the same logical item and document identities, and the selected catalogue remains the record of the installed estate.
+The host supplies workspace discovery, credentials, storage and Spark. The project keeps the same logical item and document identities, and the selected catalogue remains the record of the installed source estate.
 
 ## 1. Project portability: use one source tree
 
@@ -58,9 +58,9 @@ For the ordinary top-level operation calls shown on this page, workspace discove
 2. otherwise `workspace-config.yml` in the process working directory is used;
 3. otherwise Weaver reads the current Fabric workspace from `notebookutils.runtime`.
 
-An explicit `catalogue=` or `environment=` overrides that value on the selected base. Build, Load, Test and Health need a catalogue such as `Warehouse/<catalogue-name>`; discovering the notebook workspace does not invent one. A Fabric Environment may be written as `<environment-name>` in the operation workspace or `<owner-workspace>/<environment-name>` when Fabric permits a cross-workspace attachment. The qualification changes the Environment's owner, not the operation's workspace.
+An explicit `catalogue=` or `environment=` overrides that value on the selected base. The source-data lifecycle shown here needs a catalogue; discovering the notebook workspace does not invent one. Standalone Power BI deployment/refresh and source/file-mode Test have catalogue-free routes documented separately. A Fabric Environment may be written as `<environment-name>` in the operation workspace or `<owner-workspace>/<environment-name>` when Fabric permits a cross-workspace attachment. The qualification changes the Environment's owner, not the operation's workspace.
 
-A notebook already executing in its attached workspace uses its active Spark session and notebook identity. It does not need an `environment=` argument merely to start a remote Livy session. Its attached runtime still needs Weaver and the project's Python dependencies. From a desktop, Lakehouse Python Load or Test instead needs a published Environment selected by configuration or `--environment`; Warehouse-only work does not, and Spark SQL can use the workspace's default Spark runtime.
+A notebook already executing in its attached workspace uses its active Spark session and notebook identity. It does not need an `environment=` argument merely to start a remote Livy session. Its attached runtime still needs Weaver and the project's Python dependencies. From a desktop, hosted Lakehouse Build/Load/Test needs Weaver in a published Environment selected by configuration or `--environment`, including generated Spark SQL work. Spark-backed Build checks its matching runtime before mutation. Warehouse-only T-SQL and standalone Power BI do not acquire Spark merely because other operations support it.
 
 ## 2. Move the project both ways with Fabric Git
 
@@ -159,6 +159,8 @@ See [Python operations](../reference/python/operations.md) and the [CLI referenc
 
 ## 4. Installed-artifact portability: run built work in Fabric
 
+Native deployed objects do not imply zero framework dependency. These generated Python classes and their operational methods still import Weaver; re-running custom TMDL annotations also requires Weaver. This page does not describe a compiled-TMDL export or automatic reverse migration.
+
 Build deploys Lakehouse load modules under the target Lakehouse's `Files/_/Load` tree. Python-authored Folders and Tables remain importable modules. A Spark SQL Table is compiled into a generated Python module with the same `Schema__Object` class spelling.
 
 The following notebook code assumes that Build installed the checked-in `examples/parcel-portability` project into the notebook's attached physical `Lakehouse/Landing`. That project contains the Python Folder `Parcel.Events`, Python Table `Parcel.Event`, Spark SQL Table `Parcel.CurrentStatus` and Python Assumption `Parcel.HasDestination` used below. Replace `<catalogue-name>` with the catalogue Warehouse for that installed estate:
@@ -207,7 +209,7 @@ violations = Parcel__HasDestination(
 ).read()
 validation_report = weaver.test(
     "Lakehouse/Landing",
-    name="Parcel.HasDestination",
+    names=r"Parcel[.]HasDestination",
     catalogue=catalogue,
 )
 ```

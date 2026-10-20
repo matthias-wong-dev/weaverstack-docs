@@ -1,0 +1,16 @@
+Test
+
+  Read validations                                                                                         0.1s
+  Execute                                                                                                  1.0s
+✗ Test                                                                                                     1.1s
+
+test failed
+
+  failed     Assumption  SemanticModel/Parcel/Parcel.PositiveDeliveryCount  (1 violation)
+
+Test summary
+    0 passed
+    1 failed
+
+  SemanticModel/Parcel/Parcel.PositiveDeliveryCount:
+    {'DeliveryCount': -1}

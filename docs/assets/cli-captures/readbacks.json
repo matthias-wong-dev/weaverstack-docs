@@ -1,0 +1,208 @@
+{
+  "evidence": "Real SQL endpoint, DAX executeQueries, Fabric getDefinition, Power BI REST and Fabric notebook observations from the 17 October 2026 walkthrough; not CLI output and not screenshots",
+  "runtime_revision": "afb5b31c36498aeb8b70927e7f723de054225d5e",
+  "workspace": "Weaver Example (disposable), shown in docs as Parcel Development",
+  "observations": {
+    "warehouse-current-status": {
+      "kind": "SQL",
+      "target": "Operations",
+      "sql": "select [Parcel ID], [Status], [Depot] from [Parcel].[CurrentStatus] order by [Parcel ID];",
+      "rows": [
+        [
+          "P-1001",
+          "In transit",
+          "Central"
+        ],
+        [
+          "P-1002",
+          "Delivered",
+          "South"
+        ]
+      ]
+    },
+    "warehouse-live-status-initial": {
+      "kind": "SQL",
+      "target": "Operations",
+      "rows": [
+        [
+          "P-1001",
+          "In transit",
+          "Central"
+        ],
+        [
+          "P-1002",
+          "Delivered",
+          "South"
+        ]
+      ]
+    },
+    "warehouse-live-status-after-change": {
+      "kind": "SQL",
+      "target": "Operations",
+      "rows": [
+        [
+          "P-1001",
+          "Delivered",
+          "Central"
+        ]
+      ],
+      "bookmarks_increasing": [
+        "2026-10-16 14:11:55.783387",
+        "2026-10-16 14:12:20.271420",
+        "2026-10-16 14:12:37.929827"
+      ]
+    },
+    "lakehouse-event": {
+      "kind": "SQL",
+      "target": "Landing SQL endpoint",
+      "rows": [
+        [
+          "P-1001",
+          1,
+          "Accepted",
+          "North"
+        ],
+        [
+          "P-1001",
+          2,
+          "In transit",
+          "Central"
+        ],
+        [
+          "P-1002",
+          1,
+          "Delivered",
+          "South"
+        ]
+      ]
+    },
+    "lakehouse-live-status-after-change": {
+      "kind": "SQL",
+      "target": "Landing SQL endpoint",
+      "rows": [
+        [
+          "P-1001",
+          "Delivered",
+          "Central"
+        ]
+      ],
+      "managed_files": [
+        "Files/Parcel/StatusFiles/P-1001.csv"
+      ]
+    },
+    "notebooks": {
+      "kind": "Fabric notebook run",
+      "VerifyParcelSource (ParcelSourceArchive)": "Completed",
+      "VerifyStatusShortcut (Landing)": "Completed",
+      "ReadLiveStatus (Landing)": "Completed",
+      "MutateParcelSource (ParcelSourceArchive)": "Completed",
+      "NegativeControl assert False": "Failed"
+    },
+    "cross-item-lakehouse-current-status": {
+      "kind": "SQL",
+      "target": "Operations",
+      "rows": [
+        [
+          "P-1001",
+          "In transit",
+          "Central"
+        ],
+        [
+          "P-1002",
+          "Delivered",
+          "South"
+        ]
+      ]
+    },
+    "native-delivery-count": {
+      "kind": "DAX",
+      "model": "Parcel",
+      "result": 2
+    },
+    "native-foreign-key-visibility": {
+      "kind": "getDefinition",
+      "Delivery[DepotId]": "isHidden",
+      "Depot[DepotId]": "visible"
+    },
+    "shared-policy-definition": {
+      "kind": "getDefinition",
+      "Delivery Count": "0 \"deliveries\"",
+      "InternalCost": "#,##0.00",
+      "Display": "calculationGroup with Current",
+      "discourageImplicitMeasures": true
+    },
+    "custom-annotation-definition": {
+      "kind": "getDefinition",
+      "Delivery Count displayFolder": "Parcel metrics"
+    },
+    "variants": {
+      "kind": "DAX + getDefinition + REST",
+      "ParcelOperations": {
+        "DeliveryCount": 2,
+        "has": [
+          "Delivery Rate",
+          "InternalCosts"
+        ]
+      },
+      "ParcelExecutive": {
+        "DeliveryCount": 2,
+        "InternalCosts": "absent",
+        "Delivery Count format": "0 \"delivered\""
+      },
+      "ParcelBase deployed": false
+    },
+    "parcel-summary": {
+      "kind": "DAX",
+      "DeliveryCount": 2,
+      "Delivery rows": 3
+    },
+    "report-bindings": {
+      "kind": "Power BI REST",
+      "Parcel_Report_Dev": "Parcel_Dev",
+      "Parcel_Report_Production": "Parcel_Production",
+      "ParcelOperations": "ParcelOperations",
+      "ParcelExecutive": "ParcelExecutive",
+      "DeliveryCount": {
+        "Parcel_Dev": 2,
+        "Parcel_Production": 2
+      }
+    },
+    "report-export": {
+      "kind": "Power BI REST ExportTo PNG",
+      "result": "403 Forbidden on the trial capacity"
+    },
+    "mirror": {
+      "kind": "SQL",
+      "OperationsDev CurrentStatus": [
+        [
+          "P-1001",
+          "In transit"
+        ],
+        [
+          "P-1002",
+          "Delivered"
+        ]
+      ],
+      "_.Mirror rows after Mirror": 10,
+      "after local Build of Reference.Service": "Service left _.Mirror; Depot remained; source kept Express",
+      "after re-mirror": "Service borrowed again (Express)"
+    },
+    "reload": {
+      "kind": "SQL",
+      "Parcel.StatusEvent": "3 rows reinserted with new Row insert datetime; bookmark restarted"
+    },
+    "wipe": {
+      "kind": "SQL",
+      "Operations user objects after Wipe": 0,
+      "_.Installation after Wipe": [
+        "Warehouse/Reporting",
+        "Lakehouse/Landing",
+        "Warehouse/_weaver"
+      ]
+    },
+    "managed-refresh": {
+      "kind": "CLI error text",
+      "result": "default data connection without explicit connection credentials; no connection has the endpoint path"
+    }
+  }
+}

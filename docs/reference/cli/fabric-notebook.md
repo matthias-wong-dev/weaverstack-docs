@@ -174,7 +174,7 @@ targets:
 
 The catalogue is not used as the notebook's default Lakehouse. `fabric notebook run` uses `--lakehouse` when supplied; otherwise it selects the one configured Lakehouse only when the configuration contains exactly one.
 
-If `ParcelRuntime` does not yet exist or its definition changed, publish it before the notebook run. [Configure workspaces and Fabric Environments](../../basics/workspace-and-python-runtime.md) covers that boundary.
+If `ParcelRuntime` does not yet exist or its definition changed, publish it before the notebook run. [Configure workspaces and Fabric Environments](../../estate/environments.md) covers that boundary.
 
 ## Push the notebook definition
 

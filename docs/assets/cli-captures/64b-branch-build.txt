@@ -1,0 +1,61 @@
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+  Warehouse/Reporting
+
+
+Build
+
+  Check target occupancy                                                                                   0.0s
+  Resolve semantic data sources                                                                            0.0s
+  Read catalogue                                                                                           2.8s
+    Read Warehouse/Operations inventory                                                                    0.9s
+    Read Warehouse/Reporting inventory                                                                     0.8s
+    Read Warehouse/Catalogue inventory                                                                     0.1s
+  Read target inventories                                                                                  1.8s
+  Read semantic sources                                                                                    0.0s
+  Prepare bundle                                                                                           0.1s
+Install selection
+  Warehouse/Operations
+    new                     12
+    selected for build      12
+  Warehouse/Reporting
+    new                     11
+    selected for build      11
+
+→   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
+✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                          1.2s
+→   Warehouse/Operations · Creating schemas · 1 action
+→   Warehouse/Operations · Building objects · 3 actions
+→   Warehouse/Reporting · Creating schemas · 2 actions
+✓   Warehouse/Operations · Creating schemas · 1 action                                                     0.0s
+✓   Warehouse/Reporting · Creating schemas · 2 actions                                                     0.6s
+→   Warehouse/Operations · Installing load and test artefacts · 6 actions
+✓   Warehouse/Operations · Building objects · 3 actions                                                    1.1s
+→   Warehouse/Operations · Building objects · 1 action
+✓   Warehouse/Operations · Building objects · 1 action                                                     0.6s
+→   Warehouse/Operations · Building objects · 1 action
+✓   Warehouse/Operations · Building objects · 1 action                                                     0.6s
+→   Warehouse/Operations · Building objects · 1 action
+✓   Warehouse/Operations · Building objects · 1 action                                                     0.8s
+→   Warehouse/Reporting · Creating shortcuts · 1 action
+✓   Warehouse/Operations · Installing load and test artefacts · 6 actions                                  2.3s
+✓   Warehouse/Reporting · Creating shortcuts · 1 action                                                    0.3s
+→   Warehouse/Reporting · Building objects · 1 action
+→   Warehouse/Reporting · Installing load and test artefacts · 3 actions
+✓   Warehouse/Reporting · Building objects · 1 action                                                      1.6s
+✓   Warehouse/Reporting · Installing load and test artefacts · 3 actions                                   1.7s
+→   Warehouse/Catalogue · Updating catalogue definitions · 1 action
+✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                        3.7s
+→   Warehouse/Catalogue · Finalising catalogue · 1 action
+✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                  0.5s
+  Install                                                                                                 10.5s
+✓ Build                                                                                                   17.3s
+
+Installation
+   23 succeeded
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  070b0524aac0fe82e88166ec8eb457f1fc84385f3b2c3c4791682220ffdf2b16

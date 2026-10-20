@@ -1,0 +1,7 @@
+model Model
+	annotation 'Weaver.AutoHideForeignKeys' = true
+
+table Delivery
+	measure 'Delivery Count'
+		formatString: 0 "deliveries"
+		annotation 'Parcel.DisplayFolder' = Parcel metrics

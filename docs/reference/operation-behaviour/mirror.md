@@ -38,7 +38,7 @@ Authorisation covers the destination catalogue and every displayed destination t
 
 ## Catalogue copy
 
-Execution first empties and rebuilds the destination catalogue, then copies installed projection and current state from the source. The copied state includes source item bindings, Registry certification, declaration dictionaries, dependencies, Shortcuts, bookmarks, and current Load and Test status. The destination keeps its own built-in catalogue installation.
+Execution empties and rebuilds the destination catalogue against known-empty state and reconstructs selected targets. Only after every required reconstruction/readiness action succeeds are forked claims, borrowed records and final item bindings published in one final transaction. The copied state includes source item bindings, Registry certification, declaration dictionaries, dependencies, Shortcuts, bookmarks, and current Load and Test status. The destination keeps its own built-in catalogue installation.
 
 `_.Log` and `_.LoadStatistic` are rebuilt empty rather than copied. In catalogue-only mode, existing `_.Mirror` rows are copied. Unselected logical items retain the copied source bindings.
 
@@ -51,19 +51,19 @@ Each selected destination target is emptied before its borrowed forms are create
 | Warehouse | Views over source Tables and Views; supported recorded Shortcuts become local Views | Required procedures and functions are copied into the destination |
 | Lakehouse | OneLake shortcuts for Tables and Folders; source Views use local wrapper Views; recorded Shortcuts are recreated | The deployed Load and Test file tree is copied into the destination |
 
-`_.Mirror` records each borrowed relation's source and physical form. The selected item's installation binding changes to the destination only after its borrowed forms and deployed work have been created. Copied code is local because execution is dispatched from the destination; it does not make borrowed data locally owned or loadable there.
+`_.Mirror` records each borrowed relation's source and physical form. All selected item bindings are published together after required borrowed forms, deployed work and readiness checks succeed. Copied code is local because execution is dispatched from the destination; it does not make borrowed data locally owned or loadable there.
 
-A later Build compares project source with copied Registry certification and destination inventory. An unchanged borrowed object keeps its borrowed form and `_.Mirror` row. A changed or affected selected object has its recorded borrowed form removed, is installed locally, and loses its `_.Mirror` row after the physical work. The estate can therefore contain borrowed and local objects together.
+A later Build compares project source with copied Registry certification and destination inventory. An unchanged borrowed object keeps its borrowed form and `_.Mirror` row. A changed or affected selected object has its recorded borrowed form removed, is installed locally, and loses its `_.Mirror` row after the physical work. The estate can therefore contain borrowed and local objects together. Edited protected borrowed Tables/Folders materialise with retained data/bookmarks; Warehouse CTAS, Folder copy and Delta shallow clone keep the source unchanged. A clone still depends initially on source files/retention. Failed materialisation cannot certify; ordinary unprotected replacement/reset rules differ.
 
 ## Failure, partial effects and re-mirroring
 
 Planning and checking failures leave all destinations intact. Once execution starts, effects are not transactional:
 
-1. the destination catalogue is emptied, rebuilt and populated;
-2. selected targets are then emptied and reconstructed in settled order; and
-3. each selected binding changes last for that item.
+1. the destination catalogue and selected targets are emptied/reconstructed under the action graph;
+2. independent target branches may overlap, with endpoint/shortcut/readiness dependencies enforced; and
+3. copied claims, Mirror records and all selected bindings publish together only after required reconstruction. Until that transaction commits the destination records no copied source installations.
 
-A failure in catalogue rebuild or copy, target emptying, borrowed-form creation, deployed-work copy, Shortcut recreation, mirror recording or binding publication stops the operation. Earlier destructive and completed effects remain. No successful `MirrorResult` is returned for an incomplete run, and Weaver performs no operation-wide rollback.
+A failure in catalogue rebuild or copy, target emptying, borrowed-form creation, deployed-work copy, Shortcut recreation, mirror recording or binding publication prevents successful final publication. Independent work may already have run or continue under the mutation failure policy. Earlier destructive/completed effects remain. No successful `MirrorResult` is returned for an incomplete run, and Weaver performs no operation-wide rollback.
 
 Running Mirror again is a new reconstruction from the selected source. It empties the same settled destination scope again, so local materialisation inside that scope is replaced by a fresh borrowed baseline. This is a reset, not rollback or continuation of the earlier run.
 

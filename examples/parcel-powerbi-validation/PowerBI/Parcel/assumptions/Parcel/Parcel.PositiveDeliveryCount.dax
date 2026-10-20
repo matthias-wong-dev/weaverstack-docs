@@ -1,0 +1,5 @@
+/*
+Assumption ID: Parcel.PositiveDeliveryCount
+Description: The delivery count is positive.
+*/
+EVALUATE FILTER(ROW("DeliveryCount", [Delivery Count]), [DeliveryCount] <= 0)

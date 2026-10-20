@@ -1,0 +1,44 @@
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  SemanticModel/ParcelWarehouse
+
+
+Build
+
+  Check target occupancy                                                                                   0.0s
+  Resolve semantic data sources                                                                            0.6s
+  Read catalogue                                                                                           9.8s
+    Resolve SemanticModel/ParcelWarehouse                                                                  0.0s
+    Read Warehouse/Catalogue inventory                                                                   0.3s
+  Read target inventories                                                                                  0.3s
+  Read semantic sources                                                                                    1.2s
+  Prepare bundle                                                                                           0.0s
+Install selection
+  SemanticModel/ParcelWarehouse
+    dependency impacts      1
+    selected for build      1
+
+→   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action
+✓   Warehouse/Catalogue · Removing superseded catalogue entries · 1 action                               3.4s
+→   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action
+✓   Warehouse/Catalogue · Reconcile runtime state before physical work · 1 action                        0.6s
+→   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action
+✓   SemanticModel/ParcelWarehouse · Deploy semantic definitions · 1 action                                23.3s
+→   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action
+✓   Warehouse/Catalogue · Publish deployed semantic definitions · 1 action                              24.6s
+→   Warehouse/Catalogue · Updating catalogue definitions · 1 action
+✓   Warehouse/Catalogue · Updating catalogue definitions · 1 action                                      0.5s
+→   Warehouse/Catalogue · Finalising catalogue · 1 action
+✓   Warehouse/Catalogue · Finalising catalogue · 1 action                                                0.5s
+  Install                                                                                                 52.9s
+SemanticModel/ParcelWarehouse data sources bound: [warehouse-endpoint];operations
+
+✓ Build                                                                                                   1m20s
+
+Installation
+    6 succeeded
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  891699408c263599e0ee16d53f9416f22760f53e9b3089fffe84c7ebf1716f53

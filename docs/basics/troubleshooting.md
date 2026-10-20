@@ -44,7 +44,7 @@ weaver load \
   --workspace-config workspace-development.yml
 ```
 
-A retry is a new Load against the state left by the previous run. If source changed during the correction, Build it first. Without fault tolerance, the first execution failure stops new scheduling; completed work remains applied. See [Recover failed work](recover-failed-work.md) for stale catch-up and deliberate Table reconstruction.
+A retry is a new Load against the state left by the previous run. If source changed during the correction, Build it first. Without fault tolerance, the first execution failure stops new scheduling; completed work remains applied. See [Recover failed work](../estate/recovery.md) for stale catch-up and deliberate Table reconstruction.
 
 ## Test cannot run
 
@@ -58,7 +58,7 @@ weaver build . --workspace-config workspace-development.yml
 weaver test --workspace-config workspace-development.yml
 ```
 
-Test executes installed validations, not edited source files. A validation that ran and failed is a data finding; investigate the diagnostic rows and the data-producing work, then rerun Test after correction.
+Catalogue-mode Test executes installed validations. Source/file mode reads authored files using `--file` or a catalogue-free workspace, and records no installed history. A validation that ran and failed is a data finding; investigate the diagnostic rows and the data-producing work, then rerun Test after correction.
 
 ## Health is Amber
 
@@ -103,7 +103,7 @@ weaver fabric environment publish \
   --workspace-config workspace-development.yml
 ```
 
-Then rerun the failed Load or Test; publication does not resume it. Warehouse T-SQL work does not require a Fabric Environment, and Spark SQL can use the workspace's default Spark runtime. See [Configure a workspace and Python runtime](workspace-and-python-runtime.md).
+Then rerun the failed Load or Test; publication does not resume it. Warehouse T-SQL work does not require a Fabric Environment, and desktop Lakehouse Build/Load/Test also needs a matching published Weaver runtime, including generated Spark SQL work. See [Configure a workspace and Python runtime](../estate/environments.md).
 
 For exact command outcomes and catalogue evidence, use [Operation behaviour](../reference/operation-behaviour/index.md) and [Catalogue](../core-concepts/catalogue.md).
 

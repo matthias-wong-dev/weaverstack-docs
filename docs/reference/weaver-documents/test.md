@@ -10,7 +10,7 @@ A Test compares an expected relation with an actual relation. It passes when the
 | Lakehouse | `Lakehouse/<Item>/tests/` | `Schema.Object.sql` | Spark SQL |
 | Warehouse | `Warehouse/<Item>/tests/` | `Schema.Object.sql` | T-SQL |
 
-The file must sit directly under `tests/`. `Test ID: Schema.Object`, filename and Python class name must agree exactly, including case. Each identity component is one logical name: no forward slash, backslash, dot, colon or surrounding whitespace. A Test and Assumption share one validation namespace. In a Warehouse that namespace also collides with Tables and Views of the same `Schema.Object`; a Lakehouse validation identity has no `Tables/` area and may share a local name with a Table.
+For the Lakehouse/Warehouse forms above, the file must sit directly under `tests/`. Semantic-model Tests instead use `PowerBI/<project>/tests/<Model>/<Schema.Object>.dax`; [DAX validation reference](../power-bi/validations.md) owns required Expected source/SQL, comparison and mode rules. `Test ID: Schema.Object`, filename and Python class name must agree exactly, including case. Each identity component is one logical name: no forward slash, backslash, dot, colon or surrounding whitespace. A Test and Assumption share one validation namespace. In a Warehouse that namespace also collides with Tables and Views of the same `Schema.Object`; a Lakehouse validation identity has no `Tables/` area and may share a local name with a Table.
 
 ## Metadata
 
@@ -23,7 +23,7 @@ The file must sit directly under `tests/`. `Test ID: Schema.Object`, filename an
 | `Notes` | No | Non-empty free text. |
 | `Revision notes` | No | Non-empty YAML list of dated notes using one accepted date spelling throughout the document; see [Common metadata](common-metadata.md). |
 
-Only these keys are accepted. `Lineage`, `Schema`, `Column notes`, `Unique keys`, `Foreign keys`, `Not null`, `Identity`, `Comparison columns`, `Incremental`, `Static`, `Prohibit rebuild`, `File key`, `Has load procedure`, `Delete percentage threshold`, `Update percentage threshold` and `Stability row threshold` are incompatible with a Test.
+For Python/SQL data-item Tests only these keys are accepted. DAX Tests additionally require Expected source and Expected SQL under their own reference. `Lineage`, `Schema`, `Column notes`, `Unique keys`, `Foreign keys`, `Not null`, `Identity`, `Comparison columns`, `Incremental`, `Static`, `Prohibit rebuild`, `File key`, `Has load procedure`, `Delete percentage threshold`, `Update percentage threshold` and `Stability row threshold` are incompatible with a Test.
 
 `Primary key` columns must be returned by both sides. At runtime each key must be non-null, non-blank and unique on each side. `_weaver_side` and `_weaver_sk` are reserved diagnostic column names and must not be returned by either side.
 
@@ -105,6 +105,6 @@ Path: `Warehouse/Quality/tests/Parcel.CountsMatch.sql`.
 - **Check** parses metadata, identity, class/method structure, SQL program shape, dependencies and cycles without running the Test.
 - **Build** installs the declaration and its runnable form. Lakehouse Python is deployed as a module; Lakehouse Spark SQL is compiled to a module; Warehouse T-SQL is compiled to a stored procedure. Build does not evaluate the Test. A rebuilt Test receives current status `Pending`.
 - **Load** does not run Tests.
-- **Test** runs the installed definition after its data dependencies and records `Succeeded`, `Failed`, `Error` or `Blocked`. Missing and unexpected counts form the failure count. Diagnostic rows are returned to an interactive caller when requested but are not persisted.
+- **Test** runs the selected installed definition without automatically running its data dependencies and records `Succeeded`, `Failed`, `Error` or `Blocked`. Missing and unexpected counts form the failure count. Diagnostic rows are returned to an interactive caller when requested but are not persisted.
 
 `_.TestDictionary` records the logical item, `Schema.Object`, test type, resolved description and its reference, optional primary key and source signature. `_.Registry` records the compiled module or procedure with role `Test`, not a physical object at the logical Test ID. `_.Dependency` records resolved edges. `_.TestStatus` records the logical identity, test type, workflow, result, timing and current failure count; `_.Log` keeps execution history.

@@ -2,7 +2,7 @@
 meta_title: Microsoft Fabric automation | Weaver docs
 description: Automate Weaver build, load, test and health operations across Microsoft Fabric from desktop runners or Fabric-hosted processes.
 social_title: Microsoft Fabric automation with Weaver
-image_alt: Weaver documentation for Microsoft Fabric data engineering.
+image_alt: Weaver logo.
 schema_type: TechArticle
 breadcrumbs:
   - name: Weaver documentation
@@ -23,13 +23,15 @@ Weaver exposes the same lifecycle operations from a desktop process and from Pyt
 
 | Context | Workspace and identity | Spark and data access |
 | --- | --- | --- |
-| Desktop or external runner | Resolves the configured Fabric workspace and uses the desktop credential chain. | Uses Fabric APIs, OneLake and Warehouse SQL endpoints. Lakehouse Python or Spark SQL work acquires a remote Spark session in the target workspace. Python work requires a published Environment containing Weaver; Spark SQL can use the workspace's default Spark runtime. |
+| Desktop or external runner | Resolves the configured Fabric workspace and uses the desktop credential chain. | Uses Fabric APIs, OneLake and Warehouse SQL endpoints. Lakehouse Python or Spark SQL work acquires a remote Spark session in the target workspace. Hosted Lakehouse Build/Load/Test needs a published Weaver Environment, including generated Spark SQL work. Spark-backed Build checks matching runtime compatibility before mutation. |
 | Fabric process addressing its attached workspace | Uses the notebook's current workspace and notebook identity. | Uses the active Spark session, notebook storage context and Fabric-hosted item resolution. Desktop credentials are not substituted. |
 | Fabric process addressing another workspace | Uses the cross-workspace Session path and authenticates to the requested workspace independently. | Acquires capabilities for that target workspace; it does not reuse the notebook's attached Lakehouse or identity as though the workspaces were one host. |
 
 A Session belongs to one physical workspace. It is not moved to another workspace between commands. If the selected host cannot supply a required capability, the operation fails rather than falling back to local execution or silently changing target.
 
-Fabric availability remains an execution boundary. Capacity state, workspace permissions, Environment publication, item existence and service-side timing are properties of the workspace at run time; a local Check or successful plan does not establish them.
+Standalone Power BI deployment/refresh and DAX file-mode validation require their REST/query capabilities, not a catalogue or Spark runtime. They return operation reports without persisted Weaver history.
+
+For hosted Spark work, publish the same Weaver release used by the runner into the Fabric Environment. [Running Python in Fabric](../lakehouse/runtime.md) explains publication.
 
 ## Sessions reuse acquired capabilities
 
@@ -39,7 +41,7 @@ Capabilities are acquired from the host only when required. A Warehouse-only ope
 
 A failed authored statement does not by itself discard a healthy capability. A capability or remote-session failure can make that resource unavailable for the failed operation; a later operation may perform a bounded reacquisition. Closing the Session releases capabilities it acquired and does not start unused capabilities merely to close them.
 
-Workflows reuse one Session and can prepare their combined known capabilities before the first command. This changes startup timing, not command selection, authority or failure behaviour. Each command retains its own state boundary, and the workflow stops when one command fails. See [Sessions and workflows](../core-concepts/sessions-and-workflows.md).
+Workflows reuse one Session and can prepare their combined known capabilities before the first command. This changes startup timing, not command selection, authority or failure behaviour. Each command retains its state boundary. Execution errors stop the sequence; Test/Health findings are collected while the sequence continues, then make the completed workflow unsuccessful. See [Sessions and workflows](../core-concepts/sessions-and-workflows.md).
 
 ## Make unattended policy explicit
 

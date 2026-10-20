@@ -1,0 +1,5 @@
+workspace: Parcel Fabric Development
+catalogue: Warehouse/Parcel_Catalogue_Dev
+targets:
+  Warehouse/Operations: Parcel_Operations_Dev
+  Warehouse/Reporting: Parcel_Reporting_Dev

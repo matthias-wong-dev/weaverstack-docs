@@ -1,0 +1,25 @@
+Load (dry run)
+
+  Read catalogue                                                                                           2.6s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+  Warehouse/Reporting
+
+  Build run graph                                                                                          0.0s
+  Execute                                                                                                  0.0s
+✓ Load (dry run)                                                                                           2.6s
+
+plan succeeded: Warehouse/Operations, Warehouse/Reporting
+
+    validated                load:Warehouse/Operations/Parcel.Events
+    validated                load:Warehouse/Operations/Parcel.Daily
+                             after load:Warehouse/Operations/Parcel.Events
+    validated                load:Warehouse/Operations/Parcel.Summary
+                             after load:Warehouse/Operations/Parcel.Daily
+    validated                load:Warehouse/Reporting/Parcel.DashboardInput
+                             after load:Warehouse/Operations/Parcel.Summary
+
+Plan
+    4 selected

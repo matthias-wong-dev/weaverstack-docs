@@ -7,9 +7,9 @@ A Session fixes the Fabric workspace. Operation arguments may supply a catalogue
 ## Lifecycle calls
 
 - `initialise` validates and creates a project and its requested Fabric items. Environment publication is optional.
-- `build` reads project source, prepares a build bundle and installs it unless `bundle_only=True`.
-- `load` runs installed data work. `items` is a hard item boundary; `names` selects work inside that boundary without dependency expansion.
-- `test` runs installed validations, or one uninstalled source file when `file=` is supplied. `strict=True` raises `ValidationError` for failed or invalid validation outcomes.
+- `build` reads project source and normally deploys it. `dry_run=True` returns the canonical read-only preview with no retained bundle; `bundle_only=True` retains a destination-bound bundle without installation. They cannot be combined. Build sources and Power BI items in separate calls.
+- `load` runs installed Table/Folder work and semantic-model refresh. `items` is a hard boundary; `names` is whole-name case-insensitive regex selection. Optional `ancestors`/`descendants` expand the original seeds separately within that boundary. Without a catalogue only explicit semantic-model refresh is available.
+- `test` runs installed validations or source/file validations with `files=` or no catalogue. `names=` filters by repeated whole-name regex; `source=` supplies project context. It returns the completed report even for findings or invalid validations; inspect `succeeded` and `status`.
 - `health` reads catalogue and physical state. `inventories=False` omits physical inventory reads.
 
 The operation model and state transitions are in [Build, Load and Test](../../core-concepts/build-load-and-test.md). For command output, interaction policy and exit status, use the [CLI reference](../cli.md).
@@ -20,6 +20,10 @@ The operation model and state transitions are in [Build, Load and Test](../../co
 
 `plan_wipe` settles target order and catalogue disposition. It reads the catalogue when no targets are named and estate discovery is required. `wipe` executes the settled plan; `dry_run=True` reports the work without emptying targets.
 
+`plan_unbind` reads installed claims and physical presence; `unbind` removes those claims without changing physical items. It requires explicit physical targets and a catalogue.
+
+Build, Load and Test accept positive integer `concurrency=` as a total invocation cap, in addition to configured resource limits. `load(ignore_stability_threshold=True)` waives only declared delete/update thresholds for that call, not key checks, failure policy or selection.
+
 Keep a reviewed plan object when approval and execution happen in separate code paths. Passing a settled wipe plan together with new planning arguments is rejected.
 
 <!-- BEGIN GENERATED PYTHON -->
@@ -29,7 +33,7 @@ Keep a reviewed plan object when approval and execution happen in separate code 
 ### `weaver.build`
 
 ```python
-weaver.build(source=None, *, items: str | Sequence[str] | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, bundle_only: bool=False, bundle_path: str | Path | None=None, session=None) -> BuildResult
+weaver.build(source=None, *, items: str | Sequence[str] | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, data_sources=None, bind_data_sources: bool=False, dry_run: bool=False, bundle_only: bool=False, bundle_path: str | Path | None=None, concurrency: int | None=None, session=None) -> BuildResult
 ```
 
 ### `weaver.check_mirror`
@@ -47,13 +51,13 @@ weaver.health(items: str | Sequence[str] | None=None, *, as_of: str | datetime |
 ### `weaver.initialise`
 
 ```python
-weaver.initialise(project_folder, *, workspace: str | None=None, catalogue: str=DEFAULT_CATALOGUE, environment: str=DEFAULT_ENVIRONMENT, lakehouse: str | None=None, warehouse: str | None=None, example: bool=False, publish_environment: bool=False, install_weaver: bool | None=None, dry_run: bool=False, session=None, client=None) -> InitialiseReport
+weaver.initialise(project_folder, *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, lakehouse: str | None=None, warehouse: str | None=None, semantic_model: str | None=None, example: str | None=None, publish_environment: bool=False, install_weaver: bool | None=None, dry_run: bool=False, session=None, client=None) -> InitialiseReport
 ```
 
 ### `weaver.load`
 
 ```python
-weaver.load(items: str | Sequence[str] | None=None, *, names: str | Sequence[str] | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, fault_tolerant: bool=False, dry_run: bool=False, reload: bool=False, stale: bool=False, as_of: str | datetime | None=None, session=None) -> LoadRunReport
+weaver.load(items: str | Sequence[str] | None=None, *, names: str | Sequence[str] | None=None, ancestors: bool=False, descendants: bool=False, source=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, fault_tolerant: bool=False, dry_run: bool=False, reload: bool=False, ignore_stability_threshold: bool=False, stale: bool=False, as_of: str | datetime | None=None, concurrency: int | None=None, session=None) -> LoadRunReport
 ```
 
 ### `weaver.mirror`
@@ -68,22 +72,34 @@ weaver.mirror(items: str | Sequence[str] | None=None, *, no_item: bool=False, pl
 weaver.plan_mirror(items: str | Sequence[str] | None=None, *, no_item: bool=False, workspace: str | None=None, catalogue: str | None=None, mirror: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, session=None) -> MirrorPlan
 ```
 
+### `weaver.plan_unbind`
+
+```python
+weaver.plan_unbind(targets: str | Iterable[str], *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, session=None) -> UnbindPlan
+```
+
 ### `weaver.plan_wipe`
 
 ```python
-weaver.plan_wipe(targets: str | Iterable[str]=(), *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, session=None) -> WipePlan
+weaver.plan_wipe(targets: str | Iterable[str]=(), *, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, preserve_data_source: bool=False, session=None) -> WipePlan
 ```
 
 ### `weaver.test`
 
 ```python
-weaver.test(items: str | Sequence[str] | None=None, *, name: str | None=None, file: str | Path | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, dry_run: bool=False, strict: bool=False, session=None) -> ValidationRunReport
+weaver.test(items: str | Sequence[str] | None=None, *, names: str | Sequence[str] | None=None, files: str | Path | Sequence[str | Path] | None=None, source=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, dry_run: bool=False, concurrency: int | None=None, session=None) -> ValidationRunReport
+```
+
+### `weaver.unbind`
+
+```python
+weaver.unbind(targets: str | Iterable[str]=(), *, plan: UnbindPlan | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, dry_run: bool=False, session=None) -> UnbindResult
 ```
 
 ### `weaver.wipe`
 
 ```python
-weaver.wipe(targets: str | Iterable[str]=(), *, plan: WipePlan | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, dry_run: bool=False, session=None) -> WipeResult
+weaver.wipe(targets: str | Iterable[str]=(), *, plan: WipePlan | None=None, workspace: str | None=None, catalogue: str | None=None, environment: str | None=None, workspace_config: str | Path | None=None, unbind: bool=False, catalogue_action: str | None=None, preserve_data_source: bool | None=None, dry_run: bool=False, session=None) -> WipeResult
 ```
 
 <!-- END GENERATED PYTHON -->

@@ -1,0 +1,4 @@
+workspace: Parcel Production
+targets:
+  SemanticModel/Parcel: Parcel_Production
+  Report/Parcel: Parcel_Report_Production

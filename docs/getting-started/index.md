@@ -1,16 +1,16 @@
-# Getting started
+# Start here
 
-Follow this path to create and run a Warehouse-only Weaver project:
+Install Weaver, then start with the Fabric item you already work in. Each item has its own first task; you do not need to build a whole estate first.
 
-```text
-install → initialise → check → build → load → test → health → workflow full
-```
+1. [Install Weaver](installation.md) and sign in.
+2. Pick a first task:
+    - [Warehouse: a SQL Table and View](../warehouse/first-project.md). This is the shortest route to a first result: T-SQL only, no Spark runtime to publish. If you have no preference, start here.
+    - [Lakehouse: a CSV file into a Delta Table](../lakehouse/python.md), using Python and Spark SQL.
+    - [Semantic model: deploy native TMDL](../semantic-models/native-tmdl.md). This works in an ordinary Power BI workspace without a Fabric Warehouse or Catalogue; see the [two Power BI operating modes](../semantic-models/index.md#two-ways-to-use-weaver-with-power-bi).
+    - [Report: deploy a native Report with its model](../reports/deploy.md).
 
-You will author one Table and one Test, install them in Microsoft Fabric, load two rows, validate those rows and read the estate's health.
+Every task uses the same `parcel` project. A later task adds to the folder you already have, so you can go from a Warehouse to a Lakehouse to a model without starting again.
 
-1. [Install Weaver](installation.md) and confirm that it can reach your Fabric workspace.
-2. [Build your first project](first-project.md) through the complete lifecycle.
+Once two items work, [Coordinate your estate](../estate/index.md) shows how to connect them, map development and production, and read their results together.
 
-The tutorial contains every command and source file it requires. It uses T-SQL only, so you do not need to publish a Fabric Environment before running it.
-
-Afterwards, read [How Weaver works](../core-concepts/how-weaver-works.md) for the model behind the commands, or continue with [Build a Warehouse pipeline](../basics/warehouse-pipeline.md) for a larger SQL example.
+<span id="getting-started"></span>

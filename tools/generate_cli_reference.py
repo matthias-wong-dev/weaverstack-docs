@@ -31,6 +31,7 @@ OWNERSHIP: tuple[tuple[str, str], ...] = (
     ("test", "docs/reference/cli/test.md"),
     ("health", "docs/reference/cli/health.md"),
     ("wipe", "docs/reference/cli/wipe.md"),
+    ("unbind", "docs/reference/cli/unbind.md"),
     ("mirror", "docs/reference/cli/mirror.md"),
     ("fabric environment publish", "docs/reference/cli/fabric-environment.md"),
     ("fabric notebook push", "docs/reference/cli/fabric-notebook.md"),

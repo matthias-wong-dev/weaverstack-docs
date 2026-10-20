@@ -1,6 +1,6 @@
 # Python API
 
-The public Python surface is the set of names exported by `weaver.__all__`. Import these names from `weaver`; importable internal modules are not part of this reference.
+The top-level public Python surface is exported by `weaver.__all__`. Import those names from `weaver`. The separately supported [semantic extension API](semantic-models.md) exposes Annotation and native TMDL editing; other importable internal modules are not thereby public.
 
 Use [operations](operations.md) to run lifecycle work and [Session and workspace helpers](session.md) to share a workspace context across calls. The remaining pages own the public types:
 

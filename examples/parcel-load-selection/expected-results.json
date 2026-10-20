@@ -1,0 +1,42 @@
+{
+  "independent_root": "Warehouse/Operations/Reference.Service",
+  "expected_delivery_count": 1,
+  "no_match_patterns": ["Events", "Parcel[.]Missing", "["],
+  "lakehouse_area_identity": {
+    "ambiguous": "Parcel[.]Events",
+    "table": "Tables/Parcel[.]Events",
+    "folder": "Files/Parcel[.]Events"
+  },
+  "source_revision": "74b4d15ee65ed2740593af1f4d459771b801b132",
+  "models": [],
+  "reports": {},
+  "live_service": "not run; requires separately authorised disposable workspace",
+  "seed": "Parcel[.]Events",
+  "selection": {
+    "plain": [
+      "Parcel.Events"
+    ],
+    "ancestors": [
+      "Parcel.RawEvents",
+      "Parcel.Events"
+    ],
+    "descendants": [
+      "Parcel.Events",
+      "Parcel.Daily",
+      "Parcel.Summary"
+    ],
+    "both": [
+      "Parcel.RawEvents",
+      "Parcel.Events",
+      "Parcel.Daily",
+      "Parcel.Summary"
+    ],
+    "cross_item": [
+      "Warehouse/Operations/Parcel.Events",
+      "Warehouse/Operations/Parcel.Daily",
+      "Warehouse/Operations/Parcel.Summary",
+      "Warehouse/Reporting/Parcel.DashboardInput"
+    ]
+  },
+  "concurrency": 2
+}

@@ -1,0 +1,2 @@
+model Model
+	annotation 'Weaver.BaseSemanticModels' = MissingBase

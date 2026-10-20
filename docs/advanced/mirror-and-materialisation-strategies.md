@@ -47,10 +47,16 @@ unselected item              → copied source binding
 
 The result is a mixed estate. Load can run local materialised objects; borrowed objects continue to take their Load state from the catalogue where their data is owned. Health uses the installation and mirror records to inspect the corresponding state.
 
+## Retain protected borrowed contents
+
+A selected changed/impacted protected Table or Folder uses preserving materialisation rather than empty reconstruction: Warehouse CTAS, Lakehouse Delta shallow clone, or native recursive Folder copy. Its retained bookmark remains established. Protection does not make every physical shape change an in-place migration.
+
+Review the Build preview before this transition. The destination wrapper/shortcut is removed, and failed materialisation can leave partial local state without rollback. Delta shallow clones require source file retention; Folder copying does not promise an atomic point-in-time estate snapshot. Source content is not emptied by this path. [Protecting data](protecting-data.md) explains when the stronger external-ownership boundary is appropriate.
+
 ## Treat re-mirroring as a reset
 
 A later Mirror does not refresh borrowed objects in place around local work. It empties and reconstructs the destination catalogue and every selected destination target in the settled plan. Local materialisations inside that boundary are replaced by a fresh branch from the source estate.
 
 Use re-mirroring when the desired result is a new source baseline, not as an iteration step. Review the complete destination boundary first. Preflight failures leave destinations unchanged, but a failure after execution begins does not restore the previous catalogue or targets and does not undo destinations already completed.
 
-The ordinary edit, Build, Load, Test and Health loop belongs in [The development cycle](../basics/development-cycle.md). Exact Mirror planning, confirmation and recovery behaviour is in the [Mirror operation reference](../reference/operation-behaviour/mirror.md).
+The ordinary edit, Build, Load, Test and Health loop belongs in [The development cycle](../estate/development-cycle.md). Exact Mirror planning, confirmation and recovery behaviour is in the [Mirror operation reference](../reference/operation-behaviour/mirror.md).

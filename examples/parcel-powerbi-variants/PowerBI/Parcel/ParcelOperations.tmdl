@@ -1,0 +1,6 @@
+model Model
+	annotation 'Weaver.BaseSemanticModels' = ParcelBase
+
+table Delivery
+	measure 'Delivery Rate' = DIVIDE([Delivery Count], COUNTROWS(Delivery))
+		formatString: 0.0%

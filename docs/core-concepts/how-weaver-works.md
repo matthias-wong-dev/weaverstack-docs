@@ -1,49 +1,47 @@
 # How Weaver works
 
-Weaver turns authored project files into an installed and observable data estate in Microsoft Fabric.
+A Weaver project holds the definitions for a Fabric estate: Lakehouses, Warehouses, semantic models and Reports. Workspace configuration maps their logical names to physical items; the catalogue records what is installed and what has run.
 
-```text
-Weaver documents
-      ↓ Build
-installed estate
-      ↓ Load
-data + load state
-      ↓ Test
-validation state
-      ↓ Health
-current estate view
-```
+## Keep the source in a project
 
-Each stage has a different source of truth. Keeping those stages separate explains why editing a file does not immediately change a running estate, and why Load and Test continue to use the last successful Build.
+Python and SQL define data work under `Lakehouse/` and `Warehouse/`. Native model and Report definitions live under `PowerBI/`. Models use standard TMDL; optional overlays and Weaver annotations add refinements and modelling rules. These play the same authoring role as the engineering declarations around SQL and Python. Tests and Assumptions live beside the items they check.
 
-## Author Weaver documents
+The project declares logical identities, not development or production item names. Change workspace configuration to select another destination without maintaining another copy of the source.
 
-A project groups Weaver documents beneath logical Lakehouse and Warehouse items. A document's path, kind, metadata and authored body describe what should exist and what work Weaver should install.
+See [Projects and estates](projects-and-estates.md), [Weaver documents](weaver-documents.md) and [Logical and physical items](logical-and-physical-items.md).
 
-The logical names belong to the project. A [workspace configuration](logical-and-physical-items.md) binds them to Lakehouses and Warehouses in a Fabric workspace.
+## Build deploys definitions
 
-## Build installs a generation
+Build reconciles selected source items and installs their Tables, Folders, Views, Shortcuts and validations. It also deploys native semantic models and their linked Reports. Build does not run the authored data loads or refresh models.
 
-Build interprets the selected project source, resolves its physical bindings and installs the required definitions and executable work. A successful Build records the installed generation and its bindings in the [catalogue](catalogue.md).
+Build Lakehouse and Warehouse work first, then models and Reports in a separate Build call. The second call can read the installed source metadata. Both use the same project and workspace configuration; a workflow can sequence them.
 
-That installed generation is the boundary between source and operation. Editing project files changes the intended estate; Build makes those edits operational.
+## Load follows the dependency graph
 
-## Load runs installed data work
+Load runs installed Table and Folder work and refreshes semantic models. With no item selection it covers the installed estate. Selected source work precedes the consumers and model refreshes that depend on it.
 
-Load starts from catalogue state, not from the files currently on disk. It runs the installed work for Tables and Folders in the selected logical items, changes their data and records the result.
+Each consumer keeps its own successful-processing bookmark. A failed node does not discard the progress of independent work that finished. Reports use the model’s data rather than having their own data Load.
 
-## Test runs installed validations
+See [Dependencies](dependencies.md), [Incremental data processing](../advanced/incremental-data-processing.md) and [Fault tolerance](fault-tolerance.md).
 
-Test also starts from the installed generation. It runs Tests and Assumptions against estate data and records whether each validation passed, failed or could not run.
+## Test checks the data
 
-## Health reads the estate
+Tests compare expected and actual rows. Assumptions return rows that violate a condition. Both can be authored for Lakehouse and Warehouse data or for semantic models using DAX.
 
-Health combines installed declarations, current Load and Test state and, by default, physical inventory. It reports the estate as it stands; it does not install or execute authored work.
+A model’s DAX result can be checked against SQL calculated independently from its managed source. Installed results share the catalogue’s current validation state and history.
 
-## Mirror can establish a development baseline
+See [Build, Load and Test](build-load-and-test.md) and [Add Tests and Assumptions](../warehouse/tests.md).
 
-Mirror creates a development catalogue from another installed estate and presents selected source data through development targets. The development estate can therefore begin with borrowed data. When Build installs a changed borrowed object locally, that object becomes local while unchanged objects can remain borrowed.
+## Health reads the whole estate
 
-Mirror changes how a development estate begins; the normal Build → Load → Test → Health lifecycle remains the same. See [Mirrors](mirrors.md) for that model.
+Health brings Build, Load and Test state together in one report. Without an item selector it covers the managed estate, including registered model refreshes and validations. It uses recorded state and physical source inventories; it does not run the work again.
 
-Continue with [Projects and estates](projects-and-estates.md) for the distinction between source, logical model, installed generation and physical Fabric state.
+That shared view matters when a source changes after a downstream load or Test passed. Health identifies the downstream work that is now behind, rather than presenting each successful run in isolation.
+
+See [State and health](state-and-health.md) and [Run and inspect the estate](../estate/operate.md).
+
+## Develop against existing data
+
+Mirror borrows unchanged data through Warehouse Views and OneLake Shortcuts. Build materialises the work you change locally. The project keeps the same logical names and operating flow.
+
+See [Mirrors](mirrors.md) and [The development cycle](../estate/development-cycle.md).

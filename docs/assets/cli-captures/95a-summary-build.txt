@@ -1,0 +1,33 @@
+Workspace  Parcel Development
+Catalogue  none
+Targets
+  SemanticModel/ParcelSummary
+
+
+Build
+
+    Create SemanticModel/ParcelSummary                                                                    20.6s
+  Create Power BI items                                                                                   20.6s
+  Resolve semantic data sources                                                                            0.0s
+    Resolve SemanticModel/ParcelSummary                                                                    0.0s
+  Read target inventories                                                                                  0.2s
+  Read semantic sources                                                                                    0.0s
+  Prepare bundle                                                                                           0.0s
+Install selection
+  SemanticModel/ParcelSummary
+    changed                 1
+    selected for build      1
+
+→   SemanticModel/ParcelSummary · Deploy semantic definitions · 1 action
+✓   SemanticModel/ParcelSummary · Deploy semantic definitions · 1 action                                  21.0s
+→   SemanticModel/ParcelSummary · Verify deployed semantic definitions · 1 action
+✓   SemanticModel/ParcelSummary · Verify deployed semantic definitions · 1 action                         20.5s
+  Install                                                                                                 41.5s
+✓ Build                                                                                                   1m02s
+
+Installation
+    2 succeeded
+    0 failed
+    0 skipped
+  Report  [local-path]
+  Bundle  adfdbe93e8e0f0fafa41c2439baf189510670bd6c74ac0ae45008dd9eda4afb1

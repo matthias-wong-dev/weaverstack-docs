@@ -1,0 +1,24 @@
+
+Load (dry run)
+
+[2m⋯[0m Load (dry run)                                                                                       [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    0.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    1.0s[0m                                                                                                               [2m⋯[0m Read catalogue                                                                                       [2m    2.0s[0m                                                                                                                [0m Read catalogue                                                                                       [2m    2.7s[0m
+[2m⋯[0m Load (dry run)                                                                                       [2m    2.7s[0m                                                                                                               Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+[2m⋯[0m Load (dry run)                                                                                       [2m    2.7s[0m                                                                                                               [2m⋯[0m Build run graph                                                                                      [2m    0.0s[0m                                                                                                                [0m Build run graph                                                                                      [2m    0.0s[0m
+[2m⋯[0m Load (dry run)                                                                                       [2m    2.7s[0m                                                                                                               [2m⋯[0m Execute                                                                                              [2m    0.0s[0m                                                                                                                [0m Execute                                                                                              [2m    0.0s[0m
+[2m⋯[0m Load (dry run)                                                                                       [2m    2.7s[0m                                                                                                               [32m✓[0m Load (dry run)                                                                                       [2m    2.7s[0m
+
+plan [32msucceeded[0m: Warehouse/Operations
+
+    validated                load:Warehouse/Operations/Parcel.Events
+    validated                load:Warehouse/Operations/Reference.Depot
+    validated                load:Warehouse/Operations/Parcel.Daily
+                             [2mafter load:Warehouse/Operations/Parcel.Events, load:Warehouse/Operations/Reference.Depot[0m
+    validated                load:Warehouse/Operations/Parcel.Summary
+                             [2mafter load:Warehouse/Operations/Parcel.Daily[0m
+
+Plan
+    4 selected

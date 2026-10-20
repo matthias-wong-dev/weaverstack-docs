@@ -1,0 +1,3 @@
+error: SemanticModel/ParcelExecutive references missing base 'MissingBase' in PowerBI/Parcel; bases must be local to this project
+
+Enter to retry, Esc to exit.

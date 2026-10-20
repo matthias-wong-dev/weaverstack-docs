@@ -1,0 +1,16 @@
+Workspace  Parcel Development
+Catalogue  none
+Targets
+  SemanticModel/Parcel
+
+
+Build
+
+  Resolve semantic data sources                                                                            0.0s
+    Resolve SemanticModel/Parcel                                                                           0.0s
+  Read target inventories                                                                                  0.1s
+  Read semantic sources                                                                                    0.0s
+✗ Prepare bundle                                                                                           0.0s
+✗ Build                                                                                                    0.3s
+
+error: PowerBI/Parcel/Parcel.tmdl:6: Parcel.DisplayFolder: requires a non-empty display folder

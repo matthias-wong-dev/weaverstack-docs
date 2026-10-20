@@ -1,0 +1,8 @@
+workspace: Parcel Fabric Development
+catalogue: Warehouse/Parcel_Catalogue_Dev
+targets:
+  Warehouse/Operations: Parcel_Operations_Dev
+  SemanticModel/Parcel: Parcel_Dev
+  Report/Parcel: Parcel_Report_Dev
+data_sources:
+  Warehouse/Operations: Warehouse/Parcel_Operations_Dev

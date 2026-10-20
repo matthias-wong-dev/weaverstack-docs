@@ -8,9 +8,9 @@ A final installation action is:
 
 - `succeeded` — the action completed;
 - `failed` — the action was attempted and failed; or
-- `skipped` — the action was not attempted because an earlier installation barrier failed, or the action is a supported host skip.
+- `skipped` — the action was not attempted because required predecessor work failed or remained blocked, or the action is a supported host skip.
 
-`pending` and `running` are action/report lifecycle states in the public report types; a completed installation report settles planned actions to the final terms above. An installation report is `succeeded` when no action failed and `failed` otherwise. A supported skipped action does not by itself fail the report.
+`pending` and `running` are action/report lifecycle states in the public report types; a completed installation report settles planned actions to the final terms above. Installation success follows required graph completion. Uncertain mutations present as failed; blocked/unreached actions present as skipped, not successful certification. Independent branches can still complete. Do not derive success solely from the absence of an attempted failed action.
 
 A Build result uses `succeeded` or `failed`. Pre-installation command errors have no installation report.
 
@@ -70,7 +70,7 @@ A returned Mirror result currently has `status: succeeded`. Mirror raises on fai
 
 Each completed Wipe item is `emptied`. A catalogue retained by `unbind` is `preserved` and carries `unbound: true`. A raised Wipe failure has no completed aggregate result for later or partly processed targets.
 
-Workflow has no nested universal outcome vocabulary. It returns success only when all entries return success, or when an available confirmation was explicitly declined before execution. Missing authorisation, a failed command status or a Weaver error returns failure and identifies the first stopped entry. Nested reports retain their own vocabularies.
+Workflow has no nested universal outcome vocabulary. It returns success only when all entries return success, or when an available confirmation was explicitly declined before execution. Test/Health handler findings continue and cause final failure after the sequence. Other failed statuses or raised Weaver errors stop immediately. Missing authorisation also fails before execution. Nested reports retain their own vocabularies.
 
 ## Persisted catalogue outcomes
 

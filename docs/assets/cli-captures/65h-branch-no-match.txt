@@ -1,0 +1,13 @@
+Load (dry run)
+
+  Read catalogue                                                                                           2.7s
+Workspace  Parcel Development
+Catalogue  Warehouse/Catalogue
+Targets
+  Warehouse/Operations
+
+  Build run graph                                                                                          0.0s
+✗ Execute                                                                                                  0.0s
+✗ Load (dry run)                                                                                           2.7s
+
+error: no installed loadable object in the requested items matches 'Parcel[.]DoesNotExist'. Installed: Parcel.Daily, Parcel.Events, Parcel.LakehouseCurrentStatus, Parcel.LiveStatus, Parcel.RawEvents, Parcel.StatusEvent, Parcel.Summary, Reference.Depot, Reference.Service

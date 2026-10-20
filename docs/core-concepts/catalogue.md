@@ -8,7 +8,7 @@ Project source, workspace configuration and catalogue state answer different que
 - workspace configuration says where Build should install logical items;
 - the catalogue records what Build installed and what Load and Test did afterwards.
 
-Load, Test and Health use catalogue state rather than interpreting the project again. A source edit therefore does not affect those operations until a successful Build installs it.
+Catalogue-mode Load, Test and Health use recorded state. Standalone Power BI deployment/refresh and source/file-mode validation can operate without a catalogue; they return reports rather than persisted Weaver status/history. An edited source validation can therefore be tested without first installing it.
 
 ## How to read the `_` schema
 
@@ -21,7 +21,7 @@ The tables answer four groups of questions:
 3. What happened in earlier operations?
 4. Which installed objects still borrow data from another estate?
 
-The tour below covers every catalogue table. See [Catalogue schema reference](../reference/catalogue-schema.md) for exact columns, keys, types and stored values.
+The tour groups installed source and Power BI records by the question they answer. See [Catalogue schema reference](../reference/catalogue-schema.md) for exact columns, keys, types and stored values.
 
 ## Installed and declaration state
 
@@ -40,6 +40,14 @@ Build reconciles these tables for the logical items it installs.
 | `_.TestDictionary` | Which Tests and Assumptions Build installed and the descriptive metadata for each. | You need to inventory validations or distinguish their kinds. |
 | `_.Dependency` | Authored dependency references and the logical objects to which Weaver resolved them. | You need to explain Build impact or Load and Test ordering. |
 | `_.Shortcut` | Installed logical and physical Shortcut declarations and their targets. | You need to trace how an item presents data owned elsewhere. |
+| `_.SemanticModel` | Registered deployed models, descriptions and signatures. | You need the recorded model definition. |
+| `_.SemanticModelTable` | Model tables and their recorded managed-source modes/access. | You need table-level source lineage. |
+| `_.SemanticModelColumn` | Recorded model columns, including engine-inferred calculated columns. | You need native column metadata. |
+| `_.SemanticModelMeasure` | Native measure expressions and formatting. | You need the recorded measure definition. |
+| `_.SemanticModelRelationship` | Native relationship endpoints and behaviour. | You need the recorded relationship metadata. |
+| `_.SemanticModelTest` | DAX validation queries and their supported Expected-source metadata. | You need installed semantic validation work. |
+
+Models and Reports also have Installation/Registry claims when a catalogue is used. Linked Reports carry their model dependency; a Report has no data refresh or Test step of its own. Source edges describe resolved managed/registered lineage, not every unmanaged external connection.
 
 `_.Registry` is the certification boundary: a physical object may exist without being part of the installed estate. Interpret a Registry row together with its `_.Installation` binding.
 
@@ -50,7 +58,7 @@ These tables answer what is true for the current installed incarnation of an obj
 | Table | What it tells you | Inspect it when |
 | --- | --- | --- |
 | `_.Bookmark` | The incremental read boundary established by a loadable object's latest clean Load. | You need to understand where the next incremental read begins or whether a clean Load has completed. |
-| `_.LoadStatus` | The current Load outcome for each managed Table, Folder and View. | You need the Load state used by Health. |
+| `_.LoadStatus` | The current Load/refresh outcome for recorded data subjects, including registered models. | You need the Load state used by Health. |
 | `_.TestStatus` | The current outcome and finding count for each installed Test and Assumption. | You need the validation state used by Health. |
 
 A rebuilt loadable object or validation begins with fresh current state for its new installed incarnation. These tables answer “what is the result now?”, not “what has ever happened?”.
@@ -80,6 +88,6 @@ Current Load state for borrowed data remains with the source estate; work perfor
 
 ## Inspect the catalogue; change it through Weaver
 
-Query the `_` schema to inspect an estate, but do not edit catalogue rows by hand. Use Build, Load, Test, Mirror and Wipe for state changes. Manual writes can detach recorded state from the installed objects and bindings it describes.
+Query the `_` schema to inspect an estate, but do not edit catalogue rows by hand. Use Build, Load, Test, Mirror, Wipe and the documented Unbind operation for state changes. Manual writes can detach recorded state from the installed objects and bindings it describes.
 
 Use Health and command reports for normal operation, and read-only catalogue queries when you need more detail. Exact publication boundaries and schema definitions are in [Catalogue schema reference](../reference/catalogue-schema.md).

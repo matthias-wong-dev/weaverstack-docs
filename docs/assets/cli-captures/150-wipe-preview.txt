@@ -1,0 +1,9 @@
+Wipe on Parcel Development
+
+Empty
+  Warehouse/Operations
+
+Catalogue
+  Warehouse/Catalogue   preserved; claims for Warehouse/Operations unbound
+
+Nothing was changed.

@@ -5,7 +5,7 @@
 ## Synopsis
 
 ```text
-weaver doctor [-h] [--json] --workspace WORKSPACE [--non-interactive]
+weaver doctor [-h] [--json] --workspace WORKSPACE [--semantic-model NAME] [--non-interactive]
 ```
 
 ## Options
@@ -18,6 +18,9 @@ weaver doctor [-h] [--json] --workspace WORKSPACE [--non-interactive]
 
 `--workspace WORKSPACE`
 : Fabric workspace to check.
+
+`--semantic-model NAME`
+: Check this semantic model's authentication, definition and DAX access only.
 
 `--non-interactive`
 : Do not read stdin, wait for a keypress or open browser sign-in. Missing authorisation or required input is an error.

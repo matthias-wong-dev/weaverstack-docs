@@ -1,8 +1,8 @@
 # Python authored objects
 
-These classes are the public Python surface for Lakehouse object modules and authored shortcut declarations. Import them from `weaver`; modules below the top-level package are implementation details.
+These classes are the public Python surface for Lakehouse object modules and authored shortcut declarations. Import them from `weaver`; the separately documented [semantic extension modules](semantic-models.md) are additional supported imports, not a blanket public surface for all internal modules.
 
-Python object classes are not the YAML metadata, SQL document, or CLI forms of the same concepts. See [Weaver documents](../../core-concepts/weaver-documents.md) for the document model, [Lakehouse pipeline](../../basics/lakehouse-python.md) for an end-to-end authoring path, and [Shortcuts](../../basics/shortcuts.md) for shortcut target forms.
+Python object classes are not the YAML metadata, SQL document, or CLI forms of the same concepts. See [Weaver documents](../../core-concepts/weaver-documents.md) for the document model, [Lakehouse pipeline](../../lakehouse/python.md) for an end-to-end authoring path, and [Shortcuts](../../lakehouse/shortcuts.md) for shortcut target forms.
 
 <!-- BEGIN GENERATED PYTHON -->
 
@@ -57,7 +57,7 @@ status = Parcel__CurrentStatus(spark, catalogue="Warehouse/Catalogue")
 assert status.object_id == "Parcel.CurrentStatus"
 ```
 
-The module-level metadata attached to an authored class remains part of the Python document. See [Build a Lakehouse pipeline with Python](../../basics/lakehouse-python.md) for a complete document and [Incremental data processing](../../advanced/incremental-data-processing.md) for return forms across changed and unchanged inputs.
+The module-level metadata attached to an authored class remains part of the Python document. See [Build a Lakehouse pipeline with Python](../../lakehouse/python.md) for a complete document and [Incremental data processing](../../advanced/incremental-data-processing.md) for return forms across changed and unchanged inputs.
 
 ## `Folder`
 
@@ -140,7 +140,7 @@ SparkSqlTable(
 
 Runtime class generated from an authored Spark SQL table document. Its `sql: str` attribute contains the program, and `read()` executes that program to produce staging and optional delete keys.
 
-Do not subclass `SparkSqlTable` in repository Python. Author a `.sql` document; Build generates the class. [Build a Lakehouse pipeline with Spark SQL](../../basics/lakehouse-spark-sql.md) shows the authored form.
+Do not subclass `SparkSqlTable` in repository Python. Author a `.sql` document; Build generates the class. [Build a Lakehouse pipeline with Spark SQL](../../lakehouse/spark-sql.md) shows the authored form.
 
 ## `View`
 
@@ -186,4 +186,4 @@ Parcel__Events = Shortcut(
 )
 ```
 
-The accepted shortcut types, target grammar, and logical/physical distinction are documented in [Shortcuts](../../basics/shortcuts.md). They are not interchangeable with workspace YAML target bindings or CLI item selection.
+The accepted shortcut types, target grammar, and logical/physical distinction are documented in [Shortcuts](../../lakehouse/shortcuts.md). They are not interchangeable with workspace YAML target bindings or CLI item selection.
