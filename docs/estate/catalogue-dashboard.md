@@ -149,9 +149,11 @@ The installed dependency graph across Lakehouses, Warehouses and semantic models
 
 ### Performance
 
-Did the run finish in time. Each workflow is one vertical bar, from the time it started to the time it finished, in a column for its day, with the time of day down the side in the page's time zone. The bar is drawn in blue for the Load part and violet for the Test part, and outlined in red when a record failed. Runs that overlap are never added together. Set a deadline, an hour of that zone, to see which runs ended after it.
+Did the run finish in time. Each workflow is one vertical bar in a column for its day, from the time it started at the bottom to the time it finished at the top, with the time of day up the side in the page's time zone. The bar is drawn in blue for the Load part and violet for the Test part, and outlined in red when a record failed. Runs that overlap are never added together. Set a deadline, an hour of that zone, to see which runs ended after it.
 
-Choose a window of 24 hours, 7 days or 30 days, a task and an item. Select a run, in the chart or its table, to list its longest object records, then see each object's load and Test statistics over the window: counts, time, rows read, changed and rejected for Loads, and failures for Tests.
+Choose a window of 24 hours, 7 days or 30 days, a task and an item. Select a run, in the chart or its table, to list its longest object records, Loads first and then Tests. Select an object in that list to see that load's own row counts, read, inserted, updated, deleted and rejected, with the same object's loads in the runs around it, one row each. A Test shows its result and message with the executions around it. Counts are never added across loads.
+
+The Loads and Tests tables give each object's number of loads or executions over the window. Select one to see its latest loads or executions one by one. The largest loads of the last 7 days are listed each by its own counts.
 
 <div class="dashboard-demo"><iframe src="../../assets/catalogue-dashboard/performance.html" title="Catalogue Dashboard demo: Performance" loading="lazy"></iframe></div>
 <p class="dashboard-demo-open" markdown>[Open Performance full size](../assets/catalogue-dashboard/performance.html){ target="_blank" }</p>
