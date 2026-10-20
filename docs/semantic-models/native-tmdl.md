@@ -23,7 +23,7 @@ weaver initialise \
 cd parcel
 ```
 
-Initialise asks you to confirm (choose `1`), then writes the native model and linked Report under `PowerBI/Parcel/`, a workspace configuration and supporting project files. It creates no Catalogue Warehouse or Fabric Environment. Build creates the Power BI items; building and refreshing this inline model do not require Spark. You can later [add Fabric data workloads and a Catalogue](managed-sources.md) to this same project without replacing its native definitions or existing bindings.
+Initialise writes the native model and linked Report under `PowerBI/Parcel/`, a workspace configuration and supporting project files. In the Terminal, choose `1` to confirm. It creates no Catalogue Warehouse or Fabric Environment. Build creates the Power BI items; building and refreshing this inline model do not require Spark. You can later [add Fabric data workloads and a Catalogue](managed-sources.md) to this same project without replacing its native definitions or existing bindings.
 
 Open `PowerBI/Parcel/Parcel.pbip` in Desktop to inspect the native project. Open `PowerBI/Parcel/Parcel.SemanticModel/definition/tables/Delivery.tmdl` in your editor. The generated table includes the sample partition and measure:
 

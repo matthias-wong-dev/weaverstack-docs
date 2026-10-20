@@ -372,12 +372,6 @@ Read the selected identities, dependencies and any required publication/endpoint
 
 ## 4. Include upstream or downstream work
 
-```bash
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --dry-run --workspace-config workspace-development.yml
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --descendants --dry-run --workspace-config workspace-development.yml
-weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --descendants --dry-run --workspace-config workspace-development.yml
-```
-
 | Request | Selected tables in Operations |
 | --- | --- |
 | Seed alone | Events |
@@ -385,7 +379,11 @@ weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --descenda
 | Descendants | Events, Daily, Summary |
 | Both directions | RawEvents, Events, Daily, Summary |
 
-The combined preview returned:
+```bash
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --dry-run --workspace-config workspace-development.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --descendants --dry-run --workspace-config workspace-development.yml
+weaver load Warehouse/Operations --name 'Parcel[.]Events' --ancestors --descendants --dry-run --workspace-config workspace-development.yml
+```
 
 <!-- cli-capture: {"id": "65d-branch-both", "title": "Preview · ancestors and descendants of Parcel.Events"} -->
 <p class="terminal-intro">The command returned:</p>
@@ -477,13 +475,14 @@ import weaver
 
 preview = weaver.load(
     'Warehouse/Operations',
+    workspace='Parcel Development',
+    catalogue='Warehouse/Catalogue',
     names=r'Parcel[.]Events',
     ancestors=True,
     descendants=True,
     dry_run=True,
-    workspace_config='workspace-development.yml',
 )
-print(preview.to_mapping())
+preview.report()
 ```
 
 ## 6. Cross an item boundary deliberately
@@ -533,12 +532,12 @@ This selects Events, Daily and Summary in Operations, then DashboardInput in Rep
 
 Repeat `--name` to take the union of matching seeds. Every supplied pattern must match at least one loadable object inside the requested scope:
 
+The first selects Events and Depot, then Daily, which waits for both, and Summary. The second is a no-match error, not an empty successful run, and lists the installed names:
+
 ```bash
 weaver load Warehouse/Operations --name 'Parcel[.]Events' --name 'Reference[.]Depot' --descendants --dry-run --workspace-config workspace-development.yml
 weaver load Warehouse/Operations --name 'Parcel[.]DoesNotExist' --dry-run --workspace-config workspace-development.yml
 ```
-
-The first selects Events and Depot, then Daily, which waits for both, and Summary. The second is a no-match error, not an empty successful run, and lists the installed names:
 
 <!-- cli-capture: {"id": "65h-branch-no-match", "title": "Preview · no installed name matches"} -->
 <p class="terminal-intro">The command returned:</p>

@@ -2,7 +2,7 @@
 
 Operations return frozen result and report values. Import every type on this page from `weaver`; nested implementation types named in annotations are not additional public import paths.
 
-The constructors below describe the returned shape and are useful in tests. Normal application code receives these values from the corresponding operation. `to_mapping()` methods produce the operation's current machine representation, but this page does not promise a version-independent JSON schema. See [Build, Load and Test](../../core-concepts/build-load-and-test.md) for lifecycle semantics and the operation's [CLI reference](../cli.md) for command behaviour.
+The constructors below describe the returned shape and are useful in tests. Normal application code receives these values from the corresponding operation. Use `report()` for a consistent Notebook display. It delegates to the result's existing representation; existing `to_mapping()` and `as_dict()` names remain unchanged. These representations do not promise a version-independent JSON schema. See [Build, Load and Test](../../core-concepts/build-load-and-test.md) for lifecycle semantics and the operation's [CLI reference](../cli.md) for command behaviour.
 
 <!-- BEGIN GENERATED PYTHON -->
 

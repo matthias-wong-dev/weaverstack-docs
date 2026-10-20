@@ -22,13 +22,13 @@ targets:
 
 `mirror` names the source catalogue; `catalogue` and `targets` name the destinations. The source physical item, `Operations`, comes from the source catalogue's recorded binding, not from this file. Only the items listed under `targets` are rebound to development copies.
 
+In the Terminal, Weaver shows the source catalogue, destination catalogue and each target mapping, then asks once before emptying the destinations. Compare the plan with the names above; answer `y` only if they match. Declining changes nothing. In a Notebook, review the plan in the first cell before running the second. Mirror has no dry-run mode.
+
 Run Mirror:
 
 ```bash
 weaver mirror --workspace-config workspace-mirror.yml
 ```
-
-Weaver shows the source catalogue, destination catalogue and each target mapping, then asks once before emptying the destinations. Compare the plan with the names above; answer `y` only if they match. Declining changes nothing, and Mirror has no dry-run mode.
 
 <!-- cli-capture: {"id": "140-mirror", "title": "Mirror · fork the catalogue into development"} -->
 <p class="terminal-intro">The command returned:</p>

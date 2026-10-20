@@ -48,6 +48,7 @@ result = weaver.build(
 )
 if not result.succeeded:
     raise RuntimeError(result.errors)
+result.report()
 ```
 
 Replace each angle-bracketed value with an existing physical item name in the notebook's workspace. The notebook's attached runtime must contain Weaver and any libraries imported by the project. Build installs Python definitions but does not call their authored `read()` methods.
@@ -125,6 +126,12 @@ if not test_report.succeeded:
     raise RuntimeError(f"Test {test_report.status}")
 
 health_report = weaver.health(items, catalogue=catalogue)
+{
+    "build": build_result.report(),
+    "load": load_report.report(),
+    "test": test_report.report(),
+    "health": health_report.report(),
+}
 ```
 
 No desktop credential or `environment=` argument is needed for this attached-workspace path. The attached runtime must still contain Weaver and the project's Python dependencies. Supplying a [Session](../reference/python/session.md) is optional when a caller needs explicit context reuse or control.

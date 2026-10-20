@@ -69,6 +69,10 @@ Green means the assessed subjects have no current finding. Amber identifies work
 
 For example, after loading the connected Parcel items but before rerunning Test, the report retained four successful historical validations and marked them stale:
 
+```bash
+weaver health --item Lakehouse/Landing --item Warehouse/Operations
+```
+
 <!-- cli-capture: {"id": "53-cross-item-health", "title": "Health · successful validations with newer inputs"} -->
 <p class="terminal-intro">The command returned:</p>
 <figure class="weaver-terminal" aria-label="Health · successful validations with newer inputs">
@@ -117,6 +121,10 @@ Largest changes
 <summary>A failed validation is different from a stale one</summary>
 
 The [Warehouse failure exercise](../warehouse/tests.md#optional-make-one-discrepancy-visible) installs an intentionally wrong expected status, then runs Test. Its recorded finding is Red, not Amber:
+
+```bash
+weaver health --item Warehouse/Operations
+```
 
 <!-- cli-capture: {"id": "20-health-failed-test", "title": "Health · deliberate Warehouse finding"} -->
 <p class="terminal-intro">The command returned:</p>
