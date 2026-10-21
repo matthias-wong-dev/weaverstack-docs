@@ -13,11 +13,11 @@ Keep writing Python, SQL and native model definitions. Weaver handles the instal
 
 ## A Weaver project at a glance
 
-A Weaver project is ordinary Python, SQL, TMDL and configuration files organised by Fabric item. Start with one item or combine several, as Parcel does here.
+A Weaver project is ordinary Python, SQL, TMDL and configuration files organised by Fabric item. The Parcel delivery example below combines a Lakehouse, Warehouse, semantic model and Report.
 
 <div class="project-overview">
 <div class="project-overview-files">
-<p class="project-overview-label" id="parcel-files">What you write</p>
+<p class="project-overview-label" id="parcel-files">Parcel example project</p>
 <pre class="project-overview-tree" aria-labelledby="parcel-files"><code>parcel/
 ├── workspace-config.yml
 ├── workflow.yml
@@ -39,7 +39,7 @@ A Weaver project is ordinary Python, SQL, TMDL and configuration files organised
 <figcaption class="project-overview-label" id="parcel-dependencies">How the work connects</figcaption>
 <div class="project-diagram-scroll" tabindex="0" role="region" aria-label="Parcel dependency diagram; scroll horizontally on narrow screens">
 <svg class="parcel-diagram" viewBox="0 0 960 340" role="img" aria-labelledby="parcel-docs-title parcel-docs-desc">
-<title id="parcel-docs-title">A Parcel project across Fabric items</title>
+<title id="parcel-docs-title">The Parcel example project across Fabric items</title>
 <desc id="parcel-docs-desc">Parcel.Events feeds Parcel.Event. Event branches to Lakehouse CurrentStatus and a Warehouse logical Shortcut, which feeds LakehouseCurrentStatus. The Warehouse source connects to the Parcel semantic model through Weaver.Source, and the model binds to the Parcel Report.</desc>
 <defs><marker id="parcel-docs-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="var(--pv-blue)"/></marker></defs>
 <g data-project-band="Lakehouse" class="parcel-band band-0">
