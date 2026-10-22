@@ -42,9 +42,6 @@ jobs:
           mkdir -p site
           cp -R bootstrap/. site/
 
-      - name: Set the custom domain
-        run: printf '%s\n' docs.weaverstack.dev > site/CNAME
-
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:

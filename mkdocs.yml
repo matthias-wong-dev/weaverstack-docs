@@ -3,7 +3,7 @@ site_description: Build and operate Microsoft Fabric estates with Weaver — Lak
 site_url: https://docs.weaverstack.dev
 repo_name: GitHub
 repo_url: https://github.com/matthias-wong-dev/weaverstack
-edit_uri: https://github.com/matthias-wong-dev/weaverstack-docs/edit/main/docs/
+edit_uri: https://github.com/weaverstack/weaverstack-docs/edit/main/docs/
 strict: true
 
 exclude_docs: |
