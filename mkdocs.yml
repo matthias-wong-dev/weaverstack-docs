@@ -2,7 +2,7 @@ site_name: Weaver documentation
 site_description: Build and operate Microsoft Fabric estates with Weaver — Lakehouses, Warehouses, semantic models and Reports in one project
 site_url: https://docs.weaverstack.dev
 repo_name: GitHub
-repo_url: https://github.com/matthias-wong-dev/weaverstack
+repo_url: https://github.com/weaverstack/weaverstack
 edit_uri: https://github.com/weaverstack/weaverstack-docs/edit/main/docs/
 strict: true
 
